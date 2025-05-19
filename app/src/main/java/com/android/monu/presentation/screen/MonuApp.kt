@@ -5,36 +5,32 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.android.monu.R
+import com.android.monu.presentation.components.BottomNavBar
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.home.HomeScreen
 import com.android.monu.presentation.screen.reports.ReportsScreen
 import com.android.monu.presentation.screen.reports.detail.ReportsDetailScreen
 import com.android.monu.presentation.screen.settings.SettingsScreen
+import com.android.monu.presentation.screen.transactions.FilterCallbacks
+import com.android.monu.presentation.screen.transactions.FilterStateData
 import com.android.monu.presentation.screen.transactions.TransactionsScreen
 import com.android.monu.presentation.screen.transactions.TransactionsViewModel
 import com.android.monu.presentation.screen.transactions.transaction.AddExpenseScreen
@@ -42,13 +38,14 @@ import com.android.monu.presentation.screen.transactions.transaction.AddExpenseV
 import com.android.monu.presentation.screen.transactions.transaction.AddIncomeScreen
 import com.android.monu.presentation.screen.transactions.transaction.AddIncomeViewModel
 import com.android.monu.presentation.screen.transactions.transaction.EditTransactionScreen
-import com.android.monu.ui.navigation.BottomNavItem
+import com.android.monu.presentation.screen.transactions.transaction.EditTransactionViewModel
+import com.android.monu.presentation.screen.transactions.transaction.UpdateResultCallback
 import com.android.monu.ui.navigation.Screen
-import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.SoftGrey
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MonuApp(
@@ -108,19 +105,32 @@ fun MonuApp(
                 val selectedType by viewModel.selectedTypeFilter.collectAsStateWithLifecycle()
                 val selectedYear by viewModel.selectedYearFilter.collectAsStateWithLifecycle()
                 val selectedMonth by viewModel.selectedMonthFilter.collectAsStateWithLifecycle()
+                val availableYears by viewModel.availableTransactionYears.collectAsStateWithLifecycle()
+
+                val filterState = FilterStateData(
+                    searchQuery = searchQuery,
+                    selectedType = selectedType,
+                    availableTransactionYears = availableYears,
+                    selectedYear = selectedYear,
+                    selectedMonth = selectedMonth
+                )
+
+                val filterCallbacks = FilterCallbacks(
+                    onSearchQueryChange = viewModel::searchTransactions,
+                    onFilterTypeClick = viewModel::selectType,
+                    onFilterYearMonthClick = viewModel::loadAvailableTransactionYears,
+                    onFilterYearMonthApply = viewModel::selectYearAndMonth
+                )
 
                 TransactionsScreen(
                     transactions = transactions,
-                    searchQuery = searchQuery,
-                    selectedType = selectedType,
-                    selectedYear = selectedYear,
-                    selectedMonth = selectedMonth,
-                    onSearchQueryChange = viewModel::searchTransactions,
-                    onFilterTypeClick = viewModel::selectType,
-                    onFilterYearMonthApply = viewModel::selectYearAndMonth,
+                    filterState = filterState,
+                    filterCallbacks = filterCallbacks,
                     navigateToAddIncome = { navController.navigate(Screen.AddIncome.route) },
                     navigateToAddExpense = { navController.navigate(Screen.AddExpense.route) },
-                    navigateToEditTransaction = { navController.navigate(Screen.EditTransaction.route) }
+                    navigateToEditTransaction = { transactionId ->
+                        navController.navigate(Screen.EditTransaction.createRoute(transactionId))
+                    }
                 )
             }
             composable(Screen.Reports.route) {
@@ -148,19 +158,13 @@ fun MonuApp(
                 popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut() }
             ) {
                 val viewModel = koinViewModel<AddIncomeViewModel>()
-                val selectedCategory by viewModel.selectedCategory.collectAsStateWithLifecycle()
-                val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle()
                 val insertResult by viewModel.insertResult.collectAsStateWithLifecycle()
 
                 AddIncomeScreen(
-                    category = selectedCategory,
-                    date = selectedDate,
                     insertResult = insertResult,
+                    onSaveButtonClick = viewModel::insertTransaction,
+                    onResetInsertResultValue = viewModel::resetInsertResult,
                     navigateBack = { navController.navigateUp() },
-                    onResetInsertResultValue = { viewModel.resetInsertResult() },
-                    onCategoryChange = viewModel::selectCategory,
-                    onDateChange = viewModel::selectDate,
-                    onSaveButtonClick = viewModel::insertTransaction
                 )
             }
             composable(
@@ -171,35 +175,47 @@ fun MonuApp(
                 popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut() }
             ) {
                 val viewModel = koinViewModel<AddExpenseViewModel>()
-                val selectedCategory by viewModel.selectedCategory.collectAsStateWithLifecycle()
-                val selectedDate by viewModel.selectedDate.collectAsStateWithLifecycle()
-                val budgetingId by viewModel.selectedBudgetingId.collectAsStateWithLifecycle()
-                val budgetingTitle by viewModel.selectedBudgetingTitle.collectAsStateWithLifecycle()
                 val insertResult by viewModel.insertResult.collectAsStateWithLifecycle()
 
                 AddExpenseScreen(
-                    category = selectedCategory,
-                    date = selectedDate,
-                    budgetingId = budgetingId,
-                    budgetingTitle = budgetingTitle,
                     insertResult = insertResult,
-                    navigateBack = { navController.navigateUp() },
-                    onResetInsertResultValue = { viewModel.resetInsertResult() },
-                    onCategoryChange = viewModel::selectCategory,
-                    onDateChange = viewModel::selectDate,
-                    onSaveButtonClick = viewModel::insertTransaction
+                    onSaveButtonClick = viewModel::insertTransaction,
+                    onResetInsertResultValue = viewModel::resetInsertResult,
+                    navigateBack = { navController.navigateUp() }
                 )
             }
             composable(
                 route = Screen.EditTransaction.route,
+                arguments = listOf(navArgument("transactionId") { type = NavType.LongType }),
                 enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn() },
                 exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut() },
                 popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn() },
                 popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut() }
-            ) {
-                EditTransactionScreen(
-                    navigateBack = { navController.navigateUp() }
+            ) { backStackEntry ->
+                val viewModel = koinViewModel<EditTransactionViewModel>(
+                    viewModelStoreOwner = backStackEntry,
+                    parameters = { parametersOf(backStackEntry.savedStateHandle) }
                 )
+                val transaction by viewModel.transaction.collectAsStateWithLifecycle()
+                val updateResult by viewModel.updateResult.collectAsStateWithLifecycle()
+                val deleteResult by viewModel.deleteResult.collectAsStateWithLifecycle()
+
+                val updateResultCallback = UpdateResultCallback(
+                    onResetUpdateResultValue = viewModel::resetUpdateResult,
+                    onResetDeleteResultValue = viewModel::resetDeleteResult
+                )
+
+                transaction?.let {
+                    EditTransactionScreen(
+                        transaction = it,
+                        updateResult = updateResult,
+                        deleteResult = deleteResult,
+                        updateResultCallback = updateResultCallback,
+                        onSaveButtonClick = viewModel::updateTransaction,
+                        onDeleteClick = viewModel::deleteTransaction,
+                        navigateBack = { navController.navigateUp() }
+                    )
+                }
             }
             composable(
                 route = Screen.ReportDetail.route,
@@ -212,72 +228,6 @@ fun MonuApp(
                     navigateBack = { navController.navigateUp() }
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun BottomNavBar(
-    navController: NavHostController,
-    modifier: Modifier = Modifier
-) {
-    NavigationBar(
-        modifier = modifier.height(56.dp),
-        containerColor = Color.White
-    ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
-        val navigationItems = listOf(
-            BottomNavItem(
-                title = stringResource(R.string.home_menu),
-                filledIcon = painterResource(R.drawable.ic_home_filled),
-                outlinedIcon = painterResource(R.drawable.ic_home_outlined),
-                screen = Screen.Home
-            ),
-            BottomNavItem(
-                title = stringResource(R.string.transactions_menu),
-                filledIcon = painterResource(R.drawable.ic_receipt_filled),
-                outlinedIcon = painterResource(R.drawable.ic_receipt_outlined),
-                screen = Screen.Transactions
-            ),
-            BottomNavItem(
-                title = stringResource(R.string.reports_menu),
-                filledIcon = painterResource(R.drawable.ic_order_filled),
-                outlinedIcon = painterResource(R.drawable.ic_order_outlined),
-                screen = Screen.Reports
-            ),
-            BottomNavItem(
-                title = stringResource(R.string.analytics_menu),
-                filledIcon = painterResource(R.drawable.ic_chart_filled),
-                outlinedIcon = painterResource(R.drawable.ic_chart_outlined),
-                screen = Screen.Analytics
-            )
-        )
-
-        navigationItems.map { item ->
-            val selected = currentRoute == item.screen.route
-            NavigationBarItem(
-                selected = selected,
-                onClick = {
-                    navController.navigate(item.screen.route) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        restoreState = true
-                        launchSingleTop = true
-                    }
-                },
-                icon = {
-                    Icon(
-                        painter = if (selected) item.filledIcon else item.outlinedIcon,
-                        contentDescription = item.title
-                    )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color.Transparent,
-                    selectedIconColor = Blue,
-                    unselectedIconColor = Color.Gray
-                )
-            )
         }
     }
 }

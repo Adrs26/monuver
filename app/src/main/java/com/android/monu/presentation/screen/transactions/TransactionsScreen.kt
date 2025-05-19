@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -18,6 +19,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,28 +37,46 @@ import com.android.monu.presentation.screen.transactions.components.Transactions
 import com.android.monu.presentation.screen.transactions.components.TransactionsSearchBar
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.LightGrey
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionsScreen(
     transactions: LazyPagingItems<TransactionConcise>,
-    searchQuery: String,
-    selectedType: Int?,
-    selectedYear: Int?,
-    selectedMonth: Int?,
-    onSearchQueryChange: (String) -> Unit,
-    onFilterTypeClick: (Int?) -> Unit,
-    onFilterYearMonthApply: (Int?, Int?) -> Unit,
+    filterState: FilterStateData,
+    filterCallbacks: FilterCallbacks,
     navigateToAddIncome: () -> Unit,
     navigateToAddExpense: () -> Unit,
-    navigateToEditTransaction: () -> Unit
+    navigateToEditTransaction: (Long) -> Unit
 ) {
     var showFilterDialog by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
 
+    val listState = rememberLazyListState()
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
+
+    val transactionFilterData = TransactionFilterData(
+        selectedType = filterState.selectedType,
+        selectedYear = filterState.selectedYear,
+        selectedMonth = filterState.selectedMonth
+    )
+
+    LaunchedEffect(
+        key1 = filterState.searchQuery,
+        key2 = filterState.selectedType,
+        key3 = Pair(filterState.selectedYear, filterState.selectedMonth),
+    ) {
+        delay(50)
+        listState.animateScrollToItem(0)
+    }
+
+    LaunchedEffect(showFilterDialog) {
+        if (showFilterDialog == true) {
+            filterCallbacks.onFilterYearMonthClick()
+        }
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -80,20 +100,19 @@ fun TransactionsScreen(
                 .padding(innerPadding)
         ) {
             TransactionsSearchBar(
-                query = searchQuery,
-                onQueryChange = onSearchQueryChange,
+                query = filterState.searchQuery,
+                onQueryChange = filterCallbacks.onSearchQueryChange,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
             TransactionsFilterBar(
-                selectedType = selectedType,
-                selectedYear = selectedYear,
-                selectedMonth = selectedMonth,
-                modifier = Modifier.padding(start = 16.dp, end = 12.dp, top = 8.dp, bottom = 4.dp),
-                onFilterTypeClick = onFilterTypeClick,
+                transactionFilterData = transactionFilterData,
+                modifier = Modifier.padding(start = 16.dp, end = 12.dp, bottom = 8.dp),
+                onFilterTypeClick = filterCallbacks.onFilterTypeClick,
                 onFilterIconClick = { showFilterDialog = true }
             )
             TransactionsList(
                 transactions = transactions,
+                listState = listState,
                 navigateToEditTransaction = navigateToEditTransaction
             )
         }
@@ -101,11 +120,10 @@ fun TransactionsScreen(
 
     if (showFilterDialog) {
         TransactionsFilterDialog(
-            listYears = listOf(2025, 2024),
-            selectedYear = selectedYear,
-            selectedMonth = selectedMonth,
+            availableTransactionYears = filterState.availableTransactionYears,
+            transactionFilterData = transactionFilterData,
+            onApplyClick = filterCallbacks.onFilterYearMonthApply,
             onDismissRequest = { showFilterDialog = false },
-            onApplyClick = onFilterYearMonthApply
         )
     }
 
@@ -145,3 +163,24 @@ fun TransactionsScreen(
         }
     }
 }
+
+data class FilterStateData(
+    val searchQuery: String,
+    val selectedType: Int?,
+    val availableTransactionYears: List<Int>,
+    val selectedYear: Int?,
+    val selectedMonth: Int?
+)
+
+data class FilterCallbacks(
+    val onSearchQueryChange: (String) -> Unit,
+    val onFilterTypeClick: (Int?) -> Unit,
+    val onFilterYearMonthClick: () -> Unit,
+    val onFilterYearMonthApply: (Int?, Int?) -> Unit
+)
+
+data class TransactionFilterData(
+    val selectedType: Int?,
+    val selectedYear: Int?,
+    val selectedMonth: Int?
+)

@@ -76,7 +76,16 @@
     <string name="oct">Oct</string>
     <string name="nov">Nov</string>
     <string name="dec">Dec</string>
-    <string name="transaction_successfully_saved">Yay! Your transaction is saved</string>
-    <string name="empty_input_field">Hold on! Looks like some info is missing. Please fill in everything</string>
-    <string name="transaction_failed_to_saved">Something went wrong while saving. Give it another shot!</string>
+    <string name="transaction_successfully_saved">Your transaction has been saved</string>
+    <string name="transaction_successfully_updated">Your transaction has been updated</string>
+    <string name="transaction_successfully_deleted">Your transaction has been deleted</string>
+    <string name="empty_input_field">Hold on! Looks like some info is missing</string>
+    <string name="edit_transaction">Edit Transaction</string>
+    <string name="delete_this_transaction">Delete this transaction?</string>
+    <string name="years">Years</string>
+    <string name="months">Months</string>
+    <string name="cancel">Cancel</string>
+    <string name="apply">Apply</string>
+    <string name="delete">Delete</string>
+    <string name="no_transactions_yet">No transactions yet</string>
 </resources>

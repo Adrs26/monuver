@@ -47,11 +47,41 @@ class TransactionRepositoryImpl(
             .cachedIn(scope)
     }
 
+    override fun getTransactionById(transactionId: Long): Flow<Transaction?> {
+        return transactionDao.getTransactionById(transactionId).map { entity ->
+            TransactionMapper.transactionEntityToDomain(entity ?: return@map null)
+        }
+    }
+
+    override fun getAvailableTransactionYears(): Flow<List<Int>> {
+        return transactionDao.getAvailableTransactionYears()
+    }
+
     override suspend fun insertTransaction(transaction: Transaction): Result<Long> {
         return try {
             val result = transactionDao.insertTransaction(
                 TransactionMapper.transactionDomainToEntity(transaction)
             )
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateTransaction(transaction: Transaction): Result<Int> {
+        return try {
+            val result = transactionDao.updateTransaction(
+                TransactionMapper.transactionDomainToEntityForUpdate(transaction)
+            )
+            Result.success(result)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteTransactionById(transactionId: Long): Result<Int> {
+        return try {
+            val result = transactionDao.deleteTransactionById(transactionId)
             Result.success(result)
         } catch (e: Exception) {
             Result.failure(e)

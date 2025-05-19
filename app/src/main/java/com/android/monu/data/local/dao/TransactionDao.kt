@@ -5,8 +5,10 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.android.monu.data.local.entity.TransactionEntity
 import com.android.monu.data.local.projection.TransactionConciseProj
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransactionDao {
@@ -27,6 +29,18 @@ interface TransactionDao {
         year: Int?
     ): PagingSource<Int, TransactionConciseProj>
 
+    @Query("SELECT * FROM `transaction` WHERE id = :id")
+    fun getTransactionById(id: Long): Flow<TransactionEntity?>
+
+    @Query("SELECT DISTINCT year FROM `transaction` ORDER BY year DESC")
+    fun getAvailableTransactionYears(): Flow<List<Int>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: TransactionEntity): Long
+
+    @Update
+    suspend fun updateTransaction(transaction: TransactionEntity): Int
+
+    @Query("DELETE FROM `transaction` WHERE id = :id")
+    suspend fun deleteTransactionById(id: Long): Int
 }

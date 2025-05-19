@@ -4,17 +4,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.monu.presentation.components.ActionButton
-import com.android.monu.presentation.components.Toolbar
+import com.android.monu.presentation.components.NormalAppBar
 import com.android.monu.presentation.screen.reports.detail.components.ReportDetailAmount
 import com.android.monu.presentation.screen.reports.detail.components.ReportDetailPieChart
 import com.android.monu.ui.theme.Blue
@@ -26,28 +28,17 @@ fun ReportsDetailScreen(
     modifier: Modifier = Modifier,
     navigateBack: () -> Unit
 ) {
-    val listState = rememberLazyListState()
-    val showDivider by remember {
-        derivedStateOf {
-            listState.firstVisibleItemIndex > 0 || listState.firstVisibleItemScrollOffset > 40
-        }
-    }
+    val scrollState = rememberScrollState()
+    val isScrolled by remember { derivedStateOf { scrollState.value > 45 } }
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LightGrey),
-        state = listState
-    ) {
-        stickyHeader {
-            Column(
-                modifier = Modifier.background(LightGrey)
-            ) {
-                Toolbar(
+    Scaffold(
+        topBar = {
+            Column {
+                NormalAppBar(
                     title = "Report Detail (September 2025)",
                     navigateBack = navigateBack
                 )
-                if (showDivider) {
+                if (isScrolled) {
                     HorizontalDivider(
                         thickness = 1.dp,
                         color = SoftGrey
@@ -55,9 +46,16 @@ fun ReportsDetailScreen(
                 }
             }
         }
-        item { ReportDetailAmount(modifier = Modifier.padding(16.dp)) }
-        item { ReportDetailPieChart(modifier = Modifier.padding(horizontal = 16.dp)) }
-        item {
+    ) { innerPadding ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(LightGrey)
+                .padding(innerPadding)
+                .verticalScroll(scrollState)
+        ) {
+            ReportDetailAmount(modifier = Modifier.padding(16.dp))
+            ReportDetailPieChart(modifier = Modifier.padding(horizontal = 16.dp))
             ActionButton(
                 text = "Download Report Detail to PDF",
                 color = Blue,
@@ -66,4 +64,12 @@ fun ReportsDetailScreen(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ReportDetailScreenPreview() {
+    ReportsDetailScreen(
+        navigateBack = {}
+    )
 }

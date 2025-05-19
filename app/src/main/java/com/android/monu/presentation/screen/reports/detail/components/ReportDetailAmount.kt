@@ -1,7 +1,5 @@
 package com.android.monu.presentation.screen.reports.detail.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -122,26 +120,13 @@ fun IncomeCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-                        .padding(4.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_trending_up),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = Green
-                    )
-                }
                 Spacer(modifier = Modifier.weight(1f))
                 AmountTrend()
             }
             AmountText(
                 title = "Total Income",
                 amount = totalIncome,
-                modifier = Modifier.padding(top = 32.dp)
+                modifier = Modifier.padding(top = 16.dp)
             )
             AmountText(
                 title = stringResource(R.string.daily_avg_income),
@@ -170,26 +155,13 @@ fun ExpenseCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Box(
-                    modifier = Modifier
-                        .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-                        .padding(4.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_trending_down),
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp),
-                        tint = Red
-                    )
-                }
                 Spacer(modifier = Modifier.weight(1f))
                 AmountTrend()
             }
             AmountText(
                 title = "Total Expense",
                 amount = totalExpense,
-                modifier = Modifier.padding(top = 32.dp)
+                modifier = Modifier.padding(top = 16.dp)
             )
             AmountText(
                 title = stringResource(R.string.daily_avg_expense),

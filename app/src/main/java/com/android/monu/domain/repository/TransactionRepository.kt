@@ -16,5 +16,13 @@ interface TransactionRepository {
         scope: CoroutineScope
     ): Flow<PagingData<TransactionConcise>>
 
+    fun getTransactionById(transactionId: Long): Flow<Transaction?>
+
+    fun getAvailableTransactionYears(): Flow<List<Int>>
+
     suspend fun insertTransaction(transaction: Transaction): Result<Long>
+
+    suspend fun updateTransaction(transaction: Transaction): Result<Int>
+
+    suspend fun deleteTransactionById(transactionId: Long): Result<Int>
 }

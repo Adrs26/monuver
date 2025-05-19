@@ -6,7 +6,5 @@ import com.android.monu.domain.repository.TransactionRepository
 class InsertTransactionUseCase(
     private val repository: TransactionRepository
 ) {
-    suspend operator fun invoke(transaction: Transaction): Result<Long> {
-        return repository.insertTransaction(transaction)
-    }
+    suspend operator fun invoke(transaction: Transaction) = repository.insertTransaction(transaction)
 }

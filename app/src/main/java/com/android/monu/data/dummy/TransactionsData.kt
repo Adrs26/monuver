@@ -6,40 +6,11 @@ import com.android.monu.data.model.Transaction
 import com.android.monu.data.model.TransactionOverview
 
 object TransactionsData {
-    private val listItem = listOf(
-        Transaction(1, 1, 1),
-        Transaction(2, 1, 1),
-        Transaction(3, 1, 1),
-        Transaction(4, 2, 1),
-        Transaction(5, 2, 1),
-        Transaction(6, 2, 1),
-        Transaction(7, 3, 1),
-        Transaction(8, 3, 1),
-        Transaction(9, 3, 1),
-        Transaction(10, 4, 1),
-        Transaction(11, 4, 1),
-        Transaction(12, 4, 1),
-        Transaction(13, 5, 1),
-        Transaction(14, 5, 1),
-        Transaction(15, 5, 1),
-        Transaction(16, 6, 1),
-        Transaction(17, 6, 1),
-        Transaction(18, 6, 1),
-        Transaction(19, 7, 1),
-        Transaction(20, 7, 1),
-        Transaction(21, 7, 1),
-        Transaction(22, 8, 1),
-        Transaction(23, 8, 1),
-        Transaction(24, 8, 1)
-    )
-
     val listRecentItem = listOf(
         Transaction(1, 1, 1),
         Transaction(2, 1, 1),
         Transaction(3, 1, 1)
     )
-
-    val groupedItems = listItem.groupBy { it.date }
 
     val listMonth = listOf(
         Month(1, "January"),

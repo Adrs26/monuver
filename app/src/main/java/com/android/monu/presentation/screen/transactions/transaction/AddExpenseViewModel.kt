@@ -16,26 +16,6 @@ class AddExpenseViewModel(
     private val _insertResult = MutableStateFlow<Result<Long>?>(null)
     val insertResult = _insertResult.asStateFlow()
 
-    private val _selectedCategory = MutableStateFlow(0)
-    val selectedCategory = _selectedCategory.asStateFlow()
-
-    private val _selectedDate = MutableStateFlow("")
-    val selectedDate = _selectedDate.asStateFlow()
-
-    private val _selectedBudgetingId = MutableStateFlow<Long?>(null)
-    val selectedBudgetingId = _selectedBudgetingId.asStateFlow()
-
-    private val _selectedBudgetingTitle = MutableStateFlow<String?>(null)
-    val selectedBudgetingTitle = _selectedBudgetingTitle.asStateFlow()
-
-    fun selectCategory(category: Int) {
-        _selectedCategory.value = category
-    }
-
-    fun selectDate(date: String) {
-        _selectedDate.value = date
-    }
-
     fun insertTransaction(
         title: String,
         type: Int,
@@ -52,6 +32,7 @@ class AddExpenseViewModel(
                 val (month, year) = DateHelper.getMonthAndYear(date)
                 val result = insertTransactionUseCase.invoke(
                     Transaction(
+                        id = 0,
                         title = title,
                         type = type,
                         category = category,

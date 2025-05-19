@@ -29,8 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.android.monu.R
 import com.android.monu.presentation.components.ActionButton
 import com.android.monu.presentation.components.OutlinedActionButton
+import com.android.monu.presentation.screen.transactions.TransactionFilterData
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
@@ -39,12 +41,11 @@ import kotlin.math.ceil
 
 @Composable
 fun TransactionsFilterDialog(
-    listYears: List<Int>,
-    selectedYear: Int?,
-    selectedMonth: Int?,
+    availableTransactionYears: List<Int>,
+    transactionFilterData: TransactionFilterData,
     modifier: Modifier = Modifier,
+    onApplyClick: (Int?, Int?) -> Unit,
     onDismissRequest: () -> Unit,
-    onApplyClick: (selectedYear: Int?, selectedMonth: Int?) -> Unit
 ) {
     Dialog(
         onDismissRequest = onDismissRequest
@@ -58,9 +59,8 @@ fun TransactionsFilterDialog(
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
         ) {
             TransactionsFilterMenu(
-                listYears = listYears,
-                selectedYear = selectedYear,
-                selectedMonth = selectedMonth,
+                availableTransactionYears = availableTransactionYears,
+                transactionFilterData = transactionFilterData,
                 onDismissRequest = onDismissRequest,
                 onApplyClick = onApplyClick
             )
@@ -70,25 +70,23 @@ fun TransactionsFilterDialog(
 
 @Composable
 fun TransactionsFilterMenu(
-    listYears: List<Int>,
-    selectedYear: Int?,
-    selectedMonth: Int?,
+    availableTransactionYears: List<Int>,
+    transactionFilterData: TransactionFilterData,
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onApplyClick: (selectedYear: Int?, selectedMonth: Int?) -> Unit,
+    onApplyClick: (Int?, Int?) -> Unit,
 ) {
-
-    val yearOptionsFilter = listOf(0) + listYears
+    val yearOptionsFilter = listOf(0) + availableTransactionYears
     val monthOptionsFilter = (0..12).toList()
 
-    var tempSelectedYearOption by remember { mutableStateOf(selectedYear) }
-    var tempSelectedMonthOption by remember { mutableStateOf(selectedMonth) }
+    var tempSelectedYearOption by remember { mutableStateOf(transactionFilterData.selectedYear) }
+    var tempSelectedMonthOption by remember { mutableStateOf(transactionFilterData.selectedMonth) }
 
     Column(
         modifier = modifier.padding(16.dp)
     ) {
         RadioGrid(
-            title = "Years",
+            title = stringResource(R.string.years),
             options = yearOptionsFilter,
             selectedOption = tempSelectedYearOption ?: 0,
             onOptionSelected = { year ->
@@ -97,7 +95,7 @@ fun TransactionsFilterMenu(
         )
         Spacer(modifier = Modifier.height(32.dp))
         RadioGrid(
-            title = "Months",
+            title = stringResource(R.string.months),
             options = monthOptionsFilter,
             selectedOption = tempSelectedMonthOption ?: 0,
             onOptionSelected = { month ->
@@ -110,7 +108,7 @@ fun TransactionsFilterMenu(
                 .padding(top = 32.dp)
         ) {
             OutlinedActionButton(
-                text = "Cancel",
+                text = stringResource(R.string.cancel),
                 modifier = Modifier
                     .weight(1f)
                     .height(36.dp)
@@ -118,7 +116,7 @@ fun TransactionsFilterMenu(
                 onClick = onDismissRequest
             )
             ActionButton(
-                text = "Apply",
+                text = stringResource(R.string.apply),
                 color = Blue,
                 modifier = Modifier
                     .weight(1f)

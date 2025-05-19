@@ -17,27 +17,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.presentation.components.TypeFilterButton
+import com.android.monu.presentation.screen.transactions.TransactionFilterData
 import com.android.monu.ui.theme.Blue
 import com.android.monu.util.toTransactionType
 import com.android.monu.util.toTransactionTypeCode
 
 @Composable
 fun TransactionsFilterBar(
-    selectedType: Int?,
-    selectedYear: Int?,
-    selectedMonth: Int?,
+    transactionFilterData: TransactionFilterData,
     modifier: Modifier = Modifier,
     onFilterTypeClick: (Int?) -> Unit,
     onFilterIconClick: () -> Unit
 ) {
-    val isFilterSelected = selectedYear != null || selectedMonth != null
+    val isFilterSelected = transactionFilterData.selectedYear != null ||
+            transactionFilterData.selectedMonth != null
 
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         TypeButtonMenu(
-            selectedType = selectedType,
+            selectedType = transactionFilterData.selectedType,
             modifier = Modifier.weight(1f).padding(end = 4.dp),
             onFilterTypeClick = { type -> onFilterTypeClick(type) }
         )

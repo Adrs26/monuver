@@ -1,10 +1,7 @@
 package com.android.monu.domain.usecase
 
-import androidx.paging.PagingData
-import com.android.monu.domain.model.TransactionConcise
 import com.android.monu.domain.repository.TransactionRepository
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 
 class GetAllTransactionsUseCase(
     private val repository: TransactionRepository
@@ -15,7 +12,5 @@ class GetAllTransactionsUseCase(
         month: Int?,
         year: Int?,
         scope: CoroutineScope
-    ): Flow<PagingData<TransactionConcise>> {
-        return repository.getAllTransactions(query, type, month, year, scope)
-    }
+    ) = repository.getAllTransactions(query, type, month, year, scope)
 }

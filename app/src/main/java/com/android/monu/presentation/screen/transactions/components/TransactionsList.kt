@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import com.android.monu.R
 import com.android.monu.domain.model.TransactionConcise
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Red
@@ -44,13 +47,14 @@ import com.android.monu.util.toCategoryIcon
 @Composable
 fun TransactionsList(
     transactions: LazyPagingItems<TransactionConcise>,
+    listState: LazyListState,
     modifier: Modifier = Modifier,
-    navigateToEditTransaction: () -> Unit
+    navigateToEditTransaction: (Long) -> Unit
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         if (transactions.itemCount == 0 && transactions.loadState.refresh is LoadState.NotLoading) {
             Text(
-                text = "No transactions yet",
+                text = stringResource(R.string.no_transactions_yet),
                 modifier = Modifier.align(Alignment.Center),
                 style = TextStyle(
                     fontSize = 14.sp,
@@ -62,6 +66,7 @@ fun TransactionsList(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
+                state = listState,
                 contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -70,12 +75,17 @@ fun TransactionsList(
                     key = { index -> transactions[index]?.id!! }
                 ) { index ->
                     transactions[index]?.let { transaction ->
-                        TransactionsListItem(
+                        val transactionData = TransactionData(
+                            id = transaction.id,
                             title = transaction.title,
                             type = transaction.type,
                             category = transaction.category,
                             date = transaction.date,
-                            amount = transaction.amount,
+                            amount = transaction.amount
+                        )
+
+                        TransactionsListItem(
+                            transactionData = transactionData,
                             modifier = Modifier.animateItem(),
                             navigateToEditTransaction = navigateToEditTransaction
                         )
@@ -99,18 +109,14 @@ fun TransactionsList(
 
 @Composable
 fun TransactionsListItem(
-    title: String,
-    type: Int,
-    category: Int,
-    date: String,
-    amount: Long,
+    transactionData: TransactionData,
     modifier: Modifier = Modifier,
-    navigateToEditTransaction: () -> Unit
+    navigateToEditTransaction: (Long) -> Unit
 ) {
     Card(
         modifier = modifier
             .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp))
-            .debouncedClickable { navigateToEditTransaction() },
+            .debouncedClickable { navigateToEditTransaction(transactionData.id) },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
@@ -124,14 +130,14 @@ fun TransactionsListItem(
             Box(
                 modifier = Modifier
                     .background(
-                        color = category.toCategoryColor(),
+                        color = transactionData.category.toCategoryColor(),
                         shape = RoundedCornerShape(12.dp)
                     )
                     .size(40.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(category.toCategoryIcon()),
+                    painter = painterResource(transactionData.category.toCategoryIcon()),
                     contentDescription = null,
                     tint = Color.White
                 )
@@ -142,7 +148,7 @@ fun TransactionsListItem(
                     .padding(horizontal = 16.dp)
             ) {
                 Text(
-                    text = title,
+                    text = transactionData.title,
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = interFontFamily,
@@ -151,7 +157,7 @@ fun TransactionsListItem(
                     )
                 )
                 Text(
-                    text = DateHelper.formatDateToReadable(date),
+                    text = DateHelper.formatDateToReadable(transactionData.date),
                     modifier = Modifier.padding(top = 2.dp),
                     style = TextStyle(
                         fontSize = 11.sp,
@@ -162,28 +168,40 @@ fun TransactionsListItem(
                 )
             }
             Text(
-                text = CurrencyFormatHelper.formatToRupiah(amount),
+                text = CurrencyFormatHelper.formatToRupiah(transactionData.amount),
                 modifier = Modifier.padding(horizontal = 8.dp),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (type == 1) Green else Red
+                    color = if (transactionData.type == 1) Green else Red
                 )
             )
         }
     }
 }
 
+data class TransactionData(
+    val id: Long,
+    val title: String,
+    val type: Int,
+    val category: Int,
+    val date: String,
+    val amount: Long,
+)
+
 @Preview(showBackground = true)
 @Composable
 fun TransactionsListItemPreview() {
     TransactionsListItem(
-        title = "Breakfast",
-        type = 2,
-        category = 1,
-        date = "2025-18-5",
-        amount = 15000L,
+        transactionData = TransactionData(
+            id = 0,
+            title = "Breakfast",
+            type = 2,
+            category = 1,
+            date = "2025-18-5",
+            amount = 15000L
+        ),
         navigateToEditTransaction = {}
     )
 }

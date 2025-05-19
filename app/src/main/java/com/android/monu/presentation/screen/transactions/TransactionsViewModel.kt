@@ -3,14 +3,17 @@ package com.android.monu.presentation.screen.transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.GetAllTransactionsUseCase
+import com.android.monu.domain.usecase.GetAvailableTransactionYearsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 
 class TransactionsViewModel(
-    private val getAllTransactionsUseCase: GetAllTransactionsUseCase
+    private val getAllTransactionsUseCase: GetAllTransactionsUseCase,
+    private val getAvailableTransactionYearsUseCase: GetAvailableTransactionYearsUseCase
 ) : ViewModel() {
 
     private val _queryFilter = MutableStateFlow("")
@@ -24,6 +27,9 @@ class TransactionsViewModel(
 
     private val _selectedMonthFilter = MutableStateFlow<Int?>(null)
     val selectedMonthFilter = _selectedMonthFilter.asStateFlow()
+
+    private val _availableTransactionYears = MutableStateFlow<List<Int>>(emptyList())
+    val availableTransactionYears = _availableTransactionYears.asStateFlow()
 
     private val combinedFilters = combine(
         _queryFilter,
@@ -57,6 +63,14 @@ class TransactionsViewModel(
     fun selectYearAndMonth(year: Int?, month: Int?) {
         _selectedYearFilter.value = year
         _selectedMonthFilter.value = month
+    }
+
+    fun loadAvailableTransactionYears() {
+        viewModelScope.launch {
+            getAvailableTransactionYearsUseCase.invoke().collect { availableYears ->
+                _availableTransactionYears.value = availableYears
+            }
+        }
     }
 }
 

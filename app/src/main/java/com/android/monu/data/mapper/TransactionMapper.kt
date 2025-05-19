@@ -19,10 +19,44 @@ object TransactionMapper {
         )
     }
 
+    fun transactionEntityToDomain(
+        transactionEntity: TransactionEntity
+    ): Transaction {
+        return Transaction(
+            id = transactionEntity.id,
+            title = transactionEntity.title,
+            type = transactionEntity.type,
+            category = transactionEntity.category,
+            date = transactionEntity.date,
+            month = transactionEntity.month,
+            year = transactionEntity.year,
+            amount = transactionEntity.amount,
+            budgetingId = transactionEntity.budgetingId,
+            budgetingTitle = transactionEntity.budgetingTitle
+        )
+    }
+
     fun transactionDomainToEntity(
         transaction: Transaction
     ): TransactionEntity {
         return TransactionEntity(
+            title = transaction.title,
+            type = transaction.type,
+            category = transaction.category,
+            date = transaction.date,
+            month = transaction.month,
+            year = transaction.year,
+            amount = transaction.amount,
+            budgetingId = transaction.budgetingId,
+            budgetingTitle = transaction.budgetingTitle
+        )
+    }
+
+    fun transactionDomainToEntityForUpdate(
+        transaction: Transaction
+    ): TransactionEntity {
+        return TransactionEntity(
+            id = transaction.id,
             title = transaction.title,
             type = transaction.type,
             category = transaction.category,
