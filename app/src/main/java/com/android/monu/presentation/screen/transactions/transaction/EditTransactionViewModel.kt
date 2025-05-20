@@ -25,9 +25,6 @@ class EditTransactionViewModel(
     private val _updateResult = MutableStateFlow<Result<Int>?>(null)
     val updateResult = _updateResult.asStateFlow()
 
-    private val _deleteResult = MutableStateFlow<Result<Int>?>(null)
-    val deleteResult = _deleteResult.asStateFlow()
-
     init {
         val id = savedStateHandle.get<Long>("transactionId") ?: 0
         getTransactionById(id)
@@ -41,33 +38,29 @@ class EditTransactionViewModel(
         }
     }
 
-    fun updateTransaction(
-        id: Long,
-        title: String,
-        type: Int,
-        category: Int,
-        date: String,
-        amount: Long,
-        budgetingId: Long? = null,
-        budgetingTitle: String? = null
-    ) {
+    fun updateTransaction(updateTransactionData: UpdateTransactionData) {
         viewModelScope.launch {
-            if (title.isEmpty() || date.isEmpty() || category == 0 || amount == 0L) {
+            if (
+                updateTransactionData.title.isEmpty() ||
+                updateTransactionData.date.isEmpty() ||
+                updateTransactionData.category == 0 ||
+                updateTransactionData.amount == 0L
+            ) {
                 _updateResult.value = Result.failure(IllegalArgumentException())
             } else {
-                val (month, year) = DateHelper.getMonthAndYear(date)
+                val (month, year) = DateHelper.getMonthAndYear(updateTransactionData.date)
                 val result = updateTransactionUseCase.invoke(
                     Transaction(
-                        id = id,
-                        title = title,
-                        type = type,
-                        category = category,
-                        date = date,
+                        id = updateTransactionData.id,
+                        title = updateTransactionData.title,
+                        type = updateTransactionData.type,
+                        category = updateTransactionData.category,
+                        date = updateTransactionData.date,
                         month = month,
                         year = year,
-                        amount = amount,
-                        budgetingId = budgetingId,
-                        budgetingTitle = budgetingTitle
+                        amount = updateTransactionData.amount,
+                        budgetingId = updateTransactionData.budgetingId,
+                        budgetingTitle = updateTransactionData.budgetingTitle
                     )
                 )
                 _updateResult.value = result
@@ -76,17 +69,10 @@ class EditTransactionViewModel(
     }
 
     fun deleteTransaction(id: Long) {
-        viewModelScope.launch {
-            val result = deleteTransactionByIdUseCase.invoke(id)
-            _deleteResult.value = result
-        }
+        viewModelScope.launch { deleteTransactionByIdUseCase.invoke(id) }
     }
 
     fun resetUpdateResult() {
         _updateResult.value = null
-    }
-
-    fun resetDeleteResult() {
-        _deleteResult.value = null
     }
 }

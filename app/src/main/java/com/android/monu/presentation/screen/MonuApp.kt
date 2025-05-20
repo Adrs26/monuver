@@ -27,6 +27,7 @@ import com.android.monu.presentation.components.BottomNavBar
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.home.HomeScreen
 import com.android.monu.presentation.screen.reports.ReportsScreen
+import com.android.monu.presentation.screen.reports.ReportsViewModel
 import com.android.monu.presentation.screen.reports.detail.ReportsDetailScreen
 import com.android.monu.presentation.screen.settings.SettingsScreen
 import com.android.monu.presentation.screen.transactions.FilterCallbacks
@@ -39,7 +40,6 @@ import com.android.monu.presentation.screen.transactions.transaction.AddIncomeSc
 import com.android.monu.presentation.screen.transactions.transaction.AddIncomeViewModel
 import com.android.monu.presentation.screen.transactions.transaction.EditTransactionScreen
 import com.android.monu.presentation.screen.transactions.transaction.EditTransactionViewModel
-import com.android.monu.presentation.screen.transactions.transaction.UpdateResultCallback
 import com.android.monu.ui.navigation.Screen
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.SoftGrey
@@ -134,7 +134,15 @@ fun MonuApp(
                 )
             }
             composable(Screen.Reports.route) {
+                val viewModel = koinViewModel<ReportsViewModel>()
+                val availableYears by viewModel.availableTransactionYears.collectAsStateWithLifecycle()
+                val selectedYear by viewModel.selectedYearFilter.collectAsStateWithLifecycle()
+
                 ReportsScreen(
+                    availableYears = availableYears,
+                    selectedYear = selectedYear,
+                    onFilterClick = viewModel::loadAvailableTransactionYears,
+                    onYearFilterSelect = viewModel::selectYear,
                     navigateToDetail = { navController.navigate(Screen.ReportDetail.route) }
                 )
             }
@@ -198,19 +206,12 @@ fun MonuApp(
                 )
                 val transaction by viewModel.transaction.collectAsStateWithLifecycle()
                 val updateResult by viewModel.updateResult.collectAsStateWithLifecycle()
-                val deleteResult by viewModel.deleteResult.collectAsStateWithLifecycle()
-
-                val updateResultCallback = UpdateResultCallback(
-                    onResetUpdateResultValue = viewModel::resetUpdateResult,
-                    onResetDeleteResultValue = viewModel::resetDeleteResult
-                )
 
                 transaction?.let {
                     EditTransactionScreen(
                         transaction = it,
                         updateResult = updateResult,
-                        deleteResult = deleteResult,
-                        updateResultCallback = updateResultCallback,
+                        onResetUpdateResultValue = viewModel::resetUpdateResult,
                         onSaveButtonClick = viewModel::updateTransaction,
                         onDeleteClick = viewModel::deleteTransaction,
                         navigateBack = { navController.navigateUp() }

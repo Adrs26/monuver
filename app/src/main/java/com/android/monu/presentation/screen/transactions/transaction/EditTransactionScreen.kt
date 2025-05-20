@@ -56,9 +56,8 @@ import kotlinx.coroutines.launch
 fun EditTransactionScreen(
     transaction: Transaction,
     updateResult: Result<Int>?,
-    deleteResult: Result<Int>?,
-    updateResultCallback: UpdateResultCallback,
-    onSaveButtonClick: (Long, String, Int, Int, String, Long, Long?, String?) -> Unit,
+    onResetUpdateResultValue: () -> Unit,
+    onSaveButtonClick: (UpdateTransactionData) -> Unit,
     onDeleteClick: (Long) -> Unit,
     navigateBack: () -> Unit
 ) {
@@ -86,7 +85,7 @@ fun EditTransactionScreen(
             if (it.isSuccess) {
                 context.getString(R.string.transaction_successfully_updated)
                     .showMessageWithToast(context)
-                updateResultCallback.onResetUpdateResultValue()
+                onResetUpdateResultValue()
                 navigateBack()
             } else {
                 context.getString(R.string.empty_input_field).showMessageWithToast(context)
@@ -94,19 +93,9 @@ fun EditTransactionScreen(
         }
     }
 
-    LaunchedEffect(deleteResult) {
-        deleteResult?.let {
-            context.getString(R.string.transaction_successfully_deleted)
-                .showMessageWithToast(context)
-            updateResultCallback.onResetDeleteResultValue()
-            navigateBack()
-        }
-    }
-
     Scaffold(
         topBar = {
             EditTransactionAppBar(
-                title = stringResource(R.string.edit_transaction),
                 navigateBack = navigateBack,
                 onDeleteClick = { showDeleteDialog = true }
             )
@@ -175,16 +164,17 @@ fun EditTransactionScreen(
                 color = Blue,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp),
                 onClick = {
-                    onSaveButtonClick(
-                        transaction.id,
-                        title,
-                        transaction.type,
-                        category,
-                        date,
-                        rawAmountInput,
-                        budgetingId,
-                        budgetingTitle
+                    val updateTransactionData = UpdateTransactionData(
+                        id = transaction.id,
+                        title = title,
+                        type = transaction.type,
+                        category = category,
+                        date = date,
+                        amount = rawAmountInput,
+                        budgetingId = budgetingId,
+                        budgetingTitle = budgetingTitle
                     )
+                    onSaveButtonClick(updateTransactionData)
                 }
             )
         }
@@ -192,7 +182,12 @@ fun EditTransactionScreen(
 
     if(showDeleteDialog) {
         DeleteTransactionDialog(
-            onConfirmClick = { onDeleteClick(transaction.id) },
+            onConfirmClick = {
+                onDeleteClick(transaction.id)
+                context.getString(R.string.transaction_successfully_deleted)
+                    .showMessageWithToast(context)
+                navigateBack()
+            },
             onDismissRequest = { showDeleteDialog = false }
         )
     }
@@ -238,7 +233,13 @@ fun EditTransactionScreen(
     )
 }
 
-data class UpdateResultCallback(
-    val onResetUpdateResultValue: () -> Unit,
-    val onResetDeleteResultValue: () -> Unit,
+data class UpdateTransactionData(
+    val id: Long,
+    val title: String,
+    val type: Int,
+    val category: Int,
+    val date: String,
+    val amount: Long,
+    val budgetingId: Long? = null,
+    val budgetingTitle: String? = null
 )

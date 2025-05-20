@@ -54,7 +54,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddIncomeScreen(
     insertResult: Result<Long>?,
-    onSaveButtonClick: (String, Int, Int, String, Long) -> Unit,
+    onSaveButtonClick: (AddIncomeTransactionData) -> Unit,
     onResetInsertResultValue: () -> Unit,
     navigateBack: () -> Unit,
 ) {
@@ -148,7 +148,16 @@ fun AddIncomeScreen(
                 text = stringResource(R.string.save),
                 color = Blue,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp),
-                onClick = { onSaveButtonClick(title, 1, category, date, rawAmountInput) }
+                onClick = {
+                    val addIncomeTransactionData = AddIncomeTransactionData(
+                        title = title,
+                        type = 1,
+                        category = category,
+                        date = date,
+                        amount = rawAmountInput
+                    )
+                    onSaveButtonClick(addIncomeTransactionData)
+                }
             )
         }
     }
@@ -194,6 +203,14 @@ fun AddIncomeScreen(
     )
 }
 
+data class AddIncomeTransactionData(
+    val title: String,
+    val type: Int,
+    val category: Int,
+    val date: String,
+    val amount: Long
+)
+
 @Preview(showBackground = true)
 @Composable
 fun AddIncomeScreenPreview() {
@@ -201,6 +218,6 @@ fun AddIncomeScreenPreview() {
         insertResult = null,
         navigateBack = {},
         onResetInsertResultValue = {},
-        onSaveButtonClick = { _, _, _, _, _ -> }
+        onSaveButtonClick = {}
     )
 }

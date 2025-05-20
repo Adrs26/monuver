@@ -16,28 +16,27 @@ class AddIncomeViewModel(
     private val _insertResult = MutableStateFlow<Result<Long>?>(null)
     val insertResult = _insertResult.asStateFlow()
 
-    fun insertTransaction(
-        title: String,
-        type: Int,
-        category: Int,
-        date: String,
-        amount: Long
-    ) {
+    fun insertTransaction(addIncomeTransactionData: AddIncomeTransactionData) {
         viewModelScope.launch {
-            if (title.isEmpty() || date.isEmpty() || category == 0 || amount == 0L) {
+            if (
+                addIncomeTransactionData.title.isEmpty() ||
+                addIncomeTransactionData.date.isEmpty() ||
+                addIncomeTransactionData.category == 0 ||
+                addIncomeTransactionData.amount == 0L
+            ) {
                 _insertResult.value = Result.failure(IllegalArgumentException())
             } else {
-                val (month, year) = DateHelper.getMonthAndYear(date)
+                val (month, year) = DateHelper.getMonthAndYear(addIncomeTransactionData.date)
                 val result = insertTransactionUseCase.invoke(
                     Transaction(
                         id = 0,
-                        title = title,
-                        type = type,
-                        category = category,
-                        date = date,
+                        title = addIncomeTransactionData.title,
+                        type = addIncomeTransactionData.type,
+                        category = addIncomeTransactionData.category,
+                        date = addIncomeTransactionData.date,
                         month = month,
                         year = year,
-                        amount = amount
+                        amount = addIncomeTransactionData.amount
                     )
                 )
                 _insertResult.value = result

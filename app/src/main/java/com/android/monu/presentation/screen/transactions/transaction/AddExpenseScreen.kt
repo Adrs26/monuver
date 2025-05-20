@@ -54,7 +54,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddExpenseScreen(
     insertResult: Result<Long>?,
-    onSaveButtonClick: (String, Int, Int, String, Long, Long?, String?) -> Unit,
+    onSaveButtonClick: (AddExpenseTransactionData) -> Unit,
     onResetInsertResultValue: () -> Unit,
     navigateBack: () -> Unit,
 ) {
@@ -158,9 +158,16 @@ fun AddExpenseScreen(
                 color = Blue,
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp),
                 onClick = {
-                    onSaveButtonClick(
-                        title, 2, category, date, rawAmountInput, budgetingId, budgetingTitle
+                    val addExpenseTransactionData = AddExpenseTransactionData(
+                        title = title,
+                        type = 2,
+                        category = category,
+                        date = date,
+                        amount = rawAmountInput,
+                        budgetingId = budgetingId,
+                        budgetingTitle = budgetingTitle
                     )
+                    onSaveButtonClick(addExpenseTransactionData)
                 }
             )
         }
@@ -207,6 +214,16 @@ fun AddExpenseScreen(
     )
 }
 
+data class AddExpenseTransactionData(
+    val title: String,
+    val type: Int,
+    val category: Int,
+    val date: String,
+    val amount: Long,
+    val budgetingId: Long? = null,
+    val budgetingTitle: String? = null
+)
+
 @Preview(showBackground = true)
 @Composable
 fun AddExpenseScreenPreview() {
@@ -214,6 +231,6 @@ fun AddExpenseScreenPreview() {
         insertResult = null,
         navigateBack = {},
         onResetInsertResultValue = {},
-        onSaveButtonClick = { _, _, _, _, _, _, _ -> }
+        onSaveButtonClick = {}
     )
 }

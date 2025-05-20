@@ -16,32 +16,29 @@ class AddExpenseViewModel(
     private val _insertResult = MutableStateFlow<Result<Long>?>(null)
     val insertResult = _insertResult.asStateFlow()
 
-    fun insertTransaction(
-        title: String,
-        type: Int,
-        category: Int,
-        date: String,
-        amount: Long,
-        budgetingId: Long? = null,
-        budgetingTitle: String? = null
-    ) {
+    fun insertTransaction(addExpenseTransactionData: AddExpenseTransactionData) {
         viewModelScope.launch {
-            if (title.isEmpty() || date.isEmpty() || category == 0 || amount == 0L) {
+            if (
+                addExpenseTransactionData.title.isEmpty() ||
+                addExpenseTransactionData.date.isEmpty() ||
+                addExpenseTransactionData.category == 0 ||
+                addExpenseTransactionData.amount == 0L
+            ) {
                 _insertResult.value = Result.failure(IllegalArgumentException())
             } else {
-                val (month, year) = DateHelper.getMonthAndYear(date)
+                val (month, year) = DateHelper.getMonthAndYear(addExpenseTransactionData.date)
                 val result = insertTransactionUseCase.invoke(
                     Transaction(
                         id = 0,
-                        title = title,
-                        type = type,
-                        category = category,
-                        date = date,
+                        title = addExpenseTransactionData.title,
+                        type = addExpenseTransactionData.type,
+                        category = addExpenseTransactionData.category,
+                        date = addExpenseTransactionData.date,
                         month = month,
                         year = year,
-                        amount = amount,
-                        budgetingId = budgetingId,
-                        budgetingTitle = budgetingTitle
+                        amount = addExpenseTransactionData.amount,
+                        budgetingId = addExpenseTransactionData.budgetingId,
+                        budgetingTitle = addExpenseTransactionData.budgetingTitle
                     )
                 )
                 _insertResult.value = result
