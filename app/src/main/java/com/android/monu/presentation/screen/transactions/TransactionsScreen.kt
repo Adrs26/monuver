@@ -44,8 +44,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun TransactionsScreen(
     transactions: LazyPagingItems<TransactionConcise>,
-    filterState: FilterStateData,
-    filterCallbacks: FilterCallbacks,
+    filterState: TransactionFilterState,
+    filterCallbacks: TransactionFilterCallbacks,
     navigateToAddIncome: () -> Unit,
     navigateToAddExpense: () -> Unit,
     navigateToEditTransaction: (Long) -> Unit
@@ -164,7 +164,7 @@ fun TransactionsScreen(
     }
 }
 
-data class FilterStateData(
+data class TransactionFilterState(
     val searchQuery: String,
     val selectedType: Int?,
     val availableTransactionYears: List<Int>,
@@ -172,7 +172,7 @@ data class FilterStateData(
     val selectedMonth: Int?
 )
 
-data class FilterCallbacks(
+data class TransactionFilterCallbacks(
     val onSearchQueryChange: (String) -> Unit,
     val onFilterTypeClick: (Int?) -> Unit,
     val onFilterYearMonthClick: () -> Unit,

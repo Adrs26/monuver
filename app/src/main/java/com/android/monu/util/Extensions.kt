@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import com.android.monu.R
 import com.android.monu.ui.theme.ArmyGreen
 import com.android.monu.ui.theme.DarkBurgundy
@@ -214,14 +213,32 @@ fun Int.toTransactionTypeCode(): Int? {
     }
 }
 
-fun Int.toMonthResourceId(): Int {
+fun Int.toFullMonthResourceId(): Int {
+    return when (this) {
+        1 -> R.string.january
+        2 -> R.string.february
+        3 -> R.string.march
+        4 -> R.string.april
+        5 -> R.string.may_full
+        6 -> R.string.june
+        7 -> R.string.july
+        8 -> R.string.august
+        9 -> R.string.september
+        10 -> R.string.october
+        11 -> R.string.november
+        12 -> R.string.december
+        else -> 0
+    }
+}
+
+fun Int.toShortMonthResourceId(): Int {
     return when (this) {
         0 -> R.string.all
         1 -> R.string.jan
         2 -> R.string.feb
         3 -> R.string.mar
         4 -> R.string.apr
-        5 -> R.string.may
+        5 -> R.string.may_short
         6 -> R.string.jun
         7 -> R.string.jul
         8 -> R.string.aug

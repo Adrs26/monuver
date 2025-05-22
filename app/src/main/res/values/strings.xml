@@ -68,7 +68,7 @@
     <string name="feb">Feb</string>
     <string name="mar">Mar</string>
     <string name="apr">Apr</string>
-    <string name="may">May</string>
+    <string name="may_short">May</string>
     <string name="jun">Jun</string>
     <string name="jul">Jul</string>
     <string name="aug">Aug</string>
@@ -76,6 +76,18 @@
     <string name="oct">Oct</string>
     <string name="nov">Nov</string>
     <string name="dec">Dec</string>
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may_full">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
     <string name="transaction_successfully_saved">Your transaction has been saved</string>
     <string name="transaction_successfully_updated">Your transaction has been updated</string>
     <string name="transaction_successfully_deleted">Your transaction has been deleted</string>

@@ -3,6 +3,7 @@ package com.android.monu.domain.repository
 import androidx.paging.PagingData
 import com.android.monu.domain.model.Transaction
 import com.android.monu.domain.model.TransactionConcise
+import com.android.monu.domain.model.TransactionMonthlyAmount
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
@@ -19,6 +20,8 @@ interface TransactionRepository {
     fun getTransactionById(transactionId: Long): Flow<Transaction?>
 
     fun getAvailableTransactionYears(): Flow<List<Int>>
+
+    fun getTransactionMonthlyAmount(year: Int): Flow<List<TransactionMonthlyAmount>>
 
     suspend fun insertTransaction(transaction: Transaction): Result<Long>
 

@@ -41,7 +41,7 @@ class TransactionsViewModel(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val filteredPagingData = combinedFilters
+    val transactions = combinedFilters
         .flatMapLatest { filters ->
             getAllTransactionsUseCase.invoke(
                 query = filters.query,

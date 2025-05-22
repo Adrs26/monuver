@@ -36,7 +36,7 @@ import com.android.monu.presentation.screen.transactions.TransactionFilterData
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.toMonthResourceId
+import com.android.monu.util.toShortMonthResourceId
 import kotlin.math.ceil
 
 @Composable
@@ -180,7 +180,7 @@ fun RadioGrid(
                         )
                         Text(
                             text = if (option in 0..12)
-                                stringResource(option.toMonthResourceId()) else option.toString(),
+                                stringResource(option.toShortMonthResourceId()) else option.toString(),
                             style = TextStyle(
                                 fontSize = 14.sp,
                                 fontFamily = interFontFamily,

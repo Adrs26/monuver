@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.presentation.components.YearFilterButton
+import com.android.monu.presentation.screen.reports.ReportsFilterCallbacks
+import com.android.monu.presentation.screen.reports.ReportsFilterState
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.util.debouncedClickable
@@ -38,13 +40,11 @@ import com.android.monu.util.debouncedClickable
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReportsAppBar(
-    availableYears: List<Int>,
-    selectedYear: Int,
-    onFilterClick: () -> Unit,
-    onYearFilterSelect: (Int) -> Unit
+    filterState: ReportsFilterState,
+    filterCallbacks: ReportsFilterCallbacks
 ) {
     var dropdownMenuExpanded by remember { mutableStateOf(false) }
-    var selectedYearFilter by remember { mutableIntStateOf(selectedYear) }
+    var selectedYearFilter by remember { mutableIntStateOf(filterState.selectedYear) }
 
     TopAppBar(
         title = {
@@ -67,7 +67,7 @@ fun ReportsAppBar(
                         .padding(end = 8.dp)
                         .debouncedClickable {
                             dropdownMenuExpanded = !dropdownMenuExpanded
-                            onFilterClick()
+                            filterCallbacks.onFilterClick()
                         }
                 )
                 DropdownMenu(
@@ -78,7 +78,7 @@ fun ReportsAppBar(
                         .heightIn(max = 160.dp),
                     offset = DpOffset(x = (-8).dp, y = 4.dp)
                 ) {
-                    availableYears.forEach { year ->
+                    filterState.availableYears.forEach { year ->
                         DropdownMenuItem(
                             text = {
                                 Text(
@@ -92,7 +92,7 @@ fun ReportsAppBar(
                                 )
                             },
                             onClick = {
-                                onYearFilterSelect(year)
+                                filterCallbacks.onYearFilterSelect(year)
                                 selectedYearFilter = year
                                 dropdownMenuExpanded = false
                             },
@@ -117,10 +117,14 @@ fun ReportsAppBar(
 @Composable
 fun ReportsAppBarPreview() {
     ReportsAppBar(
-        availableYears = listOf(2025, 2024, 2023),
-        selectedYear = 2025,
-        onFilterClick = {},
-        onYearFilterSelect = {}
+        filterState = ReportsFilterState(
+            selectedYear = 2025,
+            availableYears = listOf(2025, 2024, 2023)
+        ),
+        filterCallbacks = ReportsFilterCallbacks(
+            onFilterClick = { },
+            onYearFilterSelect = { }
+        )
     )
 }
 

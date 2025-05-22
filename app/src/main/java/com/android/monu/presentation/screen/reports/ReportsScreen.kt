@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -19,7 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.android.monu.data.dummy.TransactionsData
+import com.android.monu.domain.model.TransactionMonthlyAmount
 import com.android.monu.presentation.screen.reports.components.ReportsAppBar
 import com.android.monu.presentation.screen.reports.components.ReportsListItem
 import com.android.monu.ui.theme.LightGrey
@@ -27,10 +26,9 @@ import com.android.monu.ui.theme.SoftGrey
 
 @Composable
 fun ReportsScreen(
-    availableYears: List<Int>,
-    selectedYear: Int,
-    onFilterClick: () -> Unit,
-    onYearFilterSelect: (Int) -> Unit,
+    listTransactionsMonthlyAmount: List<TransactionMonthlyAmount>,
+    filterState: ReportsFilterState,
+    filterCallbacks: ReportsFilterCallbacks,
     navigateToDetail: () -> Unit
 ) {
     val gridState = rememberLazyGridState()
@@ -44,10 +42,8 @@ fun ReportsScreen(
         topBar = {
             Column {
                 ReportsAppBar(
-                    availableYears = availableYears,
-                    selectedYear = selectedYear,
-                    onFilterClick = onFilterClick,
-                    onYearFilterSelect = onYearFilterSelect
+                    filterState = filterState,
+                    filterCallbacks = filterCallbacks
                 )
                 if (isScrolled) {
                     HorizontalDivider(
@@ -69,9 +65,9 @@ fun ReportsScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(TransactionsData.listMonth, key = { it.id }) {
+            items(listTransactionsMonthlyAmount.size) { index ->
                 ReportsListItem(
-                    title = it.name,
+                    transactionMonthlyAmount = listTransactionsMonthlyAmount[index],
                     navigateToDetail = navigateToDetail
                 )
             }
@@ -79,14 +75,29 @@ fun ReportsScreen(
     }
 }
 
+data class ReportsFilterState(
+    val selectedYear: Int,
+    val availableYears: List<Int>
+)
+
+data class ReportsFilterCallbacks(
+    val onFilterClick: () -> Unit,
+    val onYearFilterSelect: (Int) -> Unit
+)
+
 @Preview(showBackground = true)
 @Composable
 fun ReportsScreenPreview() {
     ReportsScreen(
-        availableYears = listOf(2025, 2024, 2023),
-        selectedYear = 2025,
-        onFilterClick = { },
-        onYearFilterSelect = { },
+        listTransactionsMonthlyAmount = listOf(),
+        filterState = ReportsFilterState(
+            selectedYear = 2025,
+            availableYears = listOf(2025, 2024, 2023)
+        ),
+        filterCallbacks = ReportsFilterCallbacks(
+            onFilterClick = { },
+            onYearFilterSelect = { }
+        ),
         navigateToDetail = { }
     )
 }

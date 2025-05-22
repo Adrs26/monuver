@@ -8,7 +8,7 @@ object DataHelper {
         R.string.feb,
         R.string.mar,
         R.string.apr,
-        R.string.may,
+        R.string.may_short,
         R.string.jun,
         R.string.jul,
         R.string.aug,

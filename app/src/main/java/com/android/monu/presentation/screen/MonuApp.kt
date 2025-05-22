@@ -26,12 +26,14 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.presentation.components.BottomNavBar
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.home.HomeScreen
+import com.android.monu.presentation.screen.reports.ReportsFilterCallbacks
+import com.android.monu.presentation.screen.reports.ReportsFilterState
 import com.android.monu.presentation.screen.reports.ReportsScreen
 import com.android.monu.presentation.screen.reports.ReportsViewModel
 import com.android.monu.presentation.screen.reports.detail.ReportsDetailScreen
 import com.android.monu.presentation.screen.settings.SettingsScreen
-import com.android.monu.presentation.screen.transactions.FilterCallbacks
-import com.android.monu.presentation.screen.transactions.FilterStateData
+import com.android.monu.presentation.screen.transactions.TransactionFilterCallbacks
+import com.android.monu.presentation.screen.transactions.TransactionFilterState
 import com.android.monu.presentation.screen.transactions.TransactionsScreen
 import com.android.monu.presentation.screen.transactions.TransactionsViewModel
 import com.android.monu.presentation.screen.transactions.transaction.AddExpenseScreen
@@ -49,7 +51,6 @@ import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MonuApp(
-    modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
     val systemUiController = rememberSystemUiController()
@@ -71,7 +72,6 @@ fun MonuApp(
     }
 
     Scaffold(
-        modifier = modifier,
         bottomBar = {
             if (currentRoute in mainMenuRoute) {
                 Column {
@@ -100,14 +100,14 @@ fun MonuApp(
             }
             composable(Screen.Transactions.route) {
                 val viewModel = koinViewModel<TransactionsViewModel>()
-                val transactions = viewModel.filteredPagingData.collectAsLazyPagingItems()
+                val transactions = viewModel.transactions.collectAsLazyPagingItems()
                 val searchQuery by viewModel.queryFilter.collectAsStateWithLifecycle()
                 val selectedType by viewModel.selectedTypeFilter.collectAsStateWithLifecycle()
                 val selectedYear by viewModel.selectedYearFilter.collectAsStateWithLifecycle()
                 val selectedMonth by viewModel.selectedMonthFilter.collectAsStateWithLifecycle()
                 val availableYears by viewModel.availableTransactionYears.collectAsStateWithLifecycle()
 
-                val filterState = FilterStateData(
+                val filterState = TransactionFilterState(
                     searchQuery = searchQuery,
                     selectedType = selectedType,
                     availableTransactionYears = availableYears,
@@ -115,7 +115,7 @@ fun MonuApp(
                     selectedMonth = selectedMonth
                 )
 
-                val filterCallbacks = FilterCallbacks(
+                val filterCallbacks = TransactionFilterCallbacks(
                     onSearchQueryChange = viewModel::searchTransactions,
                     onFilterTypeClick = viewModel::selectType,
                     onFilterYearMonthClick = viewModel::loadAvailableTransactionYears,
@@ -135,24 +135,35 @@ fun MonuApp(
             }
             composable(Screen.Reports.route) {
                 val viewModel = koinViewModel<ReportsViewModel>()
-                val availableYears by viewModel.availableTransactionYears.collectAsStateWithLifecycle()
+                val listTransactionsMonthlyAmount by viewModel
+                    .listTransactionsMonthlyAmount.collectAsStateWithLifecycle()
                 val selectedYear by viewModel.selectedYearFilter.collectAsStateWithLifecycle()
+                val availableYears by viewModel.availableTransactionYears.collectAsStateWithLifecycle()
+
+                val filterState = ReportsFilterState(
+                    selectedYear = selectedYear,
+                    availableYears = availableYears
+                )
+
+                val filterCallbacks = ReportsFilterCallbacks(
+                    onFilterClick = viewModel::loadAvailableTransactionYears,
+                    onYearFilterSelect = viewModel::selectYear
+                )
 
                 ReportsScreen(
-                    availableYears = availableYears,
-                    selectedYear = selectedYear,
-                    onFilterClick = viewModel::loadAvailableTransactionYears,
-                    onYearFilterSelect = viewModel::selectYear,
+                    listTransactionsMonthlyAmount = listTransactionsMonthlyAmount,
+                    filterState = filterState,
+                    filterCallbacks = filterCallbacks,
                     navigateToDetail = { navController.navigate(Screen.ReportDetail.route) }
                 )
             }
             composable(Screen.Analytics.route) { AnalyticsScreen() }
             composable(
                 route = Screen.Settings.route,
-                enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn() },
-                exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut() },
-                popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn() },
-                popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut() }
+                enterTransition = { NavigationAnimation.enter },
+                exitTransition = { NavigationAnimation.exit },
+                popEnterTransition = { NavigationAnimation.popEnter },
+                popExitTransition = { NavigationAnimation.popExit }
             ) {
                 SettingsScreen(
                     navigateBack = { navController.navigateUp() }
@@ -160,10 +171,10 @@ fun MonuApp(
             }
             composable(
                 route = Screen.AddIncome.route,
-                enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn() },
-                exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut() },
-                popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn() },
-                popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut() }
+                enterTransition = { NavigationAnimation.enter },
+                exitTransition = { NavigationAnimation.exit },
+                popEnterTransition = { NavigationAnimation.popEnter },
+                popExitTransition = { NavigationAnimation.popExit }
             ) {
                 val viewModel = koinViewModel<AddIncomeViewModel>()
                 val insertResult by viewModel.insertResult.collectAsStateWithLifecycle()
@@ -177,10 +188,10 @@ fun MonuApp(
             }
             composable(
                 route = Screen.AddExpense.route,
-                enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn() },
-                exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut() },
-                popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn() },
-                popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut() }
+                enterTransition = { NavigationAnimation.enter },
+                exitTransition = { NavigationAnimation.exit },
+                popEnterTransition = { NavigationAnimation.popEnter },
+                popExitTransition = { NavigationAnimation.popExit }
             ) {
                 val viewModel = koinViewModel<AddExpenseViewModel>()
                 val insertResult by viewModel.insertResult.collectAsStateWithLifecycle()
@@ -195,10 +206,10 @@ fun MonuApp(
             composable(
                 route = Screen.EditTransaction.route,
                 arguments = listOf(navArgument("transactionId") { type = NavType.LongType }),
-                enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn() },
-                exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut() },
-                popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn() },
-                popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut() }
+                enterTransition = { NavigationAnimation.enter },
+                exitTransition = { NavigationAnimation.exit },
+                popEnterTransition = { NavigationAnimation.popEnter },
+                popExitTransition = { NavigationAnimation.popExit }
             ) { backStackEntry ->
                 val viewModel = koinViewModel<EditTransactionViewModel>(
                     viewModelStoreOwner = backStackEntry,
@@ -220,10 +231,10 @@ fun MonuApp(
             }
             composable(
                 route = Screen.ReportDetail.route,
-                enterTransition = { slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn() },
-                exitTransition = { slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut() },
-                popEnterTransition = { slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn() },
-                popExitTransition = { slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut() }
+                enterTransition = { NavigationAnimation.enter },
+                exitTransition = { NavigationAnimation.exit },
+                popEnterTransition = { NavigationAnimation.popEnter },
+                popExitTransition = { NavigationAnimation.popExit }
             ) {
                 ReportsDetailScreen(
                     navigateBack = { navController.navigateUp() }
@@ -231,6 +242,13 @@ fun MonuApp(
             }
         }
     }
+}
+
+private object NavigationAnimation {
+    val enter = slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn()
+    val exit = slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
+    val popEnter = slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn()
+    val popExit = slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut()
 }
 
 @Preview(showBackground = true)

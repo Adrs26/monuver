@@ -9,6 +9,7 @@ import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.Transaction
 import com.android.monu.domain.model.TransactionConcise
+import com.android.monu.domain.model.TransactionMonthlyAmount
 import com.android.monu.domain.repository.TransactionRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -55,6 +56,14 @@ class TransactionRepositoryImpl(
 
     override fun getAvailableTransactionYears(): Flow<List<Int>> {
         return transactionDao.getAvailableTransactionYears()
+    }
+
+    override fun getTransactionMonthlyAmount(year: Int): Flow<List<TransactionMonthlyAmount>> {
+        return transactionDao.getTransactionMonthlyAmount(year).map { entityList ->
+            entityList.map { entity ->
+                TransactionMapper.transactionMonthlyAmountEntityToDomain(entity)
+            }
+        }
     }
 
     override suspend fun insertTransaction(transaction: Transaction): Result<Long> {

@@ -16,5 +16,5 @@ val viewModelModule = module {
     viewModel { (handle: SavedStateHandle) ->
         EditTransactionViewModel(get(), get(), get(), handle)
     }
-    viewModel { ReportsViewModel(get()) }
+    viewModel { ReportsViewModel(get(), get()) }
 }

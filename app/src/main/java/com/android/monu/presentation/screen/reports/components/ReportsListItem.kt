@@ -25,14 +25,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
+import com.android.monu.domain.model.TransactionMonthlyAmount
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
+import com.android.monu.util.CurrencyFormatHelper
 import com.android.monu.util.debouncedClickable
+import com.android.monu.util.toFullMonthResourceId
 
 @Composable
 fun ReportsListItem(
-    title: String,
+    transactionMonthlyAmount: TransactionMonthlyAmount,
     modifier: Modifier = Modifier,
     navigateToDetail: () -> Unit
 ) {
@@ -48,7 +51,7 @@ fun ReportsListItem(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = title,
+                text = stringResource(transactionMonthlyAmount.month.toFullMonthResourceId()),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = interFontFamily,
@@ -57,6 +60,8 @@ fun ReportsListItem(
                 )
             )
             TotalIncomeExpenseCard(
+                totalIncome = transactionMonthlyAmount.totalAmountIncome,
+                totalExpense = transactionMonthlyAmount.totalAmountExpense,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -65,6 +70,8 @@ fun ReportsListItem(
 
 @Composable
 fun TotalIncomeExpenseCard(
+    totalIncome: Long,
+    totalExpense: Long,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -80,7 +87,7 @@ fun TotalIncomeExpenseCard(
                 icon = R.drawable.ic_trending_up,
                 iconBackgroundColor = Green,
                 title = stringResource(R.string.income),
-                value = "Rp200.000.000"
+                value = CurrencyFormatHelper.formatToRupiah(totalIncome)
             )
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
@@ -91,7 +98,7 @@ fun TotalIncomeExpenseCard(
                 icon = R.drawable.ic_trending_down,
                 iconBackgroundColor = Color.Red,
                 title = stringResource(R.string.expense),
-                value = "Rp100.000.000"
+                value = CurrencyFormatHelper.formatToRupiah(totalExpense)
             )
         }
     }
@@ -150,5 +157,12 @@ fun IncomeExpenseItem(
 @Preview(showBackground = true)
 @Composable
 fun ReportsListItemPreview() {
-    ReportsListItem("September", navigateToDetail = {})
+    ReportsListItem(
+        transactionMonthlyAmount = TransactionMonthlyAmount(
+            month = 1,
+            totalAmountIncome = 100000L,
+            totalAmountExpense = 50000L
+        ),
+        navigateToDetail = { }
+    )
 }
