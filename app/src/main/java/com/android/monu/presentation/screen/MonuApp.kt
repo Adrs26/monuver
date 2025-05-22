@@ -24,7 +24,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.presentation.components.BottomNavBar
+import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
+import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
+import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.home.HomeScreen
 import com.android.monu.presentation.screen.reports.ReportsFilterCallbacks
 import com.android.monu.presentation.screen.reports.ReportsFilterState
@@ -100,6 +103,7 @@ fun MonuApp(
             }
             composable(Screen.Transactions.route) {
                 val viewModel = koinViewModel<TransactionsViewModel>()
+
                 val transactions = viewModel.transactions.collectAsLazyPagingItems()
                 val searchQuery by viewModel.queryFilter.collectAsStateWithLifecycle()
                 val selectedType by viewModel.selectedTypeFilter.collectAsStateWithLifecycle()
@@ -135,6 +139,7 @@ fun MonuApp(
             }
             composable(Screen.Reports.route) {
                 val viewModel = koinViewModel<ReportsViewModel>()
+
                 val listTransactionsMonthlyAmount by viewModel
                     .listTransactionsMonthlyAmount.collectAsStateWithLifecycle()
                 val selectedYear by viewModel.selectedYearFilter.collectAsStateWithLifecycle()
@@ -157,7 +162,49 @@ fun MonuApp(
                     navigateToDetail = { navController.navigate(Screen.ReportDetail.route) }
                 )
             }
-            composable(Screen.Analytics.route) { AnalyticsScreen() }
+            composable(Screen.Analytics.route) {
+                val viewModel = koinViewModel<AnalyticsViewModel>()
+
+                val averageTransactionAmount by viewModel
+                    .averageTransactionAmount.collectAsStateWithLifecycle()
+                val barChartSelectedType by viewModel.
+                        barChartSelectedTypeFilter.collectAsStateWithLifecycle()
+                val barChartSelectedYear by viewModel.
+                        barChartSelectedYearFilter.collectAsStateWithLifecycle()
+                val barChartScaleLabels by viewModel.barChartScaleLabels.collectAsStateWithLifecycle()
+                val transactionsOverview by viewModel.transactionsOverview.collectAsStateWithLifecycle()
+                val pieChartSelectedYear by viewModel.
+                        pieChartSelectedYearFilter.collectAsStateWithLifecycle()
+                val availableYears by viewModel.availableTransactionYears.collectAsStateWithLifecycle()
+
+                val pieValues by viewModel.pieValues.collectAsStateWithLifecycle()
+
+
+                val filterState = AnalyticsFilterState(
+                    barChartSelectedYear = barChartSelectedYear,
+                    barChartSelectedType = barChartSelectedType,
+                    pieChartSelectedYear = pieChartSelectedYear,
+                    availableYears = availableYears
+                )
+
+                val filterCallbacks = AnalyticsFilterCallbacks(
+                    onFilterClick = viewModel::loadAvailableTransactionYears,
+                    onBarChartYearFilterSelect = viewModel::selectBarChartYear,
+                    onBarChartFilterTypeClick = viewModel::selectType,
+                    onPieChartYearFilterSelect = viewModel::selectPieChartYear
+                )
+
+                averageTransactionAmount?.let {
+                    AnalyticsScreen(
+                        averageTransactionAmount = it,
+                        filterState = filterState,
+                        filterCallbacks = filterCallbacks,
+                        transactionsOverview = transactionsOverview,
+                        barChartScaleLabels = barChartScaleLabels,
+                        pieValues = pieValues
+                    )
+                }
+            }
             composable(
                 route = Screen.Settings.route,
                 enterTransition = { NavigationAnimation.enter },

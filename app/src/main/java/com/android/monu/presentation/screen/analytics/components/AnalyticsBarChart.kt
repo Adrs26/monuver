@@ -42,23 +42,27 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.data.model.ScaleLabel
-import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
+import com.android.monu.domain.model.TransactionOverview
 import com.android.monu.presentation.components.TypeFilterButton
+import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
+import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
+import com.android.monu.presentation.screen.analytics.BarChartScaleLabel
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.util.CurrencyFormatHelper
+import com.android.monu.util.DataHelper
+import com.android.monu.util.toFullMonthResourceId
 import com.android.monu.util.toHighestRangeValue
+import com.android.monu.util.toTransactionType
+import com.android.monu.util.toTransactionTypeCode
 
 @Composable
-fun AnalyticsBarChartContent(
-    viewModel: AnalyticsViewModel,
-    selectedType: String,
-    values: List<Long>,
-    dates: List<String>,
-    monthLabels: List<Int>,
-    scaleLabels: List<ScaleLabel>,
+fun AnalyticsBarChart(
+    transactionsOverview: List<TransactionOverview>,
+    scaleLabels: List<BarChartScaleLabel>,
+    filterState: AnalyticsFilterState,
+    filterCallbacks: AnalyticsFilterCallbacks,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -74,16 +78,19 @@ fun AnalyticsBarChartContent(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            ChartTopBar(title = stringResource(R.string.transactions_overview))
+            AnalyticsChartTopBar(
+                title = stringResource(R.string.transactions_overview),
+                chartType = 1,
+                filterState = filterState,
+                filterCallbacks = filterCallbacks
+            )
             BarChartTypeFilterButton(
-                viewModel = viewModel,
-                selectedType = selectedType,
-                modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)
+                selectedType = filterState.barChartSelectedType,
+                modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
+                onFilterTypeClick = filterCallbacks.onBarChartFilterTypeClick
             )
             BarChart(
-                values = values,
-                dates = dates,
-                monthLabels = monthLabels,
+                transactionsOverview = transactionsOverview,
                 scaleLabels = scaleLabels,
                 modifier = Modifier.padding(top = 32.dp)
             )
@@ -93,21 +100,22 @@ fun AnalyticsBarChartContent(
 
 @Composable
 fun BarChartTypeFilterButton(
-    viewModel: AnalyticsViewModel,
-    selectedType: String,
-    modifier: Modifier = Modifier
+    selectedType: Int,
+    modifier: Modifier = Modifier,
+    onFilterTypeClick: (Int) -> Unit
 ) {
     Row(
         modifier = modifier.background(color = Color.LightGray, shape = RoundedCornerShape(24.dp))
     ) {
         listOf(
-            stringResource(R.string.balance),
-            stringResource(R.string.income),
-            stringResource(R.string.expense)
+            R.string.balance,
+            R.string.income,
+            R.string.expense
         ).forEach { type ->
-            val isSelected = selectedType == type
+            val isSelected = stringResource(selectedType.toTransactionType()) ==
+                    stringResource(type)
             TypeFilterButton(
-                transactionsType = type,
+                transactionsType = stringResource(type),
                 background = if (isSelected) Color.White else Color.LightGray,
                 textColor = Color.Black,
                 horizontalPadding = 8.dp,
@@ -115,7 +123,7 @@ fun BarChartTypeFilterButton(
                 modifier = Modifier
                     .weight(1f)
                     .padding(2.dp),
-                onClick = { viewModel.selectType(type) }
+                onClick = { onFilterTypeClick(type.toTransactionTypeCode() ?: 0) }
             )
         }
     }
@@ -123,10 +131,8 @@ fun BarChartTypeFilterButton(
 
 @Composable
 fun BarChart(
-    values: List<Long>,
-    dates: List<String>,
-    monthLabels: List<Int>,
-    scaleLabels: List<ScaleLabel>,
+    transactionsOverview: List<TransactionOverview>,
+    scaleLabels: List<BarChartScaleLabel>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -144,21 +150,15 @@ fun BarChart(
                 scaleLabels = scaleLabels,
                 modifier = Modifier.padding(end = 8.dp)
             )
-            BarChartGraph(
-                values = values,
-                dates = dates
-            )
+            BarChartGraph(transactionsOverview = transactionsOverview)
         }
-        BarChartXAxis(
-            monthLabels = monthLabels,
-            modifier = Modifier.padding(start = 48.dp, top = 8.dp)
-        )
+        BarChartXAxis(modifier = Modifier.padding(start = 48.dp, top = 8.dp))
     }
 }
 
 @Composable
 fun BarChartYAxis(
-    scaleLabels: List<ScaleLabel>,
+    scaleLabels: List<BarChartScaleLabel>,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -189,8 +189,7 @@ fun BarChartYAxis(
 
 @Composable
 fun BarChartGraph(
-    values: List<Long>,
-    dates: List<String>,
+    transactionsOverview: List<TransactionOverview>,
     modifier: Modifier = Modifier
 ) {
     var selectedIndex by remember { mutableIntStateOf(-1) }
@@ -199,7 +198,7 @@ fun BarChartGraph(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Bottom
     ) {
-        values.forEachIndexed { index, value ->
+        transactionsOverview.forEachIndexed { index, value ->
             val isSelected = index == selectedIndex
             val backgroundColor = if (isSelected) Blue else Color.LightGray
             val offsetY = remember { Animatable(300f) }
@@ -219,10 +218,10 @@ fun BarChartGraph(
                     .clip(CircleShape)
                     .weight(1f)
                     .fillMaxHeight(
-                        value.toFloat() / values
-                            .max()
-                            .toHighestRangeValue()
-                            .toFloat()
+                        value.amount.toFloat() /
+                                (transactionsOverview.maxOfOrNull { it.amount } ?: 0L)
+                                    .toHighestRangeValue()
+                                    .toFloat()
                     )
                     .offset { IntOffset(x = 0, y = offsetY.value.toInt()) }
                     .background(backgroundColor)
@@ -236,7 +235,12 @@ fun BarChartGraph(
                 offset = DpOffset(x = 20.dp, y = (-200).dp)
             ) {
                 Text(
-                    text = "${dates[index]} : ${CurrencyFormatHelper.formatToRupiah(value)}",
+                    text = stringResource(
+                        R.string.transaction_overview_information,
+                        stringResource(transactionsOverview[index].month.toFullMonthResourceId()),
+                        transactionsOverview[index].year,
+                        CurrencyFormatHelper.formatToRupiah(transactionsOverview[index].amount)
+                    ),
                     modifier = Modifier.padding(8.dp),
                     style = TextStyle(
                         fontSize = 12.sp,
@@ -252,13 +256,12 @@ fun BarChartGraph(
 
 @Composable
 fun BarChartXAxis(
-    monthLabels: List<Int>,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.fillMaxWidth()
     ) {
-        monthLabels.forEach {
+        DataHelper.monthLabels.forEach {
             Text(
                 text = stringResource(it),
                 modifier = Modifier.weight(1f),

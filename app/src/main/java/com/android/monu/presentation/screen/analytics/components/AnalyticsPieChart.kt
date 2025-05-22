@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.data.model.PieData
 import com.android.monu.presentation.components.PieChart
+import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
+import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.util.CurrencyFormatHelper
@@ -33,6 +35,8 @@ import com.android.monu.util.toHighlightColor
 @Composable
 fun AnalyticsPieChartContent(
     values: List<PieData>,
+    filterState: AnalyticsFilterState,
+    filterCallbacks: AnalyticsFilterCallbacks,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -46,8 +50,11 @@ fun AnalyticsPieChartContent(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            ChartTopBar(
+            AnalyticsChartTopBar(
                 title = stringResource(R.string.most_expense_category),
+                chartType = 2,
+                filterState = filterState,
+                filterCallbacks = filterCallbacks,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             PieChartContent(
@@ -93,7 +100,6 @@ fun PieChartDetail(
             PieChartDetailData(
                 title = data.label,
                 value = data.value,
-                color = data.color,
                 total = values.sumOf { it.value },
                 modifier = Modifier.padding(bottom = 8.dp)
             )
@@ -105,7 +111,6 @@ fun PieChartDetail(
 fun PieChartDetailData(
     title: String,
     value: Long,
-    color: Color,
     total: Long,
     modifier: Modifier = Modifier
 ) {

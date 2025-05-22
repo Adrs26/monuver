@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.android.monu.data.local.entity.TransactionEntity
 import com.android.monu.data.local.projection.TransactionConciseProj
 import com.android.monu.data.local.projection.TransactionMonthlyAmountProj
+import com.android.monu.data.local.projection.TransactionOverviewProj
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -47,6 +48,83 @@ interface TransactionDao {
         ORDER BY year, month
     """)
     fun getTransactionMonthlyAmount(year: Int): Flow<List<TransactionMonthlyAmountProj>>
+
+    @Query("""
+        WITH all_dates AS (
+            SELECT DISTINCT DATE(date) as date
+            FROM `transaction`
+        ),
+        daily_totals AS (
+            SELECT 
+                ad.date,
+                COALESCE(SUM(t.amount), 0) as dailyTotal
+            FROM all_dates ad
+            LEFT JOIN `transaction` t ON DATE(t.date) = ad.date AND t.type = :type
+            GROUP BY ad.date
+        )
+        SELECT AVG(dailyTotal) FROM daily_totals
+    """)
+    fun getAverageTransactionAmountPerDay(type: Int): Flow<Double?>
+
+    @Query("""
+        WITH all_months AS (
+            SELECT DISTINCT year, month
+            FROM `transaction`
+        ),
+        monthly_totals AS (
+            SELECT 
+                am.year,
+                am.month,
+                COALESCE(SUM(t.amount), 0) as monthlyTotal
+            FROM all_months am
+            LEFT JOIN `transaction` t ON t.year = am.year AND t.month = am.month AND t.type = :type
+            GROUP BY am.year, am.month
+        )
+        SELECT AVG(monthlyTotal) FROM monthly_totals
+    """)
+    fun getAverageTransactionAmountPerMonth(type: Int): Flow<Double?>
+
+    @Query("""
+        WITH all_years AS (
+            SELECT DISTINCT year
+            FROM `transaction`
+        ),
+        yearly_totals AS (
+            SELECT 
+                ay.year,
+                COALESCE(SUM(t.amount), 0) as yearlyTotal
+            FROM all_years ay
+            LEFT JOIN `transaction` t ON t.year = ay.year AND t.type = :type
+            GROUP BY ay.year
+        )
+        SELECT AVG(yearlyTotal) FROM yearly_totals
+    """)
+    fun getAverageTransactionAmountPerYear(type: Int): Flow<Double?>
+
+    @Query("""
+        SELECT 
+            month,
+            year,
+            SUM(amount) AS amount
+        FROM `transaction`
+        WHERE type = :type AND year = :year
+        GROUP BY year, month
+        ORDER BY year, month
+    """)
+    fun getMonthlyTransactionOverviewByType(type: Int, year: Int): Flow<List<TransactionOverviewProj>>
+
+    @Query("""
+        SELECT 
+            month,
+            year,
+            SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) -
+            SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS amount
+        FROM `transaction`
+        WHERE year = :year
+        GROUP BY year, month
+        ORDER BY year, month
+    """)
+    fun getMonthlyTransactionBalance(year: Int): Flow<List<TransactionOverviewProj>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: TransactionEntity): Long

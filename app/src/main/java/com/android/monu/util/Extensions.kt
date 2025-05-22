@@ -28,27 +28,12 @@ import com.android.monu.ui.theme.SaddleBrown
 import com.android.monu.ui.theme.SeaGreen
 import com.android.monu.ui.theme.SteelNavy
 
-fun Int.toMonthName(): String {
-    return when (this) {
-        1 -> "January"
-        2 -> "February"
-        3 -> "March"
-        4 -> "April"
-        5 -> "May"
-        6 -> "June"
-        7 -> "July"
-        8 -> "August"
-        9 -> "September"
-        10 -> "October"
-        11 -> "November"
-        12 -> "December"
-        else -> ""
-    }
-}
-
 fun Long.toHighestRangeValue(): Long {
     return when (this) {
-        in 0L..1_000_000L -> 1_000_000L
+        in 0L..50_000L -> 50_000L
+        in 50_000L..200_000L -> 200_000L
+        in 200_000L..500_000L -> 500_000L
+        in 500_000L..1_000_000L -> 1_000_000L
         in 1_000_000L..3_000_000L -> 3_000_000L
         in 3_000_000L..5_000_000L -> 5_000_000L
         in 5_000_000L..7_000_000L -> 7_000_000L
@@ -201,6 +186,7 @@ fun Int?.toTransactionType(): Int {
         null -> R.string.all
         1 -> R.string.income
         2 -> R.string.expense
+        3 -> R.string.balance
         else -> 0
     }
 }
@@ -209,6 +195,7 @@ fun Int.toTransactionTypeCode(): Int? {
     return when (this) {
         R.string.income -> 1
         R.string.expense -> 2
+        R.string.balance -> 3
         else -> null
     }
 }

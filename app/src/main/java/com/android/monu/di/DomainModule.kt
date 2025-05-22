@@ -3,6 +3,8 @@ package com.android.monu.di
 import com.android.monu.domain.usecase.DeleteTransactionByIdUseCase
 import com.android.monu.domain.usecase.GetAllTransactionsUseCase
 import com.android.monu.domain.usecase.GetAvailableTransactionYearsUseCase
+import com.android.monu.domain.usecase.GetAverageTransactionAmountUseCase
+import com.android.monu.domain.usecase.GetMonthlyTransactionOverviewUseCase
 import com.android.monu.domain.usecase.GetTransactionByIdUseCase
 import com.android.monu.domain.usecase.GetTransactionMonthlyAmountUseCase
 import com.android.monu.domain.usecase.InsertTransactionUseCase
@@ -14,6 +16,8 @@ val domainModule = module {
     factory { GetTransactionByIdUseCase(get()) }
     factory { GetAvailableTransactionYearsUseCase(get()) }
     factory { GetTransactionMonthlyAmountUseCase(get()) }
+    factory { GetAverageTransactionAmountUseCase(get()) }
+    factory { GetMonthlyTransactionOverviewUseCase(get()) }
     factory { InsertTransactionUseCase(get()) }
     factory { UpdateTransactionUseCase(get()) }
     factory { DeleteTransactionByIdUseCase(get()) }

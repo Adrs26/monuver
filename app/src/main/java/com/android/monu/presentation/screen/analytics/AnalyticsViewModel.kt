@@ -1,64 +1,110 @@
 package com.android.monu.presentation.screen.analytics
 
+import android.icu.util.Calendar
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.android.monu.data.dummy.TransactionsData
 import com.android.monu.data.model.MostExpenseCategory
 import com.android.monu.data.model.PieData
-import com.android.monu.data.model.ScaleLabel
-import com.android.monu.data.model.TransactionOverview
+import com.android.monu.domain.model.AverageTransactionAmount
+import com.android.monu.domain.usecase.GetAvailableTransactionYearsUseCase
+import com.android.monu.domain.usecase.GetAverageTransactionAmountUseCase
+import com.android.monu.domain.usecase.GetMonthlyTransactionOverviewUseCase
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Orange
 import com.android.monu.ui.theme.Red
-import com.android.monu.util.DataHelper
 import com.android.monu.util.toHighestRangeValue
-import com.android.monu.util.toMonthName
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class AnalyticsViewModel : ViewModel() {
-    private val _selectedType = MutableStateFlow("Balance")
-    private val _scaleLabels = MutableStateFlow<List<ScaleLabel>>(emptyList())
-    private val _monthLabels = MutableStateFlow(DataHelper.monthLabels)
-    private val _barDates = MutableStateFlow<List<String>>(emptyList())
-    private val _barValues = MutableStateFlow<List<Long>>(emptyList())
+class AnalyticsViewModel(
+    private val getAverageTransactionAmountUseCase: GetAverageTransactionAmountUseCase,
+    private val getAvailableTransactionYearsUseCase: GetAvailableTransactionYearsUseCase,
+    private val getMonthlyTransactionOverviewUseCase: GetMonthlyTransactionOverviewUseCase
+) : ViewModel() {
+
     private val _pieValues = MutableStateFlow<List<PieData>>(emptyList())
-
-    val selectedType: StateFlow<String> = _selectedType
-    val scaleLabels: StateFlow<List<ScaleLabel>> = _scaleLabels
-    val monthLabels: StateFlow<List<Int>> = _monthLabels
-    val barDates: StateFlow<List<String>> = _barDates
-    val barValues: StateFlow<List<Long>> = _barValues
     val pieValues: StateFlow<List<PieData>> = _pieValues
 
+    private val _averageTransactionAmount = MutableStateFlow<AverageTransactionAmount?>(null)
+    val averageTransactionAmount = _averageTransactionAmount
+        .onStart {
+            getAverageTransactionAmount()
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    private val _barChartSelectedTypeFilter = MutableStateFlow(3)
+    val barChartSelectedTypeFilter = _barChartSelectedTypeFilter.asStateFlow()
+
+    private val _barChartSelectedYearFilter = MutableStateFlow<Int>(
+        Calendar.getInstance().get(Calendar.YEAR)
+    )
+    val barChartSelectedYearFilter = _barChartSelectedYearFilter.asStateFlow()
+
+    private val _barChartScaleLabels = MutableStateFlow<List<BarChartScaleLabel>>(emptyList())
+    val barChartScaleLabels = _barChartScaleLabels.asStateFlow()
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val transactionsOverview = combine(
+        _barChartSelectedTypeFilter,
+        _barChartSelectedYearFilter
+    ) { type, year -> type to year }.flatMapLatest { (type, year) ->
+        getMonthlyTransactionOverviewUseCase.invoke(type, year)
+    }.onEach {
+        val highestValue = it.maxOfOrNull { it.amount } ?: 0
+        calculateBarScaleLabels(highestValue.toHighestRangeValue())
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val _pieChartSelectedYearFilter = MutableStateFlow<Int>(
+        Calendar.getInstance().get(Calendar.YEAR)
+    )
+    val pieChartSelectedYearFilter = _pieChartSelectedYearFilter.asStateFlow()
+
+    private val _availableTransactionYears = MutableStateFlow<List<Int>>(emptyList())
+    val availableTransactionYears = _availableTransactionYears.asStateFlow()
+
     init {
-        calculateBarValues(TransactionsData.listTransactionsOverview)
         calculatePieValues(TransactionsData.listMostExpenseCategory)
     }
 
-    private fun calculateBarValues(transactionsOverview: List<TransactionOverview>) {
-        val tempBarDates = mutableListOf<String>()
-        val tempBarValues = mutableListOf<Long>()
-
-        transactionsOverview.forEach {
-            tempBarDates.add("${it.month.toMonthName()} ${it.year}")
-            tempBarValues.add(it.amount)
+    private fun getAverageTransactionAmount() {
+        viewModelScope.launch {
+            getAverageTransactionAmountUseCase.invoke().collect { averageTransactionAmount ->
+                _averageTransactionAmount.value = averageTransactionAmount
+            }
         }
+    }
 
-        val highestValue = tempBarValues.max().toHighestRangeValue()
+    fun loadAvailableTransactionYears() {
+        viewModelScope.launch {
+            getAvailableTransactionYearsUseCase.invoke().collect { availableYears ->
+                _availableTransactionYears.value = availableYears
+            }
+        }
+    }
+
+    fun calculateBarScaleLabels(highestValue: Long) {
+        val highestValue = highestValue
         val quarter = highestValue / 4
         val half = highestValue / 2
         val threeQuarter = highestValue - quarter
 
-        _barDates.value = tempBarDates
-        _barValues.value = tempBarValues
-        _scaleLabels.value = listOf(
-            ScaleLabel(highestValue, 1f),
-            ScaleLabel(threeQuarter, 0.75f),
-            ScaleLabel(half, 0.5f),
-            ScaleLabel(quarter, 0.25f),
-            ScaleLabel(0, 0f)
+        _barChartScaleLabels.value = listOf(
+            BarChartScaleLabel(highestValue, 1f),
+            BarChartScaleLabel(threeQuarter, 0.75f),
+            BarChartScaleLabel(half, 0.5f),
+            BarChartScaleLabel(quarter, 0.25f),
+            BarChartScaleLabel(0, 0f)
         )
     }
 
@@ -76,12 +122,15 @@ class AnalyticsViewModel : ViewModel() {
         _pieValues.value = tempMostExpenseCategory
     }
 
-    fun selectType(type: String) {
-        when (type) {
-            "Balance" -> calculateBarValues(TransactionsData.listTransactionsOverview)
-            "Income" -> calculateBarValues(TransactionsData.listTransactionsOverview2)
-            "Expense" -> calculateBarValues(TransactionsData.listTransactionsOverview3)
-        }
-        _selectedType.value = type
+    fun selectType(type: Int) {
+        _barChartSelectedTypeFilter.value = type
+    }
+
+    fun selectBarChartYear(year: Int) {
+        _barChartSelectedYearFilter.value = year
+    }
+
+    fun selectPieChartYear(year: Int) {
+        _pieChartSelectedYearFilter.value = year
     }
 }

@@ -10,6 +10,7 @@ import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.Transaction
 import com.android.monu.domain.model.TransactionConcise
 import com.android.monu.domain.model.TransactionMonthlyAmount
+import com.android.monu.domain.model.TransactionOverview
 import com.android.monu.domain.repository.TransactionRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -62,6 +63,37 @@ class TransactionRepositoryImpl(
         return transactionDao.getTransactionMonthlyAmount(year).map { entityList ->
             entityList.map { entity ->
                 TransactionMapper.transactionMonthlyAmountEntityToDomain(entity)
+            }
+        }
+    }
+
+    override fun getAverageTransactionAmountPerDay(type: Int): Flow<Double> {
+        return transactionDao.getAverageTransactionAmountPerDay(type).map { it ?: 0.0 }
+    }
+
+    override fun getAverageTransactionAmountPerMonth(type: Int): Flow<Double> {
+        return transactionDao.getAverageTransactionAmountPerMonth(type).map { it ?: 0.0 }
+    }
+
+    override fun getAverageTransactionAmountPerYear(type: Int): Flow<Double> {
+        return transactionDao.getAverageTransactionAmountPerYear(type).map { it ?: 0.0 }
+    }
+
+    override fun getMonthlyTransactionOverviewByType(
+        type: Int,
+        year: Int
+    ): Flow<List<TransactionOverview>> {
+        return transactionDao.getMonthlyTransactionOverviewByType(type, year).map { entityList ->
+            entityList.map { entity ->
+                TransactionMapper.transactionOverviewEntityToDomain(entity)
+            }
+        }
+    }
+
+    override fun getMonthlyTransactionBalance(year: Int): Flow<List<TransactionOverview>> {
+        return transactionDao.getMonthlyTransactionBalance(year).map { entityList ->
+            entityList.map { entity ->
+                TransactionMapper.transactionOverviewEntityToDomain(entity)
             }
         }
     }

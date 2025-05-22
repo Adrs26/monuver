@@ -24,14 +24,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
+import com.android.monu.domain.model.AverageTransactionAmount
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.interFontFamily
+import com.android.monu.util.CurrencyFormatHelper
+import kotlin.math.roundToLong
 
 @Composable
-fun AnalyticsAverageAmountContent(
+fun AnalyticsAverageAmount(
+    averageTransactionAmount: AverageTransactionAmount,
     modifier: Modifier = Modifier
 ) {
+    val dailyAverageIncome = averageTransactionAmount.dailyAverageIncome.roundToLong()
+    val monthlyAverageIncome = averageTransactionAmount.monthlyAverageIncome.roundToLong()
+    val yearlyAverageIncome = averageTransactionAmount.yearlyAverageIncome.roundToLong()
+
+    val dailyAverageExpense = averageTransactionAmount.dailyAverageExpense.roundToLong()
+    val monthlyAverageExpense = averageTransactionAmount.monthlyAverageExpense.roundToLong()
+    val yearlyAverageExpense = averageTransactionAmount.yearlyAverageExpense.roundToLong()
+
     Row(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -40,11 +52,11 @@ fun AnalyticsAverageAmountContent(
             icon = R.drawable.ic_trending_up,
             iconColor = Green,
             dailyTitle = stringResource(R.string.daily_avg_income),
-            dailyAmount = "Rp100.000.000",
+            dailyAmount = CurrencyFormatHelper.formatToRupiah(dailyAverageIncome),
             monthlyTitle = stringResource(R.string.monthly_avg_income),
-            monthlyAmount = "Rp100.000.000",
+            monthlyAmount = CurrencyFormatHelper.formatToRupiah(monthlyAverageIncome),
             yearlyTitle = stringResource(R.string.yearly_avg_income),
-            yearlyAmount = "Rp100.000.000",
+            yearlyAmount = CurrencyFormatHelper.formatToRupiah(yearlyAverageIncome),
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp)
@@ -54,11 +66,11 @@ fun AnalyticsAverageAmountContent(
             icon = R.drawable.ic_trending_down,
             iconColor = Red,
             dailyTitle = stringResource(R.string.daily_avg_expense),
-            dailyAmount = "Rp100.000.000",
+            dailyAmount = CurrencyFormatHelper.formatToRupiah(dailyAverageExpense),
             monthlyTitle = stringResource(R.string.monthly_avg_expense),
-            monthlyAmount = "Rp100.000.000",
+            monthlyAmount = CurrencyFormatHelper.formatToRupiah(monthlyAverageExpense),
             yearlyTitle = stringResource(R.string.yearly_avg_expense),
-            yearlyAmount = "Rp100.000.000",
+            yearlyAmount = CurrencyFormatHelper.formatToRupiah(yearlyAverageExpense),
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp)
@@ -153,6 +165,15 @@ fun AverageAmountText(
 
 @Preview(showBackground = true)
 @Composable
-fun AnalyticsAverageAmountContentPreview() {
-    AnalyticsAverageAmountContent()
+fun AnalyticsAverageAmountPreview() {
+    AnalyticsAverageAmount(
+        averageTransactionAmount = AverageTransactionAmount(
+            dailyAverageIncome = 0.0,
+            monthlyAverageIncome = 0.0,
+            yearlyAverageIncome = 0.0,
+            dailyAverageExpense = 0.0,
+            monthlyAverageExpense = 0.0,
+            yearlyAverageExpense = 0.0
+        )
+    )
 }

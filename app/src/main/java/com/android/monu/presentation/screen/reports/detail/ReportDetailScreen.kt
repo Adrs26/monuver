@@ -25,7 +25,6 @@ import com.android.monu.ui.theme.SoftGrey
 
 @Composable
 fun ReportsDetailScreen(
-    modifier: Modifier = Modifier,
     navigateBack: () -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -48,7 +47,7 @@ fun ReportsDetailScreen(
         }
     ) { innerPadding ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .background(LightGrey)
                 .padding(innerPadding)

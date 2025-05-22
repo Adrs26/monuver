@@ -9,7 +9,10 @@ import com.android.monu.domain.usecase.GetTransactionByIdUseCase
 import com.android.monu.domain.usecase.UpdateTransactionUseCase
 import com.android.monu.util.DateHelper
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class EditTransactionViewModel(
@@ -20,15 +23,14 @@ class EditTransactionViewModel(
 ) : ViewModel() {
 
     private val _transaction = MutableStateFlow<Transaction?>(null)
-    val transaction = _transaction.asStateFlow()
+    val transaction = _transaction
+        .onStart {
+            val id = savedStateHandle.get<Long>("transactionId") ?: 0
+            getTransactionById(id)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val _updateResult = MutableStateFlow<Result<Int>?>(null)
     val updateResult = _updateResult.asStateFlow()
-
-    init {
-        val id = savedStateHandle.get<Long>("transactionId") ?: 0
-        getTransactionById(id)
-    }
 
     fun getTransactionById(id: Long) {
         viewModelScope.launch {
