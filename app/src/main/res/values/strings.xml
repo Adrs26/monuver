@@ -101,4 +101,5 @@
     <string name="delete">Delete</string>
     <string name="no_transactions_yet">No transactions yet</string>
     <string name="transaction_overview_information">%1$s %2$s</string>
+    <string name="percentage_value">%1$d%%</string>
 </resources>

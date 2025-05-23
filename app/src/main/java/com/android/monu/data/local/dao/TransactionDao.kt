@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.android.monu.data.local.entity.TransactionEntity
+import com.android.monu.data.local.projection.TransactionCategoryAmountProj
 import com.android.monu.data.local.projection.TransactionConciseProj
 import com.android.monu.data.local.projection.TransactionMonthlyAmountProj
 import com.android.monu.data.local.projection.TransactionOverviewProj
@@ -22,7 +23,7 @@ interface TransactionDao {
             AND (:month IS NULL OR month = :month)
             AND (:year IS NULL OR year = :year)
             AND (title LIKE '%' || :query || '%')
-        ORDER BY date DESC
+        ORDER BY date DESC, timeStamp DESC
     """)
     fun getAllTransactions(
         query: String,
@@ -112,6 +113,16 @@ interface TransactionDao {
         ORDER BY year, month
     """)
     fun getMonthlyTransactionOverviewByType(type: Int, year: Int): Flow<List<TransactionOverviewProj>>
+
+    @Query("""
+        SELECT category, SUM(amount) AS amount 
+        FROM `transaction`
+        WHERE type = 2 AND year = :year 
+        GROUP BY category 
+        ORDER BY amount DESC 
+        LIMIT 5
+    """)
+    fun getMostExpenseTransactionCategoryAmountByYear(year: Int): Flow<List<TransactionCategoryAmountProj>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: TransactionEntity): Long

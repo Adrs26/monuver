@@ -24,12 +24,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.data.model.PieData
 import com.android.monu.domain.model.AverageTransactionAmount
+import com.android.monu.domain.model.TransactionCategoryAmount
 import com.android.monu.domain.model.TransactionOverview
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAverageAmount
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChart
-import com.android.monu.presentation.screen.analytics.components.AnalyticsPieChartContent
+import com.android.monu.presentation.screen.analytics.components.AnalyticsPieChart
 import com.android.monu.presentation.screen.analytics.components.BarChartScaleLabel
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.SoftGrey
@@ -43,7 +43,7 @@ fun AnalyticsScreen(
     filterCallbacks: AnalyticsFilterCallbacks,
     transactionsOverview: List<TransactionOverview>,
     barChartScaleLabels: List<BarChartScaleLabel>,
-    pieValues: List<PieData>
+    mostExpenseCategory: List<TransactionCategoryAmount>,
 ) {
     val scrollState = rememberScrollState()
     val isScrolled by remember { derivedStateOf { scrollState.value > 45 } }
@@ -93,8 +93,8 @@ fun AnalyticsScreen(
                 filterCallbacks = filterCallbacks,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
-            AnalyticsPieChartContent(
-                values = pieValues,
+            AnalyticsPieChart(
+                mostExpenseCategory = mostExpenseCategory,
                 filterState = filterState,
                 filterCallbacks = filterCallbacks,
                 modifier = Modifier.padding(16.dp)

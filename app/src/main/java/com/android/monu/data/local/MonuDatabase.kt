@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.local.entity.TransactionEntity
 
-@Database(entities = [TransactionEntity::class], version = 1, exportSchema = false)
+@Database(entities = [TransactionEntity::class], version = 3, exportSchema = false)
 abstract class MonuDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
 }

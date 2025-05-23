@@ -36,6 +36,7 @@ class AddExpenseViewModel(
                         date = addExpenseTransactionData.date,
                         month = month,
                         year = year,
+                        timeStamp = System.currentTimeMillis(),
                         amount = addExpenseTransactionData.amount,
                         budgetingId = addExpenseTransactionData.budgetingId,
                         budgetingTitle = addExpenseTransactionData.budgetingTitle

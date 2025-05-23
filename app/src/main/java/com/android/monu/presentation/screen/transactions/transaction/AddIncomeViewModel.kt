@@ -36,6 +36,7 @@ class AddIncomeViewModel(
                         date = addIncomeTransactionData.date,
                         month = month,
                         year = year,
+                        timeStamp = System.currentTimeMillis(),
                         amount = addIncomeTransactionData.amount
                     )
                 )

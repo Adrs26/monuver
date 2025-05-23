@@ -5,9 +5,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,18 +25,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.data.model.PieData
+import com.android.monu.domain.model.TransactionCategoryAmount
 import com.android.monu.presentation.components.PieChart
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.util.CurrencyFormatHelper
-import com.android.monu.util.toHighlightColor
+import com.android.monu.util.DataHelper
+import com.android.monu.util.toCategoryColor
+import com.android.monu.util.toCategoryName
 
 @Composable
-fun AnalyticsPieChartContent(
-    values: List<PieData>,
+fun AnalyticsPieChart(
+    mostExpenseCategory: List<TransactionCategoryAmount>,
     filterState: AnalyticsFilterState,
     filterCallbacks: AnalyticsFilterCallbacks,
     modifier: Modifier = Modifier
@@ -58,7 +62,7 @@ fun AnalyticsPieChartContent(
                 modifier = Modifier.padding(bottom = 8.dp)
             )
             PieChartContent(
-                values = values,
+                mostExpenseCategory = mostExpenseCategory,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -67,40 +71,57 @@ fun AnalyticsPieChartContent(
 
 @Composable
 fun PieChartContent(
-    values: List<PieData>,
+    mostExpenseCategory: List<TransactionCategoryAmount>,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+    Box(
+        modifier = modifier.fillMaxSize()
     ) {
-        PieChart(
-            values = values,
-            size = 120,
-            width = 25f,
-            gapDegrees = 12,
-            modifier = Modifier.padding(8.dp)
-        )
-        PieChartDetail(
-            values = values,
-            modifier = Modifier.padding(start = 24.dp)
-        )
+        if (mostExpenseCategory.isEmpty()) {
+            Text(
+                text = stringResource(R.string.no_transactions_yet),
+                modifier = Modifier.align(Alignment.Center),
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
+                )
+            )
+        } else {
+            Row(
+                modifier = modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PieChart(
+                    values = mostExpenseCategory,
+                    size = 120,
+                    width = 25f,
+                    gapDegrees = 12,
+                    modifier = Modifier.padding(8.dp)
+                )
+                PieChartDetail(
+                    mostExpenseCategory = mostExpenseCategory,
+                    modifier = Modifier.padding(start = 24.dp)
+                )
+            }
+        }
     }
 }
 
 @Composable
 fun PieChartDetail(
-    values: List<PieData>,
+    mostExpenseCategory: List<TransactionCategoryAmount>,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
     ) {
-        values.forEach { data ->
+        mostExpenseCategory.forEach { data ->
             PieChartDetailData(
-                title = data.label,
-                value = data.value,
-                total = values.sumOf { it.value },
+                category = data.category,
+                amount = data.amount,
+                total = mostExpenseCategory.sumOf { it.amount },
                 modifier = Modifier.padding(bottom = 8.dp)
             )
         }
@@ -109,8 +130,8 @@ fun PieChartDetail(
 
 @Composable
 fun PieChartDetailData(
-    title: String,
-    value: Long,
+    category: Int,
+    amount: Long,
     total: Long,
     modifier: Modifier = Modifier
 ) {
@@ -120,15 +141,30 @@ fun PieChartDetailData(
     ) {
         Box(
             modifier = Modifier
-                .size(16.dp)
+                .width(36.dp)
+                .height(24.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(title.toHighlightColor())
-        )
+                .background(category.toCategoryColor()),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(
+                    R.string.percentage_value,
+                    DataHelper.calculateToPercentageValue(amount, total)
+                ),
+                style = TextStyle(
+                    fontSize = 11.sp,
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
+                )
+            )
+        }
         Column(
             modifier = Modifier.padding(start = 8.dp)
         ) {
             Text(
-                text = title,
+                text = stringResource(category.toCategoryName()),
                 style = TextStyle(
                     fontSize = 10.sp,
                     fontFamily = interFontFamily,
@@ -137,7 +173,7 @@ fun PieChartDetailData(
                 )
             )
             Text(
-                text = "${CurrencyFormatHelper.formatToRupiah(value)} (${String.format("%.1f", value.toFloat() / total.toFloat() * 100)}%)",
+                text = CurrencyFormatHelper.formatToRupiah(amount),
                 style = TextStyle(
                     fontSize = 10.sp,
                     fontFamily = interFontFamily,
@@ -148,8 +184,3 @@ fun PieChartDetailData(
         }
     }
 }
-
-data class PieChartData(
-    val category: Int,
-    val amount: Long
-)

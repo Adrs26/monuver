@@ -18,5 +18,5 @@ val viewModelModule = module {
         EditTransactionViewModel(get(), get(), get(), handle)
     }
     viewModel { ReportsViewModel(get(), get()) }
-    viewModel { AnalyticsViewModel(get(), get(), get()) }
+    viewModel { AnalyticsViewModel(get(), get(), get(), get()) }
 }

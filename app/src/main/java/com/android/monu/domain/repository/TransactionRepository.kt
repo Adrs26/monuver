@@ -2,6 +2,7 @@ package com.android.monu.domain.repository
 
 import androidx.paging.PagingData
 import com.android.monu.domain.model.Transaction
+import com.android.monu.domain.model.TransactionCategoryAmount
 import com.android.monu.domain.model.TransactionConcise
 import com.android.monu.domain.model.TransactionMonthlyAmount
 import com.android.monu.domain.model.TransactionOverview
@@ -31,6 +32,8 @@ interface TransactionRepository {
     fun getAverageTransactionAmountPerYear(type: Int): Flow<Double>
 
     fun getMonthlyTransactionOverviewByType(type: Int, year: Int): Flow<List<TransactionOverview>>
+
+    fun getMostExpenseTransactionCategoryAmountByYear(year: Int): Flow<List<TransactionCategoryAmount>>
 
     suspend fun insertTransaction(transaction: Transaction): Result<Long>
 

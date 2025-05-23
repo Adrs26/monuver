@@ -52,7 +52,7 @@ fun HomeRecentTransactions(
             Text(
                 text = stringResource(R.string.recent_transactions),
                 style = TextStyle(
-                    fontSize = 16.sp,
+                    fontSize = 14.sp,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black

@@ -175,10 +175,8 @@ fun MonuApp(
                 val transactionsOverview by viewModel.transactionsOverview.collectAsStateWithLifecycle()
                 val pieChartSelectedYear by viewModel.
                         pieChartSelectedYearFilter.collectAsStateWithLifecycle()
+                val mostExpenseCategory by viewModel.mostExpenseCategory.collectAsStateWithLifecycle()
                 val availableYears by viewModel.availableTransactionYears.collectAsStateWithLifecycle()
-
-                val pieValues by viewModel.pieValues.collectAsStateWithLifecycle()
-
 
                 val filterState = AnalyticsFilterState(
                     barChartSelectedYear = barChartSelectedYear,
@@ -201,7 +199,7 @@ fun MonuApp(
                         filterCallbacks = filterCallbacks,
                         transactionsOverview = transactionsOverview,
                         barChartScaleLabels = barChartScaleLabels,
-                        pieValues = pieValues
+                        mostExpenseCategory = mostExpenseCategory
                     )
                 }
             }

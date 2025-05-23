@@ -1,26 +1,18 @@
 package com.android.monu.presentation.screen.analytics
 
 import android.icu.util.Calendar
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.data.dummy.TransactionsData
-import com.android.monu.data.model.MostExpenseCategory
-import com.android.monu.data.model.PieData
 import com.android.monu.domain.model.AverageTransactionAmount
 import com.android.monu.domain.usecase.GetAvailableTransactionYearsUseCase
 import com.android.monu.domain.usecase.GetAverageTransactionAmountUseCase
 import com.android.monu.domain.usecase.GetMonthlyTransactionOverviewUseCase
+import com.android.monu.domain.usecase.GetMostExpenseTransactionCategoryAmountByYear
 import com.android.monu.presentation.screen.analytics.components.BarChartScaleLabel
-import com.android.monu.ui.theme.Blue
-import com.android.monu.ui.theme.Green
-import com.android.monu.ui.theme.Orange
-import com.android.monu.ui.theme.Red
 import com.android.monu.util.toHighestRangeValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -32,11 +24,9 @@ import kotlinx.coroutines.launch
 class AnalyticsViewModel(
     private val getAverageTransactionAmountUseCase: GetAverageTransactionAmountUseCase,
     private val getAvailableTransactionYearsUseCase: GetAvailableTransactionYearsUseCase,
-    private val getMonthlyTransactionOverviewUseCase: GetMonthlyTransactionOverviewUseCase
+    private val getMonthlyTransactionOverviewUseCase: GetMonthlyTransactionOverviewUseCase,
+    private val getMostExpenseTransactionCategoryAmountByYearUseCase: GetMostExpenseTransactionCategoryAmountByYear
 ) : ViewModel() {
-
-    private val _pieValues = MutableStateFlow<List<PieData>>(emptyList())
-    val pieValues: StateFlow<List<PieData>> = _pieValues
 
     private val _averageTransactionAmount = MutableStateFlow<AverageTransactionAmount?>(null)
     val averageTransactionAmount = _averageTransactionAmount
@@ -71,25 +61,18 @@ class AnalyticsViewModel(
     )
     val pieChartSelectedYearFilter = _pieChartSelectedYearFilter.asStateFlow()
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val mostExpenseCategory = _pieChartSelectedYearFilter.flatMapLatest { year ->
+        getMostExpenseTransactionCategoryAmountByYearUseCase.invoke(year)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
     private val _availableTransactionYears = MutableStateFlow<List<Int>>(emptyList())
     val availableTransactionYears = _availableTransactionYears.asStateFlow()
-
-    init {
-        calculatePieValues(TransactionsData.listMostExpenseCategory)
-    }
 
     private fun getAverageTransactionAmount() {
         viewModelScope.launch {
             getAverageTransactionAmountUseCase.invoke().collect { averageTransactionAmount ->
                 _averageTransactionAmount.value = averageTransactionAmount
-            }
-        }
-    }
-
-    fun loadAvailableTransactionYears() {
-        viewModelScope.launch {
-            getAvailableTransactionYearsUseCase.invoke().collect { availableYears ->
-                _availableTransactionYears.value = availableYears
             }
         }
     }
@@ -109,18 +92,12 @@ class AnalyticsViewModel(
         )
     }
 
-    private fun calculatePieValues(mostExpenseCategory: List<MostExpenseCategory>) {
-        val pieColors = listOf(Blue, Red, Green, Orange, Color.Black)
-        val tempMostExpenseCategory = mutableListOf<PieData>()
-
-        mostExpenseCategory.forEachIndexed { index, data ->
-            tempMostExpenseCategory.add(PieData(
-                label = data.title,
-                value = data.amount,
-                color = pieColors[index]
-            ))
+    fun loadAvailableTransactionYears() {
+        viewModelScope.launch {
+            getAvailableTransactionYearsUseCase.invoke().collect { availableYears ->
+                _availableTransactionYears.value = availableYears
+            }
         }
-        _pieValues.value = tempMostExpenseCategory
     }
 
     fun selectType(type: Int) {

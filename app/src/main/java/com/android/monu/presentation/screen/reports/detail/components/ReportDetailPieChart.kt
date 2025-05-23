@@ -25,35 +25,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.monu.data.model.PieData
+import com.android.monu.R
+import com.android.monu.domain.model.TransactionCategoryAmount
 import com.android.monu.presentation.components.PieChart
-import com.android.monu.ui.theme.Blue
-import com.android.monu.ui.theme.Green
-import com.android.monu.ui.theme.Orange
-import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.util.CurrencyFormatHelper
-import com.android.monu.util.toHighlightColor
+import com.android.monu.util.DataHelper
+import com.android.monu.util.toCategoryColor
+import com.android.monu.util.toCategoryName
 
 @Composable
 fun ReportDetailPieChart(
     modifier: Modifier = Modifier
 ) {
     val pieValues = listOf(
-        PieData("Food & Beverages", 80000000L, Blue),
-        PieData("Education", 70000000L, Red),
-        PieData("Shopping", 60000000L, Green),
-        PieData("Health & Personal care", 50000000L, Orange),
-        PieData("Entertainment", 40000000L, Color.Black),
-        PieData("Transportation", 30000000L, Color.Gray),
-        PieData("Insurance", 25000000L, Color.Magenta),
-        PieData("Investment", 20000000L, Color.Cyan)
+        TransactionCategoryAmount(1, 80000000L),
+        TransactionCategoryAmount(5, 70000000L),
+        TransactionCategoryAmount(7, 60000000L),
+        TransactionCategoryAmount(3, 50000000L),
+        TransactionCategoryAmount(6, 40000000L),
+        TransactionCategoryAmount(2, 30000000L),
+        TransactionCategoryAmount(10, 25000000L),
+        TransactionCategoryAmount(8, 20000000L)
     )
 
     Card(
@@ -77,7 +77,7 @@ fun ReportDetailPieChart(
                 )
             )
             PieChartContent(
-                pieValues = pieValues,
+                expenseCategory = pieValues,
                 modifier = Modifier.padding(top = 32.dp)
             )
         }
@@ -86,7 +86,7 @@ fun ReportDetailPieChart(
 
 @Composable
 fun PieChartContent(
-    pieValues: List<PieData>,
+    expenseCategory: List<TransactionCategoryAmount>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -98,14 +98,14 @@ fun PieChartContent(
                 .wrapContentSize(Alignment.Center)
         ) {
             PieChart(
-                values = pieValues,
+                values = expenseCategory,
                 size = 150,
                 width = 30f,
                 gapDegrees = 10
             )
         }
         PieChartDetail(
-            values = pieValues,
+            expenseCategory = expenseCategory,
             modifier = Modifier.padding(top = 32.dp)
         )
     }
@@ -113,17 +113,17 @@ fun PieChartContent(
 
 @Composable
 fun PieChartDetail(
-    values: List<PieData>,
+    expenseCategory: List<TransactionCategoryAmount>,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
     ) {
-        values.forEach { data ->
+        expenseCategory.forEach { data ->
             PieChartDetailData(
-                title = data.label,
-                value = data.value,
-                total = values.sumOf { it.value },
+                category = data.category,
+                amount = data.amount,
+                total = expenseCategory.sumOf { it.amount },
                 modifier = Modifier
                     .padding(vertical = 8.dp)
                     .clickable(
@@ -137,8 +137,8 @@ fun PieChartDetail(
 
 @Composable
 fun PieChartDetailData(
-    title: String,
-    value: Long,
+    category: Int,
+    amount: Long,
     total: Long,
     modifier: Modifier = Modifier
 ) {
@@ -151,11 +151,14 @@ fun PieChartDetailData(
                 .width(36.dp)
                 .height(24.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(title.toHighlightColor()),
+                .background(category.toCategoryColor()),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "${String.format("%.0f", value.toFloat() / total.toFloat() * 100)}%",
+                text = stringResource(
+                    R.string.percentage_value,
+                    DataHelper.calculateToPercentageValue(amount, total)
+                ),
                 style = TextStyle(
                     fontSize = 11.sp,
                     fontFamily = interFontFamily,
@@ -165,7 +168,7 @@ fun PieChartDetailData(
             )
         }
         Text(
-            text = title,
+            text = stringResource(category.toCategoryName()),
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 12.dp),
@@ -177,7 +180,7 @@ fun PieChartDetailData(
             )
         )
         Text(
-            text = CurrencyFormatHelper.formatToRupiah(value),
+            text = CurrencyFormatHelper.formatToRupiah(amount),
             style = TextStyle(
                 fontSize = 11.sp,
                 fontFamily = interFontFamily,

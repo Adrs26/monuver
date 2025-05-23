@@ -1,10 +1,12 @@
 package com.android.monu.data.mapper
 
 import com.android.monu.data.local.entity.TransactionEntity
+import com.android.monu.data.local.projection.TransactionCategoryAmountProj
 import com.android.monu.data.local.projection.TransactionConciseProj
 import com.android.monu.data.local.projection.TransactionMonthlyAmountProj
 import com.android.monu.data.local.projection.TransactionOverviewProj
 import com.android.monu.domain.model.Transaction
+import com.android.monu.domain.model.TransactionCategoryAmount
 import com.android.monu.domain.model.TransactionConcise
 import com.android.monu.domain.model.TransactionMonthlyAmount
 import com.android.monu.domain.model.TransactionOverview
@@ -34,9 +36,14 @@ object TransactionMapper {
             date = transactionEntity.date,
             month = transactionEntity.month,
             year = transactionEntity.year,
+            timeStamp = transactionEntity.timeStamp,
             amount = transactionEntity.amount,
             budgetingId = transactionEntity.budgetingId,
-            budgetingTitle = transactionEntity.budgetingTitle
+            budgetingTitle = transactionEntity.budgetingTitle,
+            billsId = transactionEntity.billsId,
+            billsTitle = transactionEntity.billsTitle,
+            goalsId = transactionEntity.goalsId,
+            goalsTitle = transactionEntity.goalsTitle
         )
     }
 
@@ -50,9 +57,14 @@ object TransactionMapper {
             date = transaction.date,
             month = transaction.month,
             year = transaction.year,
+            timeStamp = transaction.timeStamp,
             amount = transaction.amount,
             budgetingId = transaction.budgetingId,
-            budgetingTitle = transaction.budgetingTitle
+            budgetingTitle = transaction.budgetingTitle,
+            billsId = transaction.billsId,
+            billsTitle = transaction.billsTitle,
+            goalsId = transaction.goalsId,
+            goalsTitle = transaction.goalsTitle
         )
     }
 
@@ -67,9 +79,14 @@ object TransactionMapper {
             date = transaction.date,
             month = transaction.month,
             year = transaction.year,
+            timeStamp = transaction.timeStamp,
             amount = transaction.amount,
             budgetingId = transaction.budgetingId,
-            budgetingTitle = transaction.budgetingTitle
+            budgetingTitle = transaction.budgetingTitle,
+            billsId = transaction.billsId,
+            billsTitle = transaction.billsTitle,
+            goalsId = transaction.goalsId,
+            goalsTitle = transaction.goalsTitle
         )
     }
 
@@ -90,6 +107,15 @@ object TransactionMapper {
             month = transactionOverviewProj.month,
             year = transactionOverviewProj.year,
             amount = transactionOverviewProj.amount
+        )
+    }
+
+    fun transactionCategoryAmountEntityToDomain(
+        transactionCategoryAmountProj: TransactionCategoryAmountProj
+    ): TransactionCategoryAmount {
+        return TransactionCategoryAmount(
+            category = transactionCategoryAmountProj.category,
+            amount = transactionCategoryAmountProj.amount
         )
     }
 }

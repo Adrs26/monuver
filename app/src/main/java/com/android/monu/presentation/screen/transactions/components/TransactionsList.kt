@@ -51,7 +51,9 @@ fun TransactionsList(
     modifier: Modifier = Modifier,
     navigateToEditTransaction: (Long) -> Unit
 ) {
-    Box(modifier = modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
         if (transactions.itemCount == 0 && transactions.loadState.refresh is LoadState.NotLoading) {
             Text(
                 text = stringResource(R.string.no_transactions_yet),

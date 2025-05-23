@@ -78,7 +78,7 @@ fun AnalyticsChartTopBar(
                 modifier = Modifier
                     .background(color = Color.White)
                     .heightIn(max = 160.dp),
-                offset = DpOffset(x = (-8).dp, y = 4.dp)
+                offset = DpOffset(x = (-32).dp, y = 4.dp)
             ) {
                 filterState.availableYears.forEach { year ->
                     DropdownMenuItem(

@@ -8,6 +8,7 @@ import androidx.paging.map
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.Transaction
+import com.android.monu.domain.model.TransactionCategoryAmount
 import com.android.monu.domain.model.TransactionConcise
 import com.android.monu.domain.model.TransactionMonthlyAmount
 import com.android.monu.domain.model.TransactionOverview
@@ -86,6 +87,16 @@ class TransactionRepositoryImpl(
         return transactionDao.getMonthlyTransactionOverviewByType(type, year).map { entityList ->
             entityList.map { entity ->
                 TransactionMapper.transactionOverviewEntityToDomain(entity)
+            }
+        }
+    }
+
+    override fun getMostExpenseTransactionCategoryAmountByYear(
+        year: Int
+    ): Flow<List<TransactionCategoryAmount>> {
+        return transactionDao.getMostExpenseTransactionCategoryAmountByYear(year).map { entityList ->
+            entityList.map { entity ->
+                TransactionMapper.transactionCategoryAmountEntityToDomain(entity)
             }
         }
     }

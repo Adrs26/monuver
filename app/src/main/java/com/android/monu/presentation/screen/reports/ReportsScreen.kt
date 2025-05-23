@@ -1,13 +1,8 @@
 package com.android.monu.presentation.screen.reports
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -20,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.monu.domain.model.TransactionMonthlyAmount
 import com.android.monu.presentation.screen.reports.components.ReportsAppBar
-import com.android.monu.presentation.screen.reports.components.ReportsListItem
+import com.android.monu.presentation.screen.reports.components.ReportsList
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.SoftGrey
 
@@ -54,24 +49,14 @@ fun ReportsScreen(
             }
         }
     ) { innerPadding ->
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+        ReportsList(
+            listTransactionsMonthlyAmount = listTransactionsMonthlyAmount,
+            gridState = gridState,
             modifier = Modifier
-                .fillMaxSize()
                 .background(LightGrey)
                 .padding(innerPadding),
-            state = gridState,
-            contentPadding = PaddingValues(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(listTransactionsMonthlyAmount.size) { index ->
-                ReportsListItem(
-                    transactionMonthlyAmount = listTransactionsMonthlyAmount[index],
-                    navigateToDetail = navigateToDetail
-                )
-            }
-        }
+            navigateToDetail = navigateToDetail
+        )
     }
 }
 

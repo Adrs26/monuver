@@ -2,11 +2,17 @@ package com.android.monu.presentation.screen.reports.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,11 +33,55 @@ import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.domain.model.TransactionMonthlyAmount
 import com.android.monu.ui.theme.Green
+import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.util.CurrencyFormatHelper
 import com.android.monu.util.debouncedClickable
 import com.android.monu.util.toFullMonthResourceId
+
+@Composable
+fun ReportsList(
+    listTransactionsMonthlyAmount: List<TransactionMonthlyAmount>,
+    gridState: LazyGridState,
+    modifier: Modifier = Modifier,
+    navigateToDetail: () -> Unit
+) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        if (listTransactionsMonthlyAmount.isEmpty()) {
+            Text(
+                text = stringResource(R.string.no_transactions_yet),
+                modifier = Modifier.align(Alignment.Center),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
+                )
+            )
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(LightGrey),
+                state = gridState,
+                contentPadding = PaddingValues(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(listTransactionsMonthlyAmount.size) { index ->
+                    ReportsListItem(
+                        transactionMonthlyAmount = listTransactionsMonthlyAmount[index],
+                        navigateToDetail = navigateToDetail
+                    )
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun ReportsListItem(

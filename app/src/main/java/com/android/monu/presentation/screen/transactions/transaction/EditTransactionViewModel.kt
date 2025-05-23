@@ -60,6 +60,7 @@ class EditTransactionViewModel(
                         date = updateTransactionData.date,
                         month = month,
                         year = year,
+                        timeStamp = System.currentTimeMillis(),
                         amount = updateTransactionData.amount,
                         budgetingId = updateTransactionData.budgetingId,
                         budgetingTitle = updateTransactionData.budgetingTitle
