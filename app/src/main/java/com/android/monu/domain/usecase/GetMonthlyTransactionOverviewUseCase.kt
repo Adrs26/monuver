@@ -13,9 +13,7 @@ class GetMonthlyTransactionOverviewUseCase(
             1, 2 -> generateCompleteTransactionOverview(
                 repository.getMonthlyTransactionOverviewByType(type, year)
             )
-            else -> generateCompleteTransactionOverview(
-                repository.getMonthlyTransactionBalance(year)
-            )
+            else -> throw IllegalArgumentException("Invalid type")
         }
     }
 

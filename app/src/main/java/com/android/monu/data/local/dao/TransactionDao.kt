@@ -113,19 +113,6 @@ interface TransactionDao {
     """)
     fun getMonthlyTransactionOverviewByType(type: Int, year: Int): Flow<List<TransactionOverviewProj>>
 
-    @Query("""
-        SELECT 
-            month,
-            year,
-            SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) -
-            SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS amount
-        FROM `transaction`
-        WHERE year = :year
-        GROUP BY year, month
-        ORDER BY year, month
-    """)
-    fun getMonthlyTransactionBalance(year: Int): Flow<List<TransactionOverviewProj>>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: TransactionEntity): Long
 

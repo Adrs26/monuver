@@ -90,14 +90,6 @@ class TransactionRepositoryImpl(
         }
     }
 
-    override fun getMonthlyTransactionBalance(year: Int): Flow<List<TransactionOverview>> {
-        return transactionDao.getMonthlyTransactionBalance(year).map { entityList ->
-            entityList.map { entity ->
-                TransactionMapper.transactionOverviewEntityToDomain(entity)
-            }
-        }
-    }
-
     override suspend fun insertTransaction(transaction: Transaction): Result<Long> {
         return try {
             val result = transactionDao.insertTransaction(

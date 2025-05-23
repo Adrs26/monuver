@@ -30,6 +30,7 @@ import com.android.monu.domain.model.TransactionOverview
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAverageAmount
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChart
 import com.android.monu.presentation.screen.analytics.components.AnalyticsPieChartContent
+import com.android.monu.presentation.screen.analytics.components.BarChartScaleLabel
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
@@ -114,9 +115,4 @@ data class AnalyticsFilterCallbacks(
     val onBarChartYearFilterSelect: (Int) -> Unit,
     val onBarChartFilterTypeClick: (Int) -> Unit,
     val onPieChartYearFilterSelect: (Int) -> Unit
-)
-
-data class BarChartScaleLabel(
-    val amount: Long,
-    val fraction: Float
 )

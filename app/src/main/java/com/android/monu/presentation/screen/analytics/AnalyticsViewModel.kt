@@ -11,6 +11,7 @@ import com.android.monu.domain.model.AverageTransactionAmount
 import com.android.monu.domain.usecase.GetAvailableTransactionYearsUseCase
 import com.android.monu.domain.usecase.GetAverageTransactionAmountUseCase
 import com.android.monu.domain.usecase.GetMonthlyTransactionOverviewUseCase
+import com.android.monu.presentation.screen.analytics.components.BarChartScaleLabel
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Orange
@@ -43,7 +44,7 @@ class AnalyticsViewModel(
             getAverageTransactionAmount()
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    private val _barChartSelectedTypeFilter = MutableStateFlow(3)
+    private val _barChartSelectedTypeFilter = MutableStateFlow(1)
     val barChartSelectedTypeFilter = _barChartSelectedTypeFilter.asStateFlow()
 
     private val _barChartSelectedYearFilter = MutableStateFlow<Int>(
@@ -93,7 +94,7 @@ class AnalyticsViewModel(
         }
     }
 
-    fun calculateBarScaleLabels(highestValue: Long) {
+    private fun calculateBarScaleLabels(highestValue: Long) {
         val highestValue = highestValue
         val quarter = highestValue / 4
         val half = highestValue / 2

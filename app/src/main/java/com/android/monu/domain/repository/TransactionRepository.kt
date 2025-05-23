@@ -32,8 +32,6 @@ interface TransactionRepository {
 
     fun getMonthlyTransactionOverviewByType(type: Int, year: Int): Flow<List<TransactionOverview>>
 
-    fun getMonthlyTransactionBalance(year: Int): Flow<List<TransactionOverview>>
-
     suspend fun insertTransaction(transaction: Transaction): Result<Long>
 
     suspend fun updateTransaction(transaction: Transaction): Result<Int>

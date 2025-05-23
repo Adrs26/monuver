@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -46,7 +47,6 @@ import com.android.monu.domain.model.TransactionOverview
 import com.android.monu.presentation.components.TypeFilterButton
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
-import com.android.monu.presentation.screen.analytics.BarChartScaleLabel
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
@@ -107,11 +107,7 @@ fun BarChartTypeFilterButton(
     Row(
         modifier = modifier.background(color = Color.LightGray, shape = RoundedCornerShape(24.dp))
     ) {
-        listOf(
-            R.string.balance,
-            R.string.income,
-            R.string.expense
-        ).forEach { type ->
+        listOf(R.string.income, R.string.expense).forEach { type ->
             val isSelected = stringResource(selectedType.toTransactionType()) ==
                     stringResource(type)
             TypeFilterButton(
@@ -119,10 +115,10 @@ fun BarChartTypeFilterButton(
                 background = if (isSelected) Color.White else Color.LightGray,
                 textColor = Color.Black,
                 horizontalPadding = 8.dp,
-                verticalPadding = 4.dp,
+                verticalPadding = 6.dp,
                 modifier = Modifier
                     .weight(1f)
-                    .padding(2.dp),
+                    .padding(4.dp),
                 onClick = { onFilterTypeClick(type.toTransactionTypeCode() ?: 0) }
             )
         }
@@ -227,25 +223,57 @@ fun BarChartGraph(
                     .background(backgroundColor)
                     .clickable { selectedIndex = index }
             )
+            BarChartGraphInformation(
+                transactionsOverview = transactionsOverview,
+                selectedIndex = selectedIndex,
+                index = index,
+                onSelectedIndexReset = { selectedIndex = -1 }
+            )
+        }
+    }
+}
 
-            DropdownMenu(
-                expanded = selectedIndex == index,
-                onDismissRequest = { selectedIndex = -1 },
-                modifier = Modifier.background(color = Color.White),
-                offset = DpOffset(x = 20.dp, y = (-200).dp)
+@Composable
+fun BarChartGraphInformation(
+    transactionsOverview: List<TransactionOverview>,
+    selectedIndex: Int,
+    index: Int,
+    onSelectedIndexReset: () -> Unit
+) {
+    DropdownMenu(
+        expanded = selectedIndex == index,
+        onDismissRequest = onSelectedIndexReset,
+        modifier = Modifier.background(color = Color.White),
+        offset = DpOffset(x = 50.dp, y = (-210).dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 8.dp)
+        ) {
+            Text(
+                text = CurrencyFormatHelper.formatToRupiah(transactionsOverview[index].amount),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
+                )
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 2.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(
                         R.string.transaction_overview_information,
                         stringResource(transactionsOverview[index].month.toFullMonthResourceId()),
-                        transactionsOverview[index].year,
-                        CurrencyFormatHelper.formatToRupiah(transactionsOverview[index].amount)
+                        transactionsOverview[index].year
                     ),
-                    modifier = Modifier.padding(8.dp),
                     style = TextStyle(
-                        fontSize = 12.sp,
+                        fontSize = 10.sp,
                         fontFamily = interFontFamily,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Normal,
                         color = Color.Black
                     )
                 )
@@ -276,3 +304,8 @@ fun BarChartXAxis(
         }
     }
 }
+
+data class BarChartScaleLabel(
+    val amount: Long,
+    val fraction: Float
+)

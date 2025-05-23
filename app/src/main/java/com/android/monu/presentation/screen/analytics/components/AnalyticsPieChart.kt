@@ -148,3 +148,8 @@ fun PieChartDetailData(
         }
     }
 }
+
+data class PieChartData(
+    val category: Int,
+    val amount: Long
+)
