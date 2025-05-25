@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.core)
     implementation(libs.calendar)
+    implementation(libs.threetenabp)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

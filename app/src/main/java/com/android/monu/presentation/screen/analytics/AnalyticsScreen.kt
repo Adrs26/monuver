@@ -55,7 +55,6 @@ fun AnalyticsScreen(
                     title = {
                         Text(
                             text = stringResource(R.string.analytics_menu),
-                            modifier = Modifier.padding(start = 8.dp),
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontFamily = interFontFamily,

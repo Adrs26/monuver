@@ -58,7 +58,7 @@ fun DeleteTransactionDialog(
                         text = stringResource(R.string.delete_this_transaction),
                         textAlign = TextAlign.Center,
                         style = TextStyle(
-                            fontSize = 15.sp,
+                            fontSize = 13.sp,
                             fontFamily = interFontFamily,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.Black

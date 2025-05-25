@@ -75,16 +75,17 @@ fun PieChartContent(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         if (mostExpenseCategory.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_transactions_yet),
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier.padding(top = 48.dp, bottom = 40.dp),
                 style = TextStyle(
                     fontSize = 12.sp,
                     fontFamily = interFontFamily,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Normal,
                     color = Color.Black
                 )
             )

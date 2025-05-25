@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.presentation.components.DebouncedIconButton
+import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
+import java.util.Calendar
 
 @Composable
 fun HomeTopBar(
@@ -50,7 +53,7 @@ fun GreetingText(
         modifier = modifier
     ) {
         Text(
-            text = "Good Morning,",
+            text = stringResource(greetingText()),
             modifier = Modifier.padding(bottom = 2.dp),
             style = TextStyle(
                 fontSize = 12.sp,
@@ -82,9 +85,9 @@ fun SettingsIconButton(
     ) {
         Box(
             modifier = Modifier
-                .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-                .border(width = 0.5.dp, color = Color.Black, shape = RoundedCornerShape(16.dp))
-                .padding(4.dp),
+                .background(color = Color.White, shape = CircleShape)
+                .border(width = 1.dp, color = SoftGrey, shape = CircleShape)
+                .padding(6.dp),
             contentAlignment = Alignment.Center
         ) {
             Icon(
@@ -93,6 +96,17 @@ fun SettingsIconButton(
                 tint = Color.Black
             )
         }
+    }
+}
+
+private fun greetingText(): Int {
+    val calendar = Calendar.getInstance()
+    val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
+    return when (hourOfDay) {
+        in 6..10 -> R.string.good_morning
+        in 11..14 -> R.string.good_afternoon
+        in 15..17 -> R.string.good_evening
+        else -> R.string.good_night
     }
 }
 

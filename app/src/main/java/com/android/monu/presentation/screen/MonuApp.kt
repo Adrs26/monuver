@@ -29,6 +29,7 @@ import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.home.HomeScreen
+import com.android.monu.presentation.screen.home.HomeViewModel
 import com.android.monu.presentation.screen.reports.ReportsFilterCallbacks
 import com.android.monu.presentation.screen.reports.ReportsFilterState
 import com.android.monu.presentation.screen.reports.ReportsScreen
@@ -67,12 +68,7 @@ fun MonuApp(
         Screen.Analytics.route
     )
 
-    SideEffect {
-        systemUiController.setStatusBarColor(
-            color = LightGrey,
-            darkIcons = true
-        )
-    }
+    SideEffect { systemUiController.setStatusBarColor(color = LightGrey, darkIcons = true) }
 
     Scaffold(
         bottomBar = {
@@ -90,7 +86,16 @@ fun MonuApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) {
+                val viewModel = koinViewModel<HomeViewModel>()
+
+                val totalIncomeAmount by viewModel.totalIncomeAmount.collectAsStateWithLifecycle()
+                val totalExpenseAmount by viewModel.totalExpenseAmount.collectAsStateWithLifecycle()
+                val recentTransactions by viewModel.recentTransactions.collectAsStateWithLifecycle()
+
                 HomeScreen(
+                    totalIncomeAmount = totalIncomeAmount,
+                    totalExpenseAmount = totalExpenseAmount,
+                    recentTransactions = recentTransactions,
                     navigateToSettings = { navController.navigate(Screen.Settings.route) },
                     navigateToTransactions = {
                         navController.navigate(Screen.Transactions.route) {

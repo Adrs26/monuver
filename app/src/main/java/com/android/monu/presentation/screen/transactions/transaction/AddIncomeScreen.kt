@@ -49,6 +49,8 @@ import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -194,11 +196,18 @@ fun AddIncomeScreen(
     CalendarDialog(
         state = calendarState,
         selection = CalendarSelection.Date { selectedDate ->
-            date = selectedDate.toString()
+            val inputDate = LocalDate.parse(selectedDate.toString(), DateTimeFormatter.ISO_LOCAL_DATE)
+            val today = LocalDate.now()
+            val isAfterToday = inputDate.isAfter(today)
+            if (isAfterToday) {
+                "You cannot select a future date".showMessageWithToast(context)
+            } else {
+                date = selectedDate.toString()
+            }
         },
         config = CalendarConfig(
             monthSelection = true,
-            yearSelection = true
+            yearSelection = true,
         )
     )
 }

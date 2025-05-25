@@ -11,6 +11,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository {
 
+    fun getTotalTransactionAmount(type: Int): Flow<Long?>
+
+    fun getRecentTransactions(): Flow<List<TransactionConcise>>
+
     fun getAllTransactions(
         query: String,
         type: Int?,

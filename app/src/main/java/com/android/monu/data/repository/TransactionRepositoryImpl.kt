@@ -21,6 +21,18 @@ class TransactionRepositoryImpl(
     private val transactionDao: TransactionDao
 ) : TransactionRepository {
 
+    override fun getTotalTransactionAmount(type: Int): Flow<Long?> {
+        return transactionDao.getTotalTransactionAmount(type)
+    }
+
+    override fun getRecentTransactions(): Flow<List<TransactionConcise>> {
+        return transactionDao.getRecentTransactions().map { entityList ->
+            entityList.map { entity ->
+                TransactionMapper.transactionConciseEntityToDomain(entity)
+            }
+        }
+    }
+
     override fun getAllTransactions(
         query: String,
         type: Int?,

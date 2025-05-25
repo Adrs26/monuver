@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -27,21 +26,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.data.dummy.TransactionsData
+import com.android.monu.domain.model.TransactionConcise
 import com.android.monu.presentation.components.ActionButton
+import com.android.monu.presentation.screen.transactions.components.TransactionData
 import com.android.monu.ui.theme.Blue
-import com.android.monu.ui.theme.Orange
+import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
+import com.android.monu.util.CurrencyFormatHelper
+import com.android.monu.util.DateHelper
+import com.android.monu.util.toCategoryColor
+import com.android.monu.util.toCategoryIcon
 
 @Composable
 fun HomeRecentTransactions(
+    recentTransactions: List<TransactionConcise>,
     modifier: Modifier = Modifier,
-    toTransactions: () -> Unit
+    navigateToTransactions: () -> Unit
 ) {
     Card(
-        modifier = modifier.border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp)),
+        modifier = modifier
+            .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp))
+            .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
@@ -58,23 +65,64 @@ fun HomeRecentTransactions(
                     color = Color.Black
                 )
             )
-            LazyColumn(modifier = Modifier.padding(vertical = 8.dp)) {
-                items(TransactionsData.listRecentItem, key = { it.id }) {
-                    RecentTransactionsListItem()
-                }
-            }
-            ActionButton(
-                text = stringResource(R.string.see_all_transactions),
-                color = Blue,
-                modifier = Modifier.padding(top = 16.dp),
-                onClick = toTransactions
+            RecentTransactionList(
+                recentTransactions = recentTransactions,
+                navigateToTransactions = navigateToTransactions
             )
         }
     }
 }
 
 @Composable
+fun RecentTransactionList(
+    recentTransactions: List<TransactionConcise>,
+    modifier: Modifier = Modifier,
+    navigateToTransactions: () -> Unit
+) {
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        if (recentTransactions.isEmpty()) {
+            Text(
+                text = stringResource(R.string.no_transactions_yet),
+                modifier = Modifier.padding(top = 48.dp, bottom = 40.dp),
+                style = TextStyle(
+                    fontSize = 12.sp,
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Black
+                )
+            )
+        } else {
+            Column {
+                LazyColumn(modifier = Modifier.padding(vertical = 8.dp)) {
+                    items(recentTransactions.size) { index ->
+                        val transactionData = TransactionData(
+                            id = recentTransactions[index].id,
+                            title = recentTransactions[index].title,
+                            type = recentTransactions[index].type,
+                            category = recentTransactions[index].category,
+                            date = recentTransactions[index].date,
+                            amount = recentTransactions[index].amount
+                        )
+                        RecentTransactionsListItem(transactionData = transactionData)
+                    }
+                }
+                ActionButton(
+                    text = stringResource(R.string.see_all_transactions),
+                    color = Blue,
+                    modifier = Modifier.padding(top = 16.dp),
+                    onClick = navigateToTransactions
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun RecentTransactionsListItem(
+    transactionData: TransactionData,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -90,12 +138,15 @@ fun RecentTransactionsListItem(
         ) {
             Box(
                 modifier = Modifier
-                    .background(color = Orange, shape = RoundedCornerShape(12.dp))
-                    .size(48.dp),
+                    .background(
+                        color = transactionData.category.toCategoryColor(),
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .size(40.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_expense_food),
+                    painter = painterResource(transactionData.category.toCategoryIcon()),
                     contentDescription = null,
                     tint = Color.White
                 )
@@ -106,7 +157,7 @@ fun RecentTransactionsListItem(
                     .padding(horizontal = 16.dp)
             ) {
                 Text(
-                    text = "Breakfast",
+                    text = transactionData.title,
                     style = TextStyle(
                         fontSize = 14.sp,
                         fontFamily = interFontFamily,
@@ -115,7 +166,8 @@ fun RecentTransactionsListItem(
                     )
                 )
                 Text(
-                    text = "Food & Beverages",
+                    text = DateHelper.formatDateToReadable(transactionData.date),
+                    modifier = Modifier.padding(top = 2.dp),
                     style = TextStyle(
                         fontSize = 11.sp,
                         fontFamily = interFontFamily,
@@ -125,13 +177,13 @@ fun RecentTransactionsListItem(
                 )
             }
             Text(
-                text = "Rp50.000",
+                text = CurrencyFormatHelper.formatToRupiah(transactionData.amount),
                 modifier = Modifier.padding(horizontal = 8.dp),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.SemiBold,
-                    color = Red
+                    color = if (transactionData.type == 1) Green else Red
                 )
             )
         }
@@ -142,6 +194,7 @@ fun RecentTransactionsListItem(
 @Composable
 fun HomeRecentTransactionsPreview() {
     HomeRecentTransactions(
-        toTransactions = {}
+        recentTransactions = emptyList(),
+        navigateToTransactions = {}
     )
 }

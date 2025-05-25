@@ -102,4 +102,8 @@
     <string name="no_transactions_yet">No transactions yet</string>
     <string name="transaction_overview_information">%1$s %2$s</string>
     <string name="percentage_value">%1$d%%</string>
+    <string name="good_morning">Good Morning,</string>
+    <string name="good_afternoon">Good Afternoon,</string>
+    <string name="good_evening">Good Evening,</string>
+    <string name="good_night">Good Night,</string>
 </resources>

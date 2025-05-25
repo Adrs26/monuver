@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun DebouncedIconButton(
     onClick: () -> Unit,
-    debounceTime: Long = 700L,
     modifier: Modifier = Modifier,
+    debounceTime: Long = 700L,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     content: @Composable () -> Unit

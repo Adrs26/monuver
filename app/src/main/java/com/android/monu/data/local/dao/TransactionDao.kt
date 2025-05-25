@@ -17,6 +17,21 @@ import kotlinx.coroutines.flow.Flow
 interface TransactionDao {
 
     @Query("""
+        SELECT SUM(amount) AS totalAmount
+        FROM `transaction`
+        WHERE type = :type
+    """)
+    fun getTotalTransactionAmount(type: Int): Flow<Long?>
+
+    @Query("""
+        SELECT id, title, type, category, date, amount 
+        FROM `transaction`
+        ORDER BY date DESC, timeStamp DESC
+        LIMIT 3
+    """)
+    fun getRecentTransactions(): Flow<List<TransactionConciseProj>>
+
+    @Query("""
         SELECT id, title, type, category, date, amount 
         FROM `transaction`
         WHERE (:type IS NULL OR type = :type)

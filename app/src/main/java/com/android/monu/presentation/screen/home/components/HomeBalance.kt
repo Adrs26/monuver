@@ -29,10 +29,14 @@ import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.Green
+import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.interFontFamily
+import com.android.monu.util.CurrencyFormatHelper
 
 @Composable
 fun HomeBalance(
+    totalIncomeAmount: Long,
+    totalExpenseAmount: Long,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -61,7 +65,7 @@ fun HomeBalance(
                 BalanceFilter()
             }
             Text(
-                text = "Rp100.000.000",
+                text = CurrencyFormatHelper.formatToRupiah(totalIncomeAmount - totalExpenseAmount),
                 style = TextStyle(
                     fontSize = 24.sp,
                     fontFamily = interFontFamily,
@@ -70,6 +74,8 @@ fun HomeBalance(
                 )
             )
             IncomeExpenseCard(
+                totalIncomeAmount = totalIncomeAmount,
+                totalExpenseAmount = totalExpenseAmount,
                 modifier = Modifier.padding(top = 16.dp)
             )
         }
@@ -101,6 +107,8 @@ fun BalanceFilter(
 
 @Composable
 fun IncomeExpenseCard(
+    totalIncomeAmount: Long,
+    totalExpenseAmount: Long,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -119,7 +127,7 @@ fun IncomeExpenseCard(
                 icon = R.drawable.ic_trending_up,
                 color = Green,
                 title = stringResource(R.string.income),
-                value = "Rp200.000.000",
+                value = CurrencyFormatHelper.formatToRupiah(totalIncomeAmount),
                 modifier = Modifier.weight(1f)
             )
             VerticalDivider(
@@ -133,7 +141,7 @@ fun IncomeExpenseCard(
                 icon = R.drawable.ic_trending_down,
                 color = Color.Red,
                 title = stringResource(R.string.expense),
-                value = "Rp100.000.000",
+                value = CurrencyFormatHelper.formatToRupiah(totalExpenseAmount),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -186,5 +194,8 @@ fun IncomeExpenseItem(
 @Preview(showBackground = true)
 @Composable
 fun HomeBalancePreview() {
-    HomeBalance()
+    HomeBalance(
+        totalIncomeAmount = 1000000L,
+        totalExpenseAmount = 500000L
+    )
 }
