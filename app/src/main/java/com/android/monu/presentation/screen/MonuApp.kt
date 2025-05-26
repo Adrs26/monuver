@@ -16,14 +16,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.presentation.components.BottomNavBar
+import com.android.monu.presentation.components.shouldShowBottomNav
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
@@ -46,7 +45,15 @@ import com.android.monu.presentation.screen.transactions.transaction.AddIncomeSc
 import com.android.monu.presentation.screen.transactions.transaction.AddIncomeViewModel
 import com.android.monu.presentation.screen.transactions.transaction.EditTransactionScreen
 import com.android.monu.presentation.screen.transactions.transaction.EditTransactionViewModel
-import com.android.monu.ui.navigation.Screen
+import com.android.monu.ui.navigation.AddExpense
+import com.android.monu.ui.navigation.AddIncome
+import com.android.monu.ui.navigation.Analytics
+import com.android.monu.ui.navigation.EditTransaction
+import com.android.monu.ui.navigation.Home
+import com.android.monu.ui.navigation.ReportDetail
+import com.android.monu.ui.navigation.Reports
+import com.android.monu.ui.navigation.Settings
+import com.android.monu.ui.navigation.Transactions
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.SoftGrey
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -61,18 +68,12 @@ fun MonuApp(
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val mainMenuRoute = listOf(
-        Screen.Home.route,
-        Screen.Transactions.route,
-        Screen.Reports.route,
-        Screen.Analytics.route
-    )
 
     SideEffect { systemUiController.setStatusBarColor(color = LightGrey, darkIcons = true) }
 
     Scaffold(
         bottomBar = {
-            if (currentRoute in mainMenuRoute) {
+            if (shouldShowBottomNav(currentRoute)) {
                 Column {
                     HorizontalDivider(color = SoftGrey, thickness = 1.dp)
                     BottomNavBar(navController)
@@ -82,10 +83,10 @@ fun MonuApp(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Home.route,
+            startDestination = Home,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Home.route) {
+            composable<Home> {
                 val viewModel = koinViewModel<HomeViewModel>()
 
                 val totalIncomeAmount by viewModel.totalIncomeAmount.collectAsStateWithLifecycle()
@@ -96,9 +97,9 @@ fun MonuApp(
                     totalIncomeAmount = totalIncomeAmount,
                     totalExpenseAmount = totalExpenseAmount,
                     recentTransactions = recentTransactions,
-                    navigateToSettings = { navController.navigate(Screen.Settings.route) },
+                    navigateToSettings = { navController.navigate(Settings) },
                     navigateToTransactions = {
-                        navController.navigate(Screen.Transactions.route) {
+                        navController.navigate(Transactions) {
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                             restoreState = true
                             launchSingleTop = true
@@ -106,7 +107,7 @@ fun MonuApp(
                     }
                 )
             }
-            composable(Screen.Transactions.route) {
+            composable<Transactions> {
                 val viewModel = koinViewModel<TransactionsViewModel>()
 
                 val transactions = viewModel.transactions.collectAsLazyPagingItems()
@@ -135,14 +136,14 @@ fun MonuApp(
                     transactions = transactions,
                     filterState = filterState,
                     filterCallbacks = filterCallbacks,
-                    navigateToAddIncome = { navController.navigate(Screen.AddIncome.route) },
-                    navigateToAddExpense = { navController.navigate(Screen.AddExpense.route) },
+                    navigateToAddIncome = { navController.navigate(AddIncome) },
+                    navigateToAddExpense = { navController.navigate(AddExpense) },
                     navigateToEditTransaction = { transactionId ->
-                        navController.navigate(Screen.EditTransaction.createRoute(transactionId))
+                        navController.navigate(EditTransaction(transactionId))
                     }
                 )
             }
-            composable(Screen.Reports.route) {
+            composable<Reports> {
                 val viewModel = koinViewModel<ReportsViewModel>()
 
                 val listTransactionsMonthlyAmount by viewModel
@@ -164,10 +165,10 @@ fun MonuApp(
                     listTransactionsMonthlyAmount = listTransactionsMonthlyAmount,
                     filterState = filterState,
                     filterCallbacks = filterCallbacks,
-                    navigateToDetail = { navController.navigate(Screen.ReportDetail.route) }
+                    navigateToDetail = { navController.navigate(ReportDetail) }
                 )
             }
-            composable(Screen.Analytics.route) {
+            composable<Analytics> {
                 val viewModel = koinViewModel<AnalyticsViewModel>()
 
                 val averageTransactionAmount by viewModel
@@ -208,8 +209,7 @@ fun MonuApp(
                     )
                 }
             }
-            composable(
-                route = Screen.Settings.route,
+            composable<Settings>(
                 enterTransition = { NavigationAnimation.enter },
                 exitTransition = { NavigationAnimation.exit },
                 popEnterTransition = { NavigationAnimation.popEnter },
@@ -219,8 +219,7 @@ fun MonuApp(
                     navigateBack = { navController.navigateUp() }
                 )
             }
-            composable(
-                route = Screen.AddIncome.route,
+            composable<AddIncome>(
                 enterTransition = { NavigationAnimation.enter },
                 exitTransition = { NavigationAnimation.exit },
                 popEnterTransition = { NavigationAnimation.popEnter },
@@ -236,8 +235,7 @@ fun MonuApp(
                     navigateBack = { navController.navigateUp() },
                 )
             }
-            composable(
-                route = Screen.AddExpense.route,
+            composable<AddExpense>(
                 enterTransition = { NavigationAnimation.enter },
                 exitTransition = { NavigationAnimation.exit },
                 popEnterTransition = { NavigationAnimation.popEnter },
@@ -253,9 +251,7 @@ fun MonuApp(
                     navigateBack = { navController.navigateUp() }
                 )
             }
-            composable(
-                route = Screen.EditTransaction.route,
-                arguments = listOf(navArgument("transactionId") { type = NavType.LongType }),
+            composable<EditTransaction>(
                 enterTransition = { NavigationAnimation.enter },
                 exitTransition = { NavigationAnimation.exit },
                 popEnterTransition = { NavigationAnimation.popEnter },
@@ -279,8 +275,7 @@ fun MonuApp(
                     )
                 }
             }
-            composable(
-                route = Screen.ReportDetail.route,
+            composable<ReportDetail>(
                 enterTransition = { NavigationAnimation.enter },
                 exitTransition = { NavigationAnimation.exit },
                 popEnterTransition = { NavigationAnimation.popEnter },

@@ -1,15 +1,30 @@
 package com.android.monu.ui.navigation
 
-sealed class Screen(val route: String) {
-    data object Home : Screen("home")
-    data object Transactions : Screen("transactions")
-    data object Reports : Screen("reports")
-    data object Analytics : Screen("analytics")
-    data object Settings : Screen("settings")
-    data object AddIncome : Screen("add_income")
-    data object AddExpense : Screen("add_expense")
-    data object EditTransaction : Screen("edit_transaction/{transactionId}") {
-        fun createRoute(transactionId: Long) = "edit_transaction/$transactionId"
-    }
-    data object ReportDetail : Screen("report_detail")
-}
+import kotlinx.serialization.Serializable
+
+@Serializable
+object Home
+
+@Serializable
+object Transactions
+
+@Serializable
+object Reports
+
+@Serializable
+object Analytics
+
+@Serializable
+object Settings
+
+@Serializable
+object AddIncome
+
+@Serializable
+object AddExpense
+
+@Serializable
+data class EditTransaction(val id: Long)
+
+@Serializable
+object ReportDetail

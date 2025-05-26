@@ -3,10 +3,12 @@ package com.android.monu.presentation.screen.transactions.transaction
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.android.monu.domain.model.Transaction
 import com.android.monu.domain.usecase.DeleteTransactionByIdUseCase
 import com.android.monu.domain.usecase.GetTransactionByIdUseCase
 import com.android.monu.domain.usecase.UpdateTransactionUseCase
+import com.android.monu.ui.navigation.EditTransaction
 import com.android.monu.utils.DateHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,13 +21,13 @@ class EditTransactionViewModel(
     private val getTransactionByIdUseCase: GetTransactionByIdUseCase,
     private val updateTransactionUseCase: UpdateTransactionUseCase,
     private val deleteTransactionByIdUseCase: DeleteTransactionByIdUseCase,
-    savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _transaction = MutableStateFlow<Transaction?>(null)
     val transaction = _transaction
         .onStart {
-            val id = savedStateHandle.get<Long>("transactionId") ?: 0
+            val id = savedStateHandle.toRoute<EditTransaction>().id
             getTransactionById(id)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 

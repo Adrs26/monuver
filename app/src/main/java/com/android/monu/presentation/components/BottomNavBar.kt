@@ -19,8 +19,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.android.monu.R
+import com.android.monu.ui.navigation.Analytics
 import com.android.monu.ui.navigation.BottomNavItem
-import com.android.monu.ui.navigation.Screen
+import com.android.monu.ui.navigation.Home
+import com.android.monu.ui.navigation.Reports
+import com.android.monu.ui.navigation.Transactions
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.interFontFamily
 
@@ -41,34 +44,34 @@ fun BottomNavBar(
                 title = stringResource(R.string.home_menu),
                 filledIcon = painterResource(R.drawable.ic_home_filled),
                 outlinedIcon = painterResource(R.drawable.ic_home_outlined),
-                screen = Screen.Home
+                destination = Home
             ),
             BottomNavItem(
                 title = stringResource(R.string.transactions_menu),
                 filledIcon = painterResource(R.drawable.ic_receipt_filled),
                 outlinedIcon = painterResource(R.drawable.ic_receipt_outlined),
-                screen = Screen.Transactions
+                destination = Transactions
             ),
             BottomNavItem(
                 title = stringResource(R.string.reports_menu),
                 filledIcon = painterResource(R.drawable.ic_order_filled),
                 outlinedIcon = painterResource(R.drawable.ic_order_outlined),
-                screen = Screen.Reports
+                destination = Reports
             ),
             BottomNavItem(
                 title = stringResource(R.string.analytics_menu),
                 filledIcon = painterResource(R.drawable.ic_chart_filled),
                 outlinedIcon = painterResource(R.drawable.ic_chart_outlined),
-                screen = Screen.Analytics
+                destination = Analytics
             )
         )
 
         navigationItems.map { item ->
-            val selected = currentRoute == item.screen.route
+            val selected = currentRoute?.contains(item.destination::class.simpleName ?: "") == true
             NavigationBarItem(
                 selected = selected,
                 onClick = {
-                    navController.navigate(item.screen.route) {
+                    navController.navigate(item.destination) {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         restoreState = true
                         launchSingleTop = true
@@ -98,5 +101,11 @@ fun BottomNavBar(
                 )
             )
         }
+    }
+}
+
+fun shouldShowBottomNav(currentRoute: String?): Boolean {
+    return listOf(Home, Transactions, Reports, Analytics).any {
+        currentRoute?.contains(it::class.simpleName ?: "") == true
     }
 }

@@ -6,5 +6,5 @@ data class BottomNavItem(
     val title: String,
     val filledIcon: Painter,
     val outlinedIcon: Painter,
-    val screen: Screen
+    val destination: Any
 )
