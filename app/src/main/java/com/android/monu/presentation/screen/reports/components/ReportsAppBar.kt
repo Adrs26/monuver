@@ -35,7 +35,7 @@ import com.android.monu.presentation.screen.reports.ReportsFilterCallbacks
 import com.android.monu.presentation.screen.reports.ReportsFilterState
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.debouncedClickable
+import com.android.monu.utils.extensions.debouncedClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

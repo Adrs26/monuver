@@ -38,11 +38,11 @@ import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.CurrencyFormatHelper
-import com.android.monu.util.DateHelper
-import com.android.monu.util.debouncedClickable
-import com.android.monu.util.toCategoryColor
-import com.android.monu.util.toCategoryIcon
+import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.extensions.debouncedClickable
+import com.android.monu.utils.extensions.toCategoryColor
+import com.android.monu.utils.extensions.toCategoryIcon
 
 @Composable
 fun TransactionsList(
@@ -170,7 +170,7 @@ fun TransactionsListItem(
                 )
             }
             Text(
-                text = CurrencyFormatHelper.formatToRupiah(transactionData.amount),
+                text = NumberFormatHelper.formatToRupiah(transactionData.amount),
                 modifier = Modifier.padding(horizontal = 8.dp),
                 style = TextStyle(
                     fontSize = 14.sp,

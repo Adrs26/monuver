@@ -50,7 +50,7 @@ fun TypeFilterButton(
             modifier = Modifier.padding(horizontal = horizontalPadding, vertical = verticalPadding),
             color = textColor,
             style = TextStyle(
-                fontSize = 11.sp,
+                fontSize = 10.sp,
                 fontFamily = interFontFamily,
                 fontWeight = FontWeight.SemiBold
             )

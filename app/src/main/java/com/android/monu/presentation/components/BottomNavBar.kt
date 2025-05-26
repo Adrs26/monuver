@@ -5,19 +5,24 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.android.monu.R
 import com.android.monu.ui.navigation.BottomNavItem
 import com.android.monu.ui.navigation.Screen
 import com.android.monu.ui.theme.Blue
+import com.android.monu.ui.theme.interFontFamily
 
 @Composable
 fun BottomNavBar(
@@ -73,6 +78,17 @@ fun BottomNavBar(
                     Icon(
                         painter = if (selected) item.filledIcon else item.outlinedIcon,
                         contentDescription = item.title
+                    )
+                },
+                label = {
+                    Text(
+                        text = item.title,
+                        style = TextStyle(
+                            fontSize = 10.sp,
+                            fontFamily = interFontFamily,
+                            fontWeight = FontWeight.SemiBold,
+                            color = if (selected) Blue else Color.Gray,
+                        )
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(

@@ -23,9 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.DataHelper
-import com.android.monu.util.toHighlightColor
-import com.android.monu.util.toHighlightIcon
+import com.android.monu.utils.DataHelper
+import com.android.monu.utils.extensions.toCategoryCode
+import com.android.monu.utils.extensions.toCategoryColor
+import com.android.monu.utils.extensions.toCategoryIcon
 
 @Composable
 fun CategoryBottomSheetContent(
@@ -43,9 +44,8 @@ fun CategoryBottomSheetContent(
         modifier = modifier.fillMaxWidth()
     ) {
         items(listCategory.size) { index ->
-            val categoryTitle = stringResource(listCategory[index])
             CategoryListItem(
-                categoryTitle = categoryTitle,
+                category = listCategory[index],
                 modifier = Modifier
                     .clickable { onItemClick(listCategory[index]) }
                     .padding(horizontal = 24.dp, vertical = 8.dp)
@@ -56,7 +56,7 @@ fun CategoryBottomSheetContent(
 
 @Composable
 fun CategoryListItem(
-    categoryTitle: String,
+    category: Int,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -66,21 +66,21 @@ fun CategoryListItem(
         Box(
             modifier = Modifier
                 .background(
-                    color = categoryTitle.toHighlightColor(),
+                    color = category.toCategoryCode().toCategoryColor(),
                     shape = RoundedCornerShape(8.dp)
                 )
                 .size(36.dp),
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(categoryTitle.toHighlightIcon()),
+                painter = painterResource(category.toCategoryCode().toCategoryIcon()),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
                 tint = Color.White
             )
         }
         Text(
-            text = categoryTitle,
+            text = stringResource(category),
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 16.dp),

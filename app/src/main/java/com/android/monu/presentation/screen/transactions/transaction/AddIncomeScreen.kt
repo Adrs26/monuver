@@ -38,12 +38,12 @@ import com.android.monu.presentation.components.TextInputField
 import com.android.monu.presentation.screen.transactions.transaction.component.CategoryBottomSheetContent
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.LightGrey
-import com.android.monu.util.CurrencyFormatHelper
-import com.android.monu.util.DateHelper
-import com.android.monu.util.debouncedClickable
-import com.android.monu.util.showMessageWithToast
-import com.android.monu.util.toCategoryCode
-import com.android.monu.util.toCategoryName
+import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.extensions.debouncedClickable
+import com.android.monu.utils.extensions.showMessageWithToast
+import com.android.monu.utils.extensions.toCategoryCode
+import com.android.monu.utils.extensions.toCategoryName
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -66,7 +66,7 @@ fun AddIncomeScreen(
     var rawAmountInput by rememberSaveable { mutableLongStateOf(0L) }
     var amountFieldValue by remember {
         mutableStateOf(TextFieldValue(
-            text = CurrencyFormatHelper.formatToThousandDivider(rawAmountInput))
+            text = NumberFormatHelper.formatToThousandDivider(rawAmountInput))
         )
     }
 
@@ -136,7 +136,7 @@ fun AddIncomeScreen(
                         rawAmountInput = cleanInput.toLong()
                     }
 
-                    val formattedText = CurrencyFormatHelper.formatToThousandDivider(rawAmountInput)
+                    val formattedText = NumberFormatHelper.formatToThousandDivider(rawAmountInput)
                     val newCursorPosition = formattedText.length
 
                     amountFieldValue = TextFieldValue(

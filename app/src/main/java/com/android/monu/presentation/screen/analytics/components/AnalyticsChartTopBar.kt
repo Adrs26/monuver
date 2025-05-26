@@ -30,7 +30,7 @@ import com.android.monu.presentation.components.YearFilterButton
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.debouncedClickable
+import com.android.monu.utils.extensions.debouncedClickable
 
 @Composable
 fun AnalyticsChartTopBar(

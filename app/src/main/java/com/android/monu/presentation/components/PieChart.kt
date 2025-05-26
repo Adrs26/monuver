@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.android.monu.domain.model.TransactionCategoryAmount
-import com.android.monu.util.toCategoryColor
+import com.android.monu.utils.extensions.toCategoryColor
 import kotlinx.coroutines.launch
 
 @Composable

@@ -36,9 +36,9 @@ import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.CurrencyFormatHelper
-import com.android.monu.util.debouncedClickable
-import com.android.monu.util.toFullMonthResourceId
+import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.utils.extensions.debouncedClickable
+import com.android.monu.utils.extensions.toFullMonthResourceId
 
 @Composable
 fun ReportsList(
@@ -137,7 +137,7 @@ fun TotalIncomeExpenseCard(
                 icon = R.drawable.ic_trending_up,
                 iconBackgroundColor = Green,
                 title = stringResource(R.string.income),
-                value = CurrencyFormatHelper.formatToRupiah(totalIncome)
+                value = NumberFormatHelper.formatToConciseRupiah(totalIncome)
             )
             HorizontalDivider(
                 modifier = Modifier.padding(vertical = 8.dp),
@@ -148,7 +148,7 @@ fun TotalIncomeExpenseCard(
                 icon = R.drawable.ic_trending_down,
                 iconBackgroundColor = Color.Red,
                 title = stringResource(R.string.expense),
-                value = CurrencyFormatHelper.formatToRupiah(totalExpense)
+                value = NumberFormatHelper.formatToConciseRupiah(totalExpense)
             )
         }
     }

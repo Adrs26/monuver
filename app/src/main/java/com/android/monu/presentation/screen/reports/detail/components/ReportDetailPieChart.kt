@@ -36,10 +36,9 @@ import com.android.monu.domain.model.TransactionCategoryAmount
 import com.android.monu.presentation.components.PieChart
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.CurrencyFormatHelper
-import com.android.monu.util.DataHelper
-import com.android.monu.util.toCategoryColor
-import com.android.monu.util.toCategoryName
+import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.utils.extensions.toCategoryColor
+import com.android.monu.utils.extensions.toCategoryName
 
 @Composable
 fun ReportDetailPieChart(
@@ -157,7 +156,7 @@ fun PieChartDetailData(
             Text(
                 text = stringResource(
                     R.string.percentage_value,
-                    DataHelper.calculateToPercentageValue(amount, total)
+                    NumberFormatHelper.formatToPercentageValue(amount, total)
                 ),
                 style = TextStyle(
                     fontSize = 11.sp,
@@ -180,7 +179,7 @@ fun PieChartDetailData(
             )
         )
         Text(
-            text = CurrencyFormatHelper.formatToRupiah(amount),
+            text = NumberFormatHelper.formatToConciseRupiah(amount),
             style = TextStyle(
                 fontSize = 11.sp,
                 fontFamily = interFontFamily,

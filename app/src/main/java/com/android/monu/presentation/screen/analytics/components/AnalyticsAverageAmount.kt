@@ -28,7 +28,7 @@ import com.android.monu.domain.model.AverageTransactionAmount
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.CurrencyFormatHelper
+import com.android.monu.utils.NumberFormatHelper
 import kotlin.math.roundToLong
 
 @Composable
@@ -52,11 +52,11 @@ fun AnalyticsAverageAmount(
             icon = R.drawable.ic_trending_up,
             iconColor = Green,
             dailyTitle = stringResource(R.string.daily_avg_income),
-            dailyAmount = CurrencyFormatHelper.formatToRupiah(dailyAverageIncome),
+            dailyAmount = NumberFormatHelper.formatToConciseRupiah(dailyAverageIncome),
             monthlyTitle = stringResource(R.string.monthly_avg_income),
-            monthlyAmount = CurrencyFormatHelper.formatToRupiah(monthlyAverageIncome),
+            monthlyAmount = NumberFormatHelper.formatToConciseRupiah(monthlyAverageIncome),
             yearlyTitle = stringResource(R.string.yearly_avg_income),
-            yearlyAmount = CurrencyFormatHelper.formatToRupiah(yearlyAverageIncome),
+            yearlyAmount = NumberFormatHelper.formatToConciseRupiah(yearlyAverageIncome),
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp)
@@ -66,11 +66,11 @@ fun AnalyticsAverageAmount(
             icon = R.drawable.ic_trending_down,
             iconColor = Red,
             dailyTitle = stringResource(R.string.daily_avg_expense),
-            dailyAmount = CurrencyFormatHelper.formatToRupiah(dailyAverageExpense),
+            dailyAmount = NumberFormatHelper.formatToConciseRupiah(dailyAverageExpense),
             monthlyTitle = stringResource(R.string.monthly_avg_expense),
-            monthlyAmount = CurrencyFormatHelper.formatToRupiah(monthlyAverageExpense),
+            monthlyAmount = NumberFormatHelper.formatToConciseRupiah(monthlyAverageExpense),
             yearlyTitle = stringResource(R.string.yearly_avg_expense),
-            yearlyAmount = CurrencyFormatHelper.formatToRupiah(yearlyAverageExpense),
+            yearlyAmount = NumberFormatHelper.formatToConciseRupiah(yearlyAverageExpense),
             modifier = Modifier
                 .weight(1f)
                 .padding(horizontal = 8.dp)

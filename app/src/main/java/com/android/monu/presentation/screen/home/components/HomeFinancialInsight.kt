@@ -16,14 +16,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.monu.R
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
+import com.android.monu.utils.NumberFormatHelper
 
 @Composable
 fun HomeFinancialInsight(
@@ -77,7 +80,7 @@ fun FinancialHealthyStatus(
                 modifier = Modifier.padding(start = 8.dp, end = 4.dp)
             ) {
                 Text(
-                    text = "Financial Status",
+                    text = stringResource(R.string.financial_status),
                     style = TextStyle(
                         fontSize = 10.sp,
                         fontFamily = interFontFamily,
@@ -86,7 +89,7 @@ fun FinancialHealthyStatus(
                     )
                 )
                 Text(
-                    text = "Very Healthy",
+                    text = "Sangat sehat",
                     modifier = Modifier.padding(top = 2.dp),
                     style = TextStyle(
                         fontSize = 13.sp,
@@ -118,7 +121,7 @@ fun ExpensePrediction(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp)
         ) {
             Text(
-                text = "Expense Prediction",
+                text = stringResource(R.string.expense_prediction),
                 style = TextStyle(
                     fontSize = 10.sp,
                     fontFamily = interFontFamily,
@@ -127,7 +130,7 @@ fun ExpensePrediction(
                 )
             )
             Text(
-                text = "Rp2.500.000",
+                text = NumberFormatHelper.formatToConciseRupiah(130_000_000_000),
                 modifier = Modifier.padding(top = 2.dp),
                 style = TextStyle(
                     fontSize = 14.sp,

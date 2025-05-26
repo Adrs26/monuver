@@ -50,12 +50,12 @@ import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.CurrencyFormatHelper
-import com.android.monu.util.DataHelper
-import com.android.monu.util.toFullMonthResourceId
-import com.android.monu.util.toHighestRangeValue
-import com.android.monu.util.toTransactionType
-import com.android.monu.util.toTransactionTypeCode
+import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.utils.DataHelper
+import com.android.monu.utils.extensions.toFullMonthResourceId
+import com.android.monu.utils.extensions.toHighestRangeValue
+import com.android.monu.utils.extensions.toTransactionType
+import com.android.monu.utils.extensions.toTransactionTypeCode
 
 @Composable
 fun AnalyticsBarChart(
@@ -169,7 +169,7 @@ fun BarChartYAxis(
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Text(
-                    text = CurrencyFormatHelper.rupiahToShortFormat(it.amount),
+                    text = NumberFormatHelper.formatToShortRupiah(it.amount),
                     style = TextStyle(
                         fontSize = 7.sp,
                         fontFamily = interFontFamily,
@@ -250,7 +250,7 @@ fun BarChartGraphInformation(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
             Text(
-                text = CurrencyFormatHelper.formatToRupiah(transactionsOverview[index].amount),
+                text = NumberFormatHelper.formatToRupiah(transactionsOverview[index].amount),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = interFontFamily,

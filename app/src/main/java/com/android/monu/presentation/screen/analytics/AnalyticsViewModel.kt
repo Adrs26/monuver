@@ -9,7 +9,7 @@ import com.android.monu.domain.usecase.GetAverageTransactionAmountUseCase
 import com.android.monu.domain.usecase.GetMonthlyTransactionOverviewUseCase
 import com.android.monu.domain.usecase.GetMostExpenseTransactionCategoryAmountByYear
 import com.android.monu.presentation.screen.analytics.components.BarChartScaleLabel
-import com.android.monu.util.toHighestRangeValue
+import com.android.monu.utils.extensions.toHighestRangeValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

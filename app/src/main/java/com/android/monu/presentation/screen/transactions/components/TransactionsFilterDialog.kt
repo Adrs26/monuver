@@ -36,7 +36,7 @@ import com.android.monu.presentation.screen.transactions.TransactionFilterData
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.toShortMonthResourceId
+import com.android.monu.utils.extensions.toShortMonthResourceId
 import kotlin.math.ceil
 
 @Composable

@@ -38,17 +38,19 @@ import com.android.monu.presentation.components.TextInputField
 import com.android.monu.presentation.screen.transactions.transaction.component.CategoryBottomSheetContent
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.LightGrey
-import com.android.monu.util.CurrencyFormatHelper
-import com.android.monu.util.DateHelper
-import com.android.monu.util.debouncedClickable
-import com.android.monu.util.showMessageWithToast
-import com.android.monu.util.toCategoryCode
-import com.android.monu.util.toCategoryName
+import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.extensions.debouncedClickable
+import com.android.monu.utils.extensions.showMessageWithToast
+import com.android.monu.utils.extensions.toCategoryCode
+import com.android.monu.utils.extensions.toCategoryName
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +66,7 @@ fun AddExpenseScreen(
     var rawAmountInput by rememberSaveable { mutableLongStateOf(0L) }
     var amountFieldValue by remember {
         mutableStateOf(TextFieldValue(
-            text = CurrencyFormatHelper.formatToThousandDivider(rawAmountInput))
+            text = NumberFormatHelper.formatToThousandDivider(rawAmountInput))
         )
     }
     var budgetingId by rememberSaveable { mutableStateOf<Long?>(null) }
@@ -136,7 +138,7 @@ fun AddExpenseScreen(
                         rawAmountInput = cleanInput.toLong()
                     }
 
-                    val formattedText = CurrencyFormatHelper.formatToThousandDivider(rawAmountInput)
+                    val formattedText = NumberFormatHelper.formatToThousandDivider(rawAmountInput)
                     val newCursorPosition = formattedText.length
 
                     amountFieldValue = TextFieldValue(
@@ -205,7 +207,14 @@ fun AddExpenseScreen(
     CalendarDialog(
         state = calendarState,
         selection = CalendarSelection.Date { selectedDate ->
-            date = selectedDate.toString()
+            val inputDate = LocalDate.parse(selectedDate.toString(), DateTimeFormatter.ISO_LOCAL_DATE)
+            val today = LocalDate.now()
+            val isAfterToday = inputDate.isAfter(today)
+            if (isAfterToday) {
+                "You cannot select a future date".showMessageWithToast(context)
+            } else {
+                date = selectedDate.toString()
+            }
         },
         config = CalendarConfig(
             monthSelection = true,

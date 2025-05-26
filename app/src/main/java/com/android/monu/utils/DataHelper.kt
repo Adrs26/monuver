@@ -1,8 +1,6 @@
-package com.android.monu.util
+package com.android.monu.utils
 
-import android.content.Context
 import com.android.monu.R
-import kotlin.math.roundToLong
 
 object DataHelper {
     val monthLabels = listOf(
@@ -42,8 +40,4 @@ object DataHelper {
         R.string.commission,
         R.string.other_income
     )
-
-    fun calculateToPercentageValue(value: Long, total: Long): Long {
-        return (value.toFloat() / total.toFloat() * 100).roundToLong()
-    }
 }

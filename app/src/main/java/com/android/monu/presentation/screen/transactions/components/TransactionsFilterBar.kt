@@ -19,8 +19,8 @@ import com.android.monu.R
 import com.android.monu.presentation.components.TypeFilterButton
 import com.android.monu.presentation.screen.transactions.TransactionFilterData
 import com.android.monu.ui.theme.Blue
-import com.android.monu.util.toTransactionType
-import com.android.monu.util.toTransactionTypeCode
+import com.android.monu.utils.extensions.toTransactionType
+import com.android.monu.utils.extensions.toTransactionTypeCode
 
 @Composable
 fun TransactionsFilterBar(
@@ -83,7 +83,7 @@ fun TypeButtonMenu(
                 transactionsType = stringResource(type),
                 background = if (isSelected) Color.White else Color.LightGray,
                 textColor = Color.Black,
-                horizontalPadding = 16.dp,
+                horizontalPadding = 8.dp,
                 verticalPadding = 8.dp,
                 modifier = Modifier
                     .weight(1f)

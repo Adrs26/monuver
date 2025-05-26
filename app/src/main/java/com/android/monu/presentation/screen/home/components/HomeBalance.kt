@@ -29,9 +29,8 @@ import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.Green
-import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.util.CurrencyFormatHelper
+import com.android.monu.utils.NumberFormatHelper
 
 @Composable
 fun HomeBalance(
@@ -48,26 +47,20 @@ fun HomeBalance(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Row(
-                modifier = Modifier.padding(bottom = 4.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.your_balance),
-                    modifier = Modifier.weight(1f),
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontFamily = interFontFamily,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.White
-                    )
-                )
-                BalanceFilter()
-            }
             Text(
-                text = CurrencyFormatHelper.formatToRupiah(totalIncomeAmount - totalExpenseAmount),
+                text = stringResource(R.string.your_balance),
                 style = TextStyle(
-                    fontSize = 24.sp,
+                    fontSize = 14.sp,
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.White
+                )
+            )
+            Text(
+                text = NumberFormatHelper.formatToConciseRupiah(totalIncomeAmount - totalExpenseAmount),
+                modifier = Modifier.padding(top = 4.dp),
+                style = TextStyle(
+                    fontSize = 22.sp,
                     fontFamily = interFontFamily,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.White
@@ -127,7 +120,7 @@ fun IncomeExpenseCard(
                 icon = R.drawable.ic_trending_up,
                 color = Green,
                 title = stringResource(R.string.income),
-                value = CurrencyFormatHelper.formatToRupiah(totalIncomeAmount),
+                value = NumberFormatHelper.formatToConciseRupiah(totalIncomeAmount),
                 modifier = Modifier.weight(1f)
             )
             VerticalDivider(
@@ -141,7 +134,7 @@ fun IncomeExpenseCard(
                 icon = R.drawable.ic_trending_down,
                 color = Color.Red,
                 title = stringResource(R.string.expense),
-                value = CurrencyFormatHelper.formatToRupiah(totalExpenseAmount),
+                value = NumberFormatHelper.formatToConciseRupiah(totalExpenseAmount),
                 modifier = Modifier.weight(1f)
             )
         }
