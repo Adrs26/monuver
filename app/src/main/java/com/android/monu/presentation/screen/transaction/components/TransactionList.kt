@@ -1,17 +1,22 @@
-package com.android.monu.presentation.screen.home.components
+package com.android.monu.presentation.screen.transaction.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,39 +30,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import com.android.monu.R
 import com.android.monu.domain.model.TransactionConcise
-import com.android.monu.presentation.components.ActionButton
-import com.android.monu.presentation.screen.transaction.components.TransactionData
-import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.utils.NumberFormatHelper
 import com.android.monu.utils.DateHelper
+import com.android.monu.utils.extensions.debouncedClickable
 import com.android.monu.utils.extensions.toCategoryColor
 import com.android.monu.utils.extensions.toCategoryIcon
 
 @Composable
-fun HomeRecentTransactions(
-    recentTransactions: List<TransactionConcise>,
+fun TransactionList(
+    transactions: LazyPagingItems<TransactionConcise>,
+    listState: LazyListState,
     modifier: Modifier = Modifier,
-    navigateToTransactions: () -> Unit
+    navigateToEditTransaction: (Long) -> Unit
 ) {
-    Card(
-        modifier = modifier
-            .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp))
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    Box(
+        modifier = modifier.fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+        if (transactions.itemCount == 0 && transactions.loadState.refresh is LoadState.NotLoading) {
             Text(
-                text = stringResource(R.string.recent_transactions),
+                text = stringResource(R.string.no_transactions_yet),
+                modifier = Modifier.align(Alignment.Center),
                 style = TextStyle(
                     fontSize = 14.sp,
                     fontFamily = interFontFamily,
@@ -65,75 +65,68 @@ fun HomeRecentTransactions(
                     color = Color.Black
                 )
             )
-            RecentTransactionList(
-                recentTransactions = recentTransactions,
-                navigateToTransactions = navigateToTransactions
-            )
-        }
-    }
-}
-
-@Composable
-fun RecentTransactionList(
-    recentTransactions: List<TransactionConcise>,
-    modifier: Modifier = Modifier,
-    navigateToTransactions: () -> Unit
-) {
-    Box(
-        modifier = modifier.fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        if (recentTransactions.isEmpty()) {
-            Text(
-                text = stringResource(R.string.no_transactions_yet),
-                modifier = Modifier.padding(top = 48.dp, bottom = 40.dp),
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    fontFamily = interFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black
-                )
-            )
         } else {
-            Column {
-                LazyColumn(modifier = Modifier.padding(vertical = 8.dp)) {
-                    items(recentTransactions.size) { index ->
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = listState,
+                contentPadding = PaddingValues(vertical = 8.dp, horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(
+                    count = transactions.itemCount,
+                    key = { index -> transactions[index]?.id!! }
+                ) { index ->
+                    transactions[index]?.let { transaction ->
                         val transactionData = TransactionData(
-                            id = recentTransactions[index].id,
-                            title = recentTransactions[index].title,
-                            type = recentTransactions[index].type,
-                            category = recentTransactions[index].category,
-                            date = recentTransactions[index].date,
-                            amount = recentTransactions[index].amount
+                            id = transaction.id,
+                            title = transaction.title,
+                            type = transaction.type,
+                            category = transaction.category,
+                            date = transaction.date,
+                            amount = transaction.amount
                         )
-                        RecentTransactionsListItem(transactionData = transactionData)
+
+                        TransactionListItem(
+                            transactionData = transactionData,
+                            modifier = Modifier.animateItem(),
+                            navigateToEditTransaction = navigateToEditTransaction
+                        )
                     }
                 }
-                ActionButton(
-                    text = stringResource(R.string.see_all_transactions),
-                    color = Blue,
-                    modifier = Modifier.padding(top = 16.dp),
-                    onClick = navigateToTransactions
-                )
+
+                when (transactions.loadState.append) {
+                    is LoadState.Loading -> {
+                        item { CircularProgressIndicator(modifier = Modifier.padding(16.dp)) }
+                    }
+                    is LoadState.Error -> {
+                        val error = (transactions.loadState.append as LoadState.Error).error
+                        item { Text("Error: ${error.localizedMessage}") }
+                    }
+                    else -> {}
+                }
             }
         }
     }
 }
 
 @Composable
-fun RecentTransactionsListItem(
+fun TransactionListItem(
     transactionData: TransactionData,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToEditTransaction: (Long) -> Unit
 ) {
     Card(
-        modifier = modifier,
+        modifier = modifier
+            .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp))
+            .debouncedClickable { navigateToEditTransaction(transactionData.id) },
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
@@ -177,7 +170,7 @@ fun RecentTransactionsListItem(
                 )
             }
             Text(
-                text = NumberFormatHelper.formatToConciseRupiah(transactionData.amount),
+                text = NumberFormatHelper.formatToRupiah(transactionData.amount),
                 modifier = Modifier.padding(horizontal = 8.dp),
                 style = TextStyle(
                     fontSize = 14.sp,
@@ -190,11 +183,27 @@ fun RecentTransactionsListItem(
     }
 }
 
+data class TransactionData(
+    val id: Long,
+    val title: String,
+    val type: Int,
+    val category: Int,
+    val date: String,
+    val amount: Long,
+)
+
 @Preview(showBackground = true)
 @Composable
-fun HomeRecentTransactionsPreview() {
-    HomeRecentTransactions(
-        recentTransactions = emptyList(),
-        navigateToTransactions = {}
+fun TransactionListItemPreview() {
+    TransactionListItem(
+        transactionData = TransactionData(
+            id = 0,
+            title = "Breakfast",
+            type = 2,
+            category = 1,
+            date = "2025-18-5",
+            amount = 15000L
+        ),
+        navigateToEditTransaction = {}
     )
 }

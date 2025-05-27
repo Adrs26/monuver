@@ -23,6 +23,7 @@ fun HomeScreen(
     totalExpenseAmount: Long,
     recentTransactions: List<TransactionConcise>,
     navigateToSettings: () -> Unit,
+    navigateToBudgeting: () -> Unit,
     navigateToTransactions: () -> Unit
 ) {
     Column(
@@ -42,7 +43,10 @@ fun HomeScreen(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         HomeFinancialInsight(modifier = Modifier.padding(horizontal = 16.dp))
-        HomeMenuButtonBar(modifier = Modifier.padding(horizontal = 12.dp))
+        HomeMenuButtonBar(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            navigateToBudgeting = navigateToBudgeting
+        )
         HomeRecentTransactions(
             recentTransactions = recentTransactions,
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -59,6 +63,7 @@ fun HomeScreenPreview() {
         totalExpenseAmount = 500000L,
         recentTransactions = emptyList(),
         navigateToSettings = {},
+        navigateToBudgeting = {},
         navigateToTransactions = {}
     )
 }

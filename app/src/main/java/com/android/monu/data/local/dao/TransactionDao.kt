@@ -63,7 +63,7 @@ interface TransactionDao {
         GROUP BY month, year
         ORDER BY year, month
     """)
-    fun getTransactionMonthlyAmount(year: Int): Flow<List<TransactionMonthlyAmountProj>>
+    fun getTransactionMonthlyAmounts(year: Int): Flow<List<TransactionMonthlyAmountProj>>
 
     @Query("""
         WITH all_dates AS (
@@ -127,7 +127,7 @@ interface TransactionDao {
         GROUP BY year, month
         ORDER BY year, month
     """)
-    fun getMonthlyTransactionOverviewByType(type: Int, year: Int): Flow<List<TransactionOverviewProj>>
+    fun getMonthlyTransactionOverviewsByType(type: Int, year: Int): Flow<List<TransactionOverviewProj>>
 
     @Query("""
         SELECT category, SUM(amount) AS amount 
@@ -137,7 +137,7 @@ interface TransactionDao {
         ORDER BY amount DESC 
         LIMIT 5
     """)
-    fun getMostExpenseTransactionCategoryAmountByYear(year: Int): Flow<List<TransactionCategoryAmountProj>>
+    fun getMostExpenseTransactionCategoryAmountsByYear(year: Int): Flow<List<TransactionCategoryAmountProj>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTransaction(transaction: TransactionEntity): Long

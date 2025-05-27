@@ -27,33 +27,35 @@ import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
+import com.android.monu.presentation.screen.budgeting.BudgetingScreen
 import com.android.monu.presentation.screen.home.HomeScreen
 import com.android.monu.presentation.screen.home.HomeViewModel
-import com.android.monu.presentation.screen.reports.ReportsFilterCallbacks
-import com.android.monu.presentation.screen.reports.ReportsFilterState
-import com.android.monu.presentation.screen.reports.ReportsScreen
-import com.android.monu.presentation.screen.reports.ReportsViewModel
-import com.android.monu.presentation.screen.reports.detail.ReportsDetailScreen
+import com.android.monu.presentation.screen.report.ReportFilterCallbacks
+import com.android.monu.presentation.screen.report.ReportFilterState
+import com.android.monu.presentation.screen.report.ReportScreen
+import com.android.monu.presentation.screen.report.ReportViewModel
+import com.android.monu.presentation.screen.report.detail.ReportsDetailScreen
 import com.android.monu.presentation.screen.settings.SettingsScreen
-import com.android.monu.presentation.screen.transactions.TransactionFilterCallbacks
-import com.android.monu.presentation.screen.transactions.TransactionFilterState
-import com.android.monu.presentation.screen.transactions.TransactionsScreen
-import com.android.monu.presentation.screen.transactions.TransactionsViewModel
-import com.android.monu.presentation.screen.transactions.transaction.AddExpenseScreen
-import com.android.monu.presentation.screen.transactions.transaction.AddExpenseViewModel
-import com.android.monu.presentation.screen.transactions.transaction.AddIncomeScreen
-import com.android.monu.presentation.screen.transactions.transaction.AddIncomeViewModel
-import com.android.monu.presentation.screen.transactions.transaction.EditTransactionScreen
-import com.android.monu.presentation.screen.transactions.transaction.EditTransactionViewModel
+import com.android.monu.presentation.screen.transaction.TransactionFilterCallbacks
+import com.android.monu.presentation.screen.transaction.TransactionFilterState
+import com.android.monu.presentation.screen.transaction.TransactionScreen
+import com.android.monu.presentation.screen.transaction.TransactionsViewModel
+import com.android.monu.presentation.screen.transaction.add_expense.AddExpenseScreen
+import com.android.monu.presentation.screen.transaction.add_expense.AddExpenseViewModel
+import com.android.monu.presentation.screen.transaction.add_income.AddIncomeScreen
+import com.android.monu.presentation.screen.transaction.add_income.AddIncomeViewModel
+import com.android.monu.presentation.screen.transaction.edit_transaction.EditTransactionScreen
+import com.android.monu.presentation.screen.transaction.edit_transaction.EditTransactionViewModel
 import com.android.monu.ui.navigation.AddExpense
 import com.android.monu.ui.navigation.AddIncome
 import com.android.monu.ui.navigation.Analytics
+import com.android.monu.ui.navigation.Budgeting
 import com.android.monu.ui.navigation.EditTransaction
 import com.android.monu.ui.navigation.Home
+import com.android.monu.ui.navigation.Report
 import com.android.monu.ui.navigation.ReportDetail
-import com.android.monu.ui.navigation.Reports
 import com.android.monu.ui.navigation.Settings
-import com.android.monu.ui.navigation.Transactions
+import com.android.monu.ui.navigation.Transaction
 import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.SoftGrey
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -98,8 +100,9 @@ fun MonuApp(
                     totalExpenseAmount = totalExpenseAmount,
                     recentTransactions = recentTransactions,
                     navigateToSettings = { navController.navigate(Settings) },
+                    navigateToBudgeting = { navController.navigate(Budgeting) },
                     navigateToTransactions = {
-                        navController.navigate(Transactions) {
+                        navController.navigate(Transaction) {
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
                             restoreState = true
                             launchSingleTop = true
@@ -107,10 +110,10 @@ fun MonuApp(
                     }
                 )
             }
-            composable<Transactions> {
+            composable<Transaction> {
                 val viewModel = koinViewModel<TransactionsViewModel>()
 
-                val transactions = viewModel.transactions.collectAsLazyPagingItems()
+                val transactionList = viewModel.transactionList.collectAsLazyPagingItems()
                 val searchQuery by viewModel.queryFilter.collectAsStateWithLifecycle()
                 val selectedType by viewModel.selectedTypeFilter.collectAsStateWithLifecycle()
                 val selectedYear by viewModel.selectedYearFilter.collectAsStateWithLifecycle()
@@ -132,8 +135,8 @@ fun MonuApp(
                     onFilterYearMonthApply = viewModel::selectYearAndMonth
                 )
 
-                TransactionsScreen(
-                    transactions = transactions,
+                TransactionScreen(
+                    transactionList = transactionList,
                     filterState = filterState,
                     filterCallbacks = filterCallbacks,
                     navigateToAddIncome = { navController.navigate(AddIncome) },
@@ -143,26 +146,26 @@ fun MonuApp(
                     }
                 )
             }
-            composable<Reports> {
-                val viewModel = koinViewModel<ReportsViewModel>()
+            composable<Report> {
+                val viewModel = koinViewModel<ReportViewModel>()
 
-                val listTransactionsMonthlyAmount by viewModel
-                    .listTransactionsMonthlyAmount.collectAsStateWithLifecycle()
+                val listTransactionMonthlyAmount by viewModel
+                    .listTransactionMonthlyAmount.collectAsStateWithLifecycle()
                 val selectedYear by viewModel.selectedYearFilter.collectAsStateWithLifecycle()
                 val availableYears by viewModel.availableTransactionYears.collectAsStateWithLifecycle()
 
-                val filterState = ReportsFilterState(
+                val filterState = ReportFilterState(
                     selectedYear = selectedYear,
                     availableYears = availableYears
                 )
 
-                val filterCallbacks = ReportsFilterCallbacks(
+                val filterCallbacks = ReportFilterCallbacks(
                     onFilterClick = viewModel::loadAvailableTransactionYears,
                     onYearFilterSelect = viewModel::selectYear
                 )
 
-                ReportsScreen(
-                    listTransactionsMonthlyAmount = listTransactionsMonthlyAmount,
+                ReportScreen(
+                    listTransactionMonthlyAmount = listTransactionMonthlyAmount,
                     filterState = filterState,
                     filterCallbacks = filterCallbacks,
                     navigateToDetail = { navController.navigate(ReportDetail) }
@@ -282,6 +285,17 @@ fun MonuApp(
                 popExitTransition = { NavigationAnimation.popExit }
             ) {
                 ReportsDetailScreen(
+                    navigateBack = { navController.navigateUp() }
+                )
+            }
+            composable<Budgeting>(
+                enterTransition = { NavigationAnimation.enter },
+                exitTransition = { NavigationAnimation.exit },
+                popEnterTransition = { NavigationAnimation.popEnter },
+                popExitTransition = { NavigationAnimation.popExit }
+            ) {
+                BudgetingScreen(
+                    onHistoryClick = { },
                     navigateBack = { navController.navigateUp() }
                 )
             }

@@ -27,7 +27,7 @@ interface TransactionRepository {
 
     fun getAvailableTransactionYears(): Flow<List<Int>>
 
-    fun getTransactionMonthlyAmount(year: Int): Flow<List<TransactionMonthlyAmount>>
+    fun getTransactionMonthlyAmounts(year: Int): Flow<List<TransactionMonthlyAmount>>
 
     fun getAverageTransactionAmountPerDay(type: Int): Flow<Double>
 
@@ -35,9 +35,9 @@ interface TransactionRepository {
 
     fun getAverageTransactionAmountPerYear(type: Int): Flow<Double>
 
-    fun getMonthlyTransactionOverviewByType(type: Int, year: Int): Flow<List<TransactionOverview>>
+    fun getMonthlyTransactionOverviewsByType(type: Int, year: Int): Flow<List<TransactionOverview>>
 
-    fun getMostExpenseTransactionCategoryAmountByYear(year: Int): Flow<List<TransactionCategoryAmount>>
+    fun getMostExpenseTransactionCategoryAmountsByYear(year: Int): Flow<List<TransactionCategoryAmount>>
 
     suspend fun insertTransaction(transaction: Transaction): Result<Long>
 

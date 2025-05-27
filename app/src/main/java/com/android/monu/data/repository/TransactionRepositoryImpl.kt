@@ -72,8 +72,8 @@ class TransactionRepositoryImpl(
         return transactionDao.getAvailableTransactionYears()
     }
 
-    override fun getTransactionMonthlyAmount(year: Int): Flow<List<TransactionMonthlyAmount>> {
-        return transactionDao.getTransactionMonthlyAmount(year).map { entityList ->
+    override fun getTransactionMonthlyAmounts(year: Int): Flow<List<TransactionMonthlyAmount>> {
+        return transactionDao.getTransactionMonthlyAmounts(year).map { entityList ->
             entityList.map { entity ->
                 TransactionMapper.transactionMonthlyAmountEntityToDomain(entity)
             }
@@ -92,21 +92,21 @@ class TransactionRepositoryImpl(
         return transactionDao.getAverageTransactionAmountPerYear(type).map { it ?: 0.0 }
     }
 
-    override fun getMonthlyTransactionOverviewByType(
+    override fun getMonthlyTransactionOverviewsByType(
         type: Int,
         year: Int
     ): Flow<List<TransactionOverview>> {
-        return transactionDao.getMonthlyTransactionOverviewByType(type, year).map { entityList ->
+        return transactionDao.getMonthlyTransactionOverviewsByType(type, year).map { entityList ->
             entityList.map { entity ->
                 TransactionMapper.transactionOverviewEntityToDomain(entity)
             }
         }
     }
 
-    override fun getMostExpenseTransactionCategoryAmountByYear(
+    override fun getMostExpenseTransactionCategoryAmountsByYear(
         year: Int
     ): Flow<List<TransactionCategoryAmount>> {
-        return transactionDao.getMostExpenseTransactionCategoryAmountByYear(year).map { entityList ->
+        return transactionDao.getMostExpenseTransactionCategoryAmountsByYear(year).map { entityList ->
             entityList.map { entity ->
                 TransactionMapper.transactionCategoryAmountEntityToDomain(entity)
             }

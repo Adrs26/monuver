@@ -1,0 +1,254 @@
+package com.android.monu.presentation.screen.transaction.edit_transaction
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import com.android.monu.R
+import com.android.monu.domain.model.Transaction
+import com.android.monu.presentation.components.ActionButton
+import com.android.monu.presentation.components.AmountInputField
+import com.android.monu.presentation.components.TextInputField
+import com.android.monu.presentation.screen.transaction.components.TransactionCategoryBottomSheetContent
+import com.android.monu.presentation.screen.transaction.edit_transaction.components.DeleteTransactionDialog
+import com.android.monu.presentation.screen.transaction.edit_transaction.components.EditTransactionAppBar
+import com.android.monu.ui.theme.Blue
+import com.android.monu.ui.theme.LightGrey
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.utils.extensions.debouncedClickable
+import com.android.monu.utils.extensions.showMessageWithToast
+import com.android.monu.utils.extensions.toCategoryCode
+import com.android.monu.utils.extensions.toCategoryName
+import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarConfig
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditTransactionScreen(
+    transaction: Transaction,
+    updateResult: Result<Int>?,
+    onResetUpdateResultValue: () -> Unit,
+    onSaveButtonClick: (UpdateTransactionData) -> Unit,
+    onDeleteClick: (Long) -> Unit,
+    navigateBack: () -> Unit
+) {
+    var title by rememberSaveable { mutableStateOf(transaction.title) }
+    var category by rememberSaveable { mutableIntStateOf(transaction.category) }
+    var date by rememberSaveable { mutableStateOf(transaction.date) }
+    var rawAmountInput by rememberSaveable { mutableLongStateOf(transaction.amount) }
+    var amountFieldValue by remember {
+        mutableStateOf(TextFieldValue(
+            text = NumberFormatHelper.formatToThousandDivider(rawAmountInput))
+        )
+    }
+    var budgetingId by rememberSaveable { mutableStateOf<Long?>(transaction.budgetingId) }
+    var budgetingTitle by rememberSaveable { mutableStateOf<String?>(transaction.budgetingTitle) }
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showCategoryBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    val calendarState = rememberSheetState()
+    val context = LocalContext.current
+
+    LaunchedEffect(updateResult) {
+        updateResult?.let {
+            if (it.isSuccess) {
+                context.getString(R.string.transaction_successfully_updated)
+                    .showMessageWithToast(context)
+                onResetUpdateResultValue()
+                navigateBack()
+            } else {
+                context.getString(R.string.empty_input_field).showMessageWithToast(context)
+            }
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            EditTransactionAppBar(
+                navigateBack = navigateBack,
+                onDeleteClick = { showDeleteDialog = true }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(LightGrey)
+                .padding(innerPadding)
+        ) {
+            TextInputField(
+                title = stringResource(R.string.title),
+                value = title,
+                onValueChange = { title = it },
+                placeholderText = stringResource(R.string.transaction_title),
+            )
+            TextInputField(
+                title = stringResource(R.string.category),
+                value = stringResource(category.toCategoryName()),
+                onValueChange = {},
+                placeholderText = stringResource(R.string.choose_category),
+                modifier = Modifier.debouncedClickable { showCategoryBottomSheet = true },
+                isEnable = false
+            )
+            TextInputField(
+                title = stringResource(R.string.date),
+                value = DateHelper.formatDateToReadable(date),
+                onValueChange = {},
+                placeholderText = stringResource(R.string.choose_date),
+                modifier = Modifier.debouncedClickable { calendarState.show() },
+                isEnable = false
+            )
+            AmountInputField(
+                title = stringResource(R.string.amount),
+                value = amountFieldValue,
+                onValueChange = {
+                    if (it.text.isEmpty()) {
+                        rawAmountInput = 0
+                    } else {
+                        val cleanInput = it.text.replace(Regex("\\D"), "")
+                        rawAmountInput = cleanInput.toLong()
+                    }
+
+                    val formattedText = NumberFormatHelper.formatToThousandDivider(rawAmountInput)
+                    val newCursorPosition = formattedText.length
+
+                    amountFieldValue = TextFieldValue(
+                        text = formattedText,
+                        selection = TextRange(newCursorPosition)
+                    )
+                },
+                placeholderText = "0",
+            )
+            if (transaction.type == 2) {
+                TextInputField(
+                    title = stringResource(R.string.budgeting),
+                    value = budgetingTitle ?: "",
+                    onValueChange = {},
+                    placeholderText = stringResource(R.string.choose_budgeting),
+                    isEnable = false
+                )
+            }
+            ActionButton(
+                text = stringResource(R.string.save),
+                color = Blue,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp),
+                onClick = {
+                    val updateTransactionData = UpdateTransactionData(
+                        id = transaction.id,
+                        title = title,
+                        type = transaction.type,
+                        category = category,
+                        date = date,
+                        amount = rawAmountInput,
+                        budgetingId = budgetingId,
+                        budgetingTitle = budgetingTitle
+                    )
+                    onSaveButtonClick(updateTransactionData)
+                }
+            )
+        }
+    }
+
+    if(showDeleteDialog) {
+        DeleteTransactionDialog(
+            onConfirmClick = {
+                onDeleteClick(transaction.id)
+                context.getString(R.string.transaction_successfully_deleted)
+                    .showMessageWithToast(context)
+                navigateBack()
+            },
+            onDismissRequest = { showDeleteDialog = false }
+        )
+    }
+
+    if (showCategoryBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showCategoryBottomSheet = false },
+            sheetState = sheetState,
+            shape = BottomSheetDefaults.ExpandedShape,
+            containerColor = Color.White,
+            dragHandle = {
+                Box(
+                    Modifier
+                        .padding(vertical = 8.dp)
+                        .size(width = 36.dp, height = 2.dp)
+                        .background(Color.Gray, RoundedCornerShape(2.dp))
+                )
+            }
+        ) {
+            TransactionCategoryBottomSheetContent(
+                categoryType = if (transaction.type == 1) "Income" else "Expense",
+                onItemClick = { categoryResId ->
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showCategoryBottomSheet = false
+                            category = categoryResId.toCategoryCode()
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    CalendarDialog(
+        state = calendarState,
+        selection = CalendarSelection.Date { selectedDate ->
+            val inputDate = LocalDate.parse(selectedDate.toString(), DateTimeFormatter.ISO_LOCAL_DATE)
+            val today = LocalDate.now()
+            val isAfterToday = inputDate.isAfter(today)
+            if (isAfterToday) {
+                "You cannot select a future date".showMessageWithToast(context)
+            } else {
+                date = selectedDate.toString()
+            }
+        },
+        config = CalendarConfig(
+            monthSelection = true,
+            yearSelection = true
+        )
+    )
+}
+
+data class UpdateTransactionData(
+    val id: Long,
+    val title: String,
+    val type: Int,
+    val category: Int,
+    val date: String,
+    val amount: Long,
+    val budgetingId: Long? = null,
+    val budgetingTitle: String? = null
+)

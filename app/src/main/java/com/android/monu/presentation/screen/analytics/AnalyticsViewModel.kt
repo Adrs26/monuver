@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.model.AverageTransactionAmount
 import com.android.monu.domain.usecase.GetAvailableTransactionYearsUseCase
 import com.android.monu.domain.usecase.GetAverageTransactionAmountUseCase
-import com.android.monu.domain.usecase.GetMonthlyTransactionOverviewUseCase
-import com.android.monu.domain.usecase.GetMostExpenseTransactionCategoryAmountByYear
+import com.android.monu.domain.usecase.GetMonthlyTransactionOverviewsUseCase
+import com.android.monu.domain.usecase.GetMostExpenseTransactionCategoryAmountsByYear
 import com.android.monu.presentation.screen.analytics.components.BarChartScaleLabel
 import com.android.monu.utils.extensions.toHighestRangeValue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,8 +24,8 @@ import kotlinx.coroutines.launch
 class AnalyticsViewModel(
     private val getAverageTransactionAmountUseCase: GetAverageTransactionAmountUseCase,
     private val getAvailableTransactionYearsUseCase: GetAvailableTransactionYearsUseCase,
-    private val getMonthlyTransactionOverviewUseCase: GetMonthlyTransactionOverviewUseCase,
-    private val getMostExpenseTransactionCategoryAmountByYearUseCase: GetMostExpenseTransactionCategoryAmountByYear
+    private val getMonthlyTransactionOverviewsUseCase: GetMonthlyTransactionOverviewsUseCase,
+    private val getMostExpenseTransactionCategoryAmountsByYearUseCase: GetMostExpenseTransactionCategoryAmountsByYear
 ) : ViewModel() {
 
     private val _averageTransactionAmount = MutableStateFlow<AverageTransactionAmount?>(null)
@@ -50,7 +50,7 @@ class AnalyticsViewModel(
         _barChartSelectedTypeFilter,
         _barChartSelectedYearFilter
     ) { type, year -> type to year }.flatMapLatest { (type, year) ->
-        getMonthlyTransactionOverviewUseCase.invoke(type, year)
+        getMonthlyTransactionOverviewsUseCase.invoke(type, year)
     }.onEach {
         val highestValue = it.maxOfOrNull { it.amount } ?: 0
         calculateBarScaleLabels(highestValue.toHighestRangeValue())
@@ -63,7 +63,7 @@ class AnalyticsViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val mostExpenseCategory = _pieChartSelectedYearFilter.flatMapLatest { year ->
-        getMostExpenseTransactionCategoryAmountByYearUseCase.invoke(year)
+        getMostExpenseTransactionCategoryAmountsByYearUseCase.invoke(year)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _availableTransactionYears = MutableStateFlow<List<Int>>(emptyList())

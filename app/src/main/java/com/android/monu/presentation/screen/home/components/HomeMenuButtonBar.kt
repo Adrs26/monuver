@@ -22,10 +22,12 @@ import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
+import com.android.monu.utils.extensions.debouncedClickable
 
 @Composable
 fun HomeMenuButtonBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToBudgeting: () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -36,28 +38,32 @@ fun HomeMenuButtonBar(
             title = stringResource(R.string.budgeting),
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .weight(1f)
+                .weight(1f),
+            onClick = navigateToBudgeting
         )
         HomeMenuButton(
             icon = R.drawable.ic_receipt_long,
             title = stringResource(R.string.bills),
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .weight(1f)
+                .weight(1f),
+            onClick = { }
         )
         HomeMenuButton(
             icon = R.drawable.ic_flag,
             title = stringResource(R.string.goals),
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .weight(1f)
+                .weight(1f),
+            onClick = { }
         )
         HomeMenuButton(
             icon = R.drawable.ic_currency_exchange,
             title = stringResource(R.string.currency),
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .weight(1f)
+                .weight(1f),
+            onClick = { }
         )
     }
 }
@@ -66,13 +72,15 @@ fun HomeMenuButtonBar(
 fun HomeMenuButton(
     icon: Int,
     title: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = modifier
             .background(color = Color.White, shape = RoundedCornerShape(16.dp))
             .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp))
-            .padding(12.dp),
+            .padding(12.dp)
+            .debouncedClickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
@@ -96,5 +104,7 @@ fun HomeMenuButton(
 @Preview(showBackground = true)
 @Composable
 fun HomeMenuButtonBarPreview() {
-    HomeMenuButtonBar()
+    HomeMenuButtonBar(
+        navigateToBudgeting = { }
+    )
 }

@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 object Home
 
 @Serializable
-object Transactions
+object Transaction
 
 @Serializable
-object Reports
+object Report
 
 @Serializable
 object Analytics
@@ -28,3 +28,6 @@ data class EditTransaction(val id: Long)
 
 @Serializable
 object ReportDetail
+
+@Serializable
+object Budgeting
