@@ -1,6 +1,7 @@
 package com.android.monu.presentation.screen.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -34,10 +35,11 @@ fun SettingsScreen(
             modifier = modifier
                 .fillMaxSize()
                 .background(LightGrey)
-                .padding(innerPadding)
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            AccountPreferenceContent(modifier = Modifier.padding(horizontal = 16.dp))
-            PrivacySecurityContent(modifier = Modifier.padding(16.dp))
+            AccountPreferenceContent(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp))
+            PrivacySecurityContent(modifier = Modifier.padding(horizontal = 16.dp))
             AboutContent(modifier = Modifier.padding(horizontal = 16.dp))
         }
     }

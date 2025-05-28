@@ -105,7 +105,18 @@ fun BottomNavBar(
 }
 
 fun shouldShowBottomNav(currentRoute: String?): Boolean {
-    return listOf(Home, Transaction, Report, Analytics).any {
-        currentRoute?.contains(it::class.simpleName ?: "") == true
-    }
+    val bottomNavDestination = listOf("Home", "Transaction", "Report", "Analytics")
+    val destinationName = extractDestinationName(currentRoute)
+    return destinationName in bottomNavDestination
+}
+
+private fun extractDestinationName(route: String?): String? {
+    if (route == null) return null
+
+    return route.split("/")
+        .first()
+        .split("?")
+        .first()
+        .split(".")
+        .last()
 }

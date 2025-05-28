@@ -1,6 +1,7 @@
 package com.android.monu.presentation.screen.analytics
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -79,11 +80,12 @@ fun AnalyticsScreen(
                 .fillMaxSize()
                 .background(LightGrey)
                 .padding(innerPadding)
-                .verticalScroll(scrollState)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             AnalyticsAverageAmount(
                 averageTransactionAmount = averageTransactionAmount,
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 16.dp)
+                modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 16.dp)
             )
             AnalyticsBarChart(
                 transactionsOverview = transactionsOverview,
@@ -96,7 +98,7 @@ fun AnalyticsScreen(
                 mostExpenseCategory = mostExpenseCategory,
                 filterState = filterState,
                 filterCallbacks = filterCallbacks,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             )
         }
     }

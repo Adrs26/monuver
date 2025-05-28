@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.monu.presentation.screen.budgeting.components.BudgetingAppBar
-import com.android.monu.presentation.screen.budgeting.components.BudgetingFilterBar
 import com.android.monu.presentation.screen.budgeting.components.BudgetingHeader
 import com.android.monu.presentation.screen.budgeting.components.BudgetingList
 import com.android.monu.ui.theme.Blue
@@ -57,8 +56,7 @@ fun BudgetingScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             BudgetingHeader(modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp))
-            BudgetingFilterBar(modifier = Modifier.padding(horizontal = 16.dp))
-            BudgetingList(modifier = Modifier.padding(horizontal = 4.dp))
+            BudgetingList()
         }
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
@@ -102,7 +103,7 @@ fun PieChartContent(
                 )
                 PieChartDetail(
                     mostExpenseCategory = mostExpenseCategory,
-                    modifier = Modifier.padding(start = 24.dp)
+                    modifier = Modifier.padding(start = 16.dp)
                 )
             }
         }
@@ -165,6 +166,8 @@ fun PieChartDetailData(
         ) {
             Text(
                 text = stringResource(category.toCategoryName()),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
                 style = TextStyle(
                     fontSize = 10.sp,
                     fontFamily = interFontFamily,

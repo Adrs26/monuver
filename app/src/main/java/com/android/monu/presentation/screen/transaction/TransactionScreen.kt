@@ -1,6 +1,7 @@
 package com.android.monu.presentation.screen.transaction
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -97,16 +98,17 @@ fun TransactionScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(LightGrey)
-                .padding(innerPadding)
+                .padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             TransactionSearchBar(
                 query = filterState.searchQuery,
                 onQueryChange = filterCallbacks.onSearchQueryChange,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
             )
             TransactionFilterBar(
                 transactionFilterData = transactionFilterData,
-                modifier = Modifier.padding(start = 16.dp, end = 12.dp, bottom = 8.dp),
+                modifier = Modifier.padding(start = 16.dp, end = 12.dp),
                 onFilterTypeClick = filterCallbacks.onFilterTypeClick,
                 onFilterIconClick = { showFilterDialog = true }
             )

@@ -18,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -29,7 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.ui.theme.Green
-import com.android.monu.ui.theme.LightGrey
 import com.android.monu.ui.theme.Orange
 import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.SoftGrey
@@ -45,29 +45,50 @@ fun BudgetingList(
         DummyBudgeting("Budget makan", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 250000, 1500000),
         DummyBudgeting("Budget perawatan diri", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 120000, 350000),
         DummyBudgeting("Budget jajan", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 200000, 300000),
+        DummyBudgeting("Budget internet", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 105000, 105000),
+        DummyBudgeting("Budget makan", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 250000, 1500000),
+        DummyBudgeting("Budget perawatan diri", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 120000, 350000),
+        DummyBudgeting("Budget jajan", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 200000, 300000),
+        DummyBudgeting("Budget internet", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 105000, 105000),
+        DummyBudgeting("Budget makan", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 250000, 1500000),
+        DummyBudgeting("Budget perawatan diri", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 120000, 350000),
+        DummyBudgeting("Budget jajan", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 200000, 300000),
         DummyBudgeting("Budget internet", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 105000, 105000)
     )
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = Color.White, shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+            .padding(top = 16.dp)
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxSize()
-                .background(LightGrey),
-            contentPadding = PaddingValues(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(dummyBudgeting.size) { index ->
-                BudgetingListItem(
-                    title = dummyBudgeting[index].title,
-                    startDate = dummyBudgeting[index].startDate,
-                    endDate = dummyBudgeting[index].endDate,
-                    amount = dummyBudgeting[index].amount,
-                    maxAmount = dummyBudgeting[index].maxAmount
+        if (dummyBudgeting.isEmpty()) {
+            Text(
+                text = "Belum ada budgeting yang aktif",
+                modifier = Modifier.align(Alignment.Center),
+                style = TextStyle(
+                    fontSize = 13.sp,
+                    fontFamily = interFontFamily,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.Black
                 )
+            )
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(dummyBudgeting.size) { index ->
+                    BudgetingListItem(
+                        title = dummyBudgeting[index].title,
+                        startDate = dummyBudgeting[index].startDate,
+                        endDate = dummyBudgeting[index].endDate,
+                        amount = dummyBudgeting[index].amount,
+                        maxAmount = dummyBudgeting[index].maxAmount
+                    )
+                }
             }
         }
     }
@@ -106,6 +127,8 @@ fun BudgetingListItem(
             Text(
                 text = "$startDate - $endDate",
                 modifier = Modifier.padding(top = 4.dp),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
                 style = TextStyle(
                     fontSize = 9.sp,
                     fontFamily = interFontFamily,
