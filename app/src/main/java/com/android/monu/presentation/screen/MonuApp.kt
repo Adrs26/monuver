@@ -28,6 +28,7 @@ import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.budgeting.BudgetingScreen
+import com.android.monu.presentation.screen.budgeting.history.BudgetingHistoryScreen
 import com.android.monu.presentation.screen.home.HomeScreen
 import com.android.monu.presentation.screen.home.HomeViewModel
 import com.android.monu.presentation.screen.report.ReportFilterCallbacks
@@ -50,6 +51,7 @@ import com.android.monu.ui.navigation.AddExpense
 import com.android.monu.ui.navigation.AddIncome
 import com.android.monu.ui.navigation.Analytics
 import com.android.monu.ui.navigation.Budgeting
+import com.android.monu.ui.navigation.BudgetingHistory
 import com.android.monu.ui.navigation.EditTransaction
 import com.android.monu.ui.navigation.Home
 import com.android.monu.ui.navigation.Report
@@ -295,7 +297,17 @@ fun MonuApp(
                 popExitTransition = { NavigationAnimation.popExit }
             ) {
                 BudgetingScreen(
-                    onHistoryClick = { },
+                    onHistoryClick = { navController.navigate(BudgetingHistory) },
+                    navigateBack = { navController.navigateUp() }
+                )
+            }
+            composable<BudgetingHistory>(
+                enterTransition = { NavigationAnimation.enter },
+                exitTransition = { NavigationAnimation.exit },
+                popEnterTransition = { NavigationAnimation.popEnter },
+                popExitTransition = { NavigationAnimation.popExit }
+            ) {
+                BudgetingHistoryScreen(
                     navigateBack = { navController.navigateUp() }
                 )
             }

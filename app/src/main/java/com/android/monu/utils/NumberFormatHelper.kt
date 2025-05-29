@@ -31,24 +31,36 @@ object NumberFormatHelper {
             decimalSeparator = ','
             groupingSeparator = '.'
         }
-        val decimalFormat = DecimalFormat("#,##0.##", symbols)
+
+        fun format(value: Double): String {
+            return if (value % 1 == 0.0) {
+                DecimalFormat("#,##0", symbols).format(value)
+            } else {
+                DecimalFormat("#,##0.00", symbols).format(value)
+            }
+        }
 
         return when {
             amount >= 1_000_000_000_000 -> {
                 val value = amount / 1_000_000_000_000.0
-                "Rp${decimalFormat.format(value)} Triliun"
+                "Rp${format(value)} Triliun"
             }
             amount >= 1_000_000_000 -> {
                 val value = amount / 1_000_000_000.0
-                "Rp${decimalFormat.format(value)} Miliar"
+                "Rp${format(value)} Miliar"
             }
             amount >= 1_000_000 -> {
                 val value = amount / 1_000_000.0
-                "Rp${decimalFormat.format(value)} Juta"
+                "Rp${format(value)} Juta"
             }
-            else -> "Rp${decimalFormat.format(amount)}"
+            amount >= 1_000 -> {
+                val value = amount / 1_000.0
+                "Rp${format(value)} Ribu"
+            }
+            else -> "Rp${DecimalFormat("#,##0", symbols).format(amount)}"
         }
     }
+
 
     fun formatToThousandDivider(value: Long): String {
         return String.format(Locale("in", "ID"), "%,d", value).replace(',', '.')

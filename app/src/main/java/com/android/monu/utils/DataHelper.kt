@@ -1,6 +1,7 @@
 package com.android.monu.utils
 
 import com.android.monu.R
+import com.android.monu.presentation.screen.budgeting.components.DummyBudgeting
 
 object DataHelper {
     val monthLabels = listOf(
@@ -39,5 +40,12 @@ object DataHelper {
         R.string.bonuses,
         R.string.commission,
         R.string.other_income
+    )
+
+    val dummyBudgeting = listOf(
+        DummyBudgeting("Budget makan", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 250000, 1500000),
+        DummyBudgeting("Budget perawatan diri", DateHelper.formatDateToReadable("2025-11-25"), DateHelper.formatDateToReadable("2025-12-25"), 120000, 350000),
+        DummyBudgeting("Budget jajan", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 200000, 300000),
+        DummyBudgeting("Budget internet", DateHelper.formatDateToReadable("2025-05-25"), DateHelper.formatDateToReadable("2025-06-25"), 105000, 105000),
     )
 }

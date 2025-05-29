@@ -107,4 +107,6 @@
     <string name="good_night">Selamat malam,</string>
     <string name="financial_status">Status keuangan</string>
     <string name="expense_prediction">Prediksi pengeluaran</string>
+    <string name="wait_for_update">Menunggu pembaruan</string>
+    <string name="finished">Selesai</string>
 </resources>

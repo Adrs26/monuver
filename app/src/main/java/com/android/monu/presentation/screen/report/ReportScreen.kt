@@ -29,7 +29,7 @@ fun ReportScreen(
     val gridState = rememberLazyGridState()
     val isScrolled by remember {
         derivedStateOf {
-            gridState.firstVisibleItemIndex > 0 || gridState.firstVisibleItemScrollOffset > 35
+            gridState.firstVisibleItemIndex > 0 || gridState.firstVisibleItemScrollOffset > 40
         }
     }
 

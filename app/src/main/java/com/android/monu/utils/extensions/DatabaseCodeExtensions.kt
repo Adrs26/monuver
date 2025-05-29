@@ -161,3 +161,19 @@ fun Int.toShortMonthResourceId(): Int {
         else -> 0
     }
 }
+
+fun Int.toBudgetingHistoryType(): Int {
+    return when (this) {
+        0 -> R.string.wait_for_update
+        1 -> R.string.finished
+        else -> 99
+    }
+}
+
+fun Int.toBudgetingHistoryTypeCode(): Int {
+    return when (this) {
+        R.string.wait_for_update -> 0
+        R.string.finished -> 1
+        else -> 99
+    }
+}

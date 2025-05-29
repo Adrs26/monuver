@@ -31,3 +31,6 @@ object ReportDetail
 
 @Serializable
 object Budgeting
+
+@Serializable
+object BudgetingHistory
