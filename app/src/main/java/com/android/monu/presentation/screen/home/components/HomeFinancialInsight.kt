@@ -1,7 +1,6 @@
 package com.android.monu.presentation.screen.home.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.theme.Green
-import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.utils.NumberFormatHelper
 
@@ -47,11 +45,7 @@ fun FinancialHealthyStatus(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.border(
-            width = 1.dp,
-            color = SoftGrey,
-            shape = RoundedCornerShape(16.dp)
-        ),
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
@@ -108,11 +102,7 @@ fun ExpensePrediction(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.border(
-            width = 1.dp,
-            color = SoftGrey,
-            shape = RoundedCornerShape(16.dp)
-        ),
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)

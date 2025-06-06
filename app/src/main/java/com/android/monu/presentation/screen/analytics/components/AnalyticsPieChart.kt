@@ -1,7 +1,6 @@
 package com.android.monu.presentation.screen.analytics.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,7 +29,6 @@ import com.android.monu.domain.model.TransactionCategoryAmount
 import com.android.monu.presentation.components.PieChart
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
-import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.utils.NumberFormatHelper
 import com.android.monu.utils.extensions.toCategoryColor
@@ -44,9 +42,7 @@ fun AnalyticsPieChart(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp)),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
@@ -176,7 +172,7 @@ fun PieChartDetailData(
                 )
             )
             Text(
-                text = NumberFormatHelper.formatToConciseRupiah(amount),
+                text = NumberFormatHelper.formatToRupiah(amount),
                 style = TextStyle(
                     fontSize = 10.sp,
                     fontFamily = interFontFamily,

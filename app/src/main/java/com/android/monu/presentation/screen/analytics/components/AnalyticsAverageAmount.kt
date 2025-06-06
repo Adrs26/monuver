@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
@@ -44,57 +45,57 @@ fun AnalyticsAverageAmount(
     val monthlyAverageExpense = averageTransactionAmount.monthlyAverageExpense.roundToLong()
     val yearlyAverageExpense = averageTransactionAmount.yearlyAverageExpense.roundToLong()
 
+    val analyticsAverageIncomeAmountCardData = AnalyticsAverageAmountCardData(
+        dailyTitle = stringResource(R.string.daily_avg_income),
+        dailyAmount = dailyAverageIncome,
+        monthlyTitle = stringResource(R.string.monthly_avg_income),
+        monthlyAmount = monthlyAverageIncome,
+        yearlyTitle = stringResource(R.string.yearly_avg_income),
+        yearlyAmount = yearlyAverageIncome,
+    )
+
+    val analyticsAverageExpenseAmountCardData = AnalyticsAverageAmountCardData(
+        dailyTitle = stringResource(R.string.daily_avg_expense),
+        dailyAmount = dailyAverageExpense,
+        monthlyTitle = stringResource(R.string.monthly_avg_expense),
+        monthlyAmount = monthlyAverageExpense,
+        yearlyTitle = stringResource(R.string.yearly_avg_expense),
+        yearlyAmount = yearlyAverageExpense,
+    )
+
     Row(
         modifier = modifier.fillMaxWidth()
     ) {
         AverageAmountCard(
-            backgroundColor = Green,
             icon = R.drawable.ic_trending_up,
-            iconColor = Green,
-            dailyTitle = stringResource(R.string.daily_avg_income),
-            dailyAmount = NumberFormatHelper.formatToConciseRupiah(dailyAverageIncome),
-            monthlyTitle = stringResource(R.string.monthly_avg_income),
-            monthlyAmount = NumberFormatHelper.formatToConciseRupiah(monthlyAverageIncome),
-            yearlyTitle = stringResource(R.string.yearly_avg_income),
-            yearlyAmount = NumberFormatHelper.formatToConciseRupiah(yearlyAverageIncome),
+            iconBackgroundColor = Green,
+            analyticsAverageAmountCardData = analyticsAverageIncomeAmountCardData,
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 8.dp)
+                .padding(start = 8.dp, end = 4.dp)
         )
         AverageAmountCard(
-            backgroundColor = Red,
             icon = R.drawable.ic_trending_down,
-            iconColor = Red,
-            dailyTitle = stringResource(R.string.daily_avg_expense),
-            dailyAmount = NumberFormatHelper.formatToConciseRupiah(dailyAverageExpense),
-            monthlyTitle = stringResource(R.string.monthly_avg_expense),
-            monthlyAmount = NumberFormatHelper.formatToConciseRupiah(monthlyAverageExpense),
-            yearlyTitle = stringResource(R.string.yearly_avg_expense),
-            yearlyAmount = NumberFormatHelper.formatToConciseRupiah(yearlyAverageExpense),
+            iconBackgroundColor = Red,
+            analyticsAverageAmountCardData = analyticsAverageExpenseAmountCardData,
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 8.dp)
+                .padding(start = 4.dp, end = 8.dp)
         )
     }
 }
 
 @Composable
 fun AverageAmountCard(
-    backgroundColor: Color,
     icon: Int,
-    iconColor: Color,
-    dailyTitle: String,
-    dailyAmount: String,
-    monthlyTitle: String,
-    monthlyAmount: String,
-    yearlyTitle: String,
-    yearlyAmount: String,
+    iconBackgroundColor: Color,
+    analyticsAverageAmountCardData: AnalyticsAverageAmountCardData,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
@@ -102,7 +103,7 @@ fun AverageAmountCard(
         ) {
             Box(
                 modifier = Modifier
-                    .background(color = Color.White, shape = RoundedCornerShape(16.dp))
+                    .background(color = iconBackgroundColor, shape = RoundedCornerShape(16.dp))
                     .padding(4.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -110,22 +111,25 @@ fun AverageAmountCard(
                     painter = painterResource(icon),
                     contentDescription = null,
                     modifier = Modifier.size(20.dp),
-                    tint = iconColor
+                    tint = Color.White
                 )
             }
             AverageAmountText(
-                title = dailyTitle,
-                amount = dailyAmount,
+                title = analyticsAverageAmountCardData.dailyTitle,
+                amount = analyticsAverageAmountCardData.dailyAmount,
+                textColor = iconBackgroundColor,
                 modifier = Modifier.padding(top = 32.dp)
             )
             AverageAmountText(
-                title = monthlyTitle,
-                amount = monthlyAmount,
+                title = analyticsAverageAmountCardData.monthlyTitle,
+                amount = analyticsAverageAmountCardData.monthlyAmount,
+                textColor = iconBackgroundColor,
                 modifier = Modifier.padding(top = 12.dp)
             )
             AverageAmountText(
-                title = yearlyTitle,
-                amount = yearlyAmount,
+                title = analyticsAverageAmountCardData.yearlyTitle,
+                amount = analyticsAverageAmountCardData.yearlyAmount,
+                textColor = iconBackgroundColor,
                 modifier = Modifier.padding(top = 12.dp)
             )
         }
@@ -135,7 +139,8 @@ fun AverageAmountCard(
 @Composable
 fun AverageAmountText(
     title: String,
-    amount: String,
+    amount: Long,
+    textColor: Color,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -144,24 +149,42 @@ fun AverageAmountText(
         Text(
             text = title,
             style = TextStyle(
-                fontSize = 11.sp,
+                fontSize = 12.sp,
                 fontFamily = interFontFamily,
                 fontWeight = FontWeight.Normal,
-                color = Color.White
+                color = Color.Black
             )
         )
         Text(
-            text = amount,
+            text = NumberFormatHelper.formatToRupiah(amount),
             modifier = Modifier.padding(top = 2.dp),
             style = TextStyle(
-                fontSize = 16.sp,
+                fontSize = changeFontSize(amount),
                 fontFamily = interFontFamily,
                 fontWeight = FontWeight.SemiBold,
-                color = Color.White
+                color = textColor
             )
         )
     }
 }
+
+fun changeFontSize(amount: Long): TextUnit {
+    return when {
+        amount < 1_000_000_000 -> 16.sp
+        amount < 10_000_000_000 -> 15.sp
+        amount < 100_000_000_000 -> 14.sp
+        else -> 13.sp
+    }
+}
+
+data class AnalyticsAverageAmountCardData(
+    val dailyTitle: String,
+    val dailyAmount: Long,
+    val monthlyTitle: String,
+    val monthlyAmount: Long,
+    val yearlyTitle: String,
+    val yearlyAmount: Long,
+)
 
 @Preview(showBackground = true)
 @Composable

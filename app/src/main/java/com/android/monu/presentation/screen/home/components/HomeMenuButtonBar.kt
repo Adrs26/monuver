@@ -1,7 +1,6 @@
 package com.android.monu.presentation.screen.home.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -20,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.utils.extensions.debouncedClickable
 
@@ -78,7 +76,6 @@ fun HomeMenuButton(
     Column(
         modifier = modifier
             .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-            .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp))
             .padding(12.dp)
             .debouncedClickable { onClick() },
         horizontalAlignment = Alignment.CenterHorizontally

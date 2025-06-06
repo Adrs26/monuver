@@ -1,7 +1,6 @@
 package com.android.monu.presentation.screen.transaction.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,10 +36,9 @@ import com.android.monu.R
 import com.android.monu.domain.model.TransactionConcise
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Red
-import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.utils.NumberFormatHelper
 import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberFormatHelper
 import com.android.monu.utils.extensions.debouncedClickable
 import com.android.monu.utils.extensions.toCategoryColor
 import com.android.monu.utils.extensions.toCategoryIcon
@@ -118,7 +116,6 @@ fun TransactionListItem(
 ) {
     Card(
         modifier = modifier
-            .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp))
             .debouncedClickable { navigateToEditTransaction(transactionData.id) },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),

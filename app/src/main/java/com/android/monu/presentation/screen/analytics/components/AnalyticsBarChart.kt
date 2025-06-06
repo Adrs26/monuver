@@ -4,7 +4,6 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,10 +47,9 @@ import com.android.monu.presentation.components.TypeFilterButton
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
 import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.ui.theme.Blue
-import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.utils.NumberFormatHelper
 import com.android.monu.utils.DataHelper
+import com.android.monu.utils.NumberFormatHelper
 import com.android.monu.utils.extensions.toFullMonthResourceId
 import com.android.monu.utils.extensions.toHighestRangeValue
 import com.android.monu.utils.extensions.toTransactionType
@@ -66,11 +64,7 @@ fun AnalyticsBarChart(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.border(
-            width = 1.dp,
-            color = SoftGrey,
-            shape = RoundedCornerShape(16.dp)
-        ),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
@@ -115,7 +109,7 @@ fun BarChartTypeFilterButton(
                 background = if (isSelected) Color.White else Color.LightGray,
                 textColor = Color.Black,
                 horizontalPadding = 8.dp,
-                verticalPadding = 6.dp,
+                verticalPadding = 8.dp,
                 modifier = Modifier
                     .weight(1f)
                     .padding(4.dp),

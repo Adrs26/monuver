@@ -90,9 +90,7 @@ fun ReportListItem(
     navigateToDetail: () -> Unit
 ) {
     Card(
-        modifier = modifier
-            .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp))
-            .debouncedClickable { navigateToDetail() },
+        modifier = modifier.debouncedClickable { navigateToDetail() },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)

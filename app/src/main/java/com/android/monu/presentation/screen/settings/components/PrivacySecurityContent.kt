@@ -1,6 +1,5 @@
 package com.android.monu.presentation.screen.settings.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,7 +16,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 
 @Composable
@@ -25,7 +23,7 @@ fun PrivacySecurityContent(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp)),
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)

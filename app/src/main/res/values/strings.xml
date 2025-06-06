@@ -36,7 +36,7 @@
     <string name="about_application">Tentang aplikasi</string>
     <string name="version">Versi aplikasi</string>
     <string name="transactions_overview">Rekap transaksi</string>
-    <string name="most_expense_category">Kategori pengeluaran terbanyak</string>
+    <string name="most_expense_category">Pengeluaran terbanyak</string>
     <string name="title">Judul</string>
     <string name="category">Kategori</string>
     <string name="date">Tanggal</string>
@@ -45,7 +45,7 @@
     <string name="transaction_title">Judul transaksi</string>
     <string name="choose_category">Pilih kategori</string>
     <string name="choose_date">Pilih tanggal</string>
-    <string name="choose_budgeting">Pilih budgeting</string>
+    <string name="choose_budgeting">Pilih budgeting (opsional)</string>
     <string name="food_beverages"><![CDATA[Makanan & Minuman]]></string>
     <string name="transportation">Transportasi</string>
     <string name="health_personal_care"><![CDATA[Kesehatan & Perawatan diri]]></string>

@@ -1,7 +1,6 @@
 package com.android.monu.presentation.screen.home.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,15 +27,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.domain.model.TransactionConcise
-import com.android.monu.presentation.components.ActionButton
 import com.android.monu.presentation.screen.transaction.components.TransactionData
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Red
-import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.utils.NumberFormatHelper
 import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.utils.extensions.debouncedClickable
 import com.android.monu.utils.extensions.toCategoryColor
 import com.android.monu.utils.extensions.toCategoryIcon
 
@@ -48,7 +46,6 @@ fun HomeRecentTransactions(
 ) {
     Card(
         modifier = modifier
-            .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp))
             .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -57,19 +54,31 @@ fun HomeRecentTransactions(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(
-                text = stringResource(R.string.recent_transactions),
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontFamily = interFontFamily,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.recent_transactions),
+                    modifier = Modifier.weight(1f),
+                    style = TextStyle(
+                        fontSize = 14.sp,
+                        fontFamily = interFontFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
+                    )
                 )
-            )
-            RecentTransactionList(
-                recentTransactions = recentTransactions,
-                navigateToTransactions = navigateToTransactions
-            )
+                Text(
+                    text = "Lihat semua",
+                    modifier = Modifier.debouncedClickable { navigateToTransactions() },
+                    style = TextStyle(
+                        fontSize = 11.sp,
+                        fontFamily = interFontFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Blue
+                    )
+                )
+            }
+            RecentTransactionList(recentTransactions = recentTransactions)
         }
     }
 }
@@ -78,7 +87,6 @@ fun HomeRecentTransactions(
 fun RecentTransactionList(
     recentTransactions: List<TransactionConcise>,
     modifier: Modifier = Modifier,
-    navigateToTransactions: () -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxWidth(),
@@ -110,12 +118,6 @@ fun RecentTransactionList(
                         RecentTransactionsListItem(transactionData = transactionData)
                     }
                 }
-                ActionButton(
-                    text = stringResource(R.string.see_all_transactions),
-                    color = Blue,
-                    modifier = Modifier.padding(top = 16.dp),
-                    onClick = navigateToTransactions
-                )
             }
         }
     }

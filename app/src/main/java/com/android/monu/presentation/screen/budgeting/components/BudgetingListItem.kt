@@ -1,6 +1,5 @@
 package com.android.monu.presentation.screen.budgeting.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +31,6 @@ import com.android.monu.R
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Orange
 import com.android.monu.ui.theme.Red
-import com.android.monu.ui.theme.SoftGrey
 import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.utils.NumberFormatHelper
 
@@ -47,8 +45,7 @@ fun BudgetingListItem(
     containerColor: Color = Color.White
 ) {
     Card(
-        modifier = modifier
-            .border(width = 1.dp, color = SoftGrey, shape = RoundedCornerShape(16.dp)),
+        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = containerColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
