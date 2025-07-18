@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.android.monu.ui.navigation.MainSettings
 import com.android.monu.ui.navigation.Settings
-import com.android.monu.utils.NavigationAnimation
+import com.android.monu.presentation.utils.NavigationAnimation
 
 fun NavGraphBuilder.settingsNavGraph(
     navController: NavHostController

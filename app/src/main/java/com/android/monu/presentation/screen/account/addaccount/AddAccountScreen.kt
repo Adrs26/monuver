@@ -18,8 +18,8 @@ import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContent
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContentActions
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContentState
-import com.android.monu.utils.NumberFormatHelper
-import com.android.monu.utils.extensions.showMessageWithToast
+import com.android.monu.presentation.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.showMessageWithToast
 
 @Composable
 fun AddAccountScreen(

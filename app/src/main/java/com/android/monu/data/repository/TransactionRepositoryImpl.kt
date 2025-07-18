@@ -8,11 +8,13 @@ import androidx.paging.map
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.model.transaction.TransactionMonthlyAmount
+import com.android.monu.domain.model.transaction.TransactionMonthlyAmountOverview
 import com.android.monu.domain.model.transaction.TransactionOverview
 import com.android.monu.domain.repository.TransactionRepository
+import com.android.monu.presentation.utils.TransactionType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 
 class TransactionRepositoryImpl(
@@ -70,24 +72,36 @@ class TransactionRepositoryImpl(
         return transactionDao.getAvailableTransactionYears()
     }
 
-    override fun getTransactionMonthlyAmounts(year: Int): Flow<List<TransactionMonthlyAmount>> {
-        return transactionDao.getTransactionMonthlyAmounts(year).map { entityList ->
-            entityList.map { entity ->
-                TransactionMapper.transactionMonthlyAmountEntityToDomain(entity)
-            }
+    override fun getTransactionMonthlyAmountOverview(
+        month: Int,
+        year: Int
+    ): Flow<TransactionMonthlyAmountOverview> {
+        val totalIncomeAmount = transactionDao.getTransactionMonthlyAmount(
+            TransactionType.INCOME, month, year
+        )
+        val totalExpenseAmount = transactionDao.getTransactionMonthlyAmount(
+            TransactionType.EXPENSE, month, year
+        )
+        val averageIncomeAmount = transactionDao.getAverageTransactionAmountPerDay(
+            TransactionType.INCOME, month, year
+        )
+        val averageExpenseAmount = transactionDao.getAverageTransactionAmountPerDay(
+            TransactionType.EXPENSE, month, year
+        )
+
+        return combine(
+            totalIncomeAmount,
+            totalExpenseAmount,
+            averageIncomeAmount,
+            averageExpenseAmount
+        ) { totalIncome, totalExpense, averageIncome, averageExpense ->
+            TransactionMonthlyAmountOverview(
+                totalIncomeAmount = totalIncome ?: 0L,
+                totalExpenseAmount = totalExpense ?: 0L,
+                averageIncomeAmount = averageIncome ?: 0.0,
+                averageExpenseAmount = averageExpense ?: 0.0
+            )
         }
-    }
-
-    override fun getAverageTransactionAmountPerDay(type: Int): Flow<Double> {
-        return transactionDao.getAverageTransactionAmountPerDay(type).map { it ?: 0.0 }
-    }
-
-    override fun getAverageTransactionAmountPerMonth(type: Int): Flow<Double> {
-        return transactionDao.getAverageTransactionAmountPerMonth(type).map { it ?: 0.0 }
-    }
-
-    override fun getAverageTransactionAmountPerYear(type: Int): Flow<Double> {
-        return transactionDao.getAverageTransactionAmountPerYear(type).map { it ?: 0.0 }
     }
 
     override fun getMonthlyTransactionOverviewsByType(

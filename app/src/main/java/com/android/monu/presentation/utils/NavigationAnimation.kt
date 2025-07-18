@@ -1,4 +1,4 @@
-package com.android.monu.utils
+package com.android.monu.presentation.utils
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut

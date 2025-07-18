@@ -15,7 +15,7 @@ import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.presentation.screen.transaction.detailtransaction.components.DeleteTransactionAppBar
 import com.android.monu.presentation.screen.transaction.detailtransaction.components.DeleteTransactionDialog
 import com.android.monu.presentation.screen.transaction.detailtransaction.components.DetailTransactionContent
-import com.android.monu.utils.extensions.showMessageWithToast
+import com.android.monu.presentation.utils.showMessageWithToast
 
 @Composable
 fun DetailTransactionScreen(

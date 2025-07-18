@@ -47,8 +47,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.R
+import com.android.monu.domain.model.transaction.TransactionMonthlyAmountOverview
 import com.android.monu.presentation.components.CommonFloatingActionButton
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
+import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.budgeting.BudgetingScreen
 import com.android.monu.presentation.screen.home.HomeScreen
 import com.android.monu.presentation.screen.home.HomeViewModel
@@ -65,7 +67,7 @@ import com.android.monu.ui.navigation.MainDetailTransaction
 import com.android.monu.ui.navigation.Settings
 import com.android.monu.ui.navigation.Transaction
 import com.android.monu.ui.navigation.Transfer
-import com.android.monu.utils.TransactionType
+import com.android.monu.presentation.utils.TransactionType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -203,7 +205,21 @@ fun MainScreen(
                 )
             }
             composable<Analytics> {
-                AnalyticsScreen()
+                val viewModel = koinViewModel<AnalyticsViewModel>()
+                val monthValue by viewModel.monthFilter.collectAsStateWithLifecycle()
+                val yearValue by viewModel.yearFilter.collectAsStateWithLifecycle()
+                val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
+                val transactionAmountOverview by viewModel.transactionAmountOverview
+                    .collectAsStateWithLifecycle(initialValue = TransactionMonthlyAmountOverview())
+
+                AnalyticsScreen(
+                    monthValue = monthValue,
+                    yearValue = yearValue,
+                    yearFilterOptions = yearFilterOptions,
+                    onMonthChange = viewModel::changeMonthFilter,
+                    onYearChange = viewModel::changeYearFilter,
+                    transactionAmountOverview = transactionAmountOverview
+                )
             }
         }
 

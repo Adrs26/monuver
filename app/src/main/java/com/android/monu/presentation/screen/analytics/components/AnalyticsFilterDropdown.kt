@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AnalyticsFilterDropdown(
-    initialValue: String,
+    value: String,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -30,7 +30,7 @@ fun AnalyticsFilterDropdown(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = initialValue,
+            text = value,
             style = MaterialTheme.typography.labelSmall.copy(
                 color = MaterialTheme.colorScheme.onBackground
             )

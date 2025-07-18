@@ -18,7 +18,7 @@ import com.android.monu.domain.model.account.Account
 import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.account.components.AccountListItem
 import com.android.monu.ui.theme.MonuTheme
-import com.android.monu.utils.SelectAccountType
+import com.android.monu.presentation.utils.SelectAccountType
 
 @Composable
 fun TransferAccountScreen(

@@ -14,9 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.android.monu.domain.model.transaction.TransactionMonthlyAmountOverview
+import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun AnalyticsAmountOverview(
+    transactionAmount: TransactionMonthlyAmountOverview,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -27,11 +30,15 @@ fun AnalyticsAmountOverview(
         AnalyticsAmountData(
             title = "Total pemasukan",
             containerColor = Color(0xFFC8E6C9),
+            totalAmount = transactionAmount.totalIncomeAmount,
+            averageAmount = transactionAmount.averageIncomeAmount,
             modifier = Modifier.weight(1f)
         )
         AnalyticsAmountData(
             title = "Total pengeluaran",
             containerColor = Color(0xFFFFCDD2),
+            totalAmount = transactionAmount.totalExpenseAmount,
+            averageAmount = transactionAmount.averageExpenseAmount,
             modifier = Modifier.weight(1f)
         )
     }
@@ -41,6 +48,8 @@ fun AnalyticsAmountOverview(
 fun AnalyticsAmountData(
     title: String,
     containerColor: Color,
+    totalAmount: Long,
+    averageAmount: Double,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -57,7 +66,7 @@ fun AnalyticsAmountData(
                 style = MaterialTheme.typography.labelSmall
             )
             Text(
-                text = "Rp10.000.000",
+                text = NumberFormatHelper.formatToRupiah(totalAmount),
                 modifier = Modifier.padding(top = 2.dp),
                 style = MaterialTheme.typography.labelMedium
             )
@@ -67,7 +76,7 @@ fun AnalyticsAmountData(
                 style = MaterialTheme.typography.labelSmall
             )
             Text(
-                text = "Rp125.000",
+                text = NumberFormatHelper.formatToRupiah(averageAmount.toLong()),
                 modifier = Modifier.padding(top = 2.dp),
                 style = MaterialTheme.typography.labelMedium
             )

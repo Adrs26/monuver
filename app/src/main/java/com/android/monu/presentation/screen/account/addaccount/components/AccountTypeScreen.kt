@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.sp
 import com.android.monu.presentation.components.CategoryIcon
 import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.ui.theme.MonuTheme
-import com.android.monu.utils.DataProvider
-import com.android.monu.utils.DatabaseCodeMapper
+import com.android.monu.presentation.utils.DataProvider
+import com.android.monu.presentation.utils.DatabaseCodeMapper
 
 @Composable
 fun AccountTypeScreen(

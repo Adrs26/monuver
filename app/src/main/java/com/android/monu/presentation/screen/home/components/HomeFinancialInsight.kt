@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun HomeFinancialInsight(

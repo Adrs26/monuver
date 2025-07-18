@@ -32,11 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.android.monu.R
-import com.android.monu.utils.DataProvider
-import com.android.monu.utils.DatabaseCodeMapper
-import com.android.monu.utils.Month
-import com.android.monu.utils.TransactionType
-import com.android.monu.utils.extensions.toShortMonthResourceId
+import com.android.monu.presentation.utils.DataProvider
+import com.android.monu.presentation.utils.DatabaseCodeMapper
+import com.android.monu.presentation.utils.Month
+import com.android.monu.presentation.utils.TransactionType
 import kotlin.math.ceil
 
 @Composable
@@ -189,7 +188,9 @@ fun RadioGrid(
                         Text(
                             text = when (option) {
                                 0 -> stringResource(R.string.all)
-                                in 1..12 -> stringResource(option.toShortMonthResourceId())
+                                in 1..12 -> stringResource(
+                                    DatabaseCodeMapper.toShortMonth(option)
+                                )
                                 in 1001..1003 -> stringResource(
                                     DatabaseCodeMapper.toTransactionType(option)
                                 )

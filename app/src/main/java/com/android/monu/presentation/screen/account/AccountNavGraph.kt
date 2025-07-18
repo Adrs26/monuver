@@ -15,8 +15,8 @@ import com.android.monu.ui.navigation.Account
 import com.android.monu.ui.navigation.AccountType
 import com.android.monu.ui.navigation.AddAccount
 import com.android.monu.ui.navigation.MainAccount
-import com.android.monu.utils.NavigationAnimation
-import com.android.monu.utils.extensions.sharedKoinViewModel
+import com.android.monu.presentation.utils.NavigationAnimation
+import com.android.monu.presentation.utils.sharedKoinViewModel
 import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.accountNavGraph(

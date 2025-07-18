@@ -2,8 +2,7 @@ package com.android.monu.domain.repository
 
 import androidx.paging.PagingData
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.model.transaction.TransactionCategoryAmount
-import com.android.monu.domain.model.transaction.TransactionMonthlyAmount
+import com.android.monu.domain.model.transaction.TransactionMonthlyAmountOverview
 import com.android.monu.domain.model.transaction.TransactionOverview
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -26,13 +25,10 @@ interface TransactionRepository {
 
     fun getAvailableTransactionYears(): Flow<List<Int>>
 
-    fun getTransactionMonthlyAmounts(year: Int): Flow<List<TransactionMonthlyAmount>>
-
-    fun getAverageTransactionAmountPerDay(type: Int): Flow<Double>
-
-    fun getAverageTransactionAmountPerMonth(type: Int): Flow<Double>
-
-    fun getAverageTransactionAmountPerYear(type: Int): Flow<Double>
+    fun getTransactionMonthlyAmountOverview(
+        month: Int,
+        year: Int
+    ): Flow<TransactionMonthlyAmountOverview>
 
     fun getMonthlyTransactionOverviewsByType(type: Int, year: Int): Flow<List<TransactionOverview>>
 

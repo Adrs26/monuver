@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.android.monu.domain.model.transaction.TransactionMonthlyAmountOverview
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAmountOverview
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAppBar
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChart
@@ -16,10 +17,23 @@ import com.android.monu.presentation.screen.analytics.components.AnalyticsPieCha
 import com.android.monu.presentation.screen.analytics.components.BarChartScaleLabel
 
 @Composable
-fun AnalyticsScreen() {
+fun AnalyticsScreen(
+    monthValue: Int,
+    yearValue: Int,
+    yearFilterOptions: List<Int>,
+    transactionAmountOverview: TransactionMonthlyAmountOverview,
+    onMonthChange: (Int) -> Unit,
+    onYearChange: (Int) -> Unit
+) {
     Scaffold(
         topBar = {
-            AnalyticsAppBar()
+            AnalyticsAppBar(
+                monthValue = monthValue,
+                yearValue = yearValue,
+                yearFilterOptions = yearFilterOptions,
+                onMonthChange = onMonthChange,
+                onYearChange = onYearChange
+            )
         },
     ) { innerPadding ->
         Column(
@@ -28,7 +42,10 @@ fun AnalyticsScreen() {
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            AnalyticsAmountOverview(modifier = Modifier.padding(16.dp))
+            AnalyticsAmountOverview(
+                transactionAmount = transactionAmountOverview,
+                modifier = Modifier.padding(16.dp)
+            )
             AnalyticsBarChart(
                 scaleLabels = listOf(
                     BarChartScaleLabel(amount = 0, fraction = 0f),

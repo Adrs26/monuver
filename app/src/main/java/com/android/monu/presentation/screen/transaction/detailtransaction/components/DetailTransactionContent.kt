@@ -15,10 +15,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.utils.DatabaseCodeMapper
-import com.android.monu.utils.DateHelper
-import com.android.monu.utils.NumberFormatHelper
-import com.android.monu.utils.TransactionType
+import com.android.monu.presentation.utils.DatabaseCodeMapper
+import com.android.monu.presentation.utils.DateHelper
+import com.android.monu.presentation.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.TransactionType
 
 @Composable
 fun DetailTransactionContent(

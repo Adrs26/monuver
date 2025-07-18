@@ -19,8 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.presentation.components.TextAmountInputField
 import com.android.monu.presentation.components.TextInputField
-import com.android.monu.utils.DatabaseCodeMapper
-import com.android.monu.utils.DateHelper
+import com.android.monu.presentation.utils.DatabaseCodeMapper
+import com.android.monu.presentation.utils.DateHelper
 
 @Composable
 fun AddTransactionContent(

@@ -33,9 +33,9 @@ import com.android.monu.ui.navigation.TransactionCategory
 import com.android.monu.ui.navigation.TransactionSource
 import com.android.monu.ui.navigation.Transfer
 import com.android.monu.ui.navigation.TransferAccount
-import com.android.monu.utils.NavigationAnimation
-import com.android.monu.utils.SelectAccountType
-import com.android.monu.utils.extensions.sharedKoinViewModel
+import com.android.monu.presentation.utils.NavigationAnimation
+import com.android.monu.presentation.utils.SelectAccountType
+import com.android.monu.presentation.utils.sharedKoinViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

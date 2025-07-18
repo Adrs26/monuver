@@ -19,8 +19,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.android.monu.domain.model.account.Account
 import com.android.monu.presentation.components.CategoryIcon
-import com.android.monu.utils.DatabaseCodeMapper
-import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.DatabaseCodeMapper
+import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun AccountListItem(

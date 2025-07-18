@@ -1,4 +1,4 @@
-package com.android.monu.utils
+package com.android.monu.presentation.utils
 
 import androidx.compose.ui.graphics.Color
 import com.android.monu.R
@@ -57,15 +57,6 @@ object DatabaseCodeMapper {
             TransactionType.INCOME -> R.string.income
             TransactionType.EXPENSE -> R.string.expense
             TransactionType.TRANSFER -> R.string.transfer
-            else -> 0
-        }
-    }
-
-    fun toTransferCategoryTitle(code: Int): Int {
-        return when (code) {
-            TransferCategory.ACCOUNT -> R.string.transfer_account
-            TransferCategory.SAVINGS_IN -> R.string.savings_in
-            TransferCategory.SAVINGS_OUT -> R.string.savings_out
             else -> 0
         }
     }

@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun AccountOverview(

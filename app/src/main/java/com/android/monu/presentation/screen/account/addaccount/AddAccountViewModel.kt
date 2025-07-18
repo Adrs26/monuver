@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.finance.CreateAccountWithInitialTransactionUseCase
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContentState
-import com.android.monu.utils.DataMapper
+import com.android.monu.presentation.utils.DataMapper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

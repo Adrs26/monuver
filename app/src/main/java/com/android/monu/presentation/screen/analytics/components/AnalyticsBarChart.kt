@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.theme.Blue
-import com.android.monu.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun AnalyticsBarChart(
@@ -73,7 +73,7 @@ fun AnalyticsBarChart(
                     legendLabel = stringResource(R.string.expense),
                 )
             }
-            AnalyticsFilterDropdown(initialValue = "Minggu ke-1")
+            AnalyticsFilterDropdown(value = "Minggu ke-1")
         }
         Row(
             modifier = Modifier

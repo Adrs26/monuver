@@ -1,4 +1,4 @@
-package com.android.monu.utils.extensions
+package com.android.monu.presentation.utils
 
 import android.content.Context
 import android.widget.Toast
@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import com.android.monu.R
 import org.koin.androidx.compose.koinViewModel
 
 fun Long.toHighestRangeValue(): Long {
@@ -35,25 +34,6 @@ fun Long.toHighestRangeValue(): Long {
         in 100_000_000L..200_000_000L -> 200_000_000L
         in 200_000_000L..500_000_000L -> 500_000_000L
         else -> 1_000_000_000L
-    }
-}
-
-fun Int.toShortMonthResourceId(): Int {
-    return when (this) {
-        0 -> R.string.all
-        1 -> R.string.jan
-        2 -> R.string.feb
-        3 -> R.string.mar
-        4 -> R.string.apr
-        5 -> R.string.may_short
-        6 -> R.string.jun
-        7 -> R.string.jul
-        8 -> R.string.aug
-        9 -> R.string.sep
-        10 -> R.string.oct
-        11 -> R.string.nov
-        12 -> R.string.dec
-        else -> 0
     }
 }
 

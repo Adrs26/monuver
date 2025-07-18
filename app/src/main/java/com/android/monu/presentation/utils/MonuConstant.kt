@@ -1,4 +1,4 @@
-package com.android.monu.utils
+package com.android.monu.presentation.utils
 
 object AccountType {
     const val CASH = 1

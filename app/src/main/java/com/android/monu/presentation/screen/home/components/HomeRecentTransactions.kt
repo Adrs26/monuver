@@ -32,9 +32,9 @@ import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.Green
 import com.android.monu.ui.theme.Red
 import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.utils.DateHelper
-import com.android.monu.utils.NumberFormatHelper
-import com.android.monu.utils.extensions.debouncedClickable
+import com.android.monu.presentation.utils.DateHelper
+import com.android.monu.presentation.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.debouncedClickable
 
 @Composable
 fun HomeRecentTransactions(
