@@ -14,4 +14,5 @@ val databaseModule = module {
             ).fallbackToDestructiveMigration(true).build()
     }
     single { get<MonuDatabase>().transactionDao() }
+    single { get<MonuDatabase>().accountDao() }
 }

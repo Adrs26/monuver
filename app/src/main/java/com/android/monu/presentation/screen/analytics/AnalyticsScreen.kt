@@ -1,104 +1,46 @@
 package com.android.monu.presentation.screen.analytics
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.android.monu.R
-import com.android.monu.domain.model.AverageTransactionAmount
-import com.android.monu.domain.model.TransactionCategoryAmount
-import com.android.monu.domain.model.TransactionOverview
-import com.android.monu.presentation.screen.analytics.components.AnalyticsAverageAmount
+import com.android.monu.presentation.screen.analytics.components.AnalyticsAmountOverview
+import com.android.monu.presentation.screen.analytics.components.AnalyticsAppBar
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChart
 import com.android.monu.presentation.screen.analytics.components.AnalyticsPieChart
 import com.android.monu.presentation.screen.analytics.components.BarChartScaleLabel
-import com.android.monu.ui.theme.LightGrey
-import com.android.monu.ui.theme.SoftGrey
-import com.android.monu.ui.theme.interFontFamily
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AnalyticsScreen(
-    averageTransactionAmount: AverageTransactionAmount,
-    filterState: AnalyticsFilterState,
-    filterCallbacks: AnalyticsFilterCallbacks,
-    transactionsOverview: List<TransactionOverview>,
-    barChartScaleLabels: List<BarChartScaleLabel>,
-    mostExpenseCategory: List<TransactionCategoryAmount>,
-) {
-    val scrollState = rememberScrollState()
-    val isScrolled by remember { derivedStateOf { scrollState.value > 45 } }
-
+fun AnalyticsScreen() {
     Scaffold(
         topBar = {
-            Column {
-                TopAppBar(
-                    title = {
-                        Text(
-                            text = stringResource(R.string.analytics_menu),
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontFamily = interFontFamily,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color.Black
-                            )
-                        )
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(containerColor = LightGrey)
-                )
-                if (isScrolled) {
-                    HorizontalDivider(
-                        thickness = 1.dp,
-                        color = SoftGrey
-                    )
-                }
-            }
-        }
+            AnalyticsAppBar()
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(LightGrey)
                 .padding(innerPadding)
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
-            AnalyticsAverageAmount(
-                averageTransactionAmount = averageTransactionAmount,
-                modifier = Modifier.padding(start = 8.dp, end = 8.dp, top = 16.dp)
-            )
+            AnalyticsAmountOverview(modifier = Modifier.padding(16.dp))
             AnalyticsBarChart(
-                transactionsOverview = transactionsOverview,
-                scaleLabels = barChartScaleLabels,
-                filterState = filterState,
-                filterCallbacks = filterCallbacks,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                scaleLabels = listOf(
+                    BarChartScaleLabel(amount = 0, fraction = 0f),
+                    BarChartScaleLabel(amount = 100000, fraction = 0.25f),
+                    BarChartScaleLabel(amount = 200000, fraction = 0.5f),
+                    BarChartScaleLabel(amount = 300000, fraction = 0.75f),
+                    BarChartScaleLabel(amount = 400000, fraction = 1f)
+                ),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
             )
             AnalyticsPieChart(
-                mostExpenseCategory = mostExpenseCategory,
-                filterState = filterState,
-                filterCallbacks = filterCallbacks,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                modifier = Modifier.padding(vertical = 24.dp)
             )
         }
     }

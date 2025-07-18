@@ -2,35 +2,28 @@ package com.android.monu.ui.navigation
 
 import kotlinx.serialization.Serializable
 
-@Serializable
-object Home
+@Serializable object Main
+@Serializable object Home
+@Serializable object Transaction
+@Serializable object Budgeting
+@Serializable object Analytics
 
-@Serializable
-object Transaction
+@Serializable object Settings
+@Serializable object MainSettings
 
-@Serializable
-object Report
+@Serializable object Account
+@Serializable object MainAccount
+@Serializable object AddAccount
+@Serializable object AccountType
 
-@Serializable
-object Analytics
+@Serializable object DetailTransaction
+@Serializable data class MainDetailTransaction(val id: Long = 0)
 
-@Serializable
-object Settings
+@Serializable object AddTransaction
+@Serializable data class MainAddTransaction(val type: Int = 0)
+@Serializable data class TransactionCategory(val type: Int = 0)
+@Serializable object TransactionSource
 
-@Serializable
-object AddIncome
-
-@Serializable
-object AddExpense
-
-@Serializable
-data class EditTransaction(val id: Long)
-
-@Serializable
-object ReportDetail
-
-@Serializable
-object Budgeting
-
-@Serializable
-object BudgetingHistory
+@Serializable object Transfer
+@Serializable object MainTransfer
+@Serializable data class TransferAccount(val type: Int = 0)

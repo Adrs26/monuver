@@ -11,17 +11,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,101 +31,50 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.TransactionOverview
-import com.android.monu.presentation.components.TypeFilterButton
-import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
-import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
 import com.android.monu.ui.theme.Blue
-import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.utils.DataHelper
 import com.android.monu.utils.NumberFormatHelper
-import com.android.monu.utils.extensions.toFullMonthResourceId
-import com.android.monu.utils.extensions.toHighestRangeValue
-import com.android.monu.utils.extensions.toTransactionType
-import com.android.monu.utils.extensions.toTransactionTypeCode
 
 @Composable
 fun AnalyticsBarChart(
-    transactionsOverview: List<TransactionOverview>,
-    scaleLabels: List<BarChartScaleLabel>,
-    filterState: AnalyticsFilterState,
-    filterCallbacks: AnalyticsFilterCallbacks,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            AnalyticsChartTopBar(
-                title = stringResource(R.string.transactions_overview),
-                chartType = 1,
-                filterState = filterState,
-                filterCallbacks = filterCallbacks
-            )
-            BarChartTypeFilterButton(
-                selectedType = filterState.barChartSelectedType,
-                modifier = Modifier.padding(top = 16.dp, bottom = 4.dp),
-                onFilterTypeClick = filterCallbacks.onBarChartFilterTypeClick
-            )
-            BarChart(
-                transactionsOverview = transactionsOverview,
-                scaleLabels = scaleLabels,
-                modifier = Modifier.padding(top = 32.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun BarChartTypeFilterButton(
-    selectedType: Int,
-    modifier: Modifier = Modifier,
-    onFilterTypeClick: (Int) -> Unit
-) {
-    Row(
-        modifier = modifier.background(color = Color.LightGray, shape = RoundedCornerShape(24.dp))
-    ) {
-        listOf(R.string.income, R.string.expense).forEach { type ->
-            val isSelected = stringResource(selectedType.toTransactionType()) ==
-                    stringResource(type)
-            TypeFilterButton(
-                transactionsType = stringResource(type),
-                background = if (isSelected) Color.White else Color.LightGray,
-                textColor = Color.Black,
-                horizontalPadding = 8.dp,
-                verticalPadding = 8.dp,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(4.dp),
-                onClick = { onFilterTypeClick(type.toTransactionTypeCode() ?: 0) }
-            )
-        }
-    }
-}
-
-@Composable
-fun BarChart(
-    transactionsOverview: List<TransactionOverview>,
     scaleLabels: List<BarChartScaleLabel>,
     modifier: Modifier = Modifier
 ) {
+    val dummyList = listOf(1, 1, 1, 1, 1, 1, 1)
+
     Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.Top
+        modifier = modifier.fillMaxWidth()
     ) {
+        Text(
+            text = "Rekap transaksi",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 24.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                BarChartLegend(
+                    legendColor = Color(0xFF66BB6A),
+                    legendLabel = stringResource(R.string.income)
+                )
+                BarChartLegend(
+                    legendColor = Color(0xFFEF5350),
+                    legendLabel = stringResource(R.string.expense),
+                )
+            }
+            AnalyticsFilterDropdown(initialValue = "Minggu ke-1")
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -138,11 +84,37 @@ fun BarChart(
         ) {
             BarChartYAxis(
                 scaleLabels = scaleLabels,
-                modifier = Modifier.padding(end = 8.dp)
+                modifier = Modifier.padding(end = 4.dp)
             )
-            BarChartGraph(transactionsOverview = transactionsOverview)
+            BarChartGraph(dummyList = dummyList)
         }
-        BarChartXAxis(modifier = Modifier.padding(start = 48.dp, top = 8.dp))
+        BarChartXAxis(
+            dummyList = dummyList,
+            modifier = Modifier.padding(start = 52.dp, end = 4.dp, top = 4.dp)
+        )
+    }
+}
+
+@Composable
+fun BarChartLegend(
+    legendColor: Color,
+    legendLabel: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            modifier = modifier
+                .size(8.dp)
+                .clip(MaterialTheme.shapes.extraSmall)
+                .background(legendColor)
+        )
+        Text(
+            text = legendLabel,
+            modifier = Modifier.padding(start = 4.dp),
+            style = MaterialTheme.typography.labelSmall
+        )
     }
 }
 
@@ -154,7 +126,7 @@ fun BarChartYAxis(
     Box(
         modifier = modifier
             .fillMaxHeight()
-            .width(40.dp),
+            .width(44.dp),
         contentAlignment = Alignment.CenterEnd
     ) {
         scaleLabels.forEach {
@@ -164,12 +136,7 @@ fun BarChartYAxis(
             ) {
                 Text(
                     text = NumberFormatHelper.formatToShortRupiah(it.amount),
-                    style = TextStyle(
-                        fontSize = 7.sp,
-                        fontFamily = interFontFamily,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
-                    )
+                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(it.fraction))
             }
@@ -179,18 +146,20 @@ fun BarChartYAxis(
 
 @Composable
 fun BarChartGraph(
-    transactionsOverview: List<TransactionOverview>,
+    dummyList: List<Int>,
     modifier: Modifier = Modifier
 ) {
     var selectedIndex by remember { mutableIntStateOf(-1) }
 
     Row(
-        modifier = modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.Bottom
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp),
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        transactionsOverview.forEachIndexed { index, value ->
+        dummyList.forEachIndexed { index, value ->
             val isSelected = index == selectedIndex
-            val backgroundColor = if (isSelected) Blue else Color.LightGray
             val offsetY = remember { Animatable(300f) }
             LaunchedEffect(Unit) {
                 offsetY.animateTo(
@@ -202,23 +171,32 @@ fun BarChartGraph(
                 )
             }
 
-            Box(
+            Row(
                 modifier = Modifier
-                    .padding(horizontal = 2.dp)
-                    .clip(CircleShape)
                     .weight(1f)
-                    .fillMaxHeight(
-                        value.amount.toFloat() /
-                                (transactionsOverview.maxOfOrNull { it.amount } ?: 0L)
-                                    .toHighestRangeValue()
-                                    .toFloat()
-                    )
-                    .offset { IntOffset(x = 0, y = offsetY.value.toInt()) }
-                    .background(backgroundColor)
                     .clickable { selectedIndex = index }
-            )
+                    .padding(horizontal = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .weight(1f)
+                        .fillMaxHeight(0.75f)
+                        .offset { IntOffset(x = 0, y = offsetY.value.toInt()) }
+                        .background(if (isSelected) Blue else Color(0xFF66BB6A))
+                )
+                Box(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.extraSmall)
+                        .weight(1f)
+                        .fillMaxHeight(0.5f)
+                        .offset { IntOffset(x = 0, y = offsetY.value.toInt()) }
+                        .background(if (isSelected) Blue else Color(0xFFEF5350))
+                )
+            }
             BarChartGraphInformation(
-                transactionsOverview = transactionsOverview,
                 selectedIndex = selectedIndex,
                 index = index,
                 onSelectedIndexReset = { selectedIndex = -1 }
@@ -229,7 +207,6 @@ fun BarChartGraph(
 
 @Composable
 fun BarChartGraphInformation(
-    transactionsOverview: List<TransactionOverview>,
     selectedIndex: Int,
     index: Int,
     onSelectedIndexReset: () -> Unit
@@ -237,62 +214,52 @@ fun BarChartGraphInformation(
     DropdownMenu(
         expanded = selectedIndex == index,
         onDismissRequest = onSelectedIndexReset,
-        modifier = Modifier.background(color = Color.White),
-        offset = DpOffset(x = 50.dp, y = (-210).dp)
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+        offset = DpOffset(x = 30.dp, y = (-180).dp),
+        shape = MaterialTheme.shapes.small
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
             Text(
-                text = NumberFormatHelper.formatToRupiah(transactionsOverview[index].amount),
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    fontFamily = interFontFamily,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                text = "Pemasukan: Rp300.000",
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontSize = 12.sp
                 )
             )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 2.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(
-                        R.string.transaction_overview_information,
-                        stringResource(transactionsOverview[index].month.toFullMonthResourceId()),
-                        transactionsOverview[index].year
-                    ),
-                    style = TextStyle(
-                        fontSize = 10.sp,
-                        fontFamily = interFontFamily,
-                        fontWeight = FontWeight.Normal,
-                        color = Color.Black
-                    )
+            Text(
+                text = "Pengeluaran: Rp200.000",
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground,
+                    fontSize = 12.sp
                 )
-            }
+            )
+            Text(
+                text = "13 Juni 2025",
+                modifier = Modifier.padding(top = 8.dp),
+                style = MaterialTheme.typography.labelSmall
+            )
         }
     }
 }
 
 @Composable
 fun BarChartXAxis(
+    dummyList: List<Int>,
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        DataHelper.monthLabels.forEach {
+        dummyList.forEach {
             Text(
-                text = stringResource(it),
+                text = "13/06",
                 modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center,
-                style = TextStyle(
-                    fontSize = 7.sp,
-                    fontFamily = interFontFamily,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
+                style = MaterialTheme.typography.labelSmall.copy(
+                    fontSize = 8.sp,
+                    textAlign = TextAlign.Center
                 )
             )
         }

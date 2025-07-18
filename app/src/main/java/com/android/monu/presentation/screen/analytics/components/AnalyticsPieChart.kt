@@ -1,6 +1,7 @@
 package com.android.monu.presentation.screen.analytics.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,126 +11,82 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.TransactionCategoryAmount
 import com.android.monu.presentation.components.PieChart
-import com.android.monu.presentation.screen.analytics.AnalyticsFilterCallbacks
-import com.android.monu.presentation.screen.analytics.AnalyticsFilterState
-import com.android.monu.ui.theme.interFontFamily
-import com.android.monu.utils.NumberFormatHelper
-import com.android.monu.utils.extensions.toCategoryColor
-import com.android.monu.utils.extensions.toCategoryName
+import com.android.monu.ui.theme.Blue800
 
 @Composable
 fun AnalyticsPieChart(
-    mostExpenseCategory: List<TransactionCategoryAmount>,
-    filterState: AnalyticsFilterState,
-    filterCallbacks: AnalyticsFilterCallbacks,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    val dummyList = listOf(500000L, 400000, 300000, 200000, 100000)
+
+    Column(
+        modifier = modifier.fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            AnalyticsChartTopBar(
-                title = stringResource(R.string.most_expense_category),
-                chartType = 2,
-                filterState = filterState,
-                filterCallbacks = filterCallbacks,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            PieChartContent(
-                mostExpenseCategory = mostExpenseCategory,
-                modifier = Modifier.padding(top = 16.dp)
-            )
-        }
-    }
-}
-
-@Composable
-fun PieChartContent(
-    mostExpenseCategory: List<TransactionCategoryAmount>,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        if (mostExpenseCategory.isEmpty()) {
             Text(
-                text = stringResource(R.string.no_transactions_yet),
-                modifier = Modifier.padding(top = 48.dp, bottom = 40.dp),
-                style = TextStyle(
-                    fontSize = 12.sp,
-                    fontFamily = interFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black
-                )
+                text = "Rekap kategori",
+                modifier = Modifier.weight(1f),
+                style = MaterialTheme.typography.titleMedium
             )
-        } else {
-            Row(
-                modifier = modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                PieChart(
-                    values = mostExpenseCategory,
-                    size = 120,
-                    width = 25f,
-                    gapDegrees = 12,
-                    modifier = Modifier.padding(8.dp)
-                )
-                PieChartDetail(
-                    mostExpenseCategory = mostExpenseCategory,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
-            }
+            AnalyticsFilterDropdown(
+                initialValue = "Pemasukan"
+            )
         }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            PieChart(values = dummyList)
+        }
+        AnalyticsPieChartDetail(expenseCategory = dummyList)
     }
 }
 
 @Composable
-fun PieChartDetail(
-    mostExpenseCategory: List<TransactionCategoryAmount>,
+fun AnalyticsPieChartDetail(
+    expenseCategory: List<Long>,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
     ) {
-        mostExpenseCategory.forEach { data ->
-            PieChartDetailData(
-                category = data.category,
-                amount = data.amount,
-                total = mostExpenseCategory.sumOf { it.amount },
-                modifier = Modifier.padding(bottom = 8.dp)
+        expenseCategory.forEach { data ->
+            AnalyticsPieChartDetailData(
+//                category = data.category,
+//                amount = data.amount,
+//                total = expenseCategory.sumOf { it.amount },
+                modifier = Modifier
+                    .clickable { }
+                    .padding( horizontal = 16.dp, vertical = 8.dp)
             )
         }
     }
 }
 
 @Composable
-fun PieChartDetailData(
-    category: Int,
-    amount: Long,
-    total: Long,
+fun AnalyticsPieChartDetailData(
+//    category: Int,
+//    amount: Long,
+//    total: Long,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -141,45 +98,34 @@ fun PieChartDetailData(
                 .width(36.dp)
                 .height(24.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(category.toCategoryColor()),
+                .background(Blue800),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = stringResource(
-                    R.string.percentage_value,
-                    NumberFormatHelper.formatToPercentageValue(amount, total)
-                ),
-                style = TextStyle(
-                    fontSize = 11.sp,
-                    fontFamily = interFontFamily,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.White
+                text = "50%",
+                style = MaterialTheme.typography.labelSmall.copy(
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             )
         }
-        Column(
-            modifier = Modifier.padding(start = 8.dp)
-        ) {
-            Text(
-                text = stringResource(category.toCategoryName()),
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    fontFamily = interFontFamily,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black
-                )
-            )
-            Text(
-                text = NumberFormatHelper.formatToRupiah(amount),
-                style = TextStyle(
-                    fontSize = 10.sp,
-                    fontFamily = interFontFamily,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color.Black
-                )
-            )
-        }
+        Text(
+            text = "Makanan & Minuman",
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 12.dp),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            style = MaterialTheme.typography.labelSmall
+        )
+        Text(
+            text = "Rp500.000",
+            modifier = Modifier.padding(start = 16.dp),
+            style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
+        )
+        Icon(
+            painter = painterResource(R.drawable.ic_arrow_forward),
+            contentDescription = null,
+            modifier = Modifier.padding(start = 4.dp)
+        )
     }
 }

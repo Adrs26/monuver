@@ -7,8 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.android.monu.data.local.entity.TransactionEntity
-import com.android.monu.data.local.projection.TransactionCategoryAmountProj
-import com.android.monu.data.local.projection.TransactionConciseProj
 import com.android.monu.data.local.projection.TransactionMonthlyAmountProj
 import com.android.monu.data.local.projection.TransactionOverviewProj
 import kotlinx.coroutines.flow.Flow
@@ -24,15 +22,15 @@ interface TransactionDao {
     fun getTotalTransactionAmount(type: Int): Flow<Long?>
 
     @Query("""
-        SELECT id, title, type, category, date, amount 
+        SELECT *
         FROM `transaction`
         ORDER BY date DESC, timeStamp DESC
         LIMIT 3
     """)
-    fun getRecentTransactions(): Flow<List<TransactionConciseProj>>
+    fun getRecentTransactions(): Flow<List<TransactionEntity>>
 
     @Query("""
-        SELECT id, title, type, category, date, amount 
+        SELECT * 
         FROM `transaction`
         WHERE (:type IS NULL OR type = :type)
             AND (:month IS NULL OR month = :month)
@@ -45,7 +43,7 @@ interface TransactionDao {
         type: Int?,
         month: Int?,
         year: Int?
-    ): PagingSource<Int, TransactionConciseProj>
+    ): PagingSource<Int, TransactionEntity>
 
     @Query("SELECT * FROM `transaction` WHERE id = :id")
     fun getTransactionById(id: Long): Flow<TransactionEntity?>
@@ -129,18 +127,8 @@ interface TransactionDao {
     """)
     fun getMonthlyTransactionOverviewsByType(type: Int, year: Int): Flow<List<TransactionOverviewProj>>
 
-    @Query("""
-        SELECT category, SUM(amount) AS amount 
-        FROM `transaction`
-        WHERE type = 2 AND year = :year 
-        GROUP BY category 
-        ORDER BY amount DESC 
-        LIMIT 5
-    """)
-    fun getMostExpenseTransactionCategoryAmountsByYear(year: Int): Flow<List<TransactionCategoryAmountProj>>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTransaction(transaction: TransactionEntity): Long
+    suspend fun createNewTransaction(transaction: TransactionEntity): Long
 
     @Update
     suspend fun updateTransaction(transaction: TransactionEntity): Int

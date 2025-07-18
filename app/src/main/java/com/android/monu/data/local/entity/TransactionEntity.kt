@@ -9,16 +9,16 @@ data class TransactionEntity(
     val id: Long = 0L,
     val title: String,
     val type: Int,
-    val category: Int,
+    val parentCategory: Int,
+    val childCategory: Int,
     val date: String,
     val month: Int,
     val year: Int,
     val timeStamp: Long,
     val amount: Long,
-    val budgetingId: Long? = null,
-    val budgetingTitle: String? = null,
-    val billsId: Long? = null,
-    val billsTitle: String? = null,
-    val goalsId: Long? = null,
-    val goalsTitle: String? = null
+    val sourceId: Int,
+    val sourceName: String,
+    val destinationId: Int? = null,
+    val destinationName: String? = null,
+    val saveId: Long? = null
 )

@@ -2,8 +2,8 @@ package com.android.monu.presentation.screen.transaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.domain.usecase.GetAllTransactionsUseCase
-import com.android.monu.domain.usecase.GetAvailableTransactionYearsUseCase
+import com.android.monu.domain.usecase.transaction.GetAllTransactionsUseCase
+import com.android.monu.domain.usecase.transaction.GetAvailableTransactionYearsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 
-class TransactionsViewModel(
+class TransactionViewModel(
     private val getAllTransactionsUseCase: GetAllTransactionsUseCase,
     private val getAvailableTransactionYearsUseCase: GetAvailableTransactionYearsUseCase
 ) : ViewModel() {
@@ -19,35 +19,32 @@ class TransactionsViewModel(
     private val _queryFilter = MutableStateFlow("")
     val queryFilter = _queryFilter.asStateFlow()
 
-    private val _selectedTypeFilter = MutableStateFlow<Int?>(null)
-    val selectedTypeFilter = _selectedTypeFilter.asStateFlow()
+    private val _typeFilter = MutableStateFlow<Int?>(null)
+    val typeFilter = _typeFilter.asStateFlow()
 
-    private val _selectedYearFilter = MutableStateFlow<Int?>(null)
-    val selectedYearFilter = _selectedYearFilter.asStateFlow()
+    private val _yearFilter = MutableStateFlow<Int?>(null)
+    val yearFilter = _yearFilter.asStateFlow()
 
-    private val _selectedMonthFilter = MutableStateFlow<Int?>(null)
-    val selectedMonthFilter = _selectedMonthFilter.asStateFlow()
+    private val _monthFilter = MutableStateFlow<Int?>(null)
+    val monthFilter = _monthFilter.asStateFlow()
 
-    private val _availableTransactionYears = MutableStateFlow<List<Int>>(emptyList())
-    val availableTransactionYears = _availableTransactionYears.asStateFlow()
+    private val _yearFilterOptions = MutableStateFlow<List<Int>>(emptyList())
+    val yearFilterOptions = _yearFilterOptions.asStateFlow()
 
     private val combinedFilters = combine(
-        _queryFilter,
-        _selectedTypeFilter,
-        _selectedYearFilter,
-        _selectedMonthFilter
+        _queryFilter, _typeFilter, _yearFilter, _monthFilter
     ) { query, type, year, month ->
-        FilterParams(query, type, year, month)
+        listOf(query, type, year, month)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val transactionList = combinedFilters
+    val transactions = combinedFilters
         .flatMapLatest { filters ->
-            getAllTransactionsUseCase.invoke(
-                query = filters.query,
-                type = filters.type,
-                year = filters.year,
-                month = filters.month,
+            getAllTransactionsUseCase(
+                query = filters[0].toString(),
+                type = filters[1] as Int?,
+                year = filters[2] as Int?,
+                month = filters[3] as Int?,
                 scope = viewModelScope
             )
         }
@@ -56,27 +53,17 @@ class TransactionsViewModel(
         _queryFilter.value = query
     }
 
-    fun selectType(type: Int?) {
-        _selectedTypeFilter.value = type
+    fun applyFilter(type: Int?, year: Int?, month: Int?) {
+        _typeFilter.value = type
+        _yearFilter.value = year
+        _monthFilter.value = month
     }
 
-    fun selectYearAndMonth(year: Int?, month: Int?) {
-        _selectedYearFilter.value = year
-        _selectedMonthFilter.value = month
-    }
-
-    fun loadAvailableTransactionYears() {
+    fun getYearFilterOptions() {
         viewModelScope.launch {
-            getAvailableTransactionYearsUseCase.invoke().collect { availableYears ->
-                _availableTransactionYears.value = availableYears
+            getAvailableTransactionYearsUseCase().collect { availableYears ->
+                _yearFilterOptions.value = availableYears
             }
         }
     }
 }
-
-data class FilterParams(
-    val query: String,
-    val type: Int?,
-    val year: Int?,
-    val month: Int?
-)

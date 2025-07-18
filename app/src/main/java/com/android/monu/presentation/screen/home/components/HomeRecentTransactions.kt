@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.TransactionConcise
+import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.presentation.screen.transaction.components.TransactionData
 import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.Green
@@ -35,12 +35,10 @@ import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.utils.DateHelper
 import com.android.monu.utils.NumberFormatHelper
 import com.android.monu.utils.extensions.debouncedClickable
-import com.android.monu.utils.extensions.toCategoryColor
-import com.android.monu.utils.extensions.toCategoryIcon
 
 @Composable
 fun HomeRecentTransactions(
-    recentTransactions: List<TransactionConcise>,
+    recentTransactions: List<Transaction>,
     modifier: Modifier = Modifier,
     navigateToTransactions: () -> Unit
 ) {
@@ -85,7 +83,7 @@ fun HomeRecentTransactions(
 
 @Composable
 fun RecentTransactionList(
-    recentTransactions: List<TransactionConcise>,
+    recentTransactions: List<Transaction>,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -111,7 +109,7 @@ fun RecentTransactionList(
                             id = recentTransactions[index].id,
                             title = recentTransactions[index].title,
                             type = recentTransactions[index].type,
-                            category = recentTransactions[index].category,
+                            category = recentTransactions[index].childCategory,
                             date = recentTransactions[index].date,
                             amount = recentTransactions[index].amount
                         )
@@ -142,14 +140,14 @@ fun RecentTransactionsListItem(
             Box(
                 modifier = Modifier
                     .background(
-                        color = transactionData.category.toCategoryColor(),
+                        color = Blue,
                         shape = RoundedCornerShape(12.dp)
                     )
                     .size(40.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(transactionData.category.toCategoryIcon()),
+                    painter = painterResource(R.drawable.ic_other),
                     contentDescription = null,
                     tint = Color.White
                 )

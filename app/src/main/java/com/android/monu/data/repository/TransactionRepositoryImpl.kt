@@ -7,11 +7,9 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.TransactionMapper
-import com.android.monu.domain.model.Transaction
-import com.android.monu.domain.model.TransactionCategoryAmount
-import com.android.monu.domain.model.TransactionConcise
-import com.android.monu.domain.model.TransactionMonthlyAmount
-import com.android.monu.domain.model.TransactionOverview
+import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.transaction.TransactionMonthlyAmount
+import com.android.monu.domain.model.transaction.TransactionOverview
 import com.android.monu.domain.repository.TransactionRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -25,10 +23,10 @@ class TransactionRepositoryImpl(
         return transactionDao.getTotalTransactionAmount(type)
     }
 
-    override fun getRecentTransactions(): Flow<List<TransactionConcise>> {
+    override fun getRecentTransactions(): Flow<List<Transaction>> {
         return transactionDao.getRecentTransactions().map { entityList ->
             entityList.map { entity ->
-                TransactionMapper.transactionConciseEntityToDomain(entity)
+                TransactionMapper.transactionEntityToDomain(entity)
             }
         }
     }
@@ -39,7 +37,7 @@ class TransactionRepositoryImpl(
         month: Int?,
         year: Int?,
         scope: CoroutineScope
-    ): Flow<PagingData<TransactionConcise>> {
+    ): Flow<PagingData<Transaction>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -56,7 +54,7 @@ class TransactionRepositoryImpl(
         ).flow
             .map { pagingData ->
                 pagingData.map { entity ->
-                    TransactionMapper.transactionConciseEntityToDomain(entity)
+                    TransactionMapper.transactionEntityToDomain(entity)
                 }
             }
             .cachedIn(scope)
@@ -103,19 +101,9 @@ class TransactionRepositoryImpl(
         }
     }
 
-    override fun getMostExpenseTransactionCategoryAmountsByYear(
-        year: Int
-    ): Flow<List<TransactionCategoryAmount>> {
-        return transactionDao.getMostExpenseTransactionCategoryAmountsByYear(year).map { entityList ->
-            entityList.map { entity ->
-                TransactionMapper.transactionCategoryAmountEntityToDomain(entity)
-            }
-        }
-    }
-
-    override suspend fun insertTransaction(transaction: Transaction): Result<Long> {
+    override suspend fun createNewTransaction(transaction: Transaction): Result<Long> {
         return try {
-            val result = transactionDao.insertTransaction(
+            val result = transactionDao.createNewTransaction(
                 TransactionMapper.transactionDomainToEntity(transaction)
             )
             Result.success(result)

@@ -1,11 +1,10 @@
 package com.android.monu.domain.repository
 
 import androidx.paging.PagingData
-import com.android.monu.domain.model.Transaction
-import com.android.monu.domain.model.TransactionCategoryAmount
-import com.android.monu.domain.model.TransactionConcise
-import com.android.monu.domain.model.TransactionMonthlyAmount
-import com.android.monu.domain.model.TransactionOverview
+import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.transaction.TransactionCategoryAmount
+import com.android.monu.domain.model.transaction.TransactionMonthlyAmount
+import com.android.monu.domain.model.transaction.TransactionOverview
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
@@ -13,7 +12,7 @@ interface TransactionRepository {
 
     fun getTotalTransactionAmount(type: Int): Flow<Long?>
 
-    fun getRecentTransactions(): Flow<List<TransactionConcise>>
+    fun getRecentTransactions(): Flow<List<Transaction>>
 
     fun getAllTransactions(
         query: String,
@@ -21,7 +20,7 @@ interface TransactionRepository {
         month: Int?,
         year: Int?,
         scope: CoroutineScope
-    ): Flow<PagingData<TransactionConcise>>
+    ): Flow<PagingData<Transaction>>
 
     fun getTransactionById(transactionId: Long): Flow<Transaction?>
 
@@ -37,9 +36,7 @@ interface TransactionRepository {
 
     fun getMonthlyTransactionOverviewsByType(type: Int, year: Int): Flow<List<TransactionOverview>>
 
-    fun getMostExpenseTransactionCategoryAmountsByYear(year: Int): Flow<List<TransactionCategoryAmount>>
-
-    suspend fun insertTransaction(transaction: Transaction): Result<Long>
+    suspend fun createNewTransaction(transaction: Transaction): Result<Long>
 
     suspend fun updateTransaction(transaction: Transaction): Result<Int>
 

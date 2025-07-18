@@ -61,7 +61,6 @@ object NumberFormatHelper {
         }
     }
 
-
     fun formatToThousandDivider(value: Long): String {
         return String.format(Locale("in", "ID"), "%,d", value).replace(',', '.')
     }

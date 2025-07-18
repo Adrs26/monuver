@@ -2,9 +2,9 @@ package com.android.monu.presentation.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.domain.model.TransactionConcise
-import com.android.monu.domain.usecase.GetRecentTransactionsUseCase
-import com.android.monu.domain.usecase.GetTotalTransactionAmountUseCase
+import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
+import com.android.monu.domain.usecase.transaction.GetTotalTransactionAmountUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -28,7 +28,7 @@ class HomeViewModel(
             getTotalTransactionAmount(2)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
-    private val _recentTransactions = MutableStateFlow<List<TransactionConcise>>(emptyList())
+    private val _recentTransactions = MutableStateFlow<List<Transaction>>(emptyList())
     val recentTransactions = _recentTransactions
         .onStart {
            viewModelScope.launch {

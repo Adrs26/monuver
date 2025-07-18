@@ -13,30 +13,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import com.android.monu.domain.model.TransactionCategoryAmount
-import com.android.monu.utils.extensions.toCategoryColor
+import com.android.monu.ui.theme.Blue800
 import kotlinx.coroutines.launch
 
 @Composable
 fun PieChart(
-    values: List<TransactionCategoryAmount>,
-    size: Int,
-    width: Float,
-    gapDegrees: Int,
+    values: List<Long>,
     modifier: Modifier = Modifier
 ) {
     val numberOfGaps = values.size
-    val remainingDegrees = 360 - (numberOfGaps * gapDegrees)
-    val total = values.fold(0f) { acc, pie -> acc + pie.amount }.div(remainingDegrees)
+    val remainingDegrees = 360 - (numberOfGaps * 12)
+    val total = values.fold(0f) { acc, pie -> acc + pie }.div(remainingDegrees)
     var currentSum = 0f
 
     val arcs = values.mapIndexed { index, pieDataPoint ->
-        val startAngle = currentSum + (index * gapDegrees)
-        currentSum += pieDataPoint.amount.div(total)
+        val startAngle = currentSum + (index * 12)
+        currentSum += pieDataPoint.div(total)
         ArcData(
-            targetSweepAngle = pieDataPoint.amount.div(total),
+            targetSweepAngle = pieDataPoint.div(total),
             animation = Animatable(0f),
-            color = pieDataPoint.category.toCategoryColor(),
+            color = Blue800,
             startAngle = -90 + startAngle
         )
     }
@@ -57,9 +53,9 @@ fun PieChart(
     }
 
     Canvas(
-        modifier = modifier.size(size.dp)
+        modifier = modifier.size(160.dp)
     ) {
-        val stroke = Stroke(width = width, cap = StrokeCap.Round)
+        val stroke = Stroke(width = 35f, cap = StrokeCap.Round)
         arcs.reversed().map {
             drawArc(
                 color = it.color,

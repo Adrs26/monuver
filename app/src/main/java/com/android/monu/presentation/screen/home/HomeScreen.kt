@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.android.monu.domain.model.TransactionConcise
+import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.presentation.screen.home.components.HomeBalance
 import com.android.monu.presentation.screen.home.components.HomeFinancialInsight
 import com.android.monu.presentation.screen.home.components.HomeMenuButtonBar
@@ -21,7 +21,7 @@ import com.android.monu.ui.theme.LightGrey
 fun HomeScreen(
     totalIncomeAmount: Long,
     totalExpenseAmount: Long,
-    recentTransactions: List<TransactionConcise>,
+    recentTransactions: List<Transaction>,
     navigateToSettings: () -> Unit,
     navigateToBudgeting: () -> Unit,
     navigateToTransactions: () -> Unit
