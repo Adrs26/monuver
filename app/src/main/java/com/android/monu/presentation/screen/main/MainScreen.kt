@@ -53,11 +53,11 @@ import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.budgeting.BudgetingScreen
 import com.android.monu.presentation.screen.home.HomeScreen
-import com.android.monu.presentation.screen.home.HomeViewModel
 import com.android.monu.presentation.screen.transaction.TransactionActions
 import com.android.monu.presentation.screen.transaction.TransactionScreen
 import com.android.monu.presentation.screen.transaction.TransactionState
 import com.android.monu.presentation.screen.transaction.TransactionViewModel
+import com.android.monu.presentation.utils.TransactionType
 import com.android.monu.ui.navigation.Account
 import com.android.monu.ui.navigation.Analytics
 import com.android.monu.ui.navigation.Budgeting
@@ -67,7 +67,6 @@ import com.android.monu.ui.navigation.MainDetailTransaction
 import com.android.monu.ui.navigation.Settings
 import com.android.monu.ui.navigation.Transaction
 import com.android.monu.ui.navigation.Transfer
-import com.android.monu.presentation.utils.TransactionType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -138,14 +137,9 @@ fun MainScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable<Home> {
-                val viewModel = koinViewModel<HomeViewModel>()
-
-                val totalIncomeAmount by viewModel.totalIncomeAmount.collectAsStateWithLifecycle()
-                val totalExpenseAmount by viewModel.totalExpenseAmount.collectAsStateWithLifecycle()
-
                 HomeScreen(
-                    totalIncomeAmount = totalIncomeAmount,
-                    totalExpenseAmount = totalExpenseAmount,
+                    totalIncomeAmount = 0,
+                    totalExpenseAmount = 0,
                     recentTransactions = emptyList(),
                     navigateToSettings = { rootNavController.navigate(Settings) },
                     navigateToBudgeting = { rootNavController.navigate(Account) },
@@ -208,17 +202,29 @@ fun MainScreen(
                 val viewModel = koinViewModel<AnalyticsViewModel>()
                 val monthValue by viewModel.monthFilter.collectAsStateWithLifecycle()
                 val yearValue by viewModel.yearFilter.collectAsStateWithLifecycle()
+                val typeValue by viewModel.typeFilter.collectAsStateWithLifecycle()
+                val weekValue by viewModel.weekFilter.collectAsStateWithLifecycle()
                 val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
                 val transactionAmountOverview by viewModel.transactionAmountOverview
                     .collectAsStateWithLifecycle(initialValue = TransactionMonthlyAmountOverview())
+                val parentCategoriesSummary by viewModel.transactionParentCategorySummary
+                    .collectAsStateWithLifecycle(initialValue = emptyList())
+                val transactionWeeklySummary by viewModel.transactionWeeklySummary
+                    .collectAsStateWithLifecycle(initialValue = emptyList())
 
                 AnalyticsScreen(
                     monthValue = monthValue,
                     yearValue = yearValue,
+                    typeValue = typeValue,
+                    weekValue = weekValue,
                     yearFilterOptions = yearFilterOptions,
+                    transactionAmountOverview = transactionAmountOverview,
+                    parentCategoriesSummary = parentCategoriesSummary,
+                    transactionWeeklySummary = transactionWeeklySummary,
                     onMonthChange = viewModel::changeMonthFilter,
                     onYearChange = viewModel::changeYearFilter,
-                    transactionAmountOverview = transactionAmountOverview
+                    onTypeChange = viewModel::changeTypeFilter,
+                    onWeekChange = viewModel::changeWeekFilter
                 )
             }
         }

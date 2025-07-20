@@ -6,19 +6,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.android.monu.data.local.entity.TransactionDateRangeEntity
 import com.android.monu.data.local.entity.TransactionEntity
-import com.android.monu.data.local.projection.TransactionOverviewProj
+import com.android.monu.data.local.entity.TransactionParentCategorySummaryEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransactionDao {
-
-    @Query("""
-        SELECT SUM(amount) AS totalAmount
-        FROM `transaction`
-        WHERE type = :type
-    """)
-    fun getTotalTransactionAmount(type: Int): Flow<Long?>
 
     @Query("""
         SELECT *
@@ -48,7 +42,7 @@ interface TransactionDao {
     fun getTransactionById(id: Long): Flow<TransactionEntity?>
 
     @Query("SELECT DISTINCT year FROM `transaction` ORDER BY year DESC")
-    fun getAvailableTransactionYears(): Flow<List<Int>>
+    fun getDistinctTransactionYears(): Flow<List<Int>>
 
     @Query("""
         SELECT SUM(amount) 
@@ -57,7 +51,7 @@ interface TransactionDao {
             AND month = :month 
             AND year = :year
     """)
-    fun getTransactionMonthlyAmount(type: Int, month: Int, year: Int): Flow<Long?>
+    fun getTotalMonthlyTransactionAmount(type: Int, month: Int, year: Int): Flow<Long?>
 
     @Query("""
         WITH all_dates AS (
@@ -75,19 +69,26 @@ interface TransactionDao {
         )
         SELECT AVG(dailyTotal) FROM daily_totals
     """)
-    fun getAverageTransactionAmountPerDay(type: Int, month: Int, year: Int): Flow<Double?>
+    fun getAverageDailyTransactionAmountInMonth(type: Int, month: Int, year: Int): Flow<Double?>
 
     @Query("""
-        SELECT 
-            month,
-            year,
-            SUM(amount) AS amount
+        SELECT parentCategory, SUM(amount) AS totalAmount
         FROM `transaction`
-        WHERE type = :type AND year = :year
-        GROUP BY year, month
-        ORDER BY year, month
+        WHERE type = :type AND month = :month AND year = :year
+        GROUP BY parentCategory
+        ORDER BY totalAmount DESC
     """)
-    fun getMonthlyTransactionOverviewsByType(type: Int, year: Int): Flow<List<TransactionOverviewProj>>
+    fun getGroupedMonthlyTransactionAmountByParentCategory(
+        type: Int,
+        month: Int,
+        year: Int
+    ): Flow<List<TransactionParentCategorySummaryEntity>>
+
+    @Query("""
+        SELECT type, date, amount FROM `transaction`
+        WHERE date BETWEEN :startDate AND :endDate
+    """)
+    fun getTransactionsInRange(startDate: String, endDate: String): Flow<List<TransactionDateRangeEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createNewTransaction(transaction: TransactionEntity): Long

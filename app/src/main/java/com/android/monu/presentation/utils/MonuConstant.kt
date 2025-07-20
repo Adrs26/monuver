@@ -20,12 +20,6 @@ object TransactionType {
     const val TRANSFER = 1003
 }
 
-object TransferCategory {
-    const val ACCOUNT = 1003
-    const val SAVINGS_IN = 1004
-    const val SAVINGS_OUT = 1005
-}
-
 object TransactionParentCategory {
     const val SALARY = 1
     const val BONUSES = 2

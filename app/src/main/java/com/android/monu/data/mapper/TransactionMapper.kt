@@ -1,9 +1,7 @@
 package com.android.monu.data.mapper
 
 import com.android.monu.data.local.entity.TransactionEntity
-import com.android.monu.data.local.projection.TransactionOverviewProj
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.model.transaction.TransactionOverview
 
 object TransactionMapper {
     fun transactionEntityToDomain(
@@ -68,16 +66,6 @@ object TransactionMapper {
             destinationId = transaction.destinationId,
             destinationName = transaction.destinationName,
             saveId = transaction.saveId
-        )
-    }
-
-    fun transactionOverviewEntityToDomain(
-        transactionOverviewProj: TransactionOverviewProj
-    ): TransactionOverview {
-        return TransactionOverview(
-            month = transactionOverviewProj.month,
-            year = transactionOverviewProj.year,
-            amount = transactionOverviewProj.amount
         )
     }
 }

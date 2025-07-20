@@ -3,7 +3,7 @@ package com.android.monu.presentation.screen.transaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsUseCase
-import com.android.monu.domain.usecase.transaction.GetAvailableTransactionYearsUseCase
+import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class TransactionViewModel(
     private val getAllTransactionsUseCase: GetAllTransactionsUseCase,
-    private val getAvailableTransactionYearsUseCase: GetAvailableTransactionYearsUseCase
+    private val getDistinctTransactionYearsUseCase: GetDistinctTransactionYearsUseCase
 ) : ViewModel() {
 
     private val _queryFilter = MutableStateFlow("")
@@ -61,7 +61,7 @@ class TransactionViewModel(
 
     fun getYearFilterOptions() {
         viewModelScope.launch {
-            getAvailableTransactionYearsUseCase().collect { availableYears ->
+            getDistinctTransactionYearsUseCase().collect { availableYears ->
                 _yearFilterOptions.value = availableYears
             }
         }

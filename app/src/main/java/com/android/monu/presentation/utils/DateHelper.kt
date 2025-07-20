@@ -1,6 +1,7 @@
 package com.android.monu.presentation.utils
 
 import org.threeten.bp.LocalDate
+import org.threeten.bp.YearMonth
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
@@ -26,5 +27,56 @@ object DateHelper {
         } catch (_: Exception) {
             Pair(0, 0)
         }
+    }
+
+    fun getCurrentCustomWeekNumber(dayOfMonth: Int): Int {
+        return when (dayOfMonth) {
+            in 1..7 -> 1
+            in 8..14 -> 2
+            in 15..21 -> 3
+            in 22..28 -> 4
+            else -> 5
+        }
+    }
+
+    fun getWeekOptions(month: Int, year: Int): List<Int> {
+        val daysInMonth = YearMonth.of(year, month).lengthOfMonth()
+
+        val weekOptions = mutableListOf(1, 2, 3, 4)
+
+        if (daysInMonth > 28) {
+            weekOptions.add(5)
+        }
+
+        return weekOptions
+    }
+
+    fun formatToWeekString(weekNumber: Int): String {
+        return when (weekNumber) {
+            1 -> "Minggu ke-1"
+            2 -> "Minggu ke-2"
+            3 -> "Minggu ke-3"
+            4 -> "Minggu ke-4"
+            5 -> "Minggu ke-5"
+            else -> ""
+        }
+    }
+
+    fun getDateRangeForWeek(week: Int, month: Int, year: Int): Pair<LocalDate, LocalDate> {
+        val startDay = (week - 1) * 7 + 1
+        val startDate = LocalDate.of(year, month, startDay)
+
+        val endDay = minOf(startDay + 6, startDate.lengthOfMonth())
+        val endDate = LocalDate.of(year, month, endDay)
+
+        return startDate to endDate
+    }
+
+    fun formatToShortDate(inputDate: String): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val outputFormatter = DateTimeFormatter.ofPattern("dd/MM")
+
+        val date = LocalDate.parse(inputDate, inputFormatter)
+        return date.format(outputFormatter)
     }
 }

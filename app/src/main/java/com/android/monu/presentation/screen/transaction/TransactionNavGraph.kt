@@ -225,10 +225,6 @@ fun NavGraphBuilder.detailTransactionNavGraph(
                 override fun onRemoveTransaction(transaction: Transaction) {
                     viewModel.deleteTransaction(transaction)
                 }
-
-                override fun onResetRemoveTransactionResult() {
-                    viewModel.resetDeleteTransactionResult()
-                }
             }
 
             transaction?.let {

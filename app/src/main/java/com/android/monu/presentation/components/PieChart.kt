@@ -13,26 +13,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import com.android.monu.ui.theme.Blue800
+import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
+import com.android.monu.presentation.utils.DatabaseCodeMapper
 import kotlinx.coroutines.launch
 
 @Composable
 fun PieChart(
-    values: List<Long>,
+    values: List<TransactionParentCategorySummary>,
     modifier: Modifier = Modifier
 ) {
     val numberOfGaps = values.size
     val remainingDegrees = 360 - (numberOfGaps * 12)
-    val total = values.fold(0f) { acc, pie -> acc + pie }.div(remainingDegrees)
+    val total = values.fold(0f) { acc, pie -> acc + pie.totalAmount }.div(remainingDegrees)
     var currentSum = 0f
 
     val arcs = values.mapIndexed { index, pieDataPoint ->
         val startAngle = currentSum + (index * 12)
-        currentSum += pieDataPoint.div(total)
+        currentSum += pieDataPoint.totalAmount.div(total)
         ArcData(
-            targetSweepAngle = pieDataPoint.div(total),
+            targetSweepAngle = pieDataPoint.totalAmount.div(total),
             animation = Animatable(0f),
-            color = Blue800,
+            color = DatabaseCodeMapper.toParentCategoryIconBackground(pieDataPoint.parentCategory),
             startAngle = -90 + startAngle
         )
     }

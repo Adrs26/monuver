@@ -32,7 +32,6 @@ fun DetailTransactionScreen(
             if (it.isSuccess) {
                 context.getString(R.string.transaction_successfully_deleted)
                     .showMessageWithToast(context)
-                transactionActions.onResetRemoveTransactionResult()
                 transactionActions.onNavigateBack()
             } else {
                 "Terjadi kesalahan saat menghapus transaksi".showMessageWithToast(context)
@@ -70,5 +69,4 @@ interface DetailTransactionActions {
     fun onNavigateBack()
     fun onNavigateToEdit()
     fun onRemoveTransaction(transaction: Transaction)
-    fun onResetRemoveTransactionResult()
 }

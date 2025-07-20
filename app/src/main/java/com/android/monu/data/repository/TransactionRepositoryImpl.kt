@@ -8,22 +8,21 @@ import androidx.paging.map
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.transaction.TransactionDailySummary
 import com.android.monu.domain.model.transaction.TransactionMonthlyAmountOverview
-import com.android.monu.domain.model.transaction.TransactionOverview
+import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
 import com.android.monu.domain.repository.TransactionRepository
+import com.android.monu.presentation.utils.DateHelper
 import com.android.monu.presentation.utils.TransactionType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import org.threeten.bp.LocalDate
 
 class TransactionRepositoryImpl(
     private val transactionDao: TransactionDao
 ) : TransactionRepository {
-
-    override fun getTotalTransactionAmount(type: Int): Flow<Long?> {
-        return transactionDao.getTotalTransactionAmount(type)
-    }
 
     override fun getRecentTransactions(): Flow<List<Transaction>> {
         return transactionDao.getRecentTransactions().map { entityList ->
@@ -68,24 +67,24 @@ class TransactionRepositoryImpl(
         }
     }
 
-    override fun getAvailableTransactionYears(): Flow<List<Int>> {
-        return transactionDao.getAvailableTransactionYears()
+    override fun getDistinctTransactionYears(): Flow<List<Int>> {
+        return transactionDao.getDistinctTransactionYears()
     }
 
     override fun getTransactionMonthlyAmountOverview(
         month: Int,
         year: Int
     ): Flow<TransactionMonthlyAmountOverview> {
-        val totalIncomeAmount = transactionDao.getTransactionMonthlyAmount(
+        val totalIncomeAmount = transactionDao.getTotalMonthlyTransactionAmount(
             TransactionType.INCOME, month, year
         )
-        val totalExpenseAmount = transactionDao.getTransactionMonthlyAmount(
+        val totalExpenseAmount = transactionDao.getTotalMonthlyTransactionAmount(
             TransactionType.EXPENSE, month, year
         )
-        val averageIncomeAmount = transactionDao.getAverageTransactionAmountPerDay(
+        val averageIncomeAmount = transactionDao.getAverageDailyTransactionAmountInMonth(
             TransactionType.INCOME, month, year
         )
-        val averageExpenseAmount = transactionDao.getAverageTransactionAmountPerDay(
+        val averageExpenseAmount = transactionDao.getAverageDailyTransactionAmountInMonth(
             TransactionType.EXPENSE, month, year
         )
 
@@ -104,14 +103,60 @@ class TransactionRepositoryImpl(
         }
     }
 
-    override fun getMonthlyTransactionOverviewsByType(
+    override fun getGroupedMonthlyTransactionAmountByParentCategory(
         type: Int,
+        month: Int,
         year: Int
-    ): Flow<List<TransactionOverview>> {
-        return transactionDao.getMonthlyTransactionOverviewsByType(type, year).map { entityList ->
-            entityList.map { entity ->
-                TransactionMapper.transactionOverviewEntityToDomain(entity)
+    ): Flow<List<TransactionParentCategorySummary>> {
+        return transactionDao
+            .getGroupedMonthlyTransactionAmountByParentCategory(type, month, year)
+            .map { list ->
+                list.map { (parentCategory, totalAmount) ->
+                    TransactionParentCategorySummary(
+                        parentCategory = parentCategory,
+                        totalAmount = totalAmount
+                    )
+                }
             }
+    }
+
+    override fun getWeeklyTransactionSummaryByDateRange(
+        month: Int,
+        year: Int,
+        week: Int
+    ): Flow<List<TransactionDailySummary>> {
+        val (startDate, endDate) = DateHelper.getDateRangeForWeek(week, month, year)
+        val transactionsFlow = transactionDao.getTransactionsInRange(startDate.toString(), endDate.toString())
+
+        return transactionsFlow.map { transactions ->
+            val grouped = transactions.groupBy { LocalDate.parse(it.date) }
+
+            val result = mutableListOf<TransactionDailySummary>()
+
+            var currentDate = startDate
+            while (!currentDate.isAfter(endDate)) {
+                val currentDateTransactions = grouped[currentDate] ?: emptyList()
+
+                val (income, expense) = currentDateTransactions.fold(0L to 0L) { acc, transaction ->
+                    when (transaction.type) {
+                        TransactionType.INCOME -> acc.copy(first = acc.first + transaction.amount)
+                        TransactionType.EXPENSE -> acc.copy(second = acc.second + transaction.amount)
+                        else -> acc
+                    }
+                }
+
+                result.add(
+                    TransactionDailySummary(
+                        date = currentDate.toString(),
+                        totalIncome = income,
+                        totalExpense = expense
+                    )
+                )
+
+                currentDate = currentDate.plusDays(1)
+            }
+
+            result
         }
     }
 

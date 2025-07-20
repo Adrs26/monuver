@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import com.android.monu.presentation.screen.account.AccountViewModel
 import com.android.monu.presentation.screen.account.addaccount.AddAccountViewModel
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
-import com.android.monu.presentation.screen.home.HomeViewModel
 import com.android.monu.presentation.screen.transaction.TransactionViewModel
 import com.android.monu.presentation.screen.transaction.addtransaction.AddTransactionViewModel
 import com.android.monu.presentation.screen.transaction.detailtransaction.DetailTransactionViewModel
@@ -13,7 +12,6 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { HomeViewModel(get(), get()) }
     viewModel { AccountViewModel(get(), get()) }
     viewModel { AddAccountViewModel(get()) }
     viewModel { TransactionViewModel(get(), get()) }
@@ -22,5 +20,5 @@ val viewModelModule = module {
     }
     viewModel { AddTransactionViewModel(get(), get()) }
     viewModel { TransferViewModel(get(), get()) }
-    viewModel { AnalyticsViewModel(get(), get()) }
+    viewModel { AnalyticsViewModel(get(), get(), get(), get()) }
 }

@@ -50,8 +50,4 @@ class DetailTransactionViewModel(
             }
         }
     }
-
-    fun resetDeleteTransactionResult() {
-        _deleteTransactionResult.value = null
-    }
 }

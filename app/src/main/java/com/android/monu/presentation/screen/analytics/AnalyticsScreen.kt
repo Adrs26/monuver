@@ -9,21 +9,28 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.android.monu.domain.model.transaction.TransactionDailySummary
 import com.android.monu.domain.model.transaction.TransactionMonthlyAmountOverview
+import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAmountOverview
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAppBar
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChart
 import com.android.monu.presentation.screen.analytics.components.AnalyticsPieChart
-import com.android.monu.presentation.screen.analytics.components.BarChartScaleLabel
 
 @Composable
 fun AnalyticsScreen(
     monthValue: Int,
     yearValue: Int,
+    typeValue: Int,
+    weekValue: Int,
     yearFilterOptions: List<Int>,
     transactionAmountOverview: TransactionMonthlyAmountOverview,
+    parentCategoriesSummary: List<TransactionParentCategorySummary>,
+    transactionWeeklySummary: List<TransactionDailySummary>,
     onMonthChange: (Int) -> Unit,
-    onYearChange: (Int) -> Unit
+    onYearChange: (Int) -> Unit,
+    onTypeChange: (Int) -> Unit,
+    onWeekChange: (Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -47,17 +54,18 @@ fun AnalyticsScreen(
                 modifier = Modifier.padding(16.dp)
             )
             AnalyticsBarChart(
-                scaleLabels = listOf(
-                    BarChartScaleLabel(amount = 0, fraction = 0f),
-                    BarChartScaleLabel(amount = 100000, fraction = 0.25f),
-                    BarChartScaleLabel(amount = 200000, fraction = 0.5f),
-                    BarChartScaleLabel(amount = 300000, fraction = 0.75f),
-                    BarChartScaleLabel(amount = 400000, fraction = 1f)
-                ),
+                transactionWeeklySummary = transactionWeeklySummary,
+                monthValue = monthValue,
+                yearValue = yearValue,
+                weekValue = weekValue,
+                onWeekChange = onWeekChange,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
             )
             AnalyticsPieChart(
-                modifier = Modifier.padding(vertical = 24.dp)
+                typeValue = typeValue,
+                parentCategoriesSummary = parentCategoriesSummary,
+                modifier = Modifier.padding(vertical = 24.dp),
+                onTypeChange = onTypeChange
             )
         }
     }
