@@ -7,6 +7,11 @@ class DeleteTransactionAndAdjustAccountBalanceUseCase(
     private val repository: FinanceRepository
 ) {
     suspend operator fun invoke(transaction: Transaction): Result<Int> {
-        return repository.deleteTransactionAndAdjustAccountBalance(transaction)
+        return try {
+            val rowDeleted = repository.deleteTransactionAndAdjustAccountBalance(transaction)
+            Result.success(rowDeleted)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }

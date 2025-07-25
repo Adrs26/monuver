@@ -47,9 +47,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.TransactionMonthlyAmountOverview
+import com.android.monu.domain.model.transaction.TransactionMonthlyAmountSummary
 import com.android.monu.presentation.components.CommonFloatingActionButton
+import com.android.monu.presentation.screen.analytics.AnalyticsActions
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
+import com.android.monu.presentation.screen.analytics.AnalyticsState
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.budgeting.BudgetingScreen
 import com.android.monu.presentation.screen.home.HomeScreen
@@ -155,18 +157,16 @@ fun MainScreen(
             composable<Transaction> {
                 val viewModel = koinViewModel<TransactionViewModel>()
                 val transactions = viewModel.transactions.collectAsLazyPagingItems()
-                val queryFilter by viewModel.queryFilter.collectAsStateWithLifecycle()
+                val filter by viewModel.filterState.collectAsStateWithLifecycle()
                 val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
-                val typeFilter by viewModel.typeFilter.collectAsStateWithLifecycle()
-                val yearFilter by viewModel.yearFilter.collectAsStateWithLifecycle()
-                val monthFilter by viewModel.monthFilter.collectAsStateWithLifecycle()
 
                 val transactionState = TransactionState(
-                    queryFilter = queryFilter,
+                    queryFilter = filter.query,
                     yearFilterOptions = yearFilterOptions,
-                    typeFilter = typeFilter,
-                    yearFilter = yearFilter,
-                    monthFilter = monthFilter,
+                    typeFilter = filter.type,
+                    yearFilter = filter.year,
+                    monthFilter = filter.month,
+                    transactions = transactions
                 )
 
                 val transactionActions = object : TransactionActions {
@@ -188,7 +188,6 @@ fun MainScreen(
                 }
 
                 TransactionScreen(
-                    transactions = transactions,
                     transactionState = transactionState,
                     transactionActions = transactionActions
                 )
@@ -200,31 +199,47 @@ fun MainScreen(
             }
             composable<Analytics> {
                 val viewModel = koinViewModel<AnalyticsViewModel>()
-                val monthValue by viewModel.monthFilter.collectAsStateWithLifecycle()
-                val yearValue by viewModel.yearFilter.collectAsStateWithLifecycle()
-                val typeValue by viewModel.typeFilter.collectAsStateWithLifecycle()
-                val weekValue by viewModel.weekFilter.collectAsStateWithLifecycle()
+                val filter by viewModel.filterState.collectAsStateWithLifecycle()
                 val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
-                val transactionAmountOverview by viewModel.transactionAmountOverview
-                    .collectAsStateWithLifecycle(initialValue = TransactionMonthlyAmountOverview())
+                val transactionAmountSummary by viewModel.transactionAmountSummary
+                    .collectAsStateWithLifecycle(initialValue = TransactionMonthlyAmountSummary())
                 val parentCategoriesSummary by viewModel.transactionParentCategorySummary
                     .collectAsStateWithLifecycle(initialValue = emptyList())
                 val transactionWeeklySummary by viewModel.transactionWeeklySummary
                     .collectAsStateWithLifecycle(initialValue = emptyList())
 
-                AnalyticsScreen(
-                    monthValue = monthValue,
-                    yearValue = yearValue,
-                    typeValue = typeValue,
-                    weekValue = weekValue,
+                val analyticsState = AnalyticsState(
+                    monthFilter = filter.month,
+                    yearFilter = filter.year,
+                    typeFilter = filter.type,
+                    weekFilter = filter.week,
                     yearFilterOptions = yearFilterOptions,
-                    transactionAmountOverview = transactionAmountOverview,
+                    transactionAmountSummary = transactionAmountSummary,
                     parentCategoriesSummary = parentCategoriesSummary,
-                    transactionWeeklySummary = transactionWeeklySummary,
-                    onMonthChange = viewModel::changeMonthFilter,
-                    onYearChange = viewModel::changeYearFilter,
-                    onTypeChange = viewModel::changeTypeFilter,
-                    onWeekChange = viewModel::changeWeekFilter
+                    transactionWeeklySummary = transactionWeeklySummary
+                )
+
+                val analyticsActions = object : AnalyticsActions {
+                    override fun onMonthChange(month: Int) {
+                        viewModel.changeMonthFilter(month)
+                    }
+
+                    override fun onYearChange(year: Int) {
+                        viewModel.changeYearFilter(year)
+                    }
+
+                    override fun onTypeChange(type: Int) {
+                        viewModel.changeTypeFilter(type)
+                    }
+
+                    override fun onWeekChange(week: Int) {
+                        viewModel.changeWeekFilter(week)
+                    }
+                }
+
+                AnalyticsScreen(
+                    analyticsState = analyticsState,
+                    analyticsActions = analyticsActions
                 )
             }
         }

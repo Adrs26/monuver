@@ -9,7 +9,7 @@ import com.android.monu.domain.usecase.transaction.GetAllTransactionsUseCase
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
 import com.android.monu.domain.usecase.transaction.GetGroupedMonthlyTransactionAmountByParentCategoryUseCase
 import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
-import com.android.monu.domain.usecase.transaction.GetTransactionMonthlyAmountOverviewUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionMonthlyAmountSummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.domain.usecase.transaction.GetWeeklyTransactionSummaryByDateRangeUseCase
 import com.android.monu.domain.usecase.transaction.UpdateTransactionUseCase
@@ -20,7 +20,7 @@ val domainModule = module {
     factory { GetAllTransactionsUseCase(get()) }
     factory { GetTransactionByIdUseCase(get()) }
     factory { GetDistinctTransactionYearsUseCase(get()) }
-    factory { GetTransactionMonthlyAmountOverviewUseCase(get()) }
+    factory { GetTransactionMonthlyAmountSummaryUseCase(get()) }
     factory { GetGroupedMonthlyTransactionAmountByParentCategoryUseCase(get()) }
     factory { GetWeeklyTransactionSummaryByDateRangeUseCase(get()) }
     factory { UpdateTransactionUseCase(get()) }
@@ -29,6 +29,6 @@ val domainModule = module {
     factory { GetTotalAccountBalanceUseCase(get()) }
 
     factory { CreateAccountWithInitialTransactionUseCase(get()) }
-    factory { CreateTransactionAndAdjustAccountBalanceUseCase(get()) }
+    factory { CreateTransactionAndAdjustAccountBalanceUseCase(get(), get()) }
     factory { DeleteTransactionAndAdjustAccountBalanceUseCase(get()) }
 }

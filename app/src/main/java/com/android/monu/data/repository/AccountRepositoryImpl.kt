@@ -23,22 +23,7 @@ class AccountRepositoryImpl(
         return accountDao.getTotalAccountBalance()
     }
 
-    override suspend fun createNewAccount(account: Account): Result<Long> {
-        return try {
-            val result = accountDao.createNewAccount(
-                AccountMapper.accountDomainToEntity(account)
-            )
-            Result.success(result)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun increaseAccountBalance(accountId: Int, delta: Long) {
-        return accountDao.increaseAccountBalance(accountId, delta)
-    }
-
-    override suspend fun decreaseAccountBalance(accountId: Int, delta: Long) {
-        return accountDao.decreaseAccountBalance(accountId, delta)
+    override suspend fun getAccountBalance(accountId: Int): Long? {
+        return accountDao.getAccountBalance(accountId)
     }
 }

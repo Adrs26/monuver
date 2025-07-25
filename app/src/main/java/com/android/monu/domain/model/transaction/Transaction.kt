@@ -1,7 +1,7 @@
 package com.android.monu.domain.model.transaction
 
 data class Transaction(
-    val id: Long,
+    val id: Long = 0,
     val title: String,
     val type: Int,
     val parentCategory: Int,

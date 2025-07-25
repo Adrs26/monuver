@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
 @Serializable object AddTransaction
 @Serializable data class MainAddTransaction(val type: Int = 0)
 @Serializable data class TransactionCategory(val type: Int = 0)
-@Serializable object TransactionSource
+@Serializable data class TransactionSource(val amount: Long = 0)
 
 @Serializable object Transfer
 @Serializable object MainTransfer

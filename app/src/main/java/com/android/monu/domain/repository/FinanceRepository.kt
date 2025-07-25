@@ -5,9 +5,9 @@ import com.android.monu.domain.model.transaction.Transaction
 
 interface FinanceRepository {
 
-    suspend fun createAccountWithInitialTransaction(account: Account): Result<Long>
+    suspend fun createAccountWithInitialTransaction(account: Account, transaction: Transaction): Long
 
-    suspend fun createTransactionAndAdjustAccountBalance(transaction: Transaction): Result<Long>
+    suspend fun createTransactionAndAdjustAccountBalance(transaction: Transaction): Long
 
-    suspend fun deleteTransactionAndAdjustAccountBalance(transaction: Transaction): Result<Int>
+    suspend fun deleteTransactionAndAdjustAccountBalance(transaction: Transaction): Int
 }

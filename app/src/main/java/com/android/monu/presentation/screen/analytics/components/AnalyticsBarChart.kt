@@ -53,9 +53,7 @@ import com.android.monu.ui.theme.Red600
 @Composable
 fun AnalyticsBarChart(
     transactionWeeklySummary: List<TransactionDailySummary>,
-    monthValue: Int,
-    yearValue: Int,
-    weekValue: Int,
+    analyticsBarChartState: AnalyticsBarChartState,
     modifier: Modifier = Modifier,
     onWeekChange: (Int) -> Unit
 ) {
@@ -86,9 +84,7 @@ fun AnalyticsBarChart(
                 )
             }
             WeekFilterDropdown(
-                monthValue = monthValue,
-                yearValue = yearValue,
-                weekValue = weekValue,
+                analyticsBarChartState = analyticsBarChartState,
                 onWeekChange = onWeekChange
             )
         }
@@ -114,20 +110,21 @@ fun AnalyticsBarChart(
 
 @Composable
 fun WeekFilterDropdown(
-    monthValue: Int,
-    yearValue: Int,
-    weekValue: Int,
+    analyticsBarChartState: AnalyticsBarChartState,
     modifier: Modifier = Modifier,
     onWeekChange: (Int) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val weekFilterOptions = DateHelper.getWeekOptions(month = monthValue, year = yearValue)
+    val weekFilterOptions = DateHelper.getWeekOptions(
+        month = analyticsBarChartState.monthFilter,
+        year = analyticsBarChartState.yearFilter
+    )
 
     Box(
         modifier = modifier
     ) {
         AnalyticsFilterDropdown(
-            value = DateHelper.formatToWeekString(weekNumber = weekValue),
+            value = DateHelper.formatToWeekString(weekNumber = analyticsBarChartState.weekFilter),
             modifier = Modifier.clickable { expanded = true }
         )
         DropdownMenu(
@@ -154,8 +151,9 @@ fun WeekFilterDropdown(
                         modifier = Modifier
                             .size(24.dp)
                             .padding(end = 8.dp),
-                        tint = if (week == weekValue) MaterialTheme.colorScheme.onBackground else
-                            MaterialTheme.colorScheme.background
+                        tint = if (week == analyticsBarChartState.weekFilter)
+                            MaterialTheme.colorScheme.onBackground else
+                                MaterialTheme.colorScheme.background
                     )
                     Text(
                         text = DateHelper.formatToWeekString(week),
@@ -369,6 +367,12 @@ private fun calculateScaleLabel(value: Long): List<BarChartScaleLabel> {
         BarChartScaleLabel(amount = lastScale, fraction = 1f)
     )
 }
+
+data class AnalyticsBarChartState(
+    val monthFilter: Int,
+    val yearFilter: Int,
+    val weekFilter: Int,
+)
 
 data class BarChartScaleLabel(
     val amount: Long,

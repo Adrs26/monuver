@@ -2,11 +2,9 @@ package com.android.monu.data.local.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.android.monu.data.local.entity.TransactionDateRangeEntity
+import com.android.monu.data.local.entity.TransactionSummaryEntity
 import com.android.monu.data.local.entity.TransactionEntity
 import com.android.monu.data.local.entity.TransactionParentCategorySummaryEntity
 import kotlinx.coroutines.flow.Flow
@@ -88,14 +86,8 @@ interface TransactionDao {
         SELECT type, date, amount FROM `transaction`
         WHERE date BETWEEN :startDate AND :endDate
     """)
-    fun getTransactionsInRange(startDate: String, endDate: String): Flow<List<TransactionDateRangeEntity>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun createNewTransaction(transaction: TransactionEntity): Long
+    fun getTransactionsInRange(startDate: String, endDate: String): Flow<List<TransactionSummaryEntity>>
 
     @Update
     suspend fun updateTransaction(transaction: TransactionEntity): Int
-
-    @Query("DELETE FROM `transaction` WHERE id = :id")
-    suspend fun deleteTransactionById(id: Long): Int
 }

@@ -66,7 +66,7 @@ class TransferViewModel(
                 transferState.date.isEmpty() ||
                 transferState.amount == 0L
             ) {
-                _createTransferResult.value = Result.failure(IllegalArgumentException())
+                _createTransferResult.value = Result.failure(IllegalArgumentException("Semua field harus diisi ya"))
                 delay(500)
                 _createTransferResult.value = null
             } else {

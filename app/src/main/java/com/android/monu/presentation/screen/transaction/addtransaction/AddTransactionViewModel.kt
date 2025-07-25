@@ -60,7 +60,7 @@ class AddTransactionViewModel(
                 addTransactionState.amount == 0L ||
                 addTransactionState.sourceId == 0
             ) {
-                _createTransactionResult.value = Result.failure(IllegalArgumentException())
+                _createTransactionResult.value = Result.failure(IllegalArgumentException("Semua field harus diisi ya"))
                 delay(500)
                 _createTransactionResult.value = null
             } else {

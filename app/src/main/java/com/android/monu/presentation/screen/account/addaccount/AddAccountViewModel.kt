@@ -30,7 +30,7 @@ class AddAccountViewModel(
                 accountState.name.isEmpty() ||
                 accountState.type == 0 ||
                 accountState.balance == 0L
-                ) {
+            ) {
                 _createAccountResult.value = Result.failure(IllegalArgumentException())
                 delay(500)
                 _createAccountResult.value = null

@@ -10,36 +10,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.android.monu.domain.model.transaction.TransactionDailySummary
-import com.android.monu.domain.model.transaction.TransactionMonthlyAmountOverview
+import com.android.monu.domain.model.transaction.TransactionMonthlyAmountSummary
 import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAmountOverview
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAppBar
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChart
+import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChartState
 import com.android.monu.presentation.screen.analytics.components.AnalyticsPieChart
 
 @Composable
 fun AnalyticsScreen(
-    monthValue: Int,
-    yearValue: Int,
-    typeValue: Int,
-    weekValue: Int,
-    yearFilterOptions: List<Int>,
-    transactionAmountOverview: TransactionMonthlyAmountOverview,
-    parentCategoriesSummary: List<TransactionParentCategorySummary>,
-    transactionWeeklySummary: List<TransactionDailySummary>,
-    onMonthChange: (Int) -> Unit,
-    onYearChange: (Int) -> Unit,
-    onTypeChange: (Int) -> Unit,
-    onWeekChange: (Int) -> Unit
+    analyticsState: AnalyticsState,
+    analyticsActions: AnalyticsActions,
 ) {
+    val analyticsBarChartState = AnalyticsBarChartState(
+        monthFilter = analyticsState.monthFilter,
+        yearFilter = analyticsState.yearFilter,
+        weekFilter = analyticsState.weekFilter
+    )
+
     Scaffold(
         topBar = {
             AnalyticsAppBar(
-                monthValue = monthValue,
-                yearValue = yearValue,
-                yearFilterOptions = yearFilterOptions,
-                onMonthChange = onMonthChange,
-                onYearChange = onYearChange
+                monthValue = analyticsState.monthFilter,
+                yearValue = analyticsState.yearFilter,
+                yearFilterOptions = analyticsState.yearFilterOptions,
+                onMonthChange = { analyticsActions.onMonthChange(it) },
+                onYearChange = { analyticsActions.onYearChange(it) }
             )
         },
     ) { innerPadding ->
@@ -50,37 +47,39 @@ fun AnalyticsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             AnalyticsAmountOverview(
-                transactionAmount = transactionAmountOverview,
+                transactionAmount = analyticsState.transactionAmountSummary,
                 modifier = Modifier.padding(16.dp)
             )
             AnalyticsBarChart(
-                transactionWeeklySummary = transactionWeeklySummary,
-                monthValue = monthValue,
-                yearValue = yearValue,
-                weekValue = weekValue,
-                onWeekChange = onWeekChange,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp)
+                transactionWeeklySummary = analyticsState.transactionWeeklySummary,
+                analyticsBarChartState = analyticsBarChartState,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                onWeekChange = { analyticsActions.onWeekChange(it) },
             )
             AnalyticsPieChart(
-                typeValue = typeValue,
-                parentCategoriesSummary = parentCategoriesSummary,
+                typeValue = analyticsState.typeFilter,
+                parentCategoriesSummary = analyticsState.parentCategoriesSummary,
                 modifier = Modifier.padding(vertical = 24.dp),
-                onTypeChange = onTypeChange
+                onTypeChange = { analyticsActions.onTypeChange(it) }
             )
         }
     }
 }
 
-data class AnalyticsFilterState(
-    val barChartSelectedYear: Int,
-    val barChartSelectedType: Int,
-    val pieChartSelectedYear: Int,
-    val availableYears: List<Int>
+data class AnalyticsState(
+    val monthFilter: Int,
+    val yearFilter: Int,
+    val typeFilter: Int,
+    val weekFilter: Int,
+    val yearFilterOptions: List<Int>,
+    val transactionAmountSummary: TransactionMonthlyAmountSummary,
+    val parentCategoriesSummary: List<TransactionParentCategorySummary>,
+    val transactionWeeklySummary: List<TransactionDailySummary>,
 )
 
-data class AnalyticsFilterCallbacks(
-    val onFilterClick: () -> Unit,
-    val onBarChartYearFilterSelect: (Int) -> Unit,
-    val onBarChartFilterTypeClick: (Int) -> Unit,
-    val onPieChartYearFilterSelect: (Int) -> Unit
-)
+interface AnalyticsActions {
+    fun onMonthChange(month: Int)
+    fun onYearChange(year: Int)
+    fun onTypeChange(type: Int)
+    fun onWeekChange(week: Int)
+}

@@ -73,8 +73,8 @@ fun NavGraphBuilder.addTransactionNavGraph(
                     navController.navigate(TransactionCategory(args.type))
                 }
 
-                override fun onNavigateToSource() {
-                    navController.navigate(TransactionSource)
+                override fun onNavigateToSource(transactionAmount: Long) {
+                    navController.navigate(TransactionSource(transactionAmount))
                 }
 
                 override fun onAddNewTransaction(
@@ -110,11 +110,13 @@ fun NavGraphBuilder.addTransactionNavGraph(
             popEnterTransition = { NavigationAnimation.popEnter },
             popExitTransition = { NavigationAnimation.popExit }
         ) {
+            val args = it.toRoute<TransactionSource>()
             val viewModel = it.sharedKoinViewModel<AddTransactionViewModel>(navController)
             val accounts by viewModel.accounts.collectAsStateWithLifecycle()
 
             TransactionSourceScreen(
                 accounts = accounts,
+                transactionAmount = args.amount,
                 onNavigateBack = { navController.navigateUp() },
                 onSourceSelect = viewModel::changeTransactionSource
             )

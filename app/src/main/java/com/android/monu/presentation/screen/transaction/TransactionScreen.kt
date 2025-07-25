@@ -24,7 +24,6 @@ import com.android.monu.presentation.screen.transaction.components.TransactionTo
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionScreen(
-    transactions: LazyPagingItems<Transaction>,
     transactionState: TransactionState,
     transactionActions: TransactionActions
 ) {
@@ -55,7 +54,7 @@ fun TransactionScreen(
             onFilterButtonClick = { showFilterDialog = true }
         )
         TransactionList(
-            transactions = transactions,
+            transactions = transactionState.transactions,
             onNavigateToDetailTransaction = { transactionId ->
                 transactionActions.onNavigateToDetailTransaction(transactionId)
             }
@@ -75,10 +74,11 @@ fun TransactionScreen(
 
 data class TransactionState(
     val queryFilter: String,
-    val yearFilterOptions: List<Int>,
     val typeFilter: Int?,
     val yearFilter: Int?,
-    val monthFilter: Int?
+    val monthFilter: Int?,
+    val yearFilterOptions: List<Int>,
+    val transactions: LazyPagingItems<Transaction>,
 )
 
 interface TransactionActions {

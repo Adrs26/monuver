@@ -7,8 +7,8 @@ import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TransactionViewModel(
@@ -16,47 +16,31 @@ class TransactionViewModel(
     private val getDistinctTransactionYearsUseCase: GetDistinctTransactionYearsUseCase
 ) : ViewModel() {
 
-    private val _queryFilter = MutableStateFlow("")
-    val queryFilter = _queryFilter.asStateFlow()
-
-    private val _typeFilter = MutableStateFlow<Int?>(null)
-    val typeFilter = _typeFilter.asStateFlow()
-
-    private val _yearFilter = MutableStateFlow<Int?>(null)
-    val yearFilter = _yearFilter.asStateFlow()
-
-    private val _monthFilter = MutableStateFlow<Int?>(null)
-    val monthFilter = _monthFilter.asStateFlow()
+    private val _filterState = MutableStateFlow(TransactionFilterState())
+    val filterState = _filterState.asStateFlow()
 
     private val _yearFilterOptions = MutableStateFlow<List<Int>>(emptyList())
     val yearFilterOptions = _yearFilterOptions.asStateFlow()
 
-    private val combinedFilters = combine(
-        _queryFilter, _typeFilter, _yearFilter, _monthFilter
-    ) { query, type, year, month ->
-        listOf(query, type, year, month)
-    }
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    val transactions = combinedFilters
+    val transactions = _filterState
         .flatMapLatest { filters ->
             getAllTransactionsUseCase(
-                query = filters[0].toString(),
-                type = filters[1] as Int?,
-                year = filters[2] as Int?,
-                month = filters[3] as Int?,
+                query = filters.query,
+                type = filters.type,
+                year = filters.year,
+                month = filters.month,
                 scope = viewModelScope
             )
         }
 
     fun searchTransactions(query: String) {
-        _queryFilter.value = query
+        _filterState.update { it.copy(query = query) }
     }
 
     fun applyFilter(type: Int?, year: Int?, month: Int?) {
-        _typeFilter.value = type
-        _yearFilter.value = year
-        _monthFilter.value = month
+        _filterState.update { it.copy(type = type, year = year, month = month) }
+
     }
 
     fun getYearFilterOptions() {
@@ -67,3 +51,10 @@ class TransactionViewModel(
         }
     }
 }
+
+data class TransactionFilterState(
+    val query: String = "",
+    val type: Int? = null,
+    val year: Int? = null,
+    val month: Int? = null
+)

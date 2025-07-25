@@ -9,9 +9,5 @@ interface AccountRepository {
 
     fun getTotalAccountBalance(): Flow<Long?>
 
-    suspend fun createNewAccount(account: Account): Result<Long>
-
-    suspend fun increaseAccountBalance(accountId: Int, delta: Long)
-
-    suspend fun decreaseAccountBalance(accountId: Int, delta: Long)
+    suspend fun getAccountBalance(accountId: Int): Long?
 }

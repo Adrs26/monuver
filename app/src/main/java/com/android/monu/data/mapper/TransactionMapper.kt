@@ -1,7 +1,11 @@
 package com.android.monu.data.mapper
 
 import com.android.monu.data.local.entity.TransactionEntity
+import com.android.monu.data.local.entity.TransactionParentCategorySummaryEntity
+import com.android.monu.data.local.entity.TransactionSummaryEntity
 import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
+import com.android.monu.domain.model.transaction.TransactionSummary
 
 object TransactionMapper {
     fun transactionEntityToDomain(
@@ -66,6 +70,25 @@ object TransactionMapper {
             destinationId = transaction.destinationId,
             destinationName = transaction.destinationName,
             saveId = transaction.saveId
+        )
+    }
+
+    fun transactionSummaryEntityToDomain(
+        transactionSummaryEntity: TransactionSummaryEntity
+    ): TransactionSummary {
+        return TransactionSummary(
+            type = transactionSummaryEntity.type,
+            date = transactionSummaryEntity.date,
+            amount = transactionSummaryEntity.amount
+        )
+    }
+
+    fun transactionParentCategorySummaryEntityToDomain(
+        transactionParentCategorySummaryEntity: TransactionParentCategorySummaryEntity
+    ): TransactionParentCategorySummary {
+        return TransactionParentCategorySummary(
+            parentCategory = transactionParentCategorySummaryEntity.parentCategory,
+            totalAmount = transactionParentCategorySummaryEntity.totalAmount
         )
     }
 }

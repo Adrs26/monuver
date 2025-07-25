@@ -96,7 +96,7 @@ fun TransferScreen(
                     .showMessageWithToast(context)
                 transferActions.onNavigateBack()
             } else {
-                context.getString(R.string.empty_input_field).showMessageWithToast(context)
+                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }

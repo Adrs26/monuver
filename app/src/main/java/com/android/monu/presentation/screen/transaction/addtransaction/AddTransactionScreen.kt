@@ -87,7 +87,7 @@ fun AddTransactionScreen(
         }
 
         override fun onNavigateToSource() {
-            transactionActions.onNavigateToSource()
+            transactionActions.onNavigateToSource(transactionAmount)
         }
 
         override fun onAddNewTransaction(transactionState: AddTransactionContentState) {
@@ -102,7 +102,7 @@ fun AddTransactionScreen(
                     .showMessageWithToast(context)
                 transactionActions.onNavigateBack()
             } else {
-                context.getString(R.string.empty_input_field).showMessageWithToast(context)
+                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }
@@ -152,6 +152,6 @@ data class AddTransactionState(
 interface AddTransactionActions {
     fun onNavigateBack()
     fun onNavigateToCategory(transactionType: Int)
-    fun onNavigateToSource()
+    fun onNavigateToSource(transactionAmount: Long)
     fun onAddNewTransaction(transactionState: AddTransactionContentState)
 }
