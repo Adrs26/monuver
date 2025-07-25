@@ -1,10 +1,10 @@
 package com.android.monu.data.mapper
 
-import com.android.monu.data.local.entity.TransactionEntity
-import com.android.monu.data.local.entity.TransactionParentCategorySummaryEntity
-import com.android.monu.data.local.entity.TransactionSummaryEntity
+import com.android.monu.data.local.entity.room.TransactionEntity
+import com.android.monu.data.local.entity.projection.TransactionCategorySummaryEntity
+import com.android.monu.data.local.entity.projection.TransactionSummaryEntity
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
+import com.android.monu.domain.model.transaction.TransactionCategorySummary
 import com.android.monu.domain.model.transaction.TransactionSummary
 
 object TransactionMapper {
@@ -83,12 +83,12 @@ object TransactionMapper {
         )
     }
 
-    fun transactionParentCategorySummaryEntityToDomain(
-        transactionParentCategorySummaryEntity: TransactionParentCategorySummaryEntity
-    ): TransactionParentCategorySummary {
-        return TransactionParentCategorySummary(
-            parentCategory = transactionParentCategorySummaryEntity.parentCategory,
-            totalAmount = transactionParentCategorySummaryEntity.totalAmount
+    fun transactionCategorySummaryEntityToDomain(
+        transactionCategorySummaryEntity: TransactionCategorySummaryEntity
+    ): TransactionCategorySummary {
+        return TransactionCategorySummary(
+            parentCategory = transactionCategorySummaryEntity.parentCategory,
+            totalAmount = transactionCategorySummaryEntity.totalAmount
         )
     }
 }

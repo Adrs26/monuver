@@ -2,16 +2,15 @@ package com.android.monu.presentation.screen.account.addaccount
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.domain.usecase.finance.CreateAccountWithInitialTransactionUseCase
+import com.android.monu.domain.usecase.finance.CreateAccountUseCase
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContentState
-import com.android.monu.presentation.utils.DataMapper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AddAccountViewModel(
-    private val createAccountWithInitialTransactionUseCase: CreateAccountWithInitialTransactionUseCase
+    private val createAccountUseCase: CreateAccountUseCase
 ) : ViewModel() {
 
     private val _accountType = MutableStateFlow<Int>(0)
@@ -31,12 +30,13 @@ class AddAccountViewModel(
                 accountState.type == 0 ||
                 accountState.balance == 0L
             ) {
-                _createAccountResult.value = Result.failure(IllegalArgumentException())
+                _createAccountResult.value = Result.failure(
+                    IllegalArgumentException("Semua field harus diisi ya")
+                )
                 delay(500)
                 _createAccountResult.value = null
             } else {
-                val account = DataMapper.accountContentStateToAccount(accountState)
-                _createAccountResult.value = createAccountWithInitialTransactionUseCase(account)
+                _createAccountResult.value = createAccountUseCase(accountState)
                 _accountType.value = 0
             }
         }

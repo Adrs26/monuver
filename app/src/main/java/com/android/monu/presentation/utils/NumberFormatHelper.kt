@@ -61,10 +61,6 @@ object NumberFormatHelper {
         }
     }
 
-    fun formatToThousandDivider(value: Long): String {
-        return String.format(Locale("in", "ID"), "%,d", value).replace(',', '.')
-    }
-
     fun formatToPercentageValue(value: Long, total: Long): Long {
         return (value.toFloat() / total.toFloat() * 100).roundToLong()
     }

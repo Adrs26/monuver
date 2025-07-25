@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.android.monu.domain.model.transaction.TransactionDailySummary
-import com.android.monu.domain.model.transaction.TransactionMonthlyAmountSummary
-import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
+import com.android.monu.domain.model.transaction.TransactionAmountSummary
+import com.android.monu.domain.model.transaction.TransactionCategorySummary
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAmountOverview
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAppBar
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChart
@@ -72,8 +72,8 @@ data class AnalyticsState(
     val typeFilter: Int,
     val weekFilter: Int,
     val yearFilterOptions: List<Int>,
-    val transactionAmountSummary: TransactionMonthlyAmountSummary,
-    val parentCategoriesSummary: List<TransactionParentCategorySummary>,
+    val transactionAmountSummary: TransactionAmountSummary,
+    val parentCategoriesSummary: List<TransactionCategorySummary>,
     val transactionWeeklySummary: List<TransactionDailySummary>,
 )
 

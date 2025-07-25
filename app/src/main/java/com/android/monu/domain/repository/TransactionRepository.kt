@@ -2,7 +2,7 @@ package com.android.monu.domain.repository
 
 import androidx.paging.PagingData
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
+import com.android.monu.domain.model.transaction.TransactionCategorySummary
 import com.android.monu.domain.model.transaction.TransactionSummary
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +31,7 @@ interface TransactionRepository {
         type: Int,
         month: Int,
         year: Int
-    ): Flow<List<TransactionParentCategorySummary>>
+    ): Flow<List<TransactionCategorySummary>>
 
     fun getTransactionsInRange(startDate: String, endDate: String): Flow<List<TransactionSummary>>
 

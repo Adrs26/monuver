@@ -1,6 +1,6 @@
 package com.android.monu.data.mapper
 
-import com.android.monu.data.local.entity.AccountEntity
+import com.android.monu.data.local.entity.room.AccountEntity
 import com.android.monu.domain.model.account.Account
 
 object AccountMapper {

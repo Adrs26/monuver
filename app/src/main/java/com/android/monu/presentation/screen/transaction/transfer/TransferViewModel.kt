@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
-import com.android.monu.domain.usecase.finance.CreateTransactionAndAdjustAccountBalanceUseCase
+import com.android.monu.domain.usecase.finance.CreateTransferTransactionUseCase
 import com.android.monu.presentation.screen.transaction.transfer.components.TransferContentState
-import com.android.monu.presentation.utils.DataMapper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
 
 class TransferViewModel(
     private val getAllAccountsUseCase: GetAllAccountsUseCase,
-    private val createTransactionAndAdjustAccountBalanceUseCase: CreateTransactionAndAdjustAccountBalanceUseCase
+    private val createTransferTransactionUseCase: CreateTransferTransactionUseCase
 ) : ViewModel() {
 
     private val _sourceAccount = MutableStateFlow<Pair<Int, String>>(Pair(0, ""))
@@ -66,12 +65,13 @@ class TransferViewModel(
                 transferState.date.isEmpty() ||
                 transferState.amount == 0L
             ) {
-                _createTransferResult.value = Result.failure(IllegalArgumentException("Semua field harus diisi ya"))
+                _createTransferResult.value = Result.failure(
+                    IllegalArgumentException("Semua field harus diisi ya")
+                )
                 delay(500)
                 _createTransferResult.value = null
             } else {
-                val transaction = DataMapper.transferContentStateToTransaction(transferState)
-                _createTransferResult.value = createTransactionAndAdjustAccountBalanceUseCase(transaction)
+                _createTransferResult.value = createTransferTransactionUseCase(transferState)
             }
         }
     }

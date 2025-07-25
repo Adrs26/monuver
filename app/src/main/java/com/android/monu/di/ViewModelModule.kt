@@ -16,9 +16,9 @@ val viewModelModule = module {
     viewModel { AddAccountViewModel(get()) }
     viewModel { TransactionViewModel(get(), get()) }
     viewModel { (handle: SavedStateHandle) ->
-        DetailTransactionViewModel(get(), get(), handle)
+        DetailTransactionViewModel(get(), get(), get(), get(), handle)
     }
-    viewModel { AddTransactionViewModel(get(), get()) }
+    viewModel { AddTransactionViewModel(get(), get(), get()) }
     viewModel { TransferViewModel(get(), get()) }
     viewModel { AnalyticsViewModel(get(), get(), get(), get()) }
 }

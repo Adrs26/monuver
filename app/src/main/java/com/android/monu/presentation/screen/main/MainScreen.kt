@@ -47,7 +47,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.TransactionMonthlyAmountSummary
+import com.android.monu.domain.model.transaction.TransactionAmountSummary
 import com.android.monu.presentation.components.CommonFloatingActionButton
 import com.android.monu.presentation.screen.analytics.AnalyticsActions
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
@@ -202,7 +202,7 @@ fun MainScreen(
                 val filter by viewModel.filterState.collectAsStateWithLifecycle()
                 val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
                 val transactionAmountSummary by viewModel.transactionAmountSummary
-                    .collectAsStateWithLifecycle(initialValue = TransactionMonthlyAmountSummary())
+                    .collectAsStateWithLifecycle(initialValue = TransactionAmountSummary())
                 val parentCategoriesSummary by viewModel.transactionParentCategorySummary
                     .collectAsStateWithLifecycle(initialValue = emptyList())
                 val transactionWeeklySummary by viewModel.transactionWeeklySummary

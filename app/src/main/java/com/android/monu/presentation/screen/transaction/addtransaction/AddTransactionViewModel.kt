@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
-import com.android.monu.domain.usecase.finance.CreateTransactionAndAdjustAccountBalanceUseCase
+import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
+import com.android.monu.domain.usecase.finance.CreateIncomeTransactionUseCase
 import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContentState
-import com.android.monu.presentation.utils.DataMapper
+import com.android.monu.presentation.utils.TransactionType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +18,8 @@ import kotlinx.coroutines.launch
 
 class AddTransactionViewModel(
     private val getAllAccountsUseCase: GetAllAccountsUseCase,
-    private val createTransactionAndAdjustAccountBalanceUseCase: CreateTransactionAndAdjustAccountBalanceUseCase
+    private val createIncomeTransactionUseCase: CreateIncomeTransactionUseCase,
+    private val createExpenseTransactionUseCase: CreateExpenseTransactionUseCase
 ) : ViewModel() {
 
     private val _transactionCategory = MutableStateFlow<Pair<Int, Int>>(Pair(0, 0))
@@ -60,14 +62,18 @@ class AddTransactionViewModel(
                 addTransactionState.amount == 0L ||
                 addTransactionState.sourceId == 0
             ) {
-                _createTransactionResult.value = Result.failure(IllegalArgumentException("Semua field harus diisi ya"))
+                _createTransactionResult.value = Result.failure(
+                    IllegalArgumentException("Semua field harus diisi ya")
+                )
                 delay(500)
                 _createTransactionResult.value = null
             } else {
-                val transaction = DataMapper
-                    .addTransactionContentStateToTransaction(addTransactionState)
-                _createTransactionResult.value =
-                    createTransactionAndAdjustAccountBalanceUseCase(transaction)
+                val result = when (addTransactionState.type) {
+                    TransactionType.INCOME -> createIncomeTransactionUseCase(addTransactionState)
+                    TransactionType.EXPENSE -> createExpenseTransactionUseCase(addTransactionState)
+                    else -> Result.failure(IllegalArgumentException("Tipe transaksi tidak valid"))
+                }
+                _createTransactionResult.value = result
             }
         }
     }

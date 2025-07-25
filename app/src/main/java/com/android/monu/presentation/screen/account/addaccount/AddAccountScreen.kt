@@ -78,7 +78,7 @@ fun AddAccountScreen(
                 "Akun kamu berhasil dibuat".showMessageWithToast(context)
                 accountActions.onNavigateBack()
             } else {
-                "Semua info wajib diisi ya".showMessageWithToast(context)
+                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }

@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
+import com.android.monu.domain.model.transaction.TransactionCategorySummary
 import com.android.monu.presentation.components.PieChart
 import com.android.monu.presentation.utils.DataProvider
 import com.android.monu.presentation.utils.DatabaseCodeMapper
@@ -42,7 +42,7 @@ import com.android.monu.presentation.utils.NumberFormatHelper
 @Composable
 fun AnalyticsPieChart(
     typeValue: Int,
-    parentCategoriesSummary: List<TransactionParentCategorySummary>,
+    parentCategoriesSummary: List<TransactionCategorySummary>,
     modifier: Modifier = Modifier,
     onTypeChange: (Int) -> Unit
 ) {
@@ -133,7 +133,7 @@ fun TypeFilterDropdown(
 
 @Composable
 fun AnalyticsPieChartDetail(
-    parentCategoriesSummary: List<TransactionParentCategorySummary>,
+    parentCategoriesSummary: List<TransactionCategorySummary>,
     modifier: Modifier = Modifier
 ) {
     Column(

@@ -8,7 +8,7 @@ import androidx.paging.map
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.model.transaction.TransactionParentCategorySummary
+import com.android.monu.domain.model.transaction.TransactionCategorySummary
 import com.android.monu.domain.model.transaction.TransactionSummary
 import com.android.monu.domain.repository.TransactionRepository
 import kotlinx.coroutines.CoroutineScope
@@ -82,11 +82,11 @@ class TransactionRepositoryImpl(
         type: Int,
         month: Int,
         year: Int
-    ): Flow<List<TransactionParentCategorySummary>> {
+    ): Flow<List<TransactionCategorySummary>> {
         return transactionDao.getGroupedMonthlyTransactionAmountByParentCategory(type, month, year)
             .map { entityList ->
                 entityList.map { entity ->
-                    TransactionMapper.transactionParentCategorySummaryEntityToDomain(entity)
+                    TransactionMapper.transactionCategorySummaryEntityToDomain(entity)
                 }
             }
     }

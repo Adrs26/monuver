@@ -11,5 +11,5 @@ import org.koin.dsl.module
 val dataModule = module {
     single<TransactionRepository> { TransactionRepositoryImpl(get()) }
     single<AccountRepository> { AccountRepositoryImpl(get()) }
-    single<FinanceRepository> { FinanceRepositoryImpl(get()) }
+    single<FinanceRepository> { FinanceRepositoryImpl(get(), get(), get()) }
 }

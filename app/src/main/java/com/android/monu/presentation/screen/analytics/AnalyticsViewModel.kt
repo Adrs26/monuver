@@ -3,9 +3,9 @@ package com.android.monu.presentation.screen.analytics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
-import com.android.monu.domain.usecase.transaction.GetGroupedMonthlyTransactionAmountByParentCategoryUseCase
-import com.android.monu.domain.usecase.transaction.GetTransactionMonthlyAmountSummaryUseCase
-import com.android.monu.domain.usecase.transaction.GetWeeklyTransactionSummaryByDateRangeUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionAmountSummaryUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionSummaryUseCase
 import com.android.monu.presentation.utils.DateHelper
 import com.android.monu.presentation.utils.TransactionType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,9 +21,9 @@ import org.threeten.bp.LocalDate
 
 class AnalyticsViewModel(
     private val getDistinctTransactionYearsUseCase: GetDistinctTransactionYearsUseCase,
-    private val getTransactionMonthlyAmountSummaryUseCase: GetTransactionMonthlyAmountSummaryUseCase,
-    private val getGroupedMonthlyTransactionAmountByParentCategoryUseCase: GetGroupedMonthlyTransactionAmountByParentCategoryUseCase,
-    private val getWeeklyTransactionSummaryByDateRangeUseCase: GetWeeklyTransactionSummaryByDateRangeUseCase
+    private val getTransactionAmountSummaryUseCase: GetTransactionAmountSummaryUseCase,
+    private val getTransactionCategorySummaryUseCase: GetTransactionCategorySummaryUseCase,
+    private val getTransactionSummaryUseCase: GetTransactionSummaryUseCase
 ) : ViewModel() {
 
     private val _filterState = MutableStateFlow(AnalyticsFilterState())
@@ -38,7 +38,7 @@ class AnalyticsViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val transactionAmountSummary = _filterState
         .flatMapLatest { filters ->
-            getTransactionMonthlyAmountSummaryUseCase(
+            getTransactionAmountSummaryUseCase(
                 month = filters.month,
                 year = filters.year
             )
@@ -47,7 +47,7 @@ class AnalyticsViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val transactionParentCategorySummary = _filterState
         .flatMapLatest { filters ->
-            getGroupedMonthlyTransactionAmountByParentCategoryUseCase(
+            getTransactionCategorySummaryUseCase(
                 type = filters.type,
                 month = filters.month,
                 year = filters.year
@@ -57,7 +57,7 @@ class AnalyticsViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val transactionWeeklySummary = _filterState
         .flatMapLatest { filters ->
-            getWeeklyTransactionSummaryByDateRangeUseCase(
+            getTransactionSummaryUseCase(
                 month = filters.month,
                 year = filters.year,
                 week = filters.week

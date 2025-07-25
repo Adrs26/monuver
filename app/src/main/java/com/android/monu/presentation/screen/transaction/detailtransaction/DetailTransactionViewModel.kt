@@ -5,8 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.usecase.finance.DeleteTransactionAndAdjustAccountBalanceUseCase
+import com.android.monu.domain.usecase.finance.DeleteExpenseTransactionUseCase
+import com.android.monu.domain.usecase.finance.DeleteIncomeTransactionUseCase
+import com.android.monu.domain.usecase.finance.DeleteTransferTransactionUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
+import com.android.monu.presentation.utils.TransactionChildCategory
+import com.android.monu.presentation.utils.TransactionType
 import com.android.monu.ui.navigation.MainDetailTransaction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,7 +21,9 @@ import kotlinx.coroutines.launch
 
 class DetailTransactionViewModel(
     private val getTransactionByIdUseCase: GetTransactionByIdUseCase,
-    private val deleteTransactionAndAdjustAccountBalanceUseCase: DeleteTransactionAndAdjustAccountBalanceUseCase,
+    private val deleteIncomeTransactionUseCase: DeleteIncomeTransactionUseCase,
+    private val deleteExpenseTransactionUseCase: DeleteExpenseTransactionUseCase,
+    private val deleteTransferTransactionUseCase: DeleteTransferTransactionUseCase,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -41,13 +47,21 @@ class DetailTransactionViewModel(
 
     fun deleteTransaction(transaction: Transaction) {
         viewModelScope.launch {
-            val result = deleteTransactionAndAdjustAccountBalanceUseCase(transaction)
-
-            if (result.isSuccess) {
-                _deleteTransactionResult.value = result
-            } else {
-                _deleteTransactionResult.value = Result.failure(NoSuchFieldException())
+            val result = when {
+                transaction.type == TransactionType.INCOME -> {
+                    deleteIncomeTransactionUseCase(transaction)
+                }
+                transaction.type == TransactionType.EXPENSE -> {
+                    deleteExpenseTransactionUseCase(transaction)
+                }
+                transaction.type == TransactionType.TRANSFER &&
+                        transaction.childCategory == TransactionChildCategory.TRANSFER_ACCOUNT -> {
+                            deleteTransferTransactionUseCase(transaction)
+                }
+                else -> Result.failure(IllegalArgumentException("Tipe transaksi tidak valid"))
             }
+
+            _deleteTransactionResult.value = result
         }
     }
 }

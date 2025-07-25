@@ -14,12 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.android.monu.domain.model.transaction.TransactionMonthlyAmountSummary
+import com.android.monu.domain.model.transaction.TransactionAmountSummary
 import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun AnalyticsAmountOverview(
-    transactionAmount: TransactionMonthlyAmountSummary,
+    transactionAmount: TransactionAmountSummary,
     modifier: Modifier = Modifier
 ) {
     Row(
