@@ -12,8 +12,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.android.monu.R
 import com.android.monu.domain.model.account.Account
 import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.account.components.AccountListItem
@@ -31,8 +33,9 @@ fun TransferAccountScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = if (selectAccountType == SelectAccountType.SOURCE) "Pilih akun sumber" else
-                    "Pilih akun tujuan",
+                title = if (selectAccountType == SelectAccountType.SOURCE)
+                    stringResource(R.string.choose_source_account) else
+                        stringResource(R.string.choose_destination_account),
                 onNavigateBack = onNavigateBack
             )
         }

@@ -33,18 +33,18 @@ fun AddTransactionContent(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         TextInputField(
-            title = "Judul",
+            title = stringResource(R.string.title),
             value = transactionState.title,
             onValueChange = { transactionActions.onTitleChange(it) },
-            placeholderText = "Masukkan judul transaksi",
+            placeholderText = stringResource(R.string.enter_transaction_title),
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
         TextInputField(
-            title = "Kategori",
+            title = stringResource(R.string.category),
             value = if (transactionState.childCategory == 0) "" else
                 stringResource(DatabaseCodeMapper.toChildCategoryTitle(transactionState.childCategory)),
             onValueChange = { },
-            placeholderText = "Pilih kategori transaksi",
+            placeholderText = stringResource(R.string.choose_transaction_category),
             modifier = Modifier
                 .clickable(
                     indication = null,
@@ -57,10 +57,10 @@ fun AddTransactionContent(
             isEnable = false
         )
         TextInputField(
-            title = "Tanggal",
+            title = stringResource(R.string.date),
             value = DateHelper.formatDateToReadable(transactionState.date),
             onValueChange = { },
-            placeholderText = "Pilih tanggal transaksi",
+            placeholderText = stringResource(R.string.choose_transaction_date),
             modifier = Modifier
                 .clickable(
                     indication = null,
@@ -72,16 +72,16 @@ fun AddTransactionContent(
             isDatePicker = true
         )
         TextAmountInputField(
-            title = "Nominal",
+            title = stringResource(R.string.amount),
             value = transactionState.amountFormat,
             onValueChange = { transactionActions.onAmountChange(it) },
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextInputField(
-            title = "Sumber dana",
+            title = stringResource(R.string.funds_source),
             value = transactionState.sourceName,
             onValueChange = { },
-            placeholderText = "Pilih sumber dana",
+            placeholderText = stringResource(R.string.choose_funds_source),
             modifier = Modifier
                 .clickable(
                     indication = null,

@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.monu.R
 import com.android.monu.presentation.components.CategoryIcon
 import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.ui.theme.MonuTheme
@@ -35,7 +36,7 @@ fun AccountTypeScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = "Pilih tipe akun",
+                title = stringResource(R.string.choose_account_type),
                 onNavigateBack = onNavigateBack
             )
         }

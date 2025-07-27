@@ -12,8 +12,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.android.monu.R
 import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContent
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContentActions
@@ -75,7 +77,8 @@ fun AddAccountScreen(
     LaunchedEffect(addResult) {
         addResult?.let {
             if (it.isSuccess) {
-                "Akun kamu berhasil dibuat".showMessageWithToast(context)
+                context.getString(R.string.your_account_successfully_created)
+                    .showMessageWithToast(context)
                 accountActions.onNavigateBack()
             } else {
                 it.exceptionOrNull()?.message?.showMessageWithToast(context)
@@ -86,7 +89,7 @@ fun AddAccountScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = "Tambah akun baru",
+                title = stringResource(R.string.add_new_account),
                 onNavigateBack = { accountActions.onNavigateBack() }
             )
         }

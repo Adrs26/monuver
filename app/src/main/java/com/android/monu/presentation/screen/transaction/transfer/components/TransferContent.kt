@@ -32,10 +32,10 @@ fun TransferContent(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         TextInputField(
-            title = "Akun sumber",
+            title = stringResource(R.string.source_account),
             value = transferState.sourceName,
             onValueChange = { },
-            placeholderText = "Pilih akun sumber",
+            placeholderText = stringResource(R.string.choose_source_account),
             modifier = Modifier
                 .clickable(
                     indication = null,
@@ -46,10 +46,10 @@ fun TransferContent(
             isEnable = false
         )
         TextInputField(
-            title = "Akun tujuan",
+            title = stringResource(R.string.destination_account),
             value = transferState.destinationName,
             onValueChange = { },
-            placeholderText = "Pilih akun tujuan",
+            placeholderText = stringResource(R.string.choose_destination_account),
             modifier = Modifier
                 .clickable(
                     indication = null,
@@ -60,10 +60,10 @@ fun TransferContent(
             isEnable = false
         )
         TextInputField(
-            title = "Tanggal",
+            title = stringResource(R.string.date),
             value = DateHelper.formatDateToReadable(transferState.date),
             onValueChange = { },
-            placeholderText = "Pilih tanggal transfer",
+            placeholderText = stringResource(R.string.choose_transfer_date),
             modifier = Modifier
                 .clickable(
                     indication = null,
@@ -75,7 +75,7 @@ fun TransferContent(
             isDatePicker = true
         )
         TextAmountInputField(
-            title = "Nominal",
+            title = stringResource(R.string.amount),
             value = transferState.amountFormat,
             onValueChange = { transferActions.onAmountChange(it) },
             modifier = Modifier.padding(horizontal = 16.dp)

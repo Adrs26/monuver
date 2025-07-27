@@ -32,18 +32,18 @@ fun AddAccountContent(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         TextInputField(
-            title = "Nama",
+            title = stringResource(R.string.name),
             value = accountState.name,
             onValueChange = { accountActions.onNameChange(it) },
-            placeholderText = "Masukkan nama akun",
+            placeholderText = stringResource(R.string.enter_account_name),
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
         TextInputField(
-            title = "Tipe",
+            title = stringResource(R.string.type),
             value = if (accountState.type == 0) "" else
                 stringResource(DatabaseCodeMapper.toAccountType(accountState.type)),
             onValueChange = { },
-            placeholderText = "Pilih tipe akun",
+            placeholderText = stringResource(R.string.choose_account_type),
             modifier = Modifier
                 .clickable(
                     indication = null,
@@ -54,7 +54,7 @@ fun AddAccountContent(
             isEnable = false
         )
         TextAmountInputField(
-            title = "Nominal awal",
+            title = stringResource(R.string.start_balance),
             value = accountState.balanceFormat,
             onValueChange = { accountActions.onAmountChange(it) },
             modifier = Modifier.padding(horizontal = 16.dp)

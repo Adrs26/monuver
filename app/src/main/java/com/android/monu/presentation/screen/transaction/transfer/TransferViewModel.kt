@@ -66,7 +66,7 @@ class TransferViewModel(
                 transferState.amount == 0L
             ) {
                 _createResult.value = Result.failure(
-                    IllegalArgumentException("Semua field harus diisi ya")
+                    IllegalArgumentException("Harap lengkapi semua kolom yang tersedia")
                 )
                 delay(500)
                 _createResult.value = null

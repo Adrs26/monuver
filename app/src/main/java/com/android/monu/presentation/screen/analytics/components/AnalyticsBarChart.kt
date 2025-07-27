@@ -61,7 +61,7 @@ fun AnalyticsBarChart(
         modifier = modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Rekap transaksi",
+            text = stringResource(R.string.transaction_recap),
             style = MaterialTheme.typography.titleMedium
         )
         Row(
@@ -308,14 +308,20 @@ fun BarChartGraphInformation(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
             Text(
-                text = "Pemasukan: ${NumberFormatHelper.formatToRupiah(transactionWeeklySummary[index].totalIncome)}",
+                text = stringResource(
+                    R.string.bar_chart_income_information,
+                    NumberFormatHelper.formatToRupiah(transactionWeeklySummary[index].totalIncome)
+                ),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 12.sp
                 )
             )
             Text(
-                text = "Pengeluaran: ${NumberFormatHelper.formatToRupiah(transactionWeeklySummary[index].totalExpense)}",
+                text = stringResource(
+                    R.string.bar_chart_expense_information,
+                    NumberFormatHelper.formatToRupiah(transactionWeeklySummary[index].totalExpense)
+                ),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontSize = 12.sp

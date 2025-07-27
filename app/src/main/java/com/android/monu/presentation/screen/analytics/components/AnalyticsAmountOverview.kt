@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.android.monu.R
 import com.android.monu.domain.model.transaction.TransactionAmountSummary
 import com.android.monu.presentation.utils.NumberFormatHelper
 
@@ -28,14 +30,14 @@ fun AnalyticsAmountOverview(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AnalyticsAmountData(
-            title = "Total pemasukan",
+            title = stringResource(R.string.total_income),
             containerColor = Color(0xFFC8E6C9),
             totalAmount = transactionAmount.totalIncomeAmount,
             averageAmount = transactionAmount.averageIncomeAmount,
             modifier = Modifier.weight(1f)
         )
         AnalyticsAmountData(
-            title = "Total pengeluaran",
+            title = stringResource(R.string.total_expense),
             containerColor = Color(0xFFFFCDD2),
             totalAmount = transactionAmount.totalExpenseAmount,
             averageAmount = transactionAmount.averageExpenseAmount,
@@ -71,7 +73,7 @@ fun AnalyticsAmountData(
                 style = MaterialTheme.typography.labelMedium
             )
             Text(
-                text = "Rata-rata per hari",
+                text = stringResource(R.string.average_per_day),
                 modifier = Modifier.padding(top = 12.dp),
                 style = MaterialTheme.typography.labelSmall
             )

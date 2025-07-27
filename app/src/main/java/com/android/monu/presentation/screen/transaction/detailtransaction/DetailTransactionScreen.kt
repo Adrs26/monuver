@@ -34,7 +34,7 @@ fun DetailTransactionScreen(
                     .showMessageWithToast(context)
                 transactionActions.onNavigateBack()
             } else {
-                "Terjadi kesalahan saat menghapus transaksi".showMessageWithToast(context)
+                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }

@@ -45,7 +45,7 @@ class EditTransferViewModel(
         viewModelScope.launch {
             if (transferState.date.isEmpty() || transferState.amount == 0L) {
                 _updateResult.value = Result.failure(
-                    IllegalArgumentException("Semua field harus diisi ya")
+                    IllegalArgumentException("Harap lengkapi semua kolom yang tersedia")
                 )
                 delay(500)
                 _updateResult.value = null

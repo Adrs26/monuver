@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.monu.R
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.presentation.utils.DatabaseCodeMapper
 import com.android.monu.presentation.utils.DateHelper
@@ -32,39 +33,39 @@ fun DetailTransactionContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         DetailTransactionData(
-            title = "Judul",
+            title = stringResource(R.string.title),
             content = transaction.title
         )
         DataDivider()
         DetailTransactionData(
-            title = "Jenis",
+            title = stringResource(R.string.type),
             content = stringResource(DatabaseCodeMapper.toTransactionType(transaction.type))
         )
         DataDivider()
         DetailTransactionData(
-            title = "Kategori",
+            title = stringResource(R.string.category),
             content = stringResource(DatabaseCodeMapper.toChildCategoryTitle(transaction.childCategory))
         )
         DataDivider()
         DetailTransactionData(
-            title = "Tanggal",
+            title = stringResource(R.string.date),
             content = DateHelper.formatDateToReadable(transaction.date)
         )
         DataDivider()
         DetailTransactionData(
-            title = "Nominal",
+            title = stringResource(R.string.amount),
             content = NumberFormatHelper.formatToRupiah(transaction.amount)
         )
         DataDivider()
         DetailTransactionData(
-            title = "Sumber",
+            title = stringResource(R.string.source),
             content = transaction.sourceName
         )
 
         if (transaction.type == TransactionType.TRANSFER) {
             DataDivider()
             DetailTransactionData(
-                title = "Tujuan",
+                title = stringResource(R.string.destination),
                 content = transaction.destinationName.toString()
             )
         }

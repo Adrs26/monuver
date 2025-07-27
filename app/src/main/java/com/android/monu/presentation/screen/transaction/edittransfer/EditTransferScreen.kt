@@ -13,6 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
@@ -96,7 +97,7 @@ fun EditTransferScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = "Edit transfer",
+                title = stringResource(R.string.edit_transfer),
                 onNavigateBack = { transferActions.onNavigateBack() }
             )
         }
@@ -115,7 +116,7 @@ fun EditTransferScreen(
             val today = LocalDate.now()
             val isAfterToday = inputDate.isAfter(today)
             if (isAfterToday) {
-                "Kamu tidak bisa memilih tanggal di masa depan".showMessageWithToast(context)
+                context.getString(R.string.cannot_select_future_date).showMessageWithToast(context)
             } else {
                 transactionDate = selectedDate.toString()
             }

@@ -54,7 +54,7 @@ fun AnalyticsPieChart(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Rekap kategori",
+                text = stringResource(R.string.category_recap),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.titleMedium
             )
@@ -146,7 +146,7 @@ fun AnalyticsPieChartDetail(
                 total = parentCategoriesSummary.sumOf { it.totalAmount },
                 modifier = Modifier
                     .clickable { }
-                    .padding( horizontal = 16.dp, vertical = 8.dp)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
     }

@@ -33,21 +33,21 @@ fun EditTransferContent(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         StaticTextInputField(
-            title = "Akun sumber",
+            title = stringResource(R.string.source_account),
             value = transferState.sourceName,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
 
         )
         StaticTextInputField(
-            title = "Akun tujuan",
+            title = stringResource(R.string.destination_account),
             value = transferState.destinationName,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextInputField(
-            title = "Tanggal",
+            title = stringResource(R.string.date),
             value = DateHelper.formatDateToReadable(transferState.date),
             onValueChange = { },
-            placeholderText = "Pilih tanggal transfer",
+            placeholderText = stringResource(R.string.choose_transfer_date),
             modifier = Modifier
                 .clickable(
                     indication = null,
@@ -59,7 +59,7 @@ fun EditTransferContent(
             isDatePicker = true
         )
         TextAmountInputField(
-            title = "Nominal",
+            title = stringResource(R.string.amount),
             value = transferState.amountFormat,
             onValueChange = { transferActions.onAmountChange(it) },
             modifier = Modifier.padding(horizontal = 16.dp)
