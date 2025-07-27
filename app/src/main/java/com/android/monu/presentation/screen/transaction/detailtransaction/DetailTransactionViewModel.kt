@@ -12,6 +12,7 @@ import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.presentation.utils.TransactionChildCategory
 import com.android.monu.presentation.utils.TransactionType
 import com.android.monu.ui.navigation.MainDetailTransaction
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,8 +35,8 @@ class DetailTransactionViewModel(
             getTransactionById(id)
         }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), null)
 
-    private val _deleteTransactionResult = MutableStateFlow<Result<Int>?>(null)
-    val deleteTransactionResult = _deleteTransactionResult.asStateFlow()
+    private val _deleteResult = MutableStateFlow<Result<Int>?>(null)
+    val deleteResult = _deleteResult.asStateFlow()
 
     private fun getTransactionById(id: Long) {
         viewModelScope.launch {
@@ -61,7 +62,9 @@ class DetailTransactionViewModel(
                 else -> Result.failure(IllegalArgumentException("Tipe transaksi tidak valid"))
             }
 
-            _deleteTransactionResult.value = result
+            _deleteResult.value = result
+            delay(500)
+            _deleteResult.value = null
         }
     }
 }

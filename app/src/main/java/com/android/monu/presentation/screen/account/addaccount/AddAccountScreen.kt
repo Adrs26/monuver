@@ -24,7 +24,7 @@ import com.android.monu.presentation.utils.showMessageWithToast
 @Composable
 fun AddAccountScreen(
     accountType: Int,
-    addAccountResult: Result<Long>?,
+    addResult: Result<Long>?,
     accountActions: AddAccountActions,
 ) {
     var accountName by rememberSaveable { mutableStateOf("") }
@@ -67,13 +67,13 @@ fun AddAccountScreen(
             accountActions.onNavigateToType()
         }
 
-        override fun onAddNewAccountWithInitialTransaction(accountState: AddAccountContentState) {
-            accountActions.onAddNewAccountWithInitialTransaction(accountState)
+        override fun onAddNewAccount(accountState: AddAccountContentState) {
+            accountActions.onAddNewAccount(accountState)
         }
     }
 
-    LaunchedEffect(addAccountResult) {
-        addAccountResult?.let {
+    LaunchedEffect(addResult) {
+        addResult?.let {
             if (it.isSuccess) {
                 "Akun kamu berhasil dibuat".showMessageWithToast(context)
                 accountActions.onNavigateBack()
@@ -102,5 +102,5 @@ fun AddAccountScreen(
 interface AddAccountActions {
     fun onNavigateBack()
     fun onNavigateToType()
-    fun onAddNewAccountWithInitialTransaction(accountState: AddAccountContentState)
+    fun onAddNewAccount(accountState: AddAccountContentState)
 }

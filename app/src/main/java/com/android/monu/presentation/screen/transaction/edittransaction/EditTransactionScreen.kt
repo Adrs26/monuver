@@ -1,4 +1,4 @@
-package com.android.monu.presentation.screen.transaction.addtransaction
+package com.android.monu.presentation.screen.transaction.edittransaction
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,9 +17,9 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
 import com.android.monu.presentation.components.CommonAppBar
-import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContent
-import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContentActions
-import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContentState
+import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContent
+import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentActions
+import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentState
 import com.android.monu.presentation.utils.NumberFormatHelper
 import com.android.monu.presentation.utils.TransactionType
 import com.android.monu.presentation.utils.showMessageWithToast
@@ -32,13 +32,13 @@ import org.threeten.bp.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTransactionScreen(
-    transactionState: AddTransactionState,
-    transactionActions: AddTransactionActions
+fun EditTransactionScreen(
+    transactionState: EditTransactionState,
+    transactionActions: EditTransactionActions
 ) {
-    var transactionTitle by rememberSaveable { mutableStateOf("") }
-    var transactionDate by rememberSaveable { mutableStateOf("") }
-    var transactionAmount by rememberSaveable { mutableLongStateOf(0L) }
+    var transactionTitle by rememberSaveable { mutableStateOf(transactionState.title) }
+    var transactionDate by rememberSaveable { mutableStateOf(transactionState.date) }
+    var transactionAmount by rememberSaveable { mutableLongStateOf(transactionState.amount) }
     var transactionAmountFormat by remember {
         mutableStateOf(TextFieldValue(text = NumberFormatHelper.formatToRupiah(transactionAmount)))
     }
@@ -46,25 +46,30 @@ fun AddTransactionScreen(
     val calendarState = rememberSheetState()
     val context = LocalContext.current
 
-    val addTransactionContentState = AddTransactionContentState(
+    val editTransactionContentState = EditTransactionContentState(
+        id = transactionState.id,
         title = transactionTitle,
         type = transactionState.type,
-        parentCategory = transactionState.category.first,
-        childCategory = transactionState.category.second,
+        parentCategory = transactionState.parentCategory,
+        childCategory = transactionState.childCategory,
         date = transactionDate,
         amount = transactionAmount,
         amountFormat = transactionAmountFormat,
-        sourceId = transactionState.source.first,
-        sourceName = transactionState.source.second
+        startAmount = transactionState.amount,
+        sourceId = transactionState.sourceId,
+        sourceName = transactionState.sourceName
     )
 
-    val addTransactionContentActions = object : AddTransactionContentActions {
+    val editTransactionContentActions = object : EditTransactionContentActions {
         override fun onTitleChange(title: String) {
             transactionTitle = title
         }
 
         override fun onNavigateToCategory(transactionType: Int) {
-            transactionActions.onNavigateToCategory(transactionType)
+            if (transactionType == TransactionType.INCOME ||
+                transactionType == TransactionType.EXPENSE) {
+                transactionActions.onNavigateToCategory(transactionType)
+            }
         }
 
         override fun onDateClick() {
@@ -86,17 +91,13 @@ fun AddTransactionScreen(
             )
         }
 
-        override fun onNavigateToSource() {
-            transactionActions.onNavigateToSource()
-        }
-
-        override fun onAddNewTransaction(transactionState: AddTransactionContentState) {
-            transactionActions.onAddNewTransaction(transactionState)
+        override fun onEditTransaction(transactionState: EditTransactionContentState) {
+            transactionActions.onEditTransaction(transactionState)
         }
     }
 
-    LaunchedEffect(transactionState.addResult) {
-        transactionState.addResult?.let {
+    LaunchedEffect(transactionState.editResult) {
+        transactionState.editResult?.let {
             if (it.isSuccess) {
                 context.getString(R.string.transaction_successfully_saved)
                     .showMessageWithToast(context)
@@ -110,15 +111,14 @@ fun AddTransactionScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = if (transactionState.type == TransactionType.INCOME) "Tambah pemasukan" else
-                    "Tambah pengeluaran",
+                title = "Edit transaksi",
                 onNavigateBack = { transactionActions.onNavigateBack() }
             )
         }
     ) { innerPadding ->
-        AddTransactionContent(
-            transactionState = addTransactionContentState,
-            transactionActions = addTransactionContentActions,
+        EditTransactionContent(
+            transactionState = editTransactionContentState,
+            transactionActions = editTransactionContentActions,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -142,16 +142,21 @@ fun AddTransactionScreen(
     )
 }
 
-data class AddTransactionState(
+data class EditTransactionState(
+    val id: Long,
+    val title: String,
     val type: Int,
-    val category: Pair<Int, Int>,
-    val source: Pair<Int, String>,
-    val addResult: Result<Long>?,
+    val parentCategory: Int,
+    val childCategory: Int,
+    val date: String,
+    val amount: Long,
+    val sourceId: Int,
+    val sourceName: String,
+    val editResult: Result<Int>?
 )
 
-interface AddTransactionActions {
+interface EditTransactionActions {
     fun onNavigateBack()
     fun onNavigateToCategory(transactionType: Int)
-    fun onNavigateToSource()
-    fun onAddNewTransaction(transactionState: AddTransactionContentState)
+    fun onEditTransaction(transactionState: EditTransactionContentState)
 }

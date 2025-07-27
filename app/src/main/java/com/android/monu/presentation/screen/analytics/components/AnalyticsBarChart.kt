@@ -75,11 +75,11 @@ fun AnalyticsBarChart(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 BarChartLegend(
-                    legendColor = Color(0xFF66BB6A),
+                    legendColor = Green600,
                     legendLabel = stringResource(R.string.income)
                 )
                 BarChartLegend(
-                    legendColor = Color(0xFFEF5350),
+                    legendColor = Red600,
                     legendLabel = stringResource(R.string.expense),
                 )
             }

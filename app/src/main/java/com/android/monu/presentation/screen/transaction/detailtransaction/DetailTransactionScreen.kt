@@ -20,15 +20,15 @@ import com.android.monu.presentation.utils.showMessageWithToast
 @Composable
 fun DetailTransactionScreen(
     transaction: Transaction,
-    removeTransactionResult: Result<Int>?,
+    removeResult: Result<Int>?,
     transactionActions: DetailTransactionActions
 ) {
     var showRemoveDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
 
-    LaunchedEffect(removeTransactionResult) {
-        removeTransactionResult?.let {
+    LaunchedEffect(removeResult) {
+        removeResult?.let {
             if (it.isSuccess) {
                 context.getString(R.string.transaction_successfully_deleted)
                     .showMessageWithToast(context)
@@ -43,7 +43,13 @@ fun DetailTransactionScreen(
         topBar = {
             DeleteTransactionAppBar(
                 onNavigateBack = { transactionActions.onNavigateBack() },
-                onEditClick = { transactionActions.onNavigateToEdit() },
+                onEditClick = {
+                    transactionActions.onNavigateToEdit(
+                        transactionId = transaction.id,
+                        transactionType = transaction.type,
+                        transactionCategory = transaction.childCategory
+                    )
+                },
                 onDeleteClick = { showRemoveDialog = true }
             )
         }
@@ -67,6 +73,6 @@ fun DetailTransactionScreen(
 
 interface DetailTransactionActions {
     fun onNavigateBack()
-    fun onNavigateToEdit()
+    fun onNavigateToEdit(transactionId: Long, transactionType: Int, transactionCategory: Int)
     fun onRemoveTransaction(transaction: Transaction)
 }

@@ -1,6 +1,5 @@
 package com.android.monu.presentation.screen.transaction.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -45,28 +43,9 @@ fun TransactionTopBar(
         TransactionSearchBar(
             query = query,
             onQueryChange = onQueryChange,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            onFilterButtonClick = onFilterButtonClick
         )
-        IconButton(
-            onClick = onFilterButtonClick,
-            modifier = Modifier.size(48.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        shape = MaterialTheme.shapes.extraSmall
-                    )
-                    .padding(8.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_filter),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.background
-                )
-            }
-        }
     }
 }
 
@@ -75,6 +54,7 @@ fun TransactionSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    onFilterButtonClick: () -> Unit
 ) {
     Box(
         modifier = modifier.border(
@@ -111,10 +91,22 @@ fun TransactionSearchBar(
                 )
             },
             trailingIcon = {
-                if (query.isNotEmpty()) {
-                    IconButton(onClick = { onQueryChange("") }) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = { onQueryChange("") }) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = null,
+                                modifier = Modifier.padding(start = 8.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+                    IconButton(onClick = onFilterButtonClick) {
                         Icon(
-                            imageVector = Icons.Default.Close,
+                            painter = painterResource(R.drawable.ic_filter),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )

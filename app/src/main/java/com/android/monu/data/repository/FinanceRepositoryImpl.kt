@@ -9,6 +9,7 @@ import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
+import kotlin.math.absoluteValue
 
 class FinanceRepositoryImpl(
     private val database: MonuDatabase,
@@ -87,6 +88,68 @@ class FinanceRepositoryImpl(
             accountDao.increaseAccountBalance(sourceId, amount)
             accountDao.decreaseAccountBalance(destinationId, amount)
             rowDeleted
+        }
+    }
+
+    override suspend fun updateIncomeTransaction(
+        transaction: Transaction,
+        startAmount: Long
+    ): Int {
+        return database.withTransaction {
+            val rowUpdated = transactionDao.updateTransaction(
+                TransactionMapper.transactionDomainToEntityForUpdate(transaction)
+            )
+            val difference = transaction.amount - startAmount
+            if (difference != 0L) {
+                if (difference > 0) {
+                    accountDao.increaseAccountBalance(transaction.sourceId, difference)
+                } else {
+                    accountDao.decreaseAccountBalance(transaction.sourceId, difference.absoluteValue)
+                }
+            }
+            rowUpdated
+        }
+    }
+
+    override suspend fun updateExpenseTransaction(
+        transaction: Transaction,
+        startAmount: Long
+    ): Int {
+        return database.withTransaction {
+            val rowUpdated = transactionDao.updateTransaction(
+                TransactionMapper.transactionDomainToEntityForUpdate(transaction)
+            )
+            val difference = transaction.amount - startAmount
+            if (difference != 0L) {
+                if (difference > 0) {
+                    accountDao.decreaseAccountBalance(transaction.sourceId, difference)
+                } else {
+                    accountDao.increaseAccountBalance(transaction.sourceId, difference.absoluteValue)
+                }
+            }
+            rowUpdated
+        }
+    }
+
+    override suspend fun updateTransferTransaction(
+        transaction: Transaction,
+        startAmount: Long
+    ): Int {
+        return database.withTransaction {
+            val rowUpdated = transactionDao.updateTransaction(
+                TransactionMapper.transactionDomainToEntityForUpdate(transaction)
+            )
+            val difference = transaction.amount - startAmount
+            if (difference != 0L) {
+                if (difference > 0) {
+                    accountDao.decreaseAccountBalance(transaction.sourceId, difference)
+                    accountDao.increaseAccountBalance(transaction.destinationId ?: 0, difference)
+                } else {
+                    accountDao.increaseAccountBalance(transaction.sourceId, difference.absoluteValue)
+                    accountDao.decreaseAccountBalance(transaction.destinationId ?: 0, difference.absoluteValue)
+                }
+            }
+            rowUpdated
         }
     }
 }

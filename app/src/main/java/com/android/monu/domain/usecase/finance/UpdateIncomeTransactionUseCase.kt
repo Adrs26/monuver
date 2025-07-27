@@ -2,16 +2,17 @@ package com.android.monu.domain.usecase.finance
 
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContentState
+import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentState
 import com.android.monu.presentation.utils.DateHelper
 
-class CreateIncomeTransactionUseCase(
+class UpdateIncomeTransactionUseCase(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(transactionState: AddTransactionContentState): Result<Long> {
+    suspend operator fun invoke(transactionState: EditTransactionContentState): Result<Int> {
         return try {
             val (month, year) = DateHelper.getMonthAndYear(transactionState.date)
             val transaction = Transaction(
+                id = transactionState.id,
                 title = transactionState.title,
                 type = transactionState.type,
                 parentCategory = transactionState.parentCategory,
@@ -25,8 +26,8 @@ class CreateIncomeTransactionUseCase(
                 sourceName = transactionState.sourceName,
             )
 
-            val transactionId = repository.createIncomeTransaction(transaction)
-            Result.success(transactionId)
+            val rowUpdated = repository.updateIncomeTransaction(transaction, transactionState.startAmount)
+            Result.success(rowUpdated)
         } catch (e: Exception) {
             Result.failure(e)
         }

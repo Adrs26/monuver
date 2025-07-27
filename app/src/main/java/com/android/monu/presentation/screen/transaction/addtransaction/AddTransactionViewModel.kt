@@ -34,8 +34,8 @@ class AddTransactionViewModel(
             getAllAccounts()
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _createTransactionResult = MutableStateFlow<Result<Long>?>(null)
-    val createTransactionResult = _createTransactionResult.asStateFlow()
+    private val _createResult = MutableStateFlow<Result<Long>?>(null)
+    val createResult = _createResult.asStateFlow()
 
     fun changeTransactionCategory(parentCategory: Int, childCategory: Int) {
         _transactionCategory.value = Pair(parentCategory, childCategory)
@@ -62,18 +62,20 @@ class AddTransactionViewModel(
                 addTransactionState.amount == 0L ||
                 addTransactionState.sourceId == 0
             ) {
-                _createTransactionResult.value = Result.failure(
+                _createResult.value = Result.failure(
                     IllegalArgumentException("Semua field harus diisi ya")
                 )
                 delay(500)
-                _createTransactionResult.value = null
+                _createResult.value = null
             } else {
                 val result = when (addTransactionState.type) {
                     TransactionType.INCOME -> createIncomeTransactionUseCase(addTransactionState)
                     TransactionType.EXPENSE -> createExpenseTransactionUseCase(addTransactionState)
                     else -> Result.failure(IllegalArgumentException("Tipe transaksi tidak valid"))
                 }
-                _createTransactionResult.value = result
+                _createResult.value = result
+                delay(500)
+                _createResult.value = null
             }
         }
     }

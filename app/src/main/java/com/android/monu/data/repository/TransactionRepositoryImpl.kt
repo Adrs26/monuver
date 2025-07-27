@@ -101,15 +101,4 @@ class TransactionRepositoryImpl(
             }
         }
     }
-
-    override suspend fun updateTransaction(transaction: Transaction): Result<Int> {
-        return try {
-            val result = transactionDao.updateTransaction(
-                TransactionMapper.transactionDomainToEntityForUpdate(transaction)
-            )
-            Result.success(result)
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
-    }
 }

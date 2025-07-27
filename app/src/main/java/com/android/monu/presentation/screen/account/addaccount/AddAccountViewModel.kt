@@ -16,8 +16,8 @@ class AddAccountViewModel(
     private val _accountType = MutableStateFlow<Int>(0)
     val accountType = _accountType.asStateFlow()
 
-    private val _createAccountResult = MutableStateFlow<Result<Long>?>(null)
-    val createAccountResult = _createAccountResult.asStateFlow()
+    private val _createResult = MutableStateFlow<Result<Long>?>(null)
+    val createResult = _createResult.asStateFlow()
 
     fun changeAccountType(type: Int) {
         _accountType.value = type
@@ -30,13 +30,13 @@ class AddAccountViewModel(
                 accountState.type == 0 ||
                 accountState.balance == 0L
             ) {
-                _createAccountResult.value = Result.failure(
+                _createResult.value = Result.failure(
                     IllegalArgumentException("Semua field harus diisi ya")
                 )
                 delay(500)
-                _createAccountResult.value = null
+                _createResult.value = null
             } else {
-                _createAccountResult.value = createAccountUseCase(accountState)
+                _createResult.value = createAccountUseCase(accountState)
                 _accountType.value = 0
             }
         }

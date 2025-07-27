@@ -1,4 +1,4 @@
-package com.android.monu.presentation.screen.account.addaccount.components
+package com.android.monu.presentation.screen.transaction.edittransfer.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,56 +17,61 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.presentation.components.StaticTextInputField
 import com.android.monu.presentation.components.TextAmountInputField
 import com.android.monu.presentation.components.TextInputField
-import com.android.monu.presentation.utils.DatabaseCodeMapper
+import com.android.monu.presentation.utils.DateHelper
 
 @Composable
-fun AddAccountContent(
-    accountState: AddAccountContentState,
-    accountActions: AddAccountContentActions,
-    modifier: Modifier = Modifier,
+fun EditTransferContent(
+    transferState: EditTransferContentState,
+    transferActions: EditTransferContentActions,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        TextInputField(
-            title = "Nama",
-            value = accountState.name,
-            onValueChange = { accountActions.onNameChange(it) },
-            placeholderText = "Masukkan nama akun",
+        StaticTextInputField(
+            title = "Akun sumber",
+            value = transferState.sourceName,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+
+        )
+        StaticTextInputField(
+            title = "Akun tujuan",
+            value = transferState.destinationName,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextInputField(
-            title = "Tipe",
-            value = if (accountState.type == 0) "" else
-                stringResource(DatabaseCodeMapper.toAccountType(accountState.type)),
+            title = "Tanggal",
+            value = DateHelper.formatDateToReadable(transferState.date),
             onValueChange = { },
-            placeholderText = "Pilih tipe akun",
+            placeholderText = "Pilih tanggal transfer",
             modifier = Modifier
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = { accountActions.onNavigateToType() }
+                    onClick = { transferActions.onDateClick() }
                 )
                 .padding(horizontal = 16.dp),
-            isEnable = false
+            isEnable = false,
+            isDatePicker = true
         )
         TextAmountInputField(
-            title = "Nominal awal",
-            value = accountState.balanceFormat,
-            onValueChange = { accountActions.onAmountChange(it) },
+            title = "Nominal",
+            value = transferState.amountFormat,
+            onValueChange = { transferActions.onAmountChange(it) },
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         Button(
-            onClick = { accountActions.onAddNewAccount(accountState) },
+            onClick = { transferActions.onEditTransfer(transferState) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
         ) {
             Text(
-                text = stringResource(R.string.add),
+                text = stringResource(R.string.save),
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.labelMedium
             )
@@ -74,16 +79,20 @@ fun AddAccountContent(
     }
 }
 
-data class AddAccountContentState(
-    val name: String,
-    val type: Int,
-    val balance: Long,
-    val balanceFormat: TextFieldValue
+data class EditTransferContentState(
+    val id: Long,
+    val sourceId: Int,
+    val sourceName: String,
+    val destinationId: Int,
+    val destinationName: String,
+    val date: String,
+    val startAmount: Long,
+    val amount: Long,
+    val amountFormat: TextFieldValue
 )
 
-interface AddAccountContentActions {
-    fun onNameChange(name: String)
-    fun onAmountChange(balanceFormat: TextFieldValue)
-    fun onNavigateToType()
-    fun onAddNewAccount(accountState: AddAccountContentState)
+interface EditTransferContentActions {
+    fun onDateClick()
+    fun onAmountChange(amountFormat: TextFieldValue)
+    fun onEditTransfer(transferState: EditTransferContentState)
 }

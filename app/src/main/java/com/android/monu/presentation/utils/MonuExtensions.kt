@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.ParametersHolder
 
 fun Long.toHighestRangeValue(): Long {
     return when (this) {
@@ -66,11 +67,16 @@ fun Modifier.debouncedClickable(
 
 @Composable
 inline fun <reified T : ViewModel> NavBackStackEntry.sharedKoinViewModel(
-    navController: NavController
+    navController: NavController,
+    noinline parameters: (() -> ParametersHolder)? = null
 ): T {
     val navGraphRoute = destination.parent?.route ?: error("No parent route")
     val parentEntry = remember(this) {
         navController.getBackStackEntry(navGraphRoute)
     }
-    return koinViewModel(viewModelStoreOwner = parentEntry)
+    return if (parameters != null) {
+        koinViewModel(viewModelStoreOwner = parentEntry, parameters = parameters)
+    } else {
+        koinViewModel(viewModelStoreOwner = parentEntry)
+    }
 }

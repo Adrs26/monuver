@@ -9,17 +9,23 @@ import com.android.monu.domain.usecase.finance.CreateTransferTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteIncomeTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteTransferTransactionUseCase
+import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase
+import com.android.monu.domain.usecase.finance.UpdateIncomeTransactionUseCase
+import com.android.monu.domain.usecase.finance.UpdateTransferTransactionUseCase
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsUseCase
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
-import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionAmountSummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionSummaryUseCase
-import com.android.monu.domain.usecase.transaction.UpdateTransactionUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
+
+    factory { GetAllAccountsUseCase(get()) }
+    factory { GetTotalAccountBalanceUseCase(get()) }
+
     factory { GetRecentTransactionsUseCase(get()) }
     factory { GetAllTransactionsUseCase(get()) }
     factory { GetTransactionByIdUseCase(get()) }
@@ -27,10 +33,6 @@ val domainModule = module {
     factory { GetTransactionAmountSummaryUseCase(get()) }
     factory { GetTransactionCategorySummaryUseCase(get()) }
     factory { GetTransactionSummaryUseCase(get()) }
-    factory { UpdateTransactionUseCase(get()) }
-
-    factory { GetAllAccountsUseCase(get()) }
-    factory { GetTotalAccountBalanceUseCase(get()) }
 
     factory { CreateAccountUseCase(get()) }
     factory { CreateIncomeTransactionUseCase(get()) }
@@ -39,4 +41,8 @@ val domainModule = module {
     factory { DeleteIncomeTransactionUseCase(get()) }
     factory { DeleteExpenseTransactionUseCase(get()) }
     factory { DeleteTransferTransactionUseCase(get()) }
+    factory { UpdateIncomeTransactionUseCase(get()) }
+    factory { UpdateExpenseTransactionUseCase(get(), get()) }
+    factory { UpdateTransferTransactionUseCase(get(), get()) }
+
 }

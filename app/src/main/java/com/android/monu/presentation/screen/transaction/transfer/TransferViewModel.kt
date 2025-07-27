@@ -38,8 +38,8 @@ class TransferViewModel(
         listOf(source.first, destination.first)
     }
 
-    private val _createTransferResult = MutableStateFlow<Result<Long>?>(null)
-    val createTransferResult = _createTransferResult.asStateFlow()
+    private val _createResult = MutableStateFlow<Result<Long>?>(null)
+    val createResult = _createResult.asStateFlow()
 
     fun changeSourceAccount(sourceId: Int, sourceName: String) {
         _sourceAccount.value = Pair(sourceId, sourceName)
@@ -65,13 +65,15 @@ class TransferViewModel(
                 transferState.date.isEmpty() ||
                 transferState.amount == 0L
             ) {
-                _createTransferResult.value = Result.failure(
+                _createResult.value = Result.failure(
                     IllegalArgumentException("Semua field harus diisi ya")
                 )
                 delay(500)
-                _createTransferResult.value = null
+                _createResult.value = null
             } else {
-                _createTransferResult.value = createTransferTransactionUseCase(transferState)
+                _createResult.value = createTransferTransactionUseCase(transferState)
+                delay(500)
+                _createResult.value = null
             }
         }
     }

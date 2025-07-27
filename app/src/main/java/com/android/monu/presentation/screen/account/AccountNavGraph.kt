@@ -48,7 +48,7 @@ fun NavGraphBuilder.accountNavGraph(
         ) {
             val viewModel = it.sharedKoinViewModel<AddAccountViewModel>(navController)
             val accountType by viewModel.accountType.collectAsStateWithLifecycle()
-            val addAccountResult by viewModel.createAccountResult.collectAsStateWithLifecycle()
+            val addResult by viewModel.createResult.collectAsStateWithLifecycle()
 
             val addAccountActions = object : AddAccountActions {
                 override fun onNavigateBack() {
@@ -60,16 +60,14 @@ fun NavGraphBuilder.accountNavGraph(
                     navController.navigate(AccountType)
                 }
 
-                override fun onAddNewAccountWithInitialTransaction(
-                    accountState: AddAccountContentState
-                ) {
+                override fun onAddNewAccount(accountState: AddAccountContentState) {
                     viewModel.createNewAccountWithInitialTransaction(accountState)
                 }
             }
 
             AddAccountScreen(
                 accountType = accountType,
-                addAccountResult = addAccountResult,
+                addResult = addResult,
                 accountActions = addAccountActions
             )
         }

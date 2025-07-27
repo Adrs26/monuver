@@ -1,4 +1,4 @@
-package com.android.monu.presentation.screen.transaction.transfer.components
+package com.android.monu.presentation.screen.transaction.edittransaction.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,58 +17,56 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.presentation.components.StaticTextInputField
 import com.android.monu.presentation.components.TextAmountInputField
 import com.android.monu.presentation.components.TextInputField
+import com.android.monu.presentation.utils.DatabaseCodeMapper
 import com.android.monu.presentation.utils.DateHelper
 
 @Composable
-fun TransferContent(
-    transferState: TransferContentState,
-    transferActions: TransferContentActions,
-    modifier: Modifier
+fun EditTransactionContent(
+    transactionState: EditTransactionContentState,
+    transactionActions: EditTransactionContentActions,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         TextInputField(
-            title = "Akun sumber",
-            value = transferState.sourceName,
-            onValueChange = { },
-            placeholderText = "Pilih akun sumber",
-            modifier = Modifier
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = { transferActions.onNavigateToSourceAccount() }
-                )
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-            isEnable = false
+            title = "Judul",
+            value = transactionState.title,
+            onValueChange = { transactionActions.onTitleChange(it) },
+            placeholderText = "Masukkan judul transaksi",
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
         TextInputField(
-            title = "Akun tujuan",
-            value = transferState.destinationName,
+            title = "Kategori",
+            value = if (transactionState.childCategory == 0) "" else
+                stringResource(DatabaseCodeMapper.toChildCategoryTitle(transactionState.childCategory)),
             onValueChange = { },
-            placeholderText = "Pilih akun tujuan",
+            placeholderText = "Pilih kategori transaksi",
             modifier = Modifier
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = { transferActions.onNavigateToDestinationAccount() }
+                    onClick = {
+                        transactionActions.onNavigateToCategory(transactionState.type)
+                    }
                 )
                 .padding(horizontal = 16.dp),
             isEnable = false
         )
         TextInputField(
             title = "Tanggal",
-            value = DateHelper.formatDateToReadable(transferState.date),
+            value = DateHelper.formatDateToReadable(transactionState.date),
             onValueChange = { },
-            placeholderText = "Pilih tanggal transfer",
+            placeholderText = "Pilih tanggal transaksi",
             modifier = Modifier
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = { transferActions.onDateClick() }
+                    onClick = { transactionActions.onDateClick() }
                 )
                 .padding(horizontal = 16.dp),
             isEnable = false,
@@ -76,18 +74,25 @@ fun TransferContent(
         )
         TextAmountInputField(
             title = "Nominal",
-            value = transferState.amountFormat,
-            onValueChange = { transferActions.onAmountChange(it) },
+            value = transactionState.amountFormat,
+            onValueChange = { transactionActions.onAmountChange(it) },
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        StaticTextInputField(
+            title = "Sumber dana",
+            value = transactionState.sourceName,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         Button(
-            onClick = { transferActions.onAddNewTransfer(transferState) },
+            onClick = {
+                transactionActions.onEditTransaction(transactionState)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
         ) {
             Text(
-                text = stringResource(R.string.transfer),
+                text = stringResource(R.string.save),
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.labelMedium
             )
@@ -95,20 +100,24 @@ fun TransferContent(
     }
 }
 
-data class TransferContentState(
-    val sourceId: Int,
-    val sourceName: String,
-    val destinationId: Int,
-    val destinationName: String,
+data class EditTransactionContentState(
+    val id: Long,
+    val title: String,
+    val type: Int,
+    val parentCategory: Int,
+    val childCategory: Int,
     val date: String,
     val amount: Long,
-    val amountFormat: TextFieldValue
+    val amountFormat: TextFieldValue,
+    val startAmount: Long,
+    val sourceId: Int,
+    val sourceName: String
 )
 
-interface TransferContentActions {
-    fun onNavigateToSourceAccount()
-    fun onNavigateToDestinationAccount()
+interface EditTransactionContentActions {
+    fun onTitleChange(title: String)
+    fun onNavigateToCategory(transactionType: Int)
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
-    fun onAddNewTransfer(transferState: TransferContentState)
+    fun onEditTransaction(transactionState: EditTransactionContentState)
 }

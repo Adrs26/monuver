@@ -11,8 +11,9 @@ import com.android.monu.presentation.utils.TransactionType
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
-class CreateAccountUseCase(private val repository: FinanceRepository) {
-
+class CreateAccountUseCase(
+    private val repository: FinanceRepository
+) {
     suspend operator fun invoke(accountState: AddAccountContentState): Result<Long> {
         return try {
             val account = Account(

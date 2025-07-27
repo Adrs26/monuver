@@ -1,4 +1,4 @@
-package com.android.monu.presentation.screen.transaction.addtransaction.components
+package com.android.monu.presentation.screen.transaction.components
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

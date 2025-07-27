@@ -21,7 +21,6 @@ import com.android.monu.presentation.screen.transaction.transfer.components.Tran
 import com.android.monu.presentation.screen.transaction.transfer.components.TransferContentActions
 import com.android.monu.presentation.screen.transaction.transfer.components.TransferContentState
 import com.android.monu.presentation.utils.NumberFormatHelper
-import com.android.monu.presentation.utils.TransactionType
 import com.android.monu.presentation.utils.showMessageWithToast
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -46,7 +45,6 @@ fun TransferScreen(
     val context = LocalContext.current
 
     val transferContentState = TransferContentState(
-        type = TransactionType.TRANSFER,
         sourceId = transferState.source.first,
         sourceName = transferState.source.second,
         destinationId = transferState.destination.first,
@@ -89,8 +87,8 @@ fun TransferScreen(
         }
     }
 
-    LaunchedEffect(transferState.addTransferResult) {
-        transferState.addTransferResult?.let {
+    LaunchedEffect(transferState.addResult) {
+        transferState.addResult?.let {
             if (it.isSuccess) {
                 context.getString(R.string.transaction_successfully_saved)
                     .showMessageWithToast(context)
@@ -138,7 +136,7 @@ fun TransferScreen(
 data class TransferState(
     val source: Pair<Int, String>,
     val destination: Pair<Int, String>,
-    val addTransferResult: Result<Long>?,
+    val addResult: Result<Long>?,
 )
 
 interface TransferActions {

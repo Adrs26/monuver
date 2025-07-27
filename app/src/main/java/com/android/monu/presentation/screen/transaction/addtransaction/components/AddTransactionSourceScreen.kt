@@ -12,24 +12,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.monu.domain.model.account.Account
 import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.account.components.AccountListItem
-import com.android.monu.presentation.utils.showMessageWithToast
 import com.android.monu.ui.theme.MonuTheme
 
 @Composable
-fun TransactionSourceScreen(
+fun AddTransactionSourceScreen(
     accounts: List<Account>,
-    transactionAmount: Long,
     onNavigateBack: () -> Unit,
     onSourceSelect: (Int, String) -> Unit
 ) {
-    val context = LocalContext.current
-
     Scaffold(
         topBar = {
             CommonAppBar(
@@ -53,12 +48,8 @@ fun TransactionSourceScreen(
                         account = accounts[index],
                         modifier = Modifier
                             .clickable {
-                                if (transactionAmount > accounts[index].balance) {
-                                    "Saldo akun tidak mencukupi".showMessageWithToast(context)
-                                } else {
-                                    onSourceSelect(accounts[index].id, accounts[index].name)
-                                    onNavigateBack()
-                                }
+                                onSourceSelect(accounts[index].id, accounts[index].name)
+                                onNavigateBack()
                             }
                             .padding(horizontal = 16.dp, vertical = 2.dp)
                     )
@@ -84,11 +75,10 @@ fun TransactionSourceScreen(
 
 @Composable
 @Preview(showBackground = true)
-fun TransactionSourceScreenPreview() {
+fun AddTransactionSourceScreenPreview() {
     MonuTheme {
-        TransactionSourceScreen(
+        AddTransactionSourceScreen(
             accounts = emptyList(),
-            transactionAmount = 0,
             onNavigateBack = {},
             onSourceSelect = { _, _ -> }
         )
