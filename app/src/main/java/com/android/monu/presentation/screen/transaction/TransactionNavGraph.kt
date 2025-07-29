@@ -15,9 +15,6 @@ import com.android.monu.presentation.screen.transaction.addtransaction.AddTransa
 import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContentState
 import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionSourceScreen
 import com.android.monu.presentation.screen.transaction.components.TransactionCategoryScreen
-import com.android.monu.presentation.screen.transaction.detailtransaction.DetailTransactionActions
-import com.android.monu.presentation.screen.transaction.detailtransaction.DetailTransactionScreen
-import com.android.monu.presentation.screen.transaction.detailtransaction.DetailTransactionViewModel
 import com.android.monu.presentation.screen.transaction.edittransaction.EditTransactionActions
 import com.android.monu.presentation.screen.transaction.edittransaction.EditTransactionScreen
 import com.android.monu.presentation.screen.transaction.edittransaction.EditTransactionState
@@ -28,6 +25,9 @@ import com.android.monu.presentation.screen.transaction.edittransfer.EditTransfe
 import com.android.monu.presentation.screen.transaction.edittransfer.EditTransferState
 import com.android.monu.presentation.screen.transaction.edittransfer.EditTransferViewModel
 import com.android.monu.presentation.screen.transaction.edittransfer.components.EditTransferContentState
+import com.android.monu.presentation.screen.transaction.transactiondetail.DetailTransactionScreen
+import com.android.monu.presentation.screen.transaction.transactiondetail.TransactionDetailActions
+import com.android.monu.presentation.screen.transaction.transactiondetail.TransactionDetailViewModel
 import com.android.monu.presentation.screen.transaction.transfer.TransferActions
 import com.android.monu.presentation.screen.transaction.transfer.TransferScreen
 import com.android.monu.presentation.screen.transaction.transfer.TransferState
@@ -42,13 +42,13 @@ import com.android.monu.presentation.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.AddTransaction
 import com.android.monu.ui.navigation.AddTransactionCategory
 import com.android.monu.ui.navigation.AddTransactionSource
-import com.android.monu.ui.navigation.DetailTransaction
 import com.android.monu.ui.navigation.EditTransaction
 import com.android.monu.ui.navigation.EditTransactionCategory
 import com.android.monu.ui.navigation.EditTransfer
 import com.android.monu.ui.navigation.MainAddTransaction
-import com.android.monu.ui.navigation.MainDetailTransaction
+import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.MainTransfer
+import com.android.monu.ui.navigation.TransactionDetail
 import com.android.monu.ui.navigation.Transfer
 import com.android.monu.ui.navigation.TransferAccount
 import org.koin.androidx.compose.koinViewModel
@@ -214,21 +214,20 @@ fun NavGraphBuilder.transferNavGraph(
 fun NavGraphBuilder.detailTransactionNavGraph(
     navController: NavHostController
 ) {
-    navigation<DetailTransaction>(startDestination = MainDetailTransaction()) {
-        composable<MainDetailTransaction>(
+    navigation<TransactionDetail>(startDestination = MainTransactionDetail()) {
+        composable<MainTransactionDetail>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
             popExitTransition = { NavigationAnimation.popExit }
         ) {
-            val viewModel = koinViewModel<DetailTransactionViewModel>(
+            val viewModel = koinViewModel<TransactionDetailViewModel>(
                 viewModelStoreOwner = it,
                 parameters = { parametersOf(it.savedStateHandle) }
             )
             val transaction by viewModel.transaction.collectAsStateWithLifecycle()
-            val removeResult by viewModel.deleteResult.collectAsStateWithLifecycle()
 
-            val detailTransactionActions = object : DetailTransactionActions {
+            val detailTransactionActions = object : TransactionDetailActions {
                 override fun onNavigateBack() {
                     navController.navigateUp()
                 }
@@ -258,7 +257,6 @@ fun NavGraphBuilder.detailTransactionNavGraph(
             transaction?.let { transaction ->
                 DetailTransactionScreen(
                     transaction = transaction,
-                    removeResult = removeResult,
                     transactionActions = detailTransactionActions
                 )
             }

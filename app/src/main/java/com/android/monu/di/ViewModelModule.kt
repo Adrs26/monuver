@@ -6,7 +6,7 @@ import com.android.monu.presentation.screen.account.addaccount.AddAccountViewMod
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.transaction.TransactionViewModel
 import com.android.monu.presentation.screen.transaction.addtransaction.AddTransactionViewModel
-import com.android.monu.presentation.screen.transaction.detailtransaction.DetailTransactionViewModel
+import com.android.monu.presentation.screen.transaction.transactiondetail.TransactionDetailViewModel
 import com.android.monu.presentation.screen.transaction.edittransaction.EditTransactionViewModel
 import com.android.monu.presentation.screen.transaction.edittransfer.EditTransferViewModel
 import com.android.monu.presentation.screen.transaction.transfer.TransferViewModel
@@ -19,7 +19,7 @@ val viewModelModule = module {
 
     viewModel { TransactionViewModel(get(), get()) }
     viewModel { (handle: SavedStateHandle) ->
-        DetailTransactionViewModel(get(), get(), get(), get(), handle)
+        TransactionDetailViewModel(get(), get(), get(), get(), handle)
     }
     viewModel { (handle: SavedStateHandle) ->
         EditTransactionViewModel(get(), get(), get(), handle)

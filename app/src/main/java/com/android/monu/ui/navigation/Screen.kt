@@ -16,8 +16,8 @@ import kotlinx.serialization.Serializable
 @Serializable object AddAccount
 @Serializable object AccountType
 
-@Serializable object DetailTransaction
-@Serializable data class MainDetailTransaction(val id: Long = 0)
+@Serializable object TransactionDetail
+@Serializable data class MainTransactionDetail(val id: Long = 0)
 @Serializable data class EditTransaction(val id: Long = 0)
 @Serializable data class EditTransactionCategory(val type: Int = 0)
 @Serializable data class EditTransfer(val id: Long = 0)
@@ -30,3 +30,5 @@ import kotlinx.serialization.Serializable
 @Serializable object Transfer
 @Serializable object MainTransfer
 @Serializable data class TransferAccount(val type: Int = 0)
+
+@Serializable object BudgetingDetail

@@ -172,4 +172,5 @@
     <string name="edit_transfer">Edit transfer</string>
     <string name="choose_source_account">Pilih akun sumber</string>
     <string name="choose_destination_account">Pilih akun tujuan</string>
+    <string name="sub_category">Sub-kategori</string>
 </resources>

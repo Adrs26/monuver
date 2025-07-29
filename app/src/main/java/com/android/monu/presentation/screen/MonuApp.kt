@@ -6,11 +6,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.android.monu.presentation.screen.account.accountNavGraph
+import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailScreen
 import com.android.monu.presentation.screen.main.MainScreen
 import com.android.monu.presentation.screen.settings.settingsNavGraph
 import com.android.monu.presentation.screen.transaction.addTransactionNavGraph
 import com.android.monu.presentation.screen.transaction.detailTransactionNavGraph
 import com.android.monu.presentation.screen.transaction.transferNavGraph
+import com.android.monu.presentation.utils.NavigationAnimation
+import com.android.monu.ui.navigation.BudgetingDetail
 import com.android.monu.ui.navigation.Main
 import com.android.monu.ui.theme.SoftWhite
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -32,5 +35,14 @@ fun MonuApp() {
         detailTransactionNavGraph(navController = rootNavController)
         addTransactionNavGraph(navController = rootNavController)
         transferNavGraph(navController = rootNavController)
+
+        composable<BudgetingDetail>(
+            enterTransition = { NavigationAnimation.enter },
+            exitTransition = { NavigationAnimation.exit },
+            popEnterTransition = { NavigationAnimation.popEnter },
+            popExitTransition = { NavigationAnimation.popExit }
+        ) {
+            BudgetingDetailScreen()
+        }
     }
 }

@@ -60,7 +60,6 @@ fun AnalyticsPieChart(
             )
             TypeFilterDropdown(
                 typeValue = typeValue,
-                modifier = Modifier.padding(end = 16.dp),
                 onTypeChange = onTypeChange
             )
         }

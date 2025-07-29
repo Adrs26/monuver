@@ -10,7 +10,7 @@ import com.android.monu.domain.usecase.finance.UpdateIncomeTransactionUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentState
 import com.android.monu.presentation.utils.TransactionType
-import com.android.monu.ui.navigation.MainDetailTransaction
+import com.android.monu.ui.navigation.MainTransactionDetail
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,7 +30,7 @@ class EditTransactionViewModel(
     private val _transaction = MutableStateFlow<Transaction?>(null)
     val transaction = _transaction
         .onStart {
-            val id = savedStateHandle.toRoute<MainDetailTransaction>().id
+            val id = savedStateHandle.toRoute<MainTransactionDetail>().id
             getTransactionById(id)
         }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), null)
 

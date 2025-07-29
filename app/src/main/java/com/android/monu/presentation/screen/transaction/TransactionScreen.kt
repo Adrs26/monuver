@@ -56,7 +56,7 @@ fun TransactionScreen(
         TransactionList(
             transactions = transactionState.transactions,
             onNavigateToDetailTransaction = { transactionId ->
-                transactionActions.onNavigateToDetailTransaction(transactionId)
+                transactionActions.onNavigateToTransactionDetail(transactionId)
             }
         )
     }
@@ -85,5 +85,5 @@ interface TransactionActions {
     fun onQueryChange(query: String)
     fun onYearFilterOptionsRequest()
     fun onFilterApply(type: Int?, year: Int?, month: Int?)
-    fun onNavigateToDetailTransaction(transactionId: Long)
+    fun onNavigateToTransactionDetail(transactionId: Long)
 }

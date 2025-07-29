@@ -242,6 +242,7 @@ fun BarChartGraph(
         transactionWeeklySummary.forEachIndexed { index, value ->
             val incomeGraphValue = value.totalIncome.toFloat() / max
             val expenseGraphValue = value.totalExpense.toFloat() / max
+            val graphSpacerWeight = calculateBarGraphSpacerWeight(transactionWeeklySummary.size)
 
             val isSelected = index == selectedIndex
             val offsetY = remember { Animatable(300f) }
@@ -263,6 +264,9 @@ fun BarChartGraph(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.Bottom,
             ) {
+                if (transactionWeeklySummary.size < 7) {
+                    Spacer(modifier = Modifier.weight(graphSpacerWeight))
+                }
                 Box(
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.extraSmall)
@@ -279,6 +283,9 @@ fun BarChartGraph(
                         .offset { IntOffset(x = 0, y = offsetY.value.toInt()) }
                         .background(if (isSelected) Blue else Red600)
                 )
+                if (transactionWeeklySummary.size < 7) {
+                    Spacer(modifier = Modifier.weight(graphSpacerWeight))
+                }
             }
             BarChartGraphInformation(
                 transactionWeeklySummary = transactionWeeklySummary,
@@ -372,6 +379,15 @@ private fun calculateScaleLabel(value: Long): List<BarChartScaleLabel> {
         BarChartScaleLabel(amount = fourthScale, fraction = 0.75f),
         BarChartScaleLabel(amount = lastScale, fraction = 1f)
     )
+}
+
+private fun calculateBarGraphSpacerWeight(barSize: Int): Float {
+    return when (barSize) {
+        1 -> 4f
+        2 -> 2f
+        3 -> 1f
+        else -> 0f
+    }
 }
 
 data class AnalyticsBarChartState(

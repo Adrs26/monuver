@@ -1,5 +1,6 @@
 package com.android.monu.presentation.screen.budgeting
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -16,7 +17,8 @@ import com.android.monu.ui.theme.MonuTheme
 
 @Composable
 fun BudgetingScreen(
-    onHistoryClick: () -> Unit
+    onHistoryClick: () -> Unit,
+    onItemClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -34,7 +36,11 @@ fun BudgetingScreen(
                 modifier = Modifier.padding(top = 24.dp, bottom = 8.dp, start = 16.dp),
                 style = MaterialTheme.typography.titleMedium
             )
-            BudgetingListItem()
+            BudgetingListItem(
+                modifier = Modifier.clickable {
+                    onItemClick()
+                }
+            )
             BudgetingListItem()
             BudgetingListItem()
             BudgetingListItem()
@@ -48,7 +54,8 @@ fun BudgetingScreen(
 fun BudgetingScreenPreview() {
     MonuTheme {
         BudgetingScreen(
-            onHistoryClick = { }
+            onHistoryClick = { },
+            onItemClick = { }
         )
     }
 }

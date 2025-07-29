@@ -63,9 +63,10 @@ import com.android.monu.presentation.utils.TransactionType
 import com.android.monu.ui.navigation.Account
 import com.android.monu.ui.navigation.Analytics
 import com.android.monu.ui.navigation.Budgeting
+import com.android.monu.ui.navigation.BudgetingDetail
 import com.android.monu.ui.navigation.Home
 import com.android.monu.ui.navigation.MainAddTransaction
-import com.android.monu.ui.navigation.MainDetailTransaction
+import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.Settings
 import com.android.monu.ui.navigation.Transaction
 import com.android.monu.ui.navigation.Transfer
@@ -182,8 +183,8 @@ fun MainScreen(
                         viewModel.applyFilter(type = type, year = year, month = month)
                     }
 
-                    override fun onNavigateToDetailTransaction(transactionId: Long) {
-                        rootNavController.navigate(MainDetailTransaction(id = transactionId))
+                    override fun onNavigateToTransactionDetail(transactionId: Long) {
+                        rootNavController.navigate(MainTransactionDetail(id = transactionId))
                     }
                 }
 
@@ -194,7 +195,8 @@ fun MainScreen(
             }
             composable<Budgeting> {
                 BudgetingScreen(
-                    onHistoryClick = { }
+                    onHistoryClick = { },
+                    onItemClick = { rootNavController.navigate(BudgetingDetail) }
                 )
             }
             composable<Analytics> {

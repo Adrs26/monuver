@@ -28,14 +28,14 @@ fun AccountContent(
         accounts.isEmpty() -> {
             AccountEmptyListContent(
                 totalAccountBalance = totalAccountBalance,
-                modifier = modifier.padding(16.dp)
+                modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
             )
         }
         else -> {
             AccountListContent(
                 accounts = accounts,
                 totalAccountBalance = totalAccountBalance,
-                modifier = modifier
+                modifier = modifier.padding(top = 8.dp)
             )
         }
     }
