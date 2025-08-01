@@ -5,15 +5,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.android.monu.domain.model.transaction.TransactionDailySummary
 import com.android.monu.domain.model.transaction.TransactionAmountSummary
 import com.android.monu.domain.model.transaction.TransactionCategorySummary
-import com.android.monu.presentation.screen.analytics.components.AnalyticsAmountOverview
+import com.android.monu.domain.model.transaction.TransactionDailySummary
 import com.android.monu.presentation.screen.analytics.components.AnalyticsAppBar
+import com.android.monu.presentation.screen.analytics.components.AnalyticsBalanceOverview
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChart
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChartState
 import com.android.monu.presentation.screen.analytics.components.AnalyticsPieChart
@@ -26,7 +28,8 @@ fun AnalyticsScreen(
     val analyticsBarChartState = AnalyticsBarChartState(
         monthFilter = analyticsState.monthFilter,
         yearFilter = analyticsState.yearFilter,
-        weekFilter = analyticsState.weekFilter
+        weekFilter = analyticsState.weekFilter,
+        dailySummaries = analyticsState.dailySummaries
     )
 
     Scaffold(
@@ -46,20 +49,29 @@ fun AnalyticsScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            AnalyticsAmountOverview(
-                transactionAmount = analyticsState.transactionAmountSummary,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 24.dp)
+            AnalyticsBalanceOverview(
+                amountSummary = analyticsState.amountSummary,
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp)
+            )
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant
             )
             AnalyticsBarChart(
-                transactionWeeklySummary = analyticsState.transactionWeeklySummary,
-                analyticsBarChartState = analyticsBarChartState,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                barChartState = analyticsBarChartState,
+                modifier = Modifier.padding(horizontal = 16.dp),
                 onWeekChange = { analyticsActions.onWeekChange(it) },
+            )
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant
             )
             AnalyticsPieChart(
                 typeValue = analyticsState.typeFilter,
-                parentCategoriesSummary = analyticsState.parentCategoriesSummary,
-                modifier = Modifier.padding(vertical = 24.dp),
+                categorySummaries = analyticsState.categorySummaries,
+                modifier = Modifier.padding(bottom = 24.dp),
                 onTypeChange = { analyticsActions.onTypeChange(it) }
             )
         }
@@ -72,9 +84,9 @@ data class AnalyticsState(
     val typeFilter: Int,
     val weekFilter: Int,
     val yearFilterOptions: List<Int>,
-    val transactionAmountSummary: TransactionAmountSummary,
-    val parentCategoriesSummary: List<TransactionCategorySummary>,
-    val transactionWeeklySummary: List<TransactionDailySummary>,
+    val amountSummary: TransactionAmountSummary,
+    val categorySummaries: List<TransactionCategorySummary>,
+    val dailySummaries: List<TransactionDailySummary>,
 )
 
 interface AnalyticsActions {

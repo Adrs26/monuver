@@ -55,7 +55,7 @@ fun TransactionScreen(
         )
         TransactionList(
             transactions = transactionState.transactions,
-            onNavigateToDetailTransaction = { transactionId ->
+            onNavigateToTransactionDetail = { transactionId ->
                 transactionActions.onNavigateToTransactionDetail(transactionId)
             }
         )

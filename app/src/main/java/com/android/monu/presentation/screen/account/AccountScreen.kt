@@ -18,7 +18,7 @@ import com.android.monu.ui.theme.MonuTheme
 @Composable
 fun AccountScreen(
     accounts: List<Account>,
-    totalAccountBalance: Long,
+    totalBalance: Long,
     onNavigateBack: () -> Unit,
     onNavigateToAddAccount: () -> Unit
 ) {
@@ -35,7 +35,7 @@ fun AccountScreen(
     ) { innerPadding ->
         AccountContent(
             accounts = accounts,
-            totalAccountBalance = totalAccountBalance,
+            totalBalance = totalBalance,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -47,7 +47,7 @@ fun AccountScreenPreview() {
     MonuTheme {
         AccountScreen(
             accounts = emptyList(),
-            totalAccountBalance = 0L,
+            totalBalance = 0L,
             onNavigateBack = { },
             onNavigateToAddAccount = { }
         )

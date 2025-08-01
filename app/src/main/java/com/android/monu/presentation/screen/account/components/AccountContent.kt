@@ -21,20 +21,22 @@ import com.android.monu.domain.model.account.Account
 @Composable
 fun AccountContent(
     accounts: List<Account>,
-    totalAccountBalance: Long,
+    totalBalance: Long,
     modifier: Modifier = Modifier
 ) {
     when  {
         accounts.isEmpty() -> {
             AccountEmptyListContent(
-                totalAccountBalance = totalAccountBalance,
-                modifier = modifier.padding(start = 16.dp, end = 16.dp, top = 8.dp)
+                totalBalance = totalBalance,
+                modifier = modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp)
             )
         }
         else -> {
             AccountListContent(
                 accounts = accounts,
-                totalAccountBalance = totalAccountBalance,
+                totalBalance = totalBalance,
                 modifier = modifier.padding(top = 8.dp)
             )
         }
@@ -44,7 +46,7 @@ fun AccountContent(
 @Composable
 fun AccountListContent(
     accounts: List<Account>,
-    totalAccountBalance: Long,
+    totalBalance: Long,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -54,7 +56,7 @@ fun AccountListContent(
     ) {
         item {
             AccountOverview(
-                totalAccountBalance = totalAccountBalance,
+                totalBalance = totalBalance,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -81,7 +83,7 @@ fun AccountListContent(
 
 @Composable
 fun AccountEmptyListContent(
-    totalAccountBalance: Long,
+    totalBalance: Long,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -90,7 +92,7 @@ fun AccountEmptyListContent(
             .background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        AccountOverview(totalAccountBalance = totalAccountBalance)
+        AccountOverview(totalBalance = totalBalance)
         Text(
             text = stringResource(R.string.your_list_account),
             modifier = Modifier.padding(top = 24.dp),

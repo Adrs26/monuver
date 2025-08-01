@@ -30,12 +30,12 @@ fun NavGraphBuilder.accountNavGraph(
             popExitTransition = { NavigationAnimation.popExit }
         ) {
             val viewModel = koinViewModel<AccountViewModel>()
-            val totalAccountBalance by viewModel.totalAccountBalance.collectAsStateWithLifecycle()
+            val totalBalance by viewModel.totalAccountBalance.collectAsStateWithLifecycle()
             val accounts by viewModel.accounts.collectAsStateWithLifecycle()
 
             AccountScreen(
                 accounts = accounts,
-                totalAccountBalance = totalAccountBalance,
+                totalBalance = totalBalance,
                 onNavigateBack = { navController.navigateUp() },
                 onNavigateToAddAccount = { navController.navigate(route = AddAccount) }
             )

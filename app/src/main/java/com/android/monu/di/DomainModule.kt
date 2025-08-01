@@ -15,7 +15,7 @@ import com.android.monu.domain.usecase.finance.UpdateTransferTransactionUseCase
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsUseCase
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
 import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
-import com.android.monu.domain.usecase.transaction.GetTransactionAmountSummaryUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionBalanceSummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionSummaryUseCase
@@ -30,7 +30,7 @@ val domainModule = module {
     factory { GetAllTransactionsUseCase(get()) }
     factory { GetTransactionByIdUseCase(get()) }
     factory { GetDistinctTransactionYearsUseCase(get()) }
-    factory { GetTransactionAmountSummaryUseCase(get()) }
+    factory { GetTransactionBalanceSummaryUseCase(get()) }
     factory { GetTransactionCategorySummaryUseCase(get()) }
     factory { GetTransactionSummaryUseCase(get()) }
 

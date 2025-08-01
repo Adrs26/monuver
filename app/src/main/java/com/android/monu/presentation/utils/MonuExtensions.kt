@@ -2,9 +2,7 @@ package com.android.monu.presentation.utils
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -45,17 +43,12 @@ fun String.showMessageWithToast(context: Context) {
 @Composable
 fun Modifier.debouncedClickable(
     debounceTime: Long = 700L,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    indication: Indication? = null,
     onClick: () -> Unit
 ): Modifier {
     var lastClickTime by remember { mutableLongStateOf(0L) }
 
     return this.then(
-        Modifier.clickable(
-            interactionSource = interactionSource,
-            indication = indication
-        ) {
+        Modifier.clickable {
             val currentTime = System.currentTimeMillis()
             if (currentTime - lastClickTime >= debounceTime) {
                 lastClickTime = currentTime

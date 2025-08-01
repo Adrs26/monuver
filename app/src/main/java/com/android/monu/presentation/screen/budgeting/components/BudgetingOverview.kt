@@ -33,7 +33,7 @@ fun BudgetingOverview(
         modifier = modifier.border(
             width = 1.dp,
             color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = RoundedCornerShape(16.dp)
+            shape = MaterialTheme.shapes.medium
         ),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)

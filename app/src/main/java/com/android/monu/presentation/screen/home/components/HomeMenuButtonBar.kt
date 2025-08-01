@@ -1,63 +1,67 @@
 package com.android.monu.presentation.screen.home.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.theme.interFontFamily
 import com.android.monu.presentation.utils.debouncedClickable
+import com.android.monu.ui.theme.Blue800
+import com.android.monu.ui.theme.Green600
+import com.android.monu.ui.theme.Red600
 
 @Composable
 fun HomeMenuButtonBar(
     modifier: Modifier = Modifier,
-    navigateToBudgeting: () -> Unit
+    onNavigateToAddIncomeTransaction: () -> Unit,
+    onNavigateToAddExpenseTransaction: () -> Unit,
+    onNavigateToTransfer: () -> Unit
 ) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
     ) {
         HomeMenuButton(
-            icon = R.drawable.ic_donut,
-            title = stringResource(R.string.budgeting),
+            icon = R.drawable.ic_arrow_upward,
+            iconColor = Green600,
+            title = "Pemasukan",
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f),
-            onClick = navigateToBudgeting
+            onClick = { onNavigateToAddIncomeTransaction() }
         )
         HomeMenuButton(
-            icon = R.drawable.ic_receipt_long,
-            title = stringResource(R.string.bills),
+            icon = R.drawable.ic_arrow_downward,
+            iconColor = Red600,
+            title = "Pengeluaran",
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f),
-            onClick = { }
+            onClick = { onNavigateToAddExpenseTransaction() }
         )
         HomeMenuButton(
-            icon = R.drawable.ic_flag,
-            title = stringResource(R.string.goals),
+            icon = R.drawable.ic_compare_arrows,
+            iconColor = Blue800,
+            title = "Transfer",
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f),
-            onClick = { }
+            onClick = { onNavigateToTransfer() }
         )
-        HomeMenuButton(
-            icon = R.drawable.ic_currency_exchange,
-            title = stringResource(R.string.currency),
+        SavingMenuButton(
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f),
@@ -69,39 +73,76 @@ fun HomeMenuButtonBar(
 @Composable
 fun HomeMenuButton(
     icon: Int,
+    iconColor: Color,
     title: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
     Column(
-        modifier = modifier
-            .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-            .padding(12.dp)
-            .debouncedClickable { onClick() },
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            painter = painterResource(icon),
-            contentDescription = null,
-            tint = Color.Black
-        )
+        Box(
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = MaterialTheme.shapes.extraSmall
+                )
+                .size(48.dp)
+                .clip(MaterialTheme.shapes.extraSmall)
+                .debouncedClickable { onClick() },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(icon),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = iconColor
+            )
+        }
         Text(
             text = title,
             modifier = Modifier.padding(top = 8.dp),
-            style = TextStyle(
-                fontSize = 10.sp,
-                fontFamily = interFontFamily,
-                fontWeight = FontWeight.Normal,
-                color = Color.Black
-            )
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.labelSmall
         )
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun HomeMenuButtonBarPreview() {
-    HomeMenuButtonBar(
-        navigateToBudgeting = { }
-    )
+fun SavingMenuButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = MaterialTheme.shapes.extraSmall
+                )
+                .size(48.dp)
+                .clip(MaterialTheme.shapes.extraSmall)
+                .debouncedClickable { onClick() },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_savings_in),
+                contentDescription = null,
+                modifier = Modifier.size(36.dp),
+                tint = Blue800
+            )
+        }
+        Text(
+            text = "Menabung",
+            modifier = Modifier.padding(top = 8.dp),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.labelSmall
+        )
+    }
 }

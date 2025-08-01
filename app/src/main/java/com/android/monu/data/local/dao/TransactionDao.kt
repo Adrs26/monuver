@@ -57,6 +57,8 @@ interface TransactionDao {
         WITH all_dates AS (
             SELECT DISTINCT DATE(date) as date
             FROM `transaction`
+            WHERE strftime('%m', date) = printf('%02d', :month)
+                AND strftime('%Y', date) = CAST(:year AS TEXT)
         ),
         daily_totals AS (
             SELECT 

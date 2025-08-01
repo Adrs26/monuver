@@ -52,8 +52,7 @@ import com.android.monu.ui.theme.Red600
 
 @Composable
 fun AnalyticsBarChart(
-    transactionWeeklySummary: List<TransactionDailySummary>,
-    analyticsBarChartState: AnalyticsBarChartState,
+    barChartState: AnalyticsBarChartState,
     modifier: Modifier = Modifier,
     onWeekChange: (Int) -> Unit
 ) {
@@ -84,7 +83,7 @@ fun AnalyticsBarChart(
                 )
             }
             WeekFilterDropdown(
-                analyticsBarChartState = analyticsBarChartState,
+                barChartState = barChartState,
                 onWeekChange = onWeekChange
             )
         }
@@ -96,13 +95,13 @@ fun AnalyticsBarChart(
             verticalAlignment = Alignment.Bottom
         ) {
             BarChartYAxis(
-                transactionWeeklySummary = transactionWeeklySummary,
+                dailySummaries = barChartState.dailySummaries,
                 modifier = Modifier.padding(end = 4.dp)
             )
-            BarChartGraph(transactionWeeklySummary = transactionWeeklySummary)
+            BarChartGraph(dailySummaries = barChartState.dailySummaries)
         }
         BarChartXAxis(
-            transactionWeeklySummary = transactionWeeklySummary,
+            dailySummaries = barChartState.dailySummaries,
             modifier = Modifier.padding(start = 52.dp, end = 4.dp, top = 4.dp)
         )
     }
@@ -110,21 +109,21 @@ fun AnalyticsBarChart(
 
 @Composable
 fun WeekFilterDropdown(
-    analyticsBarChartState: AnalyticsBarChartState,
+    barChartState: AnalyticsBarChartState,
     modifier: Modifier = Modifier,
     onWeekChange: (Int) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     val weekFilterOptions = DateHelper.getWeekOptions(
-        month = analyticsBarChartState.monthFilter,
-        year = analyticsBarChartState.yearFilter
+        month = barChartState.monthFilter,
+        year = barChartState.yearFilter
     )
 
     Box(
         modifier = modifier
     ) {
         AnalyticsFilterDropdown(
-            value = DateHelper.formatToWeekString(weekNumber = analyticsBarChartState.weekFilter),
+            value = DateHelper.formatToWeekString(weekNumber = barChartState.weekFilter),
             modifier = Modifier.clickable { expanded = true }
         )
         DropdownMenu(
@@ -151,7 +150,7 @@ fun WeekFilterDropdown(
                         modifier = Modifier
                             .size(24.dp)
                             .padding(end = 8.dp),
-                        tint = if (week == analyticsBarChartState.weekFilter)
+                        tint = if (week == barChartState.weekFilter)
                             MaterialTheme.colorScheme.onBackground else
                                 MaterialTheme.colorScheme.background
                     )
@@ -192,11 +191,11 @@ fun BarChartLegend(
 
 @Composable
 fun BarChartYAxis(
-    transactionWeeklySummary: List<TransactionDailySummary>,
+    dailySummaries: List<TransactionDailySummary>,
     modifier: Modifier = Modifier
 ) {
-    val maxIncome = transactionWeeklySummary.maxOfOrNull { it.totalIncome } ?: 0
-    val maxExpense = transactionWeeklySummary.maxOfOrNull { it.totalExpense } ?: 0
+    val maxIncome = dailySummaries.maxOfOrNull { it.totalIncome } ?: 0
+    val maxExpense = dailySummaries.maxOfOrNull { it.totalExpense } ?: 0
     val max = maxOf(maxIncome, maxExpense).toHighestRangeValue()
     val scaleLabels = calculateScaleLabel(max)
 
@@ -223,13 +222,13 @@ fun BarChartYAxis(
 
 @Composable
 fun BarChartGraph(
-    transactionWeeklySummary: List<TransactionDailySummary>,
+    dailySummaries: List<TransactionDailySummary>,
     modifier: Modifier = Modifier
 ) {
     var selectedIndex by remember { mutableIntStateOf(-1) }
 
-    val maxIncome = transactionWeeklySummary.maxOfOrNull { it.totalIncome } ?: 0
-    val maxExpense = transactionWeeklySummary.maxOfOrNull { it.totalExpense } ?: 0
+    val maxIncome = dailySummaries.maxOfOrNull { it.totalIncome } ?: 0
+    val maxExpense = dailySummaries.maxOfOrNull { it.totalExpense } ?: 0
     val max = maxOf(maxIncome, maxExpense).toHighestRangeValue()
 
     Row(
@@ -239,10 +238,10 @@ fun BarChartGraph(
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        transactionWeeklySummary.forEachIndexed { index, value ->
+        dailySummaries.forEachIndexed { index, value ->
             val incomeGraphValue = value.totalIncome.toFloat() / max
             val expenseGraphValue = value.totalExpense.toFloat() / max
-            val graphSpacerWeight = calculateBarGraphSpacerWeight(transactionWeeklySummary.size)
+            val graphSpacerWeight = calculateBarGraphSpacerWeight(dailySummaries.size)
 
             val isSelected = index == selectedIndex
             val offsetY = remember { Animatable(300f) }
@@ -264,7 +263,7 @@ fun BarChartGraph(
                 horizontalArrangement = Arrangement.spacedBy(2.dp),
                 verticalAlignment = Alignment.Bottom,
             ) {
-                if (transactionWeeklySummary.size < 7) {
+                if (dailySummaries.size < 7) {
                     Spacer(modifier = Modifier.weight(graphSpacerWeight))
                 }
                 Box(
@@ -283,12 +282,12 @@ fun BarChartGraph(
                         .offset { IntOffset(x = 0, y = offsetY.value.toInt()) }
                         .background(if (isSelected) Blue else Red600)
                 )
-                if (transactionWeeklySummary.size < 7) {
+                if (dailySummaries.size < 7) {
                     Spacer(modifier = Modifier.weight(graphSpacerWeight))
                 }
             }
             BarChartGraphInformation(
-                transactionWeeklySummary = transactionWeeklySummary,
+                dailySummaries = dailySummaries,
                 selectedIndex = selectedIndex,
                 index = index,
                 onSelectedIndexReset = { selectedIndex = -1 }
@@ -299,7 +298,7 @@ fun BarChartGraph(
 
 @Composable
 fun BarChartGraphInformation(
-    transactionWeeklySummary: List<TransactionDailySummary>,
+    dailySummaries: List<TransactionDailySummary>,
     selectedIndex: Int,
     index: Int,
     onSelectedIndexReset: () -> Unit
@@ -317,7 +316,7 @@ fun BarChartGraphInformation(
             Text(
                 text = stringResource(
                     R.string.bar_chart_income_information,
-                    NumberFormatHelper.formatToRupiah(transactionWeeklySummary[index].totalIncome)
+                    NumberFormatHelper.formatToRupiah(dailySummaries[index].totalIncome)
                 ),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
@@ -327,7 +326,7 @@ fun BarChartGraphInformation(
             Text(
                 text = stringResource(
                     R.string.bar_chart_expense_information,
-                    NumberFormatHelper.formatToRupiah(transactionWeeklySummary[index].totalExpense)
+                    NumberFormatHelper.formatToRupiah(dailySummaries[index].totalExpense)
                 ),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
@@ -335,7 +334,7 @@ fun BarChartGraphInformation(
                 )
             )
             Text(
-                text = DateHelper.formatDateToReadable(transactionWeeklySummary[index].date),
+                text = DateHelper.formatDateToReadable(dailySummaries[index].date),
                 modifier = Modifier.padding(top = 8.dp),
                 style = MaterialTheme.typography.labelSmall
             )
@@ -345,14 +344,14 @@ fun BarChartGraphInformation(
 
 @Composable
 fun BarChartXAxis(
-    transactionWeeklySummary: List<TransactionDailySummary>,
+    dailySummaries: List<TransactionDailySummary>,
     modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        transactionWeeklySummary.forEach {
+        dailySummaries.forEach {
             Text(
                 text = DateHelper.formatToShortDate(it.date),
                 modifier = Modifier.weight(1f),
@@ -394,6 +393,7 @@ data class AnalyticsBarChartState(
     val monthFilter: Int,
     val yearFilter: Int,
     val weekFilter: Int,
+    val dailySummaries: List<TransactionDailySummary>
 )
 
 data class BarChartScaleLabel(

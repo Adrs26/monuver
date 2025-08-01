@@ -42,7 +42,7 @@ import com.android.monu.presentation.utils.NumberFormatHelper
 @Composable
 fun AnalyticsPieChart(
     typeValue: Int,
-    parentCategoriesSummary: List<TransactionCategorySummary>,
+    categorySummaries: List<TransactionCategorySummary>,
     modifier: Modifier = Modifier,
     onTypeChange: (Int) -> Unit
 ) {
@@ -69,9 +69,9 @@ fun AnalyticsPieChart(
                 .padding(32.dp),
             contentAlignment = Alignment.Center
         ) {
-            PieChart(values = parentCategoriesSummary)
+            PieChart(values = categorySummaries)
         }
-        AnalyticsPieChartDetail(parentCategoriesSummary = parentCategoriesSummary)
+        AnalyticsPieChartDetail(categorySummaries = categorySummaries)
     }
 }
 
@@ -132,17 +132,17 @@ fun TypeFilterDropdown(
 
 @Composable
 fun AnalyticsPieChartDetail(
-    parentCategoriesSummary: List<TransactionCategorySummary>,
+    categorySummaries: List<TransactionCategorySummary>,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
     ) {
-        parentCategoriesSummary.forEach { data ->
+        categorySummaries.forEach { data ->
             AnalyticsPieChartDetailData(
                 category = data.parentCategory,
                 amount = data.totalAmount,
-                total = parentCategoriesSummary.sumOf { it.totalAmount },
+                total = categorySummaries.sumOf { it.totalAmount },
                 modifier = Modifier
                     .clickable { }
                     .padding(horizontal = 16.dp, vertical = 8.dp)

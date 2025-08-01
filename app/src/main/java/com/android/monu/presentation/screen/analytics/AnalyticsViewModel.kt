@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
-import com.android.monu.domain.usecase.transaction.GetTransactionAmountSummaryUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionBalanceSummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionSummaryUseCase
 import com.android.monu.presentation.utils.DateHelper
 import com.android.monu.presentation.utils.TransactionType
@@ -21,7 +21,7 @@ import org.threeten.bp.LocalDate
 
 class AnalyticsViewModel(
     private val getDistinctTransactionYearsUseCase: GetDistinctTransactionYearsUseCase,
-    private val getTransactionAmountSummaryUseCase: GetTransactionAmountSummaryUseCase,
+    private val getTransactionBalanceSummaryUseCase: GetTransactionBalanceSummaryUseCase,
     private val getTransactionCategorySummaryUseCase: GetTransactionCategorySummaryUseCase,
     private val getTransactionSummaryUseCase: GetTransactionSummaryUseCase
 ) : ViewModel() {
@@ -38,14 +38,14 @@ class AnalyticsViewModel(
     @OptIn(ExperimentalCoroutinesApi::class)
     val transactionAmountSummary = _filterState
         .flatMapLatest { filters ->
-            getTransactionAmountSummaryUseCase(
+            getTransactionBalanceSummaryUseCase(
                 month = filters.month,
                 year = filters.year
             )
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val transactionParentCategorySummary = _filterState
+    val transactionCategorySummaries = _filterState
         .flatMapLatest { filters ->
             getTransactionCategorySummaryUseCase(
                 type = filters.type,
@@ -55,7 +55,7 @@ class AnalyticsViewModel(
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val transactionWeeklySummary = _filterState
+    val transactionDailySummaries = _filterState
         .flatMapLatest { filters ->
             getTransactionSummaryUseCase(
                 month = filters.month,

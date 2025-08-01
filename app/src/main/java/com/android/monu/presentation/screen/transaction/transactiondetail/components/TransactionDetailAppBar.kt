@@ -14,6 +14,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.android.monu.R
+import com.android.monu.presentation.components.DebouncedIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +44,7 @@ fun TransactionDetailAppBar(
             }
         },
         actions = {
-            IconButton(
+            DebouncedIconButton(
                 onClick = onEditClick
             ) {
                 Icon(
@@ -52,7 +53,7 @@ fun TransactionDetailAppBar(
                     tint = MaterialTheme.colorScheme.onBackground
                 )
             }
-            IconButton(
+            DebouncedIconButton(
                 onClick = onDeleteClick
             ) {
                 Icon(

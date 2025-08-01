@@ -144,7 +144,7 @@
     <string name="your_account_successfully_created">Akun kamu berhasil dibuat</string>
     <string name="add_new_account">Tambah akun baru</string>
     <string name="your_list_account">Daftar akun kamu</string>
-    <string name="total_account_balance">Jumlah saldo semua akun</string>
+    <string name="total_account_balance">Total saldo semua akun</string>
     <string name="total_income">Total pemasukan</string>
     <string name="total_expense">Total pengeluaran</string>
     <string name="average_per_day">Rata-rata per hari</string>

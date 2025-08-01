@@ -54,17 +54,19 @@ import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.analytics.AnalyticsState
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.budgeting.BudgetingScreen
+import com.android.monu.presentation.screen.home.HomeActions
 import com.android.monu.presentation.screen.home.HomeScreen
+import com.android.monu.presentation.screen.home.HomeViewModel
 import com.android.monu.presentation.screen.transaction.TransactionActions
 import com.android.monu.presentation.screen.transaction.TransactionScreen
 import com.android.monu.presentation.screen.transaction.TransactionState
 import com.android.monu.presentation.screen.transaction.TransactionViewModel
 import com.android.monu.presentation.utils.TransactionType
-import com.android.monu.ui.navigation.Account
 import com.android.monu.ui.navigation.Analytics
 import com.android.monu.ui.navigation.Budgeting
 import com.android.monu.ui.navigation.BudgetingDetail
 import com.android.monu.ui.navigation.Home
+import com.android.monu.ui.navigation.MainAccount
 import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.Settings
@@ -140,19 +142,64 @@ fun MainScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable<Home> {
-                HomeScreen(
-                    totalIncomeAmount = 0,
-                    totalExpenseAmount = 0,
-                    recentTransactions = emptyList(),
-                    navigateToSettings = { rootNavController.navigate(Settings) },
-                    navigateToBudgeting = { rootNavController.navigate(Account) },
-                    navigateToTransactions = {
+                val viewModel = koinViewModel<HomeViewModel>()
+                val totalBalance by viewModel.totalAccountBalance.collectAsStateWithLifecycle()
+                val recentTransactions by viewModel.recentTransactions.collectAsStateWithLifecycle()
+
+                val homeActions = object : HomeActions {
+                    override fun onNavigateToSettings() {
+                        rootNavController.navigate(Settings)
+                    }
+
+                    override fun onNavigateToAccount() {
+                        rootNavController.navigate(MainAccount)
+                    }
+
+                    override fun onNavigateToAddIncomeTransaction() {
+                        rootNavController.navigate(
+                            MainAddTransaction(
+                                type = TransactionType.INCOME
+                            )
+                        )
+                    }
+
+                    override fun onNavigateToAddExpenseTransaction() {
+                        rootNavController.navigate(
+                            MainAddTransaction(
+                                type = TransactionType.EXPENSE
+                            )
+                        )
+                    }
+
+                    override fun onNavigateToTransfer() {
+                        rootNavController.navigate(Transfer)
+                    }
+
+                    override fun onNavigateToTransaction() {
                         mainNavController.navigate(Transaction) {
                             popUpTo(mainNavController.graph.startDestinationId) { saveState = true }
                             restoreState = true
                             launchSingleTop = true
                         }
                     }
+
+                    override fun onNavigateToTransactionDetail(transactionId: Long) {
+                        rootNavController.navigate(MainTransactionDetail(id = transactionId))
+                    }
+
+                    override fun onNavigateToBudgeting() {
+                        mainNavController.navigate(Budgeting) {
+                            popUpTo(mainNavController.graph.startDestinationId) { saveState = true }
+                            restoreState = true
+                            launchSingleTop = true
+                        }
+                    }
+                }
+
+                HomeScreen(
+                    totalBalance = totalBalance,
+                    recentTransactions = recentTransactions,
+                    homeActions = homeActions
                 )
             }
             composable<Transaction> {
@@ -203,11 +250,11 @@ fun MainScreen(
                 val viewModel = koinViewModel<AnalyticsViewModel>()
                 val filter by viewModel.filterState.collectAsStateWithLifecycle()
                 val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
-                val transactionAmountSummary by viewModel.transactionAmountSummary
+                val amountSummary by viewModel.transactionAmountSummary
                     .collectAsStateWithLifecycle(initialValue = TransactionAmountSummary())
-                val parentCategoriesSummary by viewModel.transactionParentCategorySummary
+                val categorySummaries by viewModel.transactionCategorySummaries
                     .collectAsStateWithLifecycle(initialValue = emptyList())
-                val transactionWeeklySummary by viewModel.transactionWeeklySummary
+                val dailySummaries by viewModel.transactionDailySummaries
                     .collectAsStateWithLifecycle(initialValue = emptyList())
 
                 val analyticsState = AnalyticsState(
@@ -216,9 +263,9 @@ fun MainScreen(
                     typeFilter = filter.type,
                     weekFilter = filter.week,
                     yearFilterOptions = yearFilterOptions,
-                    transactionAmountSummary = transactionAmountSummary,
-                    parentCategoriesSummary = parentCategoriesSummary,
-                    transactionWeeklySummary = transactionWeeklySummary
+                    amountSummary = amountSummary,
+                    categorySummaries = categorySummaries,
+                    dailySummaries = dailySummaries
                 )
 
                 val analyticsActions = object : AnalyticsActions {
