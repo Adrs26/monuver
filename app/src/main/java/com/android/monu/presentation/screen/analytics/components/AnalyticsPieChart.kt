@@ -197,7 +197,8 @@ fun AnalyticsPieChartDetailData(
         Icon(
             painter = painterResource(R.drawable.ic_arrow_forward),
             contentDescription = null,
-            modifier = Modifier.padding(start = 4.dp)
+            modifier = Modifier.padding(start = 4.dp),
+            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }

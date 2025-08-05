@@ -15,4 +15,7 @@ val databaseModule = module {
     }
     single { get<MonuDatabase>().transactionDao() }
     single { get<MonuDatabase>().accountDao() }
+    single { get<MonuDatabase>().budgetingDao() }
+    single { get<MonuDatabase>().savingDao() }
+    single { get<MonuDatabase>().billDao() }
 }

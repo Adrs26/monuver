@@ -23,7 +23,7 @@ fun AnalyticsFilterDropdown(
         modifier = modifier
             .border(
                 width = 1.dp,
-                color = MaterialTheme.colorScheme.surfaceVariant,
+                color = MaterialTheme.colorScheme.onSurface,
                 shape = MaterialTheme.shapes.small
             )
             .padding(start = 16.dp, end = 8.dp, top = 2.dp, bottom = 2.dp),

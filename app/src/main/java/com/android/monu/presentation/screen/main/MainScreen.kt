@@ -6,21 +6,15 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -33,17 +27,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.R
@@ -57,6 +46,7 @@ import com.android.monu.presentation.screen.budgeting.BudgetingScreen
 import com.android.monu.presentation.screen.home.HomeActions
 import com.android.monu.presentation.screen.home.HomeScreen
 import com.android.monu.presentation.screen.home.HomeViewModel
+import com.android.monu.presentation.screen.main.components.BottomNavigationBar
 import com.android.monu.presentation.screen.transaction.TransactionActions
 import com.android.monu.presentation.screen.transaction.TransactionScreen
 import com.android.monu.presentation.screen.transaction.TransactionState
@@ -349,91 +339,6 @@ fun MainScreen(
 }
 
 @Composable
-fun BottomNavigationBar(
-    navController: NavHostController,
-    modifier: Modifier = Modifier,
-    onItemClick: (String) -> Unit
-) {
-    NavigationBar(
-        modifier = modifier
-            .height(60.dp)
-            .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 8.dp),
-        containerColor = MaterialTheme.colorScheme.background
-    ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
-        val navigationItems = listOf(
-            BottomNavigationItem(
-                title = stringResource(R.string.home_menu),
-                filledIcon = painterResource(R.drawable.ic_home_filled),
-                outlinedIcon = painterResource(R.drawable.ic_home_outlined),
-                destination = Home,
-                route = "Home"
-            ),
-            BottomNavigationItem(
-                title = stringResource(R.string.transaction_menu),
-                filledIcon = painterResource(R.drawable.ic_receipt_filled),
-                outlinedIcon = painterResource(R.drawable.ic_receipt_outlined),
-                destination = Transaction,
-                route = "Transaction"
-            ),
-            BottomNavigationItem(
-                title = stringResource(R.string.budgeting_menu),
-                filledIcon = painterResource(R.drawable.ic_budgeting_filled),
-                outlinedIcon = painterResource(R.drawable.ic_budgeting_outlined),
-                destination = Budgeting,
-                route = "Budgeting"
-            ),
-            BottomNavigationItem(
-                title = stringResource(R.string.analytics_menu),
-                filledIcon = painterResource(R.drawable.ic_analytics_filled),
-                outlinedIcon = painterResource(R.drawable.ic_analytics_outlined),
-                destination = Analytics,
-                route = "Analytics"
-            )
-        )
-
-        navigationItems.map { item ->
-            val selected = isItemSelected(currentRoute, item.route)
-            NavigationBarItem(
-                selected = selected,
-                onClick = {
-                    navController.navigate(item.destination) {
-                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                        restoreState = true
-                        launchSingleTop = true
-                    }
-                    onItemClick(item.route)
-                },
-                icon = {
-                    Icon(
-                        painter = if (selected) item.filledIcon else item.outlinedIcon,
-                        contentDescription = item.title
-                    )
-                },
-                label = {
-                    Text(
-                        text = item.title,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            color = if (selected) MaterialTheme.colorScheme.primary else
-                                MaterialTheme.colorScheme.onSurfaceVariant,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color.Transparent,
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            )
-        }
-    }
-}
-
-@Composable
 fun BottomSheetMenu(
     title: String,
     onMenuSelect: () -> Unit,
@@ -447,16 +352,3 @@ fun BottomSheetMenu(
         style = MaterialTheme.typography.labelMedium
     )
 }
-
-private fun isItemSelected(currentRoute: String?, itemRoute: String): Boolean {
-    if (currentRoute == null) return false
-    return currentRoute.contains(itemRoute, ignoreCase = true)
-}
-
-data class BottomNavigationItem(
-    val title: String,
-    val filledIcon: Painter,
-    val outlinedIcon: Painter,
-    val destination: Any,
-    val route: String
-)

@@ -33,7 +33,7 @@ fun BudgetingAppBar(
                 Icon(
                     painter = painterResource(R.drawable.ic_history),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onBackground
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
         },

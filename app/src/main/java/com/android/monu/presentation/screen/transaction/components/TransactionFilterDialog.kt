@@ -152,7 +152,7 @@ fun RadioGrid(
 ) {
     Text(
         text = title,
-        style = MaterialTheme.typography.labelMedium
+        style = MaterialTheme.typography.titleMedium
     )
     HorizontalDivider(
         modifier = Modifier.padding(vertical = 8.dp),

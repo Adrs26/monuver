@@ -71,7 +71,7 @@ fun BudgetingListItem(
                     )
                 )
                 Text(
-                    text = "01/07/2025 - 31/07/2025",
+                    text = "1 Sep 2025 - 30 Sep 2025",
                     modifier = Modifier.padding(top = 4.dp),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
@@ -112,7 +112,7 @@ fun BudgetingListItem(
                 imageVector = Icons.AutoMirrored.Default.KeyboardArrowRight,
                 contentDescription = null,
                 modifier = Modifier.padding(start = 16.dp),
-                tint = MaterialTheme.colorScheme.onBackground
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
     }

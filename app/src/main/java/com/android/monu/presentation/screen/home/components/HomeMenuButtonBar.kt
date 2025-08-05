@@ -14,7 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
@@ -35,27 +37,27 @@ fun HomeMenuButtonBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         HomeMenuButton(
-            icon = R.drawable.ic_arrow_upward,
+            icon = painterResource(R.drawable.ic_arrow_upward),
             iconColor = Green600,
-            title = "Pemasukan",
+            title = stringResource(R.string.income),
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f),
             onClick = { onNavigateToAddIncomeTransaction() }
         )
         HomeMenuButton(
-            icon = R.drawable.ic_arrow_downward,
+            icon = painterResource(R.drawable.ic_arrow_downward),
             iconColor = Red600,
-            title = "Pengeluaran",
+            title = stringResource(R.string.expense),
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f),
             onClick = { onNavigateToAddExpenseTransaction() }
         )
         HomeMenuButton(
-            icon = R.drawable.ic_compare_arrows,
+            icon = painterResource(R.drawable.ic_compare_arrows),
             iconColor = Blue800,
-            title = "Transfer",
+            title = stringResource(R.string.transfer),
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f),
@@ -72,7 +74,7 @@ fun HomeMenuButtonBar(
 
 @Composable
 fun HomeMenuButton(
-    icon: Int,
+    icon: Painter,
     iconColor: Color,
     title: String,
     modifier: Modifier = Modifier,
@@ -95,7 +97,7 @@ fun HomeMenuButton(
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(icon),
+                painter = icon,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
                 tint = iconColor
@@ -139,7 +141,7 @@ fun SavingMenuButton(
             )
         }
         Text(
-            text = "Menabung",
+            text = stringResource(R.string.saving),
             modifier = Modifier.padding(top = 8.dp),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.labelSmall

@@ -173,4 +173,14 @@
     <string name="choose_source_account">Pilih akun sumber</string>
     <string name="choose_destination_account">Pilih akun tujuan</string>
     <string name="sub_category">Sub-kategori</string>
+    <string name="budgeting_period">Periode</string>
+    <string name="maximum_amount">Saldo maksimal</string>
+    <string name="used">Terpakai</string>
+    <string name="remain">Tersisa</string>
+    <string name="saving">Menabung</string>
+    <string name="see_all">Lihat semua</string>
+    <string name="budgeting_recap">Rekap budget periode ini</string>
+    <string name="see_budgeting">Lihat budget</string>
+    <string name="used_amount">Saldo digunakan</string>
+    <string name="remained_amount">Saldo tersisa</string>
 </resources>

@@ -3,8 +3,6 @@ package com.android.monu.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val Blue = Color(0xFF3674B5)
-val Red = Color(0xFFE53935)
-val Green = Color(0xFF43A047)
 val LightGrey = Color(0xFFE9EDF4)
 val BluePrimary = Color(0xFF0077C0)
 val SoftWhite = Color(0xFFF8FCFB)
@@ -24,3 +22,4 @@ val Pink400 = Color(0xFFEC407A)
 val DeepPurple400 = Color(0xFF7E57C2)
 val Brown400 = Color(0xFF8D6E63)
 val Blue400 = Color(0xFF42A5F5)
+val Charcoal = Color(0xFF36454F)

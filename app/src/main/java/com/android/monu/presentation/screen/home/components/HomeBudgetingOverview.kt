@@ -13,8 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.monu.R
 import com.android.monu.presentation.utils.debouncedClickable
 import com.android.monu.ui.theme.Green600
 
@@ -30,12 +32,12 @@ fun HomeBudgetingOverview(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Rekap budget periode ini",
+                text = stringResource(R.string.budgeting_recap),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = "Lihat budget",
+                text = stringResource(R.string.see_budgeting),
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.extraSmall)
                     .debouncedClickable { onNavigateToBudgeting() }
@@ -75,10 +77,8 @@ fun HomeBudgetingOverview(
                     .padding(start = 48.dp)
             ) {
                 Text(
-                    text = "Saldo maksimal",
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    text = stringResource(R.string.maximum_amount),
+                    style = MaterialTheme.typography.labelSmall
                 )
                 Text(
                     text = "Rp10.000.000",
@@ -86,11 +86,9 @@ fun HomeBudgetingOverview(
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
-                    text = "Saldo digunakan",
+                    text = stringResource(R.string.used_amount),
                     modifier = Modifier.padding(top = 12.dp),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    style = MaterialTheme.typography.labelSmall
                 )
                 Text(
                     text = "Rp2.000.000",
@@ -98,11 +96,9 @@ fun HomeBudgetingOverview(
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
-                    text = "Saldo tersisa",
+                    text = stringResource(R.string.remained_amount),
                     modifier = Modifier.padding(top = 12.dp),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                    style = MaterialTheme.typography.labelSmall
                 )
                 Text(
                     text = "Rp8.000.000",

@@ -59,7 +59,7 @@ fun TransactionSearchBar(
     Box(
         modifier = modifier.border(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurface,
             shape = MaterialTheme.shapes.extraSmall
         )
     ) {
@@ -87,7 +87,7 @@ fun TransactionSearchBar(
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             },
             trailingIcon = {
@@ -100,7 +100,7 @@ fun TransactionSearchBar(
                                 imageVector = Icons.Default.Close,
                                 contentDescription = null,
                                 modifier = Modifier.padding(start = 8.dp),
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
@@ -108,7 +108,7 @@ fun TransactionSearchBar(
                         Icon(
                             painter = painterResource(R.drawable.ic_filter),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -121,9 +121,9 @@ fun TransactionSearchBar(
                 disabledContainerColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
-                cursorColor = MaterialTheme.colorScheme.onBackground,
-                focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                unfocusedTextColor = MaterialTheme.colorScheme.onBackground
+                cursorColor = MaterialTheme.colorScheme.onSurface,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface
             )
         )
     }

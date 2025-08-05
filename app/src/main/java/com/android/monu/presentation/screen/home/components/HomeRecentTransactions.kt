@@ -42,7 +42,7 @@ fun HomeRecentTransactions(
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = "Lihat semua",
+                text = stringResource(R.string.see_all),
                 modifier = Modifier
                     .clip(MaterialTheme.shapes.extraSmall)
                     .debouncedClickable { onNavigateToTransaction() }

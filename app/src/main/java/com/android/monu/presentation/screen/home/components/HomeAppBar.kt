@@ -66,7 +66,7 @@ fun HomeIconButton(
         Icon(
             painter = painterResource(icon),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onBackground
+            tint = MaterialTheme.colorScheme.onSurface
         )
     }
 }
