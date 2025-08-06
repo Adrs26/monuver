@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,7 +27,6 @@ fun TextInputField(
     placeholderText: String,
     modifier: Modifier = Modifier,
     isEnable: Boolean = true,
-    isDatePicker: Boolean = false
 ) {
     Column(
         modifier = modifier
@@ -51,8 +48,7 @@ fun TextInputField(
                 onValueChange = onValueChange,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
-                    .padding(horizontal = 4.dp),
+                    .height(48.dp),
                 enabled = isEnable,
                 textStyle = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
@@ -69,18 +65,11 @@ fun TextInputField(
                 },
                 trailingIcon = {
                     when {
-                        !isEnable && isDatePicker -> {
-                            Icon(
-                                imageVector = Icons.Default.DateRange,
-                                contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
                         !isEnable -> {
                             Icon(
                                 painter = painterResource(R.drawable.ic_arrow_forward),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
                         else -> {}

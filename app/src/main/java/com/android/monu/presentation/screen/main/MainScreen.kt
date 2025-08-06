@@ -57,6 +57,7 @@ import com.android.monu.ui.navigation.Budgeting
 import com.android.monu.ui.navigation.BudgetingDetail
 import com.android.monu.ui.navigation.Home
 import com.android.monu.ui.navigation.MainAccount
+import com.android.monu.ui.navigation.MainAddBudgeting
 import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.Settings
@@ -119,7 +120,7 @@ fun MainScreen(
                     CommonFloatingActionButton {
                         when (selectedMenu) {
                             menuItems[1] -> showBottomSheet = true
-                            menuItems[2] -> {}
+                            menuItems[2] -> rootNavController.navigate(MainAddBudgeting)
                         }
                     }
                 }

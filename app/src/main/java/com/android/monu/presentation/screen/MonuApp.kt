@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.android.monu.presentation.screen.account.accountNavGraph
+import com.android.monu.presentation.screen.budgeting.addBudgetingNavGraph
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailScreen
 import com.android.monu.presentation.screen.main.MainScreen
 import com.android.monu.presentation.screen.settings.settingsNavGraph
@@ -35,6 +36,7 @@ fun MonuApp() {
         detailTransactionNavGraph(navController = rootNavController)
         addTransactionNavGraph(navController = rootNavController)
         transferNavGraph(navController = rootNavController)
+        addBudgetingNavGraph(navController = rootNavController)
 
         composable<BudgetingDetail>(
             enterTransition = { NavigationAnimation.enter },

@@ -1,8 +1,10 @@
 package com.android.monu.presentation.utils
 
+import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.YearMonth
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.TemporalAdjusters
 import java.util.Locale
 
 object DateHelper {
@@ -78,5 +80,27 @@ object DateHelper {
 
         val date = LocalDate.parse(inputDate, inputFormatter)
         return date.format(outputFormatter)
+    }
+
+    fun getFirstDayOfCurrentMonth(): String {
+        val today = LocalDate.now()
+        val yearMonth = YearMonth.from(today)
+        return yearMonth.atDay(1).toString()
+    }
+
+    fun getLastDayOfCurrentMonth(): String {
+        val today = LocalDate.now()
+        val yearMonth = YearMonth.from(today)
+        return yearMonth.atEndOfMonth().toString()
+    }
+
+    fun getFirstDayOfCurrentWeek(): String {
+        val today = LocalDate.now()
+        return today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toString()
+    }
+
+    fun getLastDayOfCurrentWeek(): String {
+        val today = LocalDate.now()
+        return today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).toString()
     }
 }

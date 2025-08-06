@@ -183,4 +183,7 @@
     <string name="see_budgeting">Lihat budget</string>
     <string name="used_amount">Saldo digunakan</string>
     <string name="remained_amount">Saldo tersisa</string>
+    <string name="monthly">Bulanan</string>
+    <string name="weekly">Mingguan</string>
+    <string name="custom">Kustom</string>
 </resources>

@@ -32,3 +32,7 @@ import kotlinx.serialization.Serializable
 @Serializable data class TransferAccount(val type: Int = 0)
 
 @Serializable object BudgetingDetail
+
+@Serializable object AddBudgeting
+@Serializable object MainAddBudgeting
+@Serializable object AddBudgetingCategory

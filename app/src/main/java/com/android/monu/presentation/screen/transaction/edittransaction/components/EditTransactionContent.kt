@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.presentation.components.StaticTextInputField
 import com.android.monu.presentation.components.TextAmountInputField
+import com.android.monu.presentation.components.TextDateInputField
 import com.android.monu.presentation.components.TextInputField
 import com.android.monu.presentation.utils.DatabaseCodeMapper
 import com.android.monu.presentation.utils.DateHelper
@@ -57,20 +58,19 @@ fun EditTransactionContent(
                 .padding(horizontal = 16.dp),
             isEnable = false
         )
-        TextInputField(
+        TextDateInputField(
             title = stringResource(R.string.date),
             value = DateHelper.formatDateToReadable(transactionState.date),
             onValueChange = { },
             placeholderText = stringResource(R.string.choose_transaction_date),
+            isEnable = true,
             modifier = Modifier
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = { transactionActions.onDateClick() }
                 )
-                .padding(horizontal = 16.dp),
-            isEnable = false,
-            isDatePicker = true
+                .padding(horizontal = 16.dp)
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),

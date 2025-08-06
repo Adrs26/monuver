@@ -63,7 +63,7 @@ fun HomeBalanceOverview(
                 painter = painterResource(R.drawable.ic_account_balance_wallet),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
     }

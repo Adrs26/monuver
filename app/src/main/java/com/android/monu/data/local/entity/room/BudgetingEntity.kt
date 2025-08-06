@@ -7,8 +7,7 @@ import androidx.room.PrimaryKey
 data class BudgetingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val parentCategory: Int,
-    val childCategory: Int,
+    val category: Int,
     val startDate: String,
     val endDate: String,
     val maxAmount: Long,

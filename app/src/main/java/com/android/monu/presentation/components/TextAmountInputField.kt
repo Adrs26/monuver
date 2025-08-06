@@ -50,8 +50,7 @@ fun TextAmountInputField(
                 onValueChange = onValueChange,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp)
-                    .padding(horizontal = 4.dp),
+                    .height(48.dp),
                 textStyle = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp),
                 placeholder = {
                     Text(

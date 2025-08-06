@@ -47,8 +47,7 @@ fun StaticTextInputField(
                         shape = MaterialTheme.shapes.medium
                     )
                     .fillMaxWidth()
-                    .height(48.dp)
-                    .padding(horizontal = 4.dp),
+                    .height(48.dp),
                 enabled = false,
                 textStyle = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,

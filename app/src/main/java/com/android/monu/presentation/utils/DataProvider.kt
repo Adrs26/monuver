@@ -88,6 +88,19 @@ object DataProvider {
         )
     }
 
+    fun getExpenseParentCategory(): List<Int> {
+        return listOf(
+            TransactionParentCategory.FOOD_BEVERAGES,
+            TransactionParentCategory.BILLS_UTILITIES,
+            TransactionParentCategory.TRANSPORTATION,
+            TransactionParentCategory.HEALTH_PERSONAL_CARE,
+            TransactionParentCategory.EDUCATION,
+            TransactionParentCategory.SHOPPING,
+            TransactionParentCategory.ENTERTAINMENT,
+            TransactionParentCategory.OTHER_EXPENSE
+        )
+    }
+
     fun getTransactionTypeFilterOptions(): List<Int> {
         return listOf(
             TransactionType.ALL,
