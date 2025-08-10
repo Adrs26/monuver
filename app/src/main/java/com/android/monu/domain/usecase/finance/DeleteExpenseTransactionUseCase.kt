@@ -7,15 +7,14 @@ class DeleteExpenseTransactionUseCase(
     private val repository: FinanceRepository
 ) {
     suspend operator fun invoke(transaction: Transaction): Result<Int> {
-        return try {
-            val rowDeleted = repository.deleteExpenseTransaction(
+        return runCatching {
+            repository.deleteExpenseTransaction(
                 id = transaction.id,
+                parentCategory = transaction.parentCategory,
+                date = transaction.date,
                 sourceId = transaction.sourceId,
                 amount = transaction.amount
             )
-            Result.success(rowDeleted)
-        } catch (e: Exception) {
-            Result.failure(e)
         }
     }
 }

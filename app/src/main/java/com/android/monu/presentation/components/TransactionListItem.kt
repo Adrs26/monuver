@@ -24,7 +24,7 @@ import com.android.monu.ui.theme.Red600
 
 @Composable
 fun TransactionListItem(
-    transactionState: TransactionListState,
+    transactionState: TransactionListItemState,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -81,7 +81,7 @@ private fun transactionAmountColor(type: Int): Color {
     }
 }
 
-data class TransactionListState(
+data class TransactionListItemState(
     val id: Long,
     val title: String,
     val type: Int,

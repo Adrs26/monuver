@@ -353,7 +353,7 @@ fun BarChartXAxis(
     ) {
         dailySummaries.forEach {
             Text(
-                text = DateHelper.formatToShortDate(it.date),
+                text = DateHelper.formatToBarChartDate(it.date),
                 modifier = Modifier.weight(1f),
                 style = MaterialTheme.typography.labelSmall.copy(
                     fontSize = 8.sp,

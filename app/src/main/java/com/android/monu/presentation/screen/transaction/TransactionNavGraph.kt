@@ -271,41 +271,45 @@ fun NavGraphBuilder.detailTransactionNavGraph(
                 parametersOf(it.savedStateHandle)
             }
             val transaction by viewModel.transaction.collectAsStateWithLifecycle()
+            val initialTransaction by viewModel.initialTransaction.collectAsStateWithLifecycle()
             val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
 
             transaction?.let { transaction ->
-                val editTransactionState = EditTransactionState(
-                    id = transaction.id,
-                    title = transaction.title,
-                    type = transaction.type,
-                    parentCategory = transaction.parentCategory,
-                    childCategory = transaction.childCategory,
-                    date = transaction.date,
-                    amount = transaction.amount,
-                    sourceId = transaction.sourceId,
-                    sourceName = transaction.sourceName,
-                    editResult = editResult
-                )
+                initialTransaction?.let { initialTransaction ->
+                    val editTransactionState = EditTransactionState(
+                        id = transaction.id,
+                        title = transaction.title,
+                        type = transaction.type,
+                        parentCategory = transaction.parentCategory,
+                        childCategory = transaction.childCategory,
+                        date = transaction.date,
+                        amount = transaction.amount,
+                        sourceId = transaction.sourceId,
+                        sourceName = transaction.sourceName,
+                        editResult = editResult
+                    )
 
-                val editTransactionActions = object : EditTransactionActions {
-                    override fun onNavigateBack() {
-                        navController.navigateUp()
-                        viewModel.restoreOriginalTransaction()
+                    val editTransactionActions = object : EditTransactionActions {
+                        override fun onNavigateBack() {
+                            navController.navigateUp()
+                            viewModel.restoreOriginalTransaction()
+                        }
+
+                        override fun onNavigateToCategory(transactionType: Int) {
+                            navController.navigate(EditTransactionCategory(transactionType))
+                        }
+
+                        override fun onEditTransaction(transactionState: EditTransactionContentState) {
+                            viewModel.updateTransaction(transactionState)
+                        }
                     }
 
-                    override fun onNavigateToCategory(transactionType: Int) {
-                        navController.navigate(EditTransactionCategory(transactionType))
-                    }
-
-                    override fun onEditTransaction(transactionState: EditTransactionContentState) {
-                        viewModel.updateTransaction(transactionState)
-                    }
+                    EditTransactionScreen(
+                        transactionState = editTransactionState,
+                        transactionActions = editTransactionActions,
+                        initialTransaction = initialTransaction
+                    )
                 }
-
-                EditTransactionScreen(
-                    transactionState = editTransactionState,
-                    transactionActions = editTransactionActions
-                )
             }
         }
         composable<EditTransactionCategory>(

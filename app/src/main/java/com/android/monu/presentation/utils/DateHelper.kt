@@ -74,7 +74,7 @@ object DateHelper {
         return startDate to endDate
     }
 
-    fun formatToShortDate(inputDate: String): String {
+    fun formatToBarChartDate(inputDate: String): String {
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val outputFormatter = DateTimeFormatter.ofPattern("dd/MM")
 
@@ -102,5 +102,11 @@ object DateHelper {
     fun getLastDayOfCurrentWeek(): String {
         val today = LocalDate.now()
         return today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).toString()
+    }
+
+    fun formatToShortDate(inputDate: String): String {
+        val parsedDate = LocalDate.parse(inputDate)
+        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale("id", "ID"))
+        return parsedDate.format(formatter)
     }
 }

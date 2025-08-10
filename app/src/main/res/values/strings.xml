@@ -186,4 +186,13 @@
     <string name="monthly">Bulanan</string>
     <string name="weekly">Mingguan</string>
     <string name="custom">Kustom</string>
+    <string name="loading">Memuat</string>
+    <string name="insufficient_account_balance">Saldo akun tidak mencukupi</string>
+    <string name="active_budgeting_with_category_already_exists">Budget aktif dengan kategori ini sudah tersedia</string>"
+    <string name="current_budget_amount_exceeds_maximum_limit">Jumlah budget saat ini melebihi batas maksimum</string>
+    <string name="empty_transaction_title">Judul transaksi tidak boleh kosong</string>
+    <string name="empty_transaction_date">Tanggal transaksi tidak boleh kosong</string>
+    <string name="empty_transaction_category">Kategori transaksi tidak boleh kosong</string>
+    <string name="empty_transaction_amount">Nominal transaksi tidak boleh kosong</string>
+    <string name="empty_transaction_source">Sumber dana transaksi tidak boleh kosong</string>
 </resources>

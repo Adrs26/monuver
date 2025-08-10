@@ -46,7 +46,7 @@ fun AccountTypeScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            DataProvider.getAccountType().forEach { accountType ->
+            DataProvider.getAccountTypes().forEach { accountType ->
                 AccountTypeListItem(
                     accountType = accountType,
                     modifier = Modifier

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
@@ -21,27 +20,26 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.presentation.components.CategoryIcon
-import com.android.monu.ui.theme.Blue800
-import com.android.monu.ui.theme.Green600
-import com.android.monu.ui.theme.MonuTheme
-import com.android.monu.ui.theme.Orange600
-import com.android.monu.ui.theme.Red600
+import com.android.monu.presentation.utils.DatabaseCodeMapper
+import com.android.monu.presentation.utils.DateHelper
+import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun BudgetingListItem(
+    budgetingState: BudgetingListItemState,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -52,10 +50,9 @@ fun BudgetingListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             BudgetingListItemIcon(
-                icon = R.drawable.ic_expense_utilities,
-                backgroundColor = Blue800,
-                amount = 5_000_000,
-                maxAmount = 10_000_000
+                color = DatabaseCodeMapper.toParentCategoryIconBackground(budgetingState.category),
+                usedAmount = budgetingState.usedAmount,
+                maxAmount = budgetingState.maxAmount
             )
             Column(
                 modifier = Modifier
@@ -63,7 +60,7 @@ fun BudgetingListItem(
                     .weight(1f)
             ) {
                 Text(
-                    text = "Tagihan air",
+                    text = stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetingState.category)),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     style = MaterialTheme.typography.labelMedium.copy(
@@ -71,7 +68,10 @@ fun BudgetingListItem(
                     )
                 )
                 Text(
-                    text = "1 Sep 2025 - 30 Sep 2025",
+                    text = formatBudgetingDate(
+                        startDate = budgetingState.startDate,
+                        endDate = budgetingState.endDate
+                    ),
                     modifier = Modifier.padding(top = 4.dp),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
@@ -85,7 +85,7 @@ fun BudgetingListItem(
                     verticalAlignment = Alignment.Bottom
                 ) {
                     Text(
-                        text = "Rp5.000.000",
+                        text = NumberFormatHelper.formatToRupiah(budgetingState.usedAmount),
                         style = MaterialTheme.typography.labelMedium.copy(
                             color = MaterialTheme.colorScheme.onBackground,
                             fontSize = 13.sp
@@ -99,7 +99,7 @@ fun BudgetingListItem(
                         color = Color.Gray
                     )
                     Text(
-                        text = "Rp10.000.000",
+                        text = NumberFormatHelper.formatToRupiah(budgetingState.maxAmount),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                         style = MaterialTheme.typography.labelSmall.copy(
@@ -120,43 +120,55 @@ fun BudgetingListItem(
 
 @Composable
 fun BudgetingListItemIcon(
-    icon: Int,
-    backgroundColor: Color,
-    amount: Long,
+    color: Color,
+    usedAmount: Long,
     maxAmount: Long
 ) {
     Box(
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(
-            progress = { amount.toFloat() / maxAmount.toFloat() },
+            progress = { calculateProgressBar(usedAmount, maxAmount) },
             modifier = Modifier.size(48.dp),
-            color = changeProgressBarColor(amount, maxAmount),
+            color = color,
             strokeWidth = 4.dp,
             trackColor = MaterialTheme.colorScheme.surfaceVariant,
             strokeCap = StrokeCap.Square,
             gapSize = 0.dp
         )
-        CategoryIcon(
-            icon = icon,
-            backgroundColor = backgroundColor,
-            modifier = Modifier.size(40.dp)
-        )
+        Box(
+            modifier = Modifier
+                .clip(MaterialTheme.shapes.extraSmall)
+                .size(40.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(
+                    R.string.percentage_value,
+                    NumberFormatHelper.formatToPercentageValue(usedAmount, maxAmount)
+                ),
+                style = MaterialTheme.typography.labelSmall.copy(
+                    color = color,
+                    fontWeight = FontWeight.SemiBold
+                )
+            )
+        }
     }
 }
 
-private fun changeProgressBarColor(amount: Long, maxAmount: Long): Color {
-    return when {
-        amount.toDouble() / maxAmount.toDouble() > 0.9 -> Red600
-        amount.toDouble() / maxAmount.toDouble() > 0.6 -> Orange600
-        else -> Green600
+private fun formatBudgetingDate(startDate: String, endDate: String): String {
+    return if (startDate == endDate) {
+        DateHelper.formatToShortDate(startDate)
+    } else {
+        "${DateHelper.formatToShortDate(startDate)} - ${DateHelper.formatToShortDate(endDate)}"
     }
 }
 
-@Composable
-@Preview
-fun BudgetingListItemPreview() {
-    MonuTheme {
-        BudgetingListItem()
-    }
-}
+data class BudgetingListItemState(
+    val id: Long,
+    val category: Int,
+    val startDate: String,
+    val endDate: String,
+    val maxAmount: Long,
+    val usedAmount: Long,
+)

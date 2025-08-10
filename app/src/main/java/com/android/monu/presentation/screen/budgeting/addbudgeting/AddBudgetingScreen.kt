@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -33,8 +34,8 @@ import org.threeten.bp.format.DateTimeFormatter
 @Composable
 fun AddBudgetingScreen(
     category: Int,
-    onNavigateBack: () -> Unit,
-    onNavigateToCategory: () -> Unit
+    addResult: Result<Long>?,
+    budgetingActions: AddBudgetingActions
 ) {
     var budgetingMaxAmount by rememberSaveable { mutableLongStateOf(0L) }
     var budgetingMaxAmountFormat by remember {
@@ -67,7 +68,7 @@ fun AddBudgetingScreen(
 
     val addBudgetingContentActions = object : AddBudgetingContentActions {
         override fun onNavigateToCategory() {
-            onNavigateToCategory()
+            budgetingActions.onNavigateToCategory()
         }
 
         override fun onAmountChange(maxAmountFormat: TextFieldValue) {
@@ -111,13 +112,28 @@ fun AddBudgetingScreen(
         override fun onAutoUpdateChange(isAutoUpdate: Boolean) {
             isBudgetingAutoUpdate = isAutoUpdate
         }
+
+        override fun onAddNewBudgeting(budgetingState: AddBudgetingContentState) {
+            budgetingActions.onAddNewBudgeting(budgetingState)
+        }
+    }
+
+    LaunchedEffect(addResult) {
+        addResult?.let {
+            if (it.isSuccess) {
+                "Budgeting berhasil ditambahkan".showMessageWithToast(context)
+                budgetingActions.onNavigateBack()
+            } else {
+                it.exceptionOrNull()?.message?.showMessageWithToast(context)
+            }
+        }
     }
 
     Scaffold(
         topBar = {
             CommonAppBar(
                 title = "Tambah budget",
-                onNavigateBack = onNavigateBack
+                onNavigateBack = { budgetingActions.onNavigateBack() }
             )
         }
     ) { innerPadding ->
@@ -182,3 +198,9 @@ private fun getBudgetingEndDate(budgetingPeriod: Int, previousDate: String): Str
 }
 
 enum class CalendarField { START, END }
+
+interface AddBudgetingActions {
+    fun onNavigateBack()
+    fun onNavigateToCategory()
+    fun onAddNewBudgeting(budgetingState: AddBudgetingContentState)
+}

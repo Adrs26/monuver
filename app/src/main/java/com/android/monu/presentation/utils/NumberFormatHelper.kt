@@ -1,7 +1,6 @@
 package com.android.monu.presentation.utils
 
 import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.roundToLong
@@ -25,43 +24,11 @@ object NumberFormatHelper {
         return formatter.format(amount)
     }
 
-    fun formatToConciseRupiah(amount: Long): String {
-        val localeID = Locale("in", "ID")
-        val symbols = DecimalFormatSymbols(localeID).apply {
-            decimalSeparator = ','
-            groupingSeparator = '.'
-        }
-
-        fun format(value: Double): String {
-            return if (value % 1 == 0.0) {
-                DecimalFormat("#,##0", symbols).format(value)
-            } else {
-                DecimalFormat("#,##0.00", symbols).format(value)
-            }
-        }
-
-        return when {
-            amount >= 1_000_000_000_000 -> {
-                val value = amount / 1_000_000_000_000.0
-                "Rp${format(value)} Triliun"
-            }
-            amount >= 1_000_000_000 -> {
-                val value = amount / 1_000_000_000.0
-                "Rp${format(value)} Miliar"
-            }
-            amount >= 1_000_000 -> {
-                val value = amount / 1_000_000.0
-                "Rp${format(value)} Juta"
-            }
-            amount >= 1_000 -> {
-                val value = amount / 1_000.0
-                "Rp${format(value)} Ribu"
-            }
-            else -> "Rp${DecimalFormat("#,##0", symbols).format(amount)}"
-        }
-    }
-
     fun formatToPercentageValue(value: Long, total: Long): Long {
-        return (value.toFloat() / total.toFloat() * 100).roundToLong()
+        return if (total == 0L) {
+            0L
+        } else {
+            (value.toFloat() / total.toFloat() * 100).roundToLong()
+        }
     }
 }

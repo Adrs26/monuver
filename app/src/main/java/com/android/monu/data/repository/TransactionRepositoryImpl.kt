@@ -101,4 +101,12 @@ class TransactionRepositoryImpl(
             }
         }
     }
+
+    override suspend fun getTotalTransactionAmountInDateRange(
+        category: Int,
+        startDate: String,
+        endDate: String
+    ): Long {
+        return transactionDao.getTotalTransactionAmountInDateRange(category, startDate, endDate)
+    }
 }

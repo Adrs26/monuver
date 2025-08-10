@@ -36,13 +36,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.TransactionAmountSummary
+import com.android.monu.domain.model.transaction.TransactionBalanceSummary
 import com.android.monu.presentation.components.CommonFloatingActionButton
 import com.android.monu.presentation.screen.analytics.AnalyticsActions
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.analytics.AnalyticsState
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.budgeting.BudgetingScreen
+import com.android.monu.presentation.screen.budgeting.BudgetingState
+import com.android.monu.presentation.screen.budgeting.BudgetingViewModel
 import com.android.monu.presentation.screen.home.HomeActions
 import com.android.monu.presentation.screen.home.HomeScreen
 import com.android.monu.presentation.screen.home.HomeViewModel
@@ -232,7 +234,18 @@ fun MainScreen(
                 )
             }
             composable<Budgeting> {
+                val viewModel = koinViewModel<BudgetingViewModel>()
+                val summary by viewModel.budgetingSummary.collectAsStateWithLifecycle()
+                val budgets by viewModel.budgets.collectAsStateWithLifecycle()
+
+                val budgetingState = BudgetingState(
+                    totalMaxAmount = summary.totalMaxAmount,
+                    totalUsedAmount = summary.totalUsedAmount,
+                    budgets = budgets
+                )
+
                 BudgetingScreen(
+                    budgetingState = budgetingState,
                     onHistoryClick = { },
                     onItemClick = { rootNavController.navigate(BudgetingDetail) }
                 )
@@ -242,7 +255,7 @@ fun MainScreen(
                 val filter by viewModel.filterState.collectAsStateWithLifecycle()
                 val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
                 val amountSummary by viewModel.transactionAmountSummary
-                    .collectAsStateWithLifecycle(initialValue = TransactionAmountSummary())
+                    .collectAsStateWithLifecycle(initialValue = TransactionBalanceSummary())
                 val categorySummaries by viewModel.transactionCategorySummaries
                     .collectAsStateWithLifecycle(initialValue = emptyList())
                 val dailySummaries by viewModel.transactionDailySummaries

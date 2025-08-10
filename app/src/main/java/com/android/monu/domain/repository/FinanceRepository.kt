@@ -12,10 +12,10 @@ interface FinanceRepository {
     suspend fun createTransferTransaction(transaction: Transaction): Long
 
     suspend fun deleteIncomeTransaction(id: Long, sourceId: Int, amount: Long): Int
-    suspend fun deleteExpenseTransaction(id: Long, sourceId: Int, amount: Long): Int
+    suspend fun deleteExpenseTransaction(id: Long, parentCategory: Int, date: String, sourceId: Int, amount: Long): Int
     suspend fun deleteTransferTransaction(id: Long, sourceId: Int, destinationId: Int, amount: Long): Int
 
     suspend fun updateIncomeTransaction(transaction: Transaction, startAmount: Long): Int
-    suspend fun updateExpenseTransaction(transaction: Transaction, startAmount: Long): Int
+    suspend fun updateExpenseTransaction(transaction: Transaction, initialParentCategory: Int, initialDate: String, initialAmount: Long, budgetingStatus: String): Int
     suspend fun updateTransferTransaction(transaction: Transaction, startAmount: Long): Int
 }

@@ -2,6 +2,9 @@ package com.android.monu.di
 
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
+import com.android.monu.domain.usecase.budgeting.CreateBudgetingUseCase
+import com.android.monu.domain.usecase.budgeting.GetAllBudgetsUseCase
+import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
 import com.android.monu.domain.usecase.finance.CreateAccountUseCase
 import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateIncomeTransactionUseCase
@@ -36,13 +39,16 @@ val domainModule = module {
 
     factory { CreateAccountUseCase(get()) }
     factory { CreateIncomeTransactionUseCase(get()) }
-    factory { CreateExpenseTransactionUseCase(get(), get()) }
+    factory { CreateExpenseTransactionUseCase(get(), get(), get()) }
     factory { CreateTransferTransactionUseCase(get(), get()) }
     factory { DeleteIncomeTransactionUseCase(get()) }
     factory { DeleteExpenseTransactionUseCase(get()) }
     factory { DeleteTransferTransactionUseCase(get()) }
     factory { UpdateIncomeTransactionUseCase(get()) }
-    factory { UpdateExpenseTransactionUseCase(get(), get()) }
+    factory { UpdateExpenseTransactionUseCase(get(), get(), get()) }
     factory { UpdateTransferTransactionUseCase(get(), get()) }
 
+    factory { GetAllBudgetsUseCase(get()) }
+    factory { GetBudgetingSummaryUseCase(get()) }
+    factory { CreateBudgetingUseCase(get(), get()) }
 }

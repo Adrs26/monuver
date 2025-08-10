@@ -1,7 +1,7 @@
 package com.android.monu.presentation.utils
 
 object DataProvider {
-    fun getAccountType(): List<Int> {
+    fun getAccountTypes(): List<Int> {
         return listOf(
             AccountType.CASH,
             AccountType.BANK,
@@ -11,7 +11,7 @@ object DataProvider {
         )
     }
 
-    fun getIncomeCategory(): Map<Int, List<Int>> {
+    fun getIncomeCategories(): Map<Int, List<Int>> {
         return mapOf(
             TransactionParentCategory.PARENT_INCOME to listOf(
                 TransactionChildCategory.SALARY,
@@ -23,7 +23,7 @@ object DataProvider {
         )
     }
 
-    fun getExpenseCategory(): Map<Int, List<Int>> {
+    fun getExpenseCategories(): Map<Int, List<Int>> {
         return mapOf(
             TransactionParentCategory.FOOD_BEVERAGES to listOf(
                 TransactionChildCategory.FOOD,
@@ -88,7 +88,7 @@ object DataProvider {
         )
     }
 
-    fun getExpenseParentCategory(): List<Int> {
+    fun getExpenseParentCategories(): List<Int> {
         return listOf(
             TransactionParentCategory.FOOD_BEVERAGES,
             TransactionParentCategory.BILLS_UTILITIES,

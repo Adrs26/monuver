@@ -16,12 +16,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.TransactionAmountSummary
+import com.android.monu.domain.model.transaction.TransactionBalanceSummary
 import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun AnalyticsBalanceOverview(
-    amountSummary: TransactionAmountSummary,
+    amountSummary: TransactionBalanceSummary,
     modifier: Modifier = Modifier
 ) {
     Row(

@@ -100,4 +100,15 @@ interface TransactionDao {
 
     @Update
     suspend fun updateTransaction(transaction: TransactionEntity): Int
+
+    @Query("""
+        SELECT IFNULL(SUM(amount), 0) 
+        FROM `transaction`
+        WHERE parentCategory = :category AND date BETWEEN :startDate AND :endDate
+    """)
+    suspend fun getTotalTransactionAmountInDateRange(
+        category: Int,
+        startDate: String,
+        endDate: String
+    ): Long
 }

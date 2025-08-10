@@ -39,7 +39,7 @@ fun TransactionCategoryScreen(
     onCategorySelect: (Int, Int) -> Unit
 ) {
     val transactionCategory = if (transactionType == TransactionType.INCOME)
-        DataProvider.getIncomeCategory() else DataProvider.getExpenseCategory()
+        DataProvider.getIncomeCategories() else DataProvider.getExpenseCategories()
 
     Scaffold(
         topBar = {

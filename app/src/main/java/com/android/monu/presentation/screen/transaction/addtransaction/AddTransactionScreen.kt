@@ -21,8 +21,10 @@ import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContent
 import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContentActions
 import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.NumberFormatHelper
 import com.android.monu.presentation.utils.TransactionType
+import com.android.monu.presentation.utils.mapResultMessageToStringResource
 import com.android.monu.presentation.utils.showMessageWithToast
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -97,13 +99,10 @@ fun AddTransactionScreen(
     }
 
     LaunchedEffect(transactionState.addResult) {
-        transactionState.addResult?.let {
-            if (it.isSuccess) {
-                context.getString(R.string.transaction_successfully_saved)
-                    .showMessageWithToast(context)
+        transactionState.addResult?.let { result ->
+            context.getString(mapResultMessageToStringResource(result)).showMessageWithToast(context)
+            if (result == DatabaseResultMessage.CreateTransactionSuccess) {
                 transactionActions.onNavigateBack()
-            } else {
-                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }
@@ -148,7 +147,7 @@ data class AddTransactionState(
     val type: Int,
     val category: Pair<Int, Int>,
     val source: Pair<Int, String>,
-    val addResult: Result<Long>?,
+    val addResult: DatabaseResultMessage?,
 )
 
 interface AddTransactionActions {

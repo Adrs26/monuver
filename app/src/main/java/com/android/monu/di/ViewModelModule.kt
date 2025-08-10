@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.android.monu.presentation.screen.account.AccountViewModel
 import com.android.monu.presentation.screen.account.addaccount.AddAccountViewModel
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
+import com.android.monu.presentation.screen.budgeting.BudgetingViewModel
 import com.android.monu.presentation.screen.budgeting.addbudgeting.AddBudgetingViewModel
 import com.android.monu.presentation.screen.home.HomeViewModel
 import com.android.monu.presentation.screen.transaction.TransactionViewModel
@@ -35,5 +36,6 @@ val viewModelModule = module {
 
     viewModel { AnalyticsViewModel(get(), get(), get(), get()) }
 
-    viewModel { AddBudgetingViewModel() }
+    viewModel { BudgetingViewModel(get(), get()) }
+    viewModel { AddBudgetingViewModel(get()) }
 }

@@ -117,7 +117,7 @@ fun AddBudgetingContent(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         Button(
-            onClick = { },
+            onClick = { budgetingActions.onAddNewBudgeting(budgetingState) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -281,4 +281,5 @@ interface AddBudgetingContentActions {
     fun onEndDateClick()
     fun onOverflowAllowedChange(isOverflowAllowed: Boolean)
     fun onAutoUpdateChange(isAutoUpdate: Boolean)
+    fun onAddNewBudgeting(budgetingState: AddBudgetingContentState)
 }

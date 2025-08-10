@@ -14,6 +14,7 @@ import com.android.monu.ui.navigation.MainTransactionDetail
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -34,7 +35,8 @@ class EditTransactionViewModel(
             getTransactionById(id)
         }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), null)
 
-    private var originalTransaction: Transaction? = null
+    private val _initialTransaction = MutableStateFlow<Transaction?>(null)
+    val initialTransaction: StateFlow<Transaction?> = _initialTransaction
 
     private val _updateResult = MutableStateFlow<Result<Int>?>(null)
     val updateResult = _updateResult.asStateFlow()
@@ -42,25 +44,24 @@ class EditTransactionViewModel(
     private fun getTransactionById(id: Long) {
         viewModelScope.launch {
             getTransactionByIdUseCase(id).collect { transaction ->
+                if (_initialTransaction.value == null) {
+                    _initialTransaction.value = transaction
+                }
                 _transaction.value = transaction
             }
         }
     }
 
     fun changeTransactionCategory(parentCategory: Int, childCategory: Int) {
-        if (originalTransaction == null) {
-            originalTransaction = _transaction.value
-        }
-
         _transaction.update { transaction ->
             transaction?.copy(parentCategory = parentCategory, childCategory = childCategory)
         }
     }
 
     fun restoreOriginalTransaction() {
-        originalTransaction?.let {
+        _initialTransaction.value.let {
             _transaction.value = it
-            originalTransaction = null
+            _initialTransaction.value = null
         }
     }
 

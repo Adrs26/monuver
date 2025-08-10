@@ -48,7 +48,7 @@ fun AddBudgetingCategoryScreen(
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
         ) {
-            DataProvider.getExpenseParentCategory().forEach { category ->
+            DataProvider.getExpenseParentCategories().forEach { category ->
                 BudgetingCategoryListItem(
                     category = category,
                     modifier = Modifier

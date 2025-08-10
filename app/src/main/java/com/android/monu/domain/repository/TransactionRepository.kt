@@ -34,4 +34,10 @@ interface TransactionRepository {
     ): Flow<List<TransactionCategorySummary>>
 
     fun getTransactionsInRange(startDate: String, endDate: String): Flow<List<TransactionSummary>>
+
+    suspend fun getTotalTransactionAmountInDateRange(
+        category: Int,
+        startDate: String,
+        endDate: String
+    ): Long
 }

@@ -37,6 +37,8 @@ class AddAccountViewModel(
                 _createResult.value = null
             } else {
                 _createResult.value = createAccountUseCase(accountState)
+                delay(500)
+                _createResult.value = null
                 _accountType.value = 0
             }
         }

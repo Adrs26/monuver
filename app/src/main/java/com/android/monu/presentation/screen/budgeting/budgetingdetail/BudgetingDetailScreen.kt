@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.monu.presentation.components.TransactionListItem
-import com.android.monu.presentation.components.TransactionListState
+import com.android.monu.presentation.components.TransactionListItemState
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.components.BudgetingDetailAppBar
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.components.BudgetingDetailOverview
 import com.android.monu.presentation.utils.TransactionChildCategory
@@ -21,7 +21,7 @@ import com.android.monu.ui.theme.MonuTheme
 
 @Composable
 fun BudgetingDetailScreen() {
-    val dummyTransaction = TransactionListState(
+    val dummyTransaction = TransactionListItemState(
         id = 0,
         title = "Pembayaran tagihan air",
         type = TransactionType.EXPENSE,

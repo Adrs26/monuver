@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContent
 import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentActions
@@ -35,7 +36,8 @@ import org.threeten.bp.format.DateTimeFormatter
 @Composable
 fun EditTransactionScreen(
     transactionState: EditTransactionState,
-    transactionActions: EditTransactionActions
+    transactionActions: EditTransactionActions,
+    initialTransaction: Transaction
 ) {
     var transactionTitle by rememberSaveable { mutableStateOf(transactionState.title) }
     var transactionDate by rememberSaveable { mutableStateOf(transactionState.date) }
@@ -53,10 +55,12 @@ fun EditTransactionScreen(
         type = transactionState.type,
         parentCategory = transactionState.parentCategory,
         childCategory = transactionState.childCategory,
+        startParentCategory = initialTransaction.parentCategory,
         date = transactionDate,
+        startDate = initialTransaction.date,
         amount = transactionAmount,
         amountFormat = transactionAmountFormat,
-        startAmount = transactionState.amount,
+        startAmount = initialTransaction.amount,
         sourceId = transactionState.sourceId,
         sourceName = transactionState.sourceName
     )

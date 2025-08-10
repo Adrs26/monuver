@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.presentation.components.TransactionListItem
-import com.android.monu.presentation.components.TransactionListState
+import com.android.monu.presentation.components.TransactionListItemState
 import com.android.monu.presentation.utils.debouncedClickable
 
 @Composable
@@ -82,7 +82,7 @@ fun RecentTransactionList(
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 recentTransactions.forEach { transaction ->
-                    val transactionState = TransactionListState(
+                    val transactionState = TransactionListItemState(
                         id = transaction.id,
                         title = transaction.title,
                         type = transaction.type,

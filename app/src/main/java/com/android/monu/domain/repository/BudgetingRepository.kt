@@ -1,0 +1,19 @@
+package com.android.monu.domain.repository
+
+import com.android.monu.domain.model.budgeting.Budgeting
+import kotlinx.coroutines.flow.Flow
+
+interface BudgetingRepository {
+
+    fun getAllBudgets(): Flow<List<Budgeting>>
+
+    fun getTotalBudgetingMaxAmount(): Flow<Long>
+
+    fun getTotalBudgetingUsedAmount(): Flow<Long>
+
+    suspend fun isBudgetingExists(category: Int): Boolean
+
+    suspend fun createNewBudgeting(budgeting: Budgeting): Long
+
+    suspend fun getBudgetingForDate(category: Int, date: String): Budgeting?
+}

@@ -7,6 +7,7 @@ import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
 import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateIncomeTransactionUseCase
 import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.TransactionType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +35,7 @@ class AddTransactionViewModel(
             getAllAccounts()
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _createResult = MutableStateFlow<Result<Long>?>(null)
+    private val _createResult = MutableStateFlow<DatabaseResultMessage?>(null)
     val createResult = _createResult.asStateFlow()
 
     fun changeTransactionCategory(parentCategory: Int, childCategory: Int) {
@@ -55,28 +56,14 @@ class AddTransactionViewModel(
 
     fun createNewTransaction(addTransactionState: AddTransactionContentState) {
         viewModelScope.launch {
-            if (
-                addTransactionState.title.isEmpty() ||
-                addTransactionState.date.isEmpty() ||
-                addTransactionState.childCategory == 0 ||
-                addTransactionState.amount == 0L ||
-                addTransactionState.sourceId == 0
-            ) {
-                _createResult.value = Result.failure(
-                    IllegalArgumentException("Harap lengkapi semua kolom yang tersedia")
-                )
-                delay(500)
-                _createResult.value = null
-            } else {
-                val result = when (addTransactionState.type) {
-                    TransactionType.INCOME -> createIncomeTransactionUseCase(addTransactionState)
-                    TransactionType.EXPENSE -> createExpenseTransactionUseCase(addTransactionState)
-                    else -> Result.failure(IllegalArgumentException("Tipe transaksi tidak valid"))
-                }
-                _createResult.value = result
-                delay(500)
-                _createResult.value = null
+            val result = when (addTransactionState.type) {
+                TransactionType.INCOME -> createIncomeTransactionUseCase(addTransactionState)
+                TransactionType.EXPENSE -> createExpenseTransactionUseCase(addTransactionState)
+                else -> null
             }
+            _createResult.value = result
+            delay(500)
+            _createResult.value = null
         }
     }
 }
