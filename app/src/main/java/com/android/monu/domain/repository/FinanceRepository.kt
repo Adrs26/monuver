@@ -2,20 +2,44 @@ package com.android.monu.domain.repository
 
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.usecase.finance.BudgetingStatus
 
 interface FinanceRepository {
 
     suspend fun createAccount(account: Account, transaction: Transaction): Long
 
     suspend fun createIncomeTransaction(transaction: Transaction): Long
+
     suspend fun createExpenseTransaction(transaction: Transaction): Long
+
     suspend fun createTransferTransaction(transaction: Transaction): Long
 
     suspend fun deleteIncomeTransaction(id: Long, sourceId: Int, amount: Long): Int
-    suspend fun deleteExpenseTransaction(id: Long, parentCategory: Int, date: String, sourceId: Int, amount: Long): Int
-    suspend fun deleteTransferTransaction(id: Long, sourceId: Int, destinationId: Int, amount: Long): Int
 
-    suspend fun updateIncomeTransaction(transaction: Transaction, startAmount: Long): Int
-    suspend fun updateExpenseTransaction(transaction: Transaction, initialParentCategory: Int, initialDate: String, initialAmount: Long, budgetingStatus: String): Int
-    suspend fun updateTransferTransaction(transaction: Transaction, startAmount: Long): Int
+    suspend fun deleteExpenseTransaction(
+        id: Long,
+        parentCategory: Int,
+        date: String,
+        sourceId: Int,
+        amount: Long
+    ): Int
+
+    suspend fun deleteTransferTransaction(
+        id: Long,
+        sourceId: Int,
+        destinationId: Int,
+        amount: Long
+    ): Int
+
+    suspend fun updateIncomeTransaction(transaction: Transaction, initialAmount: Long): Int
+
+    suspend fun updateExpenseTransaction(
+        transaction: Transaction,
+        initialParentCategory: Int,
+        initialDate: String,
+        initialAmount: Long,
+        budgetingStatus: BudgetingStatus
+    ): Int
+
+    suspend fun updateTransferTransaction(transaction: Transaction, initialAmount: Long): Int
 }

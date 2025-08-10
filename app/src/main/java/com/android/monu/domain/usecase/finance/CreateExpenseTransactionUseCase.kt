@@ -13,10 +13,7 @@ class CreateExpenseTransactionUseCase(
     private val accountRepository: AccountRepository,
     private val budgetingRepository: BudgetingRepository
 ) {
-
-    suspend operator fun invoke(
-        transactionState: AddTransactionContentState
-    ): DatabaseResultMessage {
+    suspend operator fun invoke(transactionState: AddTransactionContentState): DatabaseResultMessage {
         when {
             transactionState.title.isEmpty() -> return DatabaseResultMessage.EmptyTransactionTitle
             transactionState.childCategory == 0 -> return DatabaseResultMessage.EmptyTransactionCategory

@@ -6,6 +6,7 @@ import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.BudgetingRepository
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.DateHelper
 
 class UpdateExpenseTransactionUseCase(
@@ -13,82 +14,85 @@ class UpdateExpenseTransactionUseCase(
     private val accountRepository: AccountRepository,
     private val budgetingRepository: BudgetingRepository
 ) {
-    suspend operator fun invoke(transactionState: EditTransactionContentState): Result<Int> {
-        return runCatching {
-            val (month, year) = DateHelper.getMonthAndYear(transactionState.date)
-            val transaction = Transaction(
-                id = transactionState.id,
-                title = transactionState.title,
-                type = transactionState.type,
-                parentCategory = transactionState.parentCategory,
-                childCategory = transactionState.childCategory,
-                date = transactionState.date,
-                month = month,
-                year = year,
-                timeStamp = System.currentTimeMillis(),
-                amount = transactionState.amount,
-                sourceId = transactionState.sourceId,
-                sourceName = transactionState.sourceName
-            )
-
-            val accountBalance = accountRepository.getAccountBalance(transaction.sourceId)
-            val difference = transaction.amount - transactionState.startAmount
-
-            val oldBudgeting = budgetingRepository.getBudgetingForDate(
-                category = transactionState.startParentCategory,
-                date = transactionState.startDate
-            )
-            val newBudgeting = budgetingRepository.getBudgetingForDate(
-                category = transaction.parentCategory,
-                date = transaction.date
-            )
-
-            require(accountBalance != null && accountBalance >= difference) {
-                "Saldo akun tidak mencukupi"
-            }
-
-            val budgetingStatus = getBudgetingStatus(oldBudgeting, newBudgeting)
-
-            when (budgetingStatus) {
-                NO_OLD_BUDGETING -> require(
-                    newBudgeting?.usedAmount?.plus(transaction.amount)!! <= newBudgeting.maxAmount ||
-                    newBudgeting.isOverflowAllowed
-                ) { "Budget melebihi batas maksimum" }
-                SAME_BUDGETING -> require(
-                    newBudgeting?.usedAmount?.plus(difference)!! <= newBudgeting.maxAmount ||
-                    newBudgeting.isOverflowAllowed
-                ) { "Budget melebihi batas maksimum" }
-                DIFFERENT_BUDGETING -> require(
-                    newBudgeting?.usedAmount?.plus(transaction.amount)!! <= newBudgeting.maxAmount ||
-                    newBudgeting.isOverflowAllowed
-                ) { "Budget melebihi batas maksimum" }
-            }
-
-            financeRepository.updateExpenseTransaction(
-                transaction = transaction,
-                initialParentCategory = transactionState.startParentCategory,
-                initialDate = transactionState.startDate,
-                initialAmount = transactionState.startAmount,
-                budgetingStatus = budgetingStatus
-            )
+    suspend operator fun invoke(transactionState: EditTransactionContentState): DatabaseResultMessage {
+        when {
+            transactionState.title.isEmpty() -> return DatabaseResultMessage.EmptyTransactionTitle
+            transactionState.amount == 0L -> return DatabaseResultMessage.EmptyTransactionAmount
         }
+
+        val (month, year) = DateHelper.getMonthAndYear(transactionState.date)
+        val transaction = Transaction(
+            id = transactionState.id,
+            title = transactionState.title,
+            type = transactionState.type,
+            parentCategory = transactionState.parentCategory,
+            childCategory = transactionState.childCategory,
+            date = transactionState.date,
+            month = month,
+            year = year,
+            timeStamp = System.currentTimeMillis(),
+            amount = transactionState.amount,
+            sourceId = transactionState.sourceId,
+            sourceName = transactionState.sourceName
+        )
+
+        val accountBalance = accountRepository.getAccountBalance(transaction.sourceId)
+        val difference = transaction.amount - transactionState.initialAmount
+
+        if (accountBalance == null || accountBalance < difference) {
+            return DatabaseResultMessage.InsufficientAccountBalance
+        }
+
+        val oldBudgeting = budgetingRepository.getBudgetingForDate(
+            category = transactionState.initialParentCategory,
+            date = transactionState.initialDate
+        )
+        val newBudgeting = budgetingRepository.getBudgetingForDate(
+            category = transaction.parentCategory,
+            date = transaction.date
+        )
+
+        val budgetingStatus = getBudgetingStatus(oldBudgeting, newBudgeting)
+
+        newBudgeting?.let { budget ->
+            if (!budget.isOverflowAllowed) {
+                val amountToAdd = when (budgetingStatus) {
+                    BudgetingStatus.SameBudgeting -> difference
+                    BudgetingStatus.DifferentBudgeting, BudgetingStatus.NoOldBudgeting -> transaction.amount
+                    else -> 0L
+                }
+
+                if (amountToAdd > 0 && budget.usedAmount + amountToAdd > budget.maxAmount) {
+                    return DatabaseResultMessage.CurrentBudgetAmountExceedsMaximumLimit
+                }
+            }
+        }
+
+        financeRepository.updateExpenseTransaction(
+            transaction = transaction,
+            initialParentCategory = transactionState.initialParentCategory,
+            initialDate = transactionState.initialDate,
+            initialAmount = transactionState.initialAmount,
+            budgetingStatus = budgetingStatus
+        )
+        return DatabaseResultMessage.UpdateTransactionSuccess
     }
 
-    private fun getBudgetingStatus(oldBudgeting: Budgeting?, newBudgeting: Budgeting?): String {
+    private fun getBudgetingStatus(oldBudgeting: Budgeting?, newBudgeting: Budgeting?): BudgetingStatus {
         return when {
-            oldBudgeting == null && newBudgeting != null -> NO_OLD_BUDGETING
-            oldBudgeting != null && newBudgeting == null -> NO_NEW_BUDGETING
-            oldBudgeting == null && newBudgeting == null -> NO_BUDGETING
-            oldBudgeting?.category == newBudgeting?.category -> SAME_BUDGETING
-            else -> DIFFERENT_BUDGETING
+            oldBudgeting == null && newBudgeting != null -> BudgetingStatus.NoOldBudgeting
+            oldBudgeting != null && newBudgeting == null -> BudgetingStatus.NoNewBudgeting
+            oldBudgeting == null && newBudgeting == null -> BudgetingStatus.NoBudgeting
+            oldBudgeting?.category == newBudgeting?.category -> BudgetingStatus.SameBudgeting
+            else -> BudgetingStatus.DifferentBudgeting
         }
     }
+}
 
-    companion object {
-        const val NO_OLD_BUDGETING = "Old budgeting is null"
-        const val NO_NEW_BUDGETING = "New budgeting is null"
-        const val NO_BUDGETING = "No budgeting"
-        const val SAME_BUDGETING = "Old and new budgeting are the same"
-        const val DIFFERENT_BUDGETING = "Old and new budgeting are different"
-    }
+sealed class BudgetingStatus {
+    object NoOldBudgeting : BudgetingStatus()
+    object NoNewBudgeting : BudgetingStatus()
+    object NoBudgeting : BudgetingStatus()
+    object SameBudgeting : BudgetingStatus()
+    object DifferentBudgeting : BudgetingStatus()
 }

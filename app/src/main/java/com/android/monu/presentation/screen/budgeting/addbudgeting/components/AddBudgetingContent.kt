@@ -73,10 +73,10 @@ fun AddBudgetingContent(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextDateInputField(
-            title = "Tanggal mulai",
+            title = stringResource(R.string.start_date),
             value = DateHelper.formatDateToReadable(budgetingState.startDate),
             onValueChange = { },
-            placeholderText = "Pilih tanggal budget dimulai",
+            placeholderText = stringResource(R.string.choose_budgeting_start_date),
             isEnable = budgetingState.period == 3,
             modifier = Modifier
                 .clickable(
@@ -91,10 +91,10 @@ fun AddBudgetingContent(
                 .padding(horizontal = 16.dp)
         )
         TextDateInputField(
-            title = "Tanggal selesai",
+            title = stringResource(R.string.end_date),
             value = DateHelper.formatDateToReadable(budgetingState.endDate),
             onValueChange = { },
-            placeholderText = "Pilih tanggal budget selesai",
+            placeholderText = stringResource(R.string.choose_budgeting_end_date),
             isEnable = budgetingState.period == 3,
             modifier = Modifier
                 .clickable(
@@ -194,13 +194,13 @@ fun TextSwitchField(
         modifier = modifier
     ) {
         TextWithSwitch(
-            text = "Izinkan budget melebihi batas maksimum",
+            text = stringResource(R.string.budgeting_overflow_allowed),
             checked = isOverflowAllowed,
             onCheckedChange = { onOverflowAllowedChange(it) },
             isEnable = true
         )
         TextWithSwitch(
-            text = "Otomatis perbarui budget setelah selesai",
+            text = stringResource(R.string.bugdeting_auto_update),
             checked = isAutoUpdate,
             onCheckedChange = { onAutoUpdateChange(it) },
             isEnable = budgetingPeriod != 3

@@ -13,7 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.android.monu.R
 import com.android.monu.domain.model.budgeting.Budgeting
 
 @Composable
@@ -68,7 +70,7 @@ fun BudgetingListContent(
         }
         item {
             Text(
-                text = "Daftar budget aktif",
+                text = stringResource(R.string.list_active_budgeting),
                 modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
                 style = MaterialTheme.typography.titleMedium
             )
@@ -112,7 +114,7 @@ fun BudgetingEmptyListContent(
             totalUsedAmount = totalUsedAmount
         )
         Text(
-            text = "Daftar budget aktif",
+            text = stringResource(R.string.list_active_budgeting),
             modifier = Modifier.padding(top = 24.dp),
             style = MaterialTheme.typography.titleMedium
         )
@@ -123,7 +125,7 @@ fun BudgetingEmptyListContent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Kamu belum memiliki budget yang aktif",
+                text = stringResource(R.string.you_have_not_active_budgeting),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 )

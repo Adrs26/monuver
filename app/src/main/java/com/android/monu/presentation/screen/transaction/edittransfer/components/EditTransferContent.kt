@@ -85,9 +85,9 @@ data class EditTransferContentState(
     val destinationId: Int,
     val destinationName: String,
     val date: String,
-    val startAmount: Long,
     val amount: Long,
-    val amountFormat: TextFieldValue
+    val amountFormat: TextFieldValue,
+    val initialAmount: Long
 )
 
 interface EditTransferContentActions {

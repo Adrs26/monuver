@@ -106,12 +106,12 @@ data class EditTransactionContentState(
     val type: Int,
     val parentCategory: Int,
     val childCategory: Int,
-    val startParentCategory: Int,
+    val initialParentCategory: Int,
     val date: String,
-    val startDate: String,
+    val initialDate: String,
     val amount: Long,
     val amountFormat: TextFieldValue,
-    val startAmount: Long,
+    val initialAmount: Long,
     val sourceId: Int,
     val sourceName: String
 )

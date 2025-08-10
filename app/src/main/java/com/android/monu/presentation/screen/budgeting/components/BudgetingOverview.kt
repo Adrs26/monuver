@@ -49,7 +49,7 @@ fun BudgetingOverview(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Budget kamu periode ini",
+                text = stringResource(R.string.your_budgeting_this_period),
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
             )
             Text(
@@ -66,7 +66,7 @@ fun BudgetingOverview(
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
-                    text = "telah digunakan",
+                    text = stringResource(R.string.already_used),
                     modifier = Modifier.padding(start = 4.dp),
                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
                 )

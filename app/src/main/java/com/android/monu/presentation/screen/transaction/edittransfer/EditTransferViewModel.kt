@@ -8,6 +8,7 @@ import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.usecase.finance.UpdateTransferTransactionUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.presentation.screen.transaction.edittransfer.components.EditTransferContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.ui.navigation.MainTransactionDetail
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +31,7 @@ class EditTransferViewModel(
             getTransactionById(id)
         }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), null)
 
-    private val _updateResult = MutableStateFlow<Result<Int>?>(null)
+    private val _updateResult = MutableStateFlow<DatabaseResultMessage?>(null)
     val updateResult = _updateResult.asStateFlow()
 
     private fun getTransactionById(id: Long) {
@@ -43,18 +44,10 @@ class EditTransferViewModel(
 
     fun updateTransaction(transferState: EditTransferContentState) {
         viewModelScope.launch {
-            if (transferState.date.isEmpty() || transferState.amount == 0L) {
-                _updateResult.value = Result.failure(
-                    IllegalArgumentException("Harap lengkapi semua kolom yang tersedia")
-                )
-                delay(500)
-                _updateResult.value = null
-            } else {
-                val result = updateTransferTransactionUseCase(transferState)
-                _updateResult.value = result
-                delay(500)
-                _updateResult.value = null
-            }
+            val result = updateTransferTransactionUseCase(transferState)
+            _updateResult.value = result
+            delay(500)
+            _updateResult.value = null
         }
     }
 }

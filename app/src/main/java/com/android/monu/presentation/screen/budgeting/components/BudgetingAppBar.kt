@@ -9,6 +9,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.android.monu.R
 
@@ -20,7 +21,7 @@ fun BudgetingAppBar(
     TopAppBar(
         title = {
             Text(
-                text = "Budget",
+                text = stringResource(R.string.budgeting_menu),
                 style = MaterialTheme.typography.titleLarge.copy(
                     color = MaterialTheme.colorScheme.onBackground
                 )

@@ -22,8 +22,10 @@ import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContent
 import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentActions
 import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.NumberFormatHelper
 import com.android.monu.presentation.utils.TransactionType
+import com.android.monu.presentation.utils.mapResultMessageToStringResource
 import com.android.monu.presentation.utils.showMessageWithToast
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -55,12 +57,12 @@ fun EditTransactionScreen(
         type = transactionState.type,
         parentCategory = transactionState.parentCategory,
         childCategory = transactionState.childCategory,
-        startParentCategory = initialTransaction.parentCategory,
+        initialParentCategory = initialTransaction.parentCategory,
         date = transactionDate,
-        startDate = initialTransaction.date,
+        initialDate = initialTransaction.date,
         amount = transactionAmount,
         amountFormat = transactionAmountFormat,
-        startAmount = initialTransaction.amount,
+        initialAmount = initialTransaction.amount,
         sourceId = transactionState.sourceId,
         sourceName = transactionState.sourceName
     )
@@ -102,13 +104,10 @@ fun EditTransactionScreen(
     }
 
     LaunchedEffect(transactionState.editResult) {
-        transactionState.editResult?.let {
-            if (it.isSuccess) {
-                context.getString(R.string.transaction_successfully_saved)
-                    .showMessageWithToast(context)
+        transactionState.editResult?.let { result ->
+            context.getString(mapResultMessageToStringResource(result)).showMessageWithToast(context)
+            if (result == DatabaseResultMessage.UpdateTransactionSuccess) {
                 transactionActions.onNavigateBack()
-            } else {
-                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }
@@ -157,7 +156,7 @@ data class EditTransactionState(
     val amount: Long,
     val sourceId: Int,
     val sourceName: String,
-    val editResult: Result<Int>?
+    val editResult: DatabaseResultMessage?
 )
 
 interface EditTransactionActions {

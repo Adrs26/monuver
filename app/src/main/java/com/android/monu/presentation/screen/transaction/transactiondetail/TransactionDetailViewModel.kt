@@ -54,7 +54,7 @@ class TransactionDetailViewModel(
                         transaction.childCategory == TransactionChildCategory.TRANSFER_ACCOUNT -> {
                             deleteTransferTransactionUseCase(transaction)
                 }
-                else -> Result.failure(IllegalArgumentException("Tipe transaksi tidak valid"))
+                else -> null
             }
         }
     }

@@ -20,13 +20,15 @@ import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContent
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContentActions
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.mapResultMessageToStringResource
 import com.android.monu.presentation.utils.showMessageWithToast
 
 @Composable
 fun AddAccountScreen(
     accountType: Int,
-    addResult: Result<Long>?,
+    addResult: DatabaseResultMessage?,
     accountActions: AddAccountActions,
 ) {
     var accountName by rememberSaveable { mutableStateOf("") }
@@ -75,13 +77,10 @@ fun AddAccountScreen(
     }
 
     LaunchedEffect(addResult) {
-        addResult?.let {
-            if (it.isSuccess) {
-                context.getString(R.string.your_account_successfully_created)
-                    .showMessageWithToast(context)
+        addResult?.let { result ->
+            context.getString(mapResultMessageToStringResource(result)).showMessageWithToast(context)
+            if (result == DatabaseResultMessage.CreateAccountSuccess) {
                 accountActions.onNavigateBack()
-            } else {
-                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }

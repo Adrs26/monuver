@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.budgeting.CreateBudgetingUseCase
 import com.android.monu.presentation.screen.budgeting.addbudgeting.components.AddBudgetingContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,7 @@ class AddBudgetingViewModel(
     private val _transactionCategory = MutableStateFlow<Int>(0)
     val transactionCategory = _transactionCategory.asStateFlow()
 
-    private val _createResult = MutableStateFlow<Result<Long>?>(null)
+    private val _createResult = MutableStateFlow<DatabaseResultMessage?>(null)
     val createResult = _createResult.asStateFlow()
 
     fun changeTransactionCategory(category: Int) {
@@ -25,17 +26,9 @@ class AddBudgetingViewModel(
 
     fun createNewBudgeting(budgetingState: AddBudgetingContentState) {
         viewModelScope.launch {
-            if (budgetingState.category == 0 || budgetingState.maxAmount == 0L) {
-                _createResult.value = Result.failure(
-                    IllegalArgumentException("Harap lengkapi semua kolom yang tersedia")
-                )
-                delay(500)
-                _createResult.value = null
-            } else {
-                _createResult.value = createBudgetingUseCase(budgetingState)
-                delay(500)
-                _createResult.value = null
-            }
+            _createResult.value = createBudgetingUseCase(budgetingState)
+            delay(500)
+            _createResult.value = null
         }
     }
 }

@@ -6,6 +6,7 @@ import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
 import com.android.monu.domain.usecase.finance.CreateTransferTransactionUseCase
 import com.android.monu.presentation.screen.transaction.transfer.components.TransferContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,7 +39,7 @@ class TransferViewModel(
         listOf(source.first, destination.first)
     }
 
-    private val _createResult = MutableStateFlow<Result<Long>?>(null)
+    private val _createResult = MutableStateFlow<DatabaseResultMessage?>(null)
     val createResult = _createResult.asStateFlow()
 
     fun changeSourceAccount(sourceId: Int, sourceName: String) {
@@ -59,22 +60,9 @@ class TransferViewModel(
 
     fun createNewTransfer(transferState: TransferContentState) {
         viewModelScope.launch {
-            if (
-                transferState.sourceId == 0 ||
-                transferState.destinationId == 0 ||
-                transferState.date.isEmpty() ||
-                transferState.amount == 0L
-            ) {
-                _createResult.value = Result.failure(
-                    IllegalArgumentException("Harap lengkapi semua kolom yang tersedia")
-                )
-                delay(500)
-                _createResult.value = null
-            } else {
-                _createResult.value = createTransferTransactionUseCase(transferState)
-                delay(500)
-                _createResult.value = null
-            }
+            _createResult.value = createTransferTransactionUseCase(transferState)
+            delay(500)
+            _createResult.value = null
         }
     }
 }

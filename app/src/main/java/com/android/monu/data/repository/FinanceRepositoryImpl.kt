@@ -10,11 +10,7 @@ import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase.Companion.DIFFERENT_BUDGETING
-import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase.Companion.NO_BUDGETING
-import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase.Companion.NO_NEW_BUDGETING
-import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase.Companion.NO_OLD_BUDGETING
-import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase.Companion.SAME_BUDGETING
+import com.android.monu.domain.usecase.finance.BudgetingStatus
 import kotlin.math.absoluteValue
 
 class FinanceRepositoryImpl(
@@ -108,13 +104,13 @@ class FinanceRepositoryImpl(
 
     override suspend fun updateIncomeTransaction(
         transaction: Transaction,
-        startAmount: Long
+        initialAmount: Long
     ): Int {
         return database.withTransaction {
             val rowUpdated = transactionDao.updateTransaction(
                 TransactionMapper.transactionDomainToEntityForUpdate(transaction)
             )
-            val difference = transaction.amount - startAmount
+            val difference = transaction.amount - initialAmount
             if (difference != 0L) {
                 if (difference > 0) {
                     accountDao.increaseAccountBalance(transaction.sourceId, difference)
@@ -131,7 +127,7 @@ class FinanceRepositoryImpl(
         initialParentCategory: Int,
         initialDate: String,
         initialAmount: Long,
-        budgetingStatus: String
+        budgetingStatus: BudgetingStatus
     ): Int {
         return database.withTransaction {
             val rowUpdated = transactionDao.updateTransaction(
@@ -147,18 +143,18 @@ class FinanceRepositoryImpl(
             }
 
             when(budgetingStatus) {
-                NO_OLD_BUDGETING -> budgetingDao.increaseBudgetingUsedAmount(
+                BudgetingStatus.NoOldBudgeting -> budgetingDao.increaseBudgetingUsedAmount(
                     transaction.parentCategory,
                     transaction.date,
                     transaction.amount
                 )
-                NO_NEW_BUDGETING -> budgetingDao.decreaseBudgetingUsedAmount(
+                BudgetingStatus.NoNewBudgeting -> budgetingDao.decreaseBudgetingUsedAmount(
                     initialParentCategory,
                     initialDate,
                     initialAmount
                 )
-                NO_BUDGETING -> {}
-                SAME_BUDGETING -> {
+                BudgetingStatus.NoBudgeting -> {}
+                BudgetingStatus.SameBudgeting -> {
                     if (difference != 0L) {
                         if (difference > 0) {
                             budgetingDao.increaseBudgetingUsedAmount(
@@ -175,7 +171,7 @@ class FinanceRepositoryImpl(
                         }
                     }
                 }
-                DIFFERENT_BUDGETING -> {
+                BudgetingStatus.DifferentBudgeting -> {
                     budgetingDao.decreaseBudgetingUsedAmount(
                         initialParentCategory,
                         initialDate,
@@ -195,13 +191,13 @@ class FinanceRepositoryImpl(
 
     override suspend fun updateTransferTransaction(
         transaction: Transaction,
-        startAmount: Long
+        initialAmount: Long
     ): Int {
         return database.withTransaction {
             val rowUpdated = transactionDao.updateTransaction(
                 TransactionMapper.transactionDomainToEntityForUpdate(transaction)
             )
-            val difference = transaction.amount - startAmount
+            val difference = transaction.amount - initialAmount
             if (difference != 0L) {
                 if (difference > 0) {
                     accountDao.decreaseAccountBalance(transaction.sourceId, difference)

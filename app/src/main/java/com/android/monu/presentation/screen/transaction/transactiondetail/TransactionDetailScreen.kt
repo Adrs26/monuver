@@ -52,8 +52,7 @@ fun DetailTransactionScreen(
             onRemoveTransaction = {
                 showRemoveDialog = false
                 transactionActions.onRemoveTransaction(transaction)
-                context.getString(R.string.transaction_successfully_deleted)
-                    .showMessageWithToast(context)
+                context.getString(R.string.transaction_successfully_deleted).showMessageWithToast(context)
                 transactionActions.onNavigateBack()
             }
         )

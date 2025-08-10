@@ -21,7 +21,9 @@ import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.transaction.transfer.components.TransferContent
 import com.android.monu.presentation.screen.transaction.transfer.components.TransferContentActions
 import com.android.monu.presentation.screen.transaction.transfer.components.TransferContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.mapResultMessageToStringResource
 import com.android.monu.presentation.utils.showMessageWithToast
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -89,13 +91,10 @@ fun TransferScreen(
     }
 
     LaunchedEffect(transferState.addResult) {
-        transferState.addResult?.let {
-            if (it.isSuccess) {
-                context.getString(R.string.transaction_successfully_saved)
-                    .showMessageWithToast(context)
+        transferState.addResult?.let { result ->
+            context.getString(mapResultMessageToStringResource(result)).showMessageWithToast(context)
+            if (result == DatabaseResultMessage.CreateTransactionSuccess) {
                 transferActions.onNavigateBack()
-            } else {
-                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }
@@ -137,7 +136,7 @@ fun TransferScreen(
 data class TransferState(
     val source: Pair<Int, String>,
     val destination: Pair<Int, String>,
-    val addResult: Result<Long>?,
+    val addResult: DatabaseResultMessage?,
 )
 
 interface TransferActions {

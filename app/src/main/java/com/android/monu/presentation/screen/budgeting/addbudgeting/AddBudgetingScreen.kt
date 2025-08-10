@@ -14,14 +14,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.android.monu.R
 import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.budgeting.addbudgeting.components.AddBudgetingContent
 import com.android.monu.presentation.screen.budgeting.addbudgeting.components.AddBudgetingContentActions
 import com.android.monu.presentation.screen.budgeting.addbudgeting.components.AddBudgetingContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.DateHelper
 import com.android.monu.presentation.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.mapResultMessageToStringResource
 import com.android.monu.presentation.utils.showMessageWithToast
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -34,7 +38,7 @@ import org.threeten.bp.format.DateTimeFormatter
 @Composable
 fun AddBudgetingScreen(
     category: Int,
-    addResult: Result<Long>?,
+    addResult: DatabaseResultMessage?,
     budgetingActions: AddBudgetingActions
 ) {
     var budgetingMaxAmount by rememberSaveable { mutableLongStateOf(0L) }
@@ -119,12 +123,10 @@ fun AddBudgetingScreen(
     }
 
     LaunchedEffect(addResult) {
-        addResult?.let {
-            if (it.isSuccess) {
-                "Budgeting berhasil ditambahkan".showMessageWithToast(context)
+        addResult?.let { result ->
+            context.getString(mapResultMessageToStringResource(result)).showMessageWithToast(context)
+            if (result == DatabaseResultMessage.CreateBudgetingSuccess) {
                 budgetingActions.onNavigateBack()
-            } else {
-                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }
@@ -132,7 +134,7 @@ fun AddBudgetingScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = "Tambah budget",
+                title = stringResource(R.string.add_budgeting),
                 onNavigateBack = { budgetingActions.onNavigateBack() }
             )
         }
@@ -154,7 +156,7 @@ fun AddBudgetingScreen(
             when (activeField) {
                 CalendarField.START -> {
                     if (isAfterToday) {
-                        "Tanggal mulai tidak bisa di masa depan"
+                        context.getString(R.string.you_can_not_select_future_start_date)
                             .showMessageWithToast(context)
                     } else {
                         budgetingStartDate = selectedDate.toString()
@@ -165,7 +167,7 @@ fun AddBudgetingScreen(
                     val isBeforeStartDate = inputDate.isBefore(startDate)
 
                     if (isBeforeStartDate) {
-                        "Tanggal selesai harus sama atau lebih baru dari tanggal mulai"
+                        context.getString(R.string.end_date_must_be_same_or_after_start_date)
                             .showMessageWithToast(context)
                     } else {
                         budgetingEndDate = selectedDate.toString()

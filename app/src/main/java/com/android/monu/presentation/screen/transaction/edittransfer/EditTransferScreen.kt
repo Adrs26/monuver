@@ -21,7 +21,9 @@ import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.transaction.edittransfer.components.EditTransferContent
 import com.android.monu.presentation.screen.transaction.edittransfer.components.EditTransferContentActions
 import com.android.monu.presentation.screen.transaction.edittransfer.components.EditTransferContentState
+import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.NumberFormatHelper
+import com.android.monu.presentation.utils.mapResultMessageToStringResource
 import com.android.monu.presentation.utils.showMessageWithToast
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -52,9 +54,9 @@ fun EditTransferScreen(
         destinationId = transferState.destinationId,
         destinationName = transferState.destinationName,
         date = transactionDate,
-        startAmount = transferState.amount,
         amount = transactionAmount,
-        amountFormat = transactionAmountFormat
+        amountFormat = transactionAmountFormat,
+        initialAmount = transferState.amount
     )
 
     val editTransferActions = object : EditTransferContentActions {
@@ -83,13 +85,10 @@ fun EditTransferScreen(
     }
 
     LaunchedEffect(transferState.editResult) {
-        transferState.editResult?.let {
-            if (it.isSuccess) {
-                context.getString(R.string.transaction_successfully_saved)
-                    .showMessageWithToast(context)
+        transferState.editResult?.let { result ->
+            context.getString(mapResultMessageToStringResource(result)).showMessageWithToast(context)
+            if (result == DatabaseResultMessage.UpdateTransactionSuccess) {
                 transferActions.onNavigateBack()
-            } else {
-                it.exceptionOrNull()?.message?.showMessageWithToast(context)
             }
         }
     }
@@ -136,7 +135,7 @@ data class EditTransferState(
     val sourceName: String,
     val destinationId: Int,
     val destinationName: String,
-    val editResult: Result<Int>?
+    val editResult: DatabaseResultMessage?
 )
 
 interface EditTransferActions {
