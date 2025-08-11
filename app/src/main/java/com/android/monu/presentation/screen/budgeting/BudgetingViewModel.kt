@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.model.budgeting.Budgeting
 import com.android.monu.domain.model.budgeting.BudgetingSummary
-import com.android.monu.domain.usecase.budgeting.GetAllBudgetsUseCase
+import com.android.monu.domain.usecase.budgeting.GetAllActiveBudgetsUseCase
 import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 class BudgetingViewModel(
     private val getBudgetingSummaryUseCase: GetBudgetingSummaryUseCase,
-    private val getAllBudgetsUseCase: GetAllBudgetsUseCase
+    private val getAllActiveBudgetsUseCase: GetAllActiveBudgetsUseCase
 ) : ViewModel() {
 
     private val _budgetingSummary = MutableStateFlow<BudgetingSummary>(BudgetingSummary(0, 0))
@@ -39,7 +39,7 @@ class BudgetingViewModel(
 
     private fun getAllBudgets() {
         viewModelScope.launch {
-            getAllBudgetsUseCase().collect { budgets ->
+            getAllActiveBudgetsUseCase().collect { budgets ->
                 _budgets.value = budgets
             }
         }

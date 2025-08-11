@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.android.monu.domain.model.budgeting.BudgetingSummary
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.presentation.screen.home.components.HomeAppBar
 import com.android.monu.presentation.screen.home.components.HomeBalanceOverview
@@ -22,6 +23,7 @@ import com.android.monu.presentation.screen.home.components.HomeRecentTransactio
 fun HomeScreen(
     totalBalance: Long,
     recentTransactions: List<Transaction>,
+    budgetingSummary: BudgetingSummary,
     homeActions: HomeActions
 ) {
     Scaffold(
@@ -41,16 +43,16 @@ fun HomeScreen(
         ) {
             HomeBalanceOverview(
                 totalBalance = totalBalance,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
-                onNavigateToAccount = { homeActions.onNavigateToAccount() }
+                onNavigateToAccount = { homeActions.onNavigateToAccount() },
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp)
             )
             HomeMenuButtonBar(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 24.dp),
                 onNavigateToAddIncomeTransaction = { homeActions.onNavigateToAddIncomeTransaction() },
                 onNavigateToAddExpenseTransaction = { homeActions.onNavigateToAddExpenseTransaction() },
-                onNavigateToTransfer = { homeActions.onNavigateToTransfer() }
+                onNavigateToTransfer = { homeActions.onNavigateToTransfer() },
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 24.dp)
             )
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
@@ -66,10 +68,12 @@ fun HomeScreen(
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
             HomeBudgetingOverview(
+                totalUsedAmount = budgetingSummary.totalUsedAmount,
+                totalMaxAmount = budgetingSummary.totalMaxAmount,
+                onNavigateToBudgeting = { homeActions.onNavigateToBudgeting() },
                 modifier = Modifier
                     .padding(start = 16.dp, end = 8.dp)
-                    .padding(bottom = 32.dp),
-                onNavigateToBudgeting = { homeActions.onNavigateToBudgeting() }
+                    .padding(bottom = 32.dp)
             )
         }
     }

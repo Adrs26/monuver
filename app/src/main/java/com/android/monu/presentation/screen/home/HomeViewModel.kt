@@ -2,8 +2,10 @@ package com.android.monu.presentation.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.monu.domain.model.budgeting.BudgetingSummary
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
+import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -13,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val getTotalAccountBalanceUseCase: GetTotalAccountBalanceUseCase,
-    private val getRecentTransactionsUseCase: GetRecentTransactionsUseCase
+    private val getRecentTransactionsUseCase: GetRecentTransactionsUseCase,
+    private val getBudgetingSummaryUseCase: GetBudgetingSummaryUseCase
 ) : ViewModel() {
 
     private val _totalAccountBalance = MutableStateFlow<Long>(0)
@@ -28,6 +31,12 @@ class HomeViewModel(
             getRecentTransactions()
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
+    private val _budgetingSummary = MutableStateFlow<BudgetingSummary?>(null)
+    val budgetingSummary = _budgetingSummary
+        .onStart {
+            getBudgetingSummary()
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
     private fun getTotalAccountBalance() {
         viewModelScope.launch {
             getTotalAccountBalanceUseCase().collect { balance ->
@@ -40,6 +49,14 @@ class HomeViewModel(
         viewModelScope.launch {
             getRecentTransactionsUseCase().collect { transactions ->
                 _recentTransactions.value = transactions
+            }
+        }
+    }
+
+    private fun getBudgetingSummary() {
+        viewModelScope.launch {
+            getBudgetingSummaryUseCase().collect { summary ->
+                _budgetingSummary.value = summary
             }
         }
     }

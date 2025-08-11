@@ -25,9 +25,9 @@ import com.android.monu.presentation.utils.debouncedClickable
 @Composable
 fun HomeRecentTransactions(
     recentTransactions: List<Transaction>,
-    modifier: Modifier = Modifier,
     onNavigateToTransaction: () -> Unit,
-    onNavigateToTransactionDetail: (Long) -> Unit
+    onNavigateToTransactionDetail: (Long) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth()

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface BudgetingRepository {
 
-    fun getAllBudgets(): Flow<List<Budgeting>>
+    fun getAllActiveBudgets(): Flow<List<Budgeting>>
 
     fun getTotalBudgetingMaxAmount(): Flow<Long>
 

@@ -87,9 +87,7 @@ fun MainScreen(
     LaunchedEffect(selectedMenu) {
         showFab = false
         delay(200)
-        if (selectedMenu == menuItems[1] || selectedMenu == menuItems[2]) {
-            showFab = true
-        }
+        if (selectedMenu == menuItems[1] || selectedMenu == menuItems[2]) { showFab = true }
     }
 
     Scaffold(
@@ -138,6 +136,7 @@ fun MainScreen(
                 val viewModel = koinViewModel<HomeViewModel>()
                 val totalBalance by viewModel.totalAccountBalance.collectAsStateWithLifecycle()
                 val recentTransactions by viewModel.recentTransactions.collectAsStateWithLifecycle()
+                val budgetingSummary by viewModel.budgetingSummary.collectAsStateWithLifecycle()
 
                 val homeActions = object : HomeActions {
                     override fun onNavigateToSettings() {
@@ -150,17 +149,13 @@ fun MainScreen(
 
                     override fun onNavigateToAddIncomeTransaction() {
                         rootNavController.navigate(
-                            MainAddTransaction(
-                                type = TransactionType.INCOME
-                            )
+                            MainAddTransaction(type = TransactionType.INCOME)
                         )
                     }
 
                     override fun onNavigateToAddExpenseTransaction() {
                         rootNavController.navigate(
-                            MainAddTransaction(
-                                type = TransactionType.EXPENSE
-                            )
+                            MainAddTransaction(type = TransactionType.EXPENSE)
                         )
                     }
 
@@ -189,11 +184,14 @@ fun MainScreen(
                     }
                 }
 
-                HomeScreen(
-                    totalBalance = totalBalance,
-                    recentTransactions = recentTransactions,
-                    homeActions = homeActions
-                )
+                budgetingSummary?.let { budgetingSummary ->
+                    HomeScreen(
+                        totalBalance = totalBalance,
+                        recentTransactions = recentTransactions,
+                        budgetingSummary = budgetingSummary,
+                        homeActions = homeActions
+                    )
+                }
             }
             composable<Transaction> {
                 val viewModel = koinViewModel<TransactionViewModel>()
@@ -315,9 +313,7 @@ fun MainScreen(
                             if (!sheetState.isVisible) {
                                 showBottomSheet = false
                                 rootNavController.navigate(
-                                    MainAddTransaction(
-                                        type = TransactionType.INCOME
-                                    )
+                                    MainAddTransaction(type = TransactionType.INCOME)
                                 )
                             }
                         }
@@ -329,9 +325,7 @@ fun MainScreen(
                             if (!sheetState.isVisible) {
                                 showBottomSheet = false
                                 rootNavController.navigate(
-                                    MainAddTransaction(
-                                        type = TransactionType.EXPENSE
-                                    )
+                                    MainAddTransaction(type = TransactionType.EXPENSE)
                                 )
                             }
                         }

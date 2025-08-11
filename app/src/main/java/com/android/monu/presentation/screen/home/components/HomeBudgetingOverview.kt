@@ -17,13 +17,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
+import com.android.monu.presentation.screen.budgeting.components.calculateProgressBar
+import com.android.monu.presentation.screen.budgeting.components.changeProgressBarColor
+import com.android.monu.presentation.utils.NumberFormatHelper
 import com.android.monu.presentation.utils.debouncedClickable
-import com.android.monu.ui.theme.Green600
 
 @Composable
 fun HomeBudgetingOverview(
-    modifier: Modifier = Modifier,
-    onNavigateToBudgeting: () -> Unit
+    totalUsedAmount: Long,
+    totalMaxAmount: Long,
+    onNavigateToBudgeting: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -58,16 +62,19 @@ fun HomeBudgetingOverview(
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    progress = { 0.2f },
+                    progress = { calculateProgressBar(totalUsedAmount, totalMaxAmount) },
                     modifier = Modifier.size(128.dp),
-                    color = Green600,
+                    color = changeProgressBarColor(totalUsedAmount, totalMaxAmount),
                     strokeWidth = 8.dp,
                     trackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
                 Text(
-                    text = "20%",
+                    text = stringResource(
+                        R.string.percentage_value,
+                        NumberFormatHelper.formatToPercentageValue(totalUsedAmount, totalMaxAmount)
+                    ),
                     style = MaterialTheme.typography.labelMedium.copy(
-                        color = Green600,
+                        color = changeProgressBarColor(totalUsedAmount, totalMaxAmount),
                         fontSize = 20.sp
                     )
                 )
@@ -81,7 +88,7 @@ fun HomeBudgetingOverview(
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
-                    text = "Rp10.000.000",
+                    text = NumberFormatHelper.formatToRupiah(totalMaxAmount),
                     modifier = Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.labelMedium
                 )
@@ -91,7 +98,7 @@ fun HomeBudgetingOverview(
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
-                    text = "Rp2.000.000",
+                    text = NumberFormatHelper.formatToRupiah(totalUsedAmount),
                     modifier = Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.labelMedium
                 )
@@ -101,7 +108,7 @@ fun HomeBudgetingOverview(
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
-                    text = "Rp8.000.000",
+                    text = NumberFormatHelper.formatToRupiah(totalMaxAmount - totalUsedAmount),
                     modifier = Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.labelMedium
                 )

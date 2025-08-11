@@ -27,8 +27,8 @@ import com.android.monu.ui.theme.MonuTheme
 @Composable
 fun HomeBalanceOverview(
     totalBalance: Long,
-    modifier: Modifier = Modifier,
-    onNavigateToAccount: () -> Unit
+    onNavigateToAccount: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),

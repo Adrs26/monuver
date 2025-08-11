@@ -27,10 +27,10 @@ import com.android.monu.ui.theme.Red600
 
 @Composable
 fun HomeMenuButtonBar(
-    modifier: Modifier = Modifier,
     onNavigateToAddIncomeTransaction: () -> Unit,
     onNavigateToAddExpenseTransaction: () -> Unit,
-    onNavigateToTransfer: () -> Unit
+    onNavigateToTransfer: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,

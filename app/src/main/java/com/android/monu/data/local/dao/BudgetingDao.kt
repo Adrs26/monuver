@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface BudgetingDao {
 
     @Query("SELECT * FROM budgeting WHERE isActive = 1")
-    fun getAllBudgets(): Flow<List<BudgetingEntity>>
+    fun getAllActiveBudgets(): Flow<List<BudgetingEntity>>
 
     @Query("""
         SELECT IFNULL(SUM(maxAmount), 0) 

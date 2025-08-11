@@ -3,7 +3,7 @@ package com.android.monu.di
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
 import com.android.monu.domain.usecase.budgeting.CreateBudgetingUseCase
-import com.android.monu.domain.usecase.budgeting.GetAllBudgetsUseCase
+import com.android.monu.domain.usecase.budgeting.GetAllActiveBudgetsUseCase
 import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
 import com.android.monu.domain.usecase.finance.CreateAccountUseCase
 import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
@@ -48,7 +48,7 @@ val domainModule = module {
     factory { UpdateExpenseTransactionUseCase(get(), get(), get()) }
     factory { UpdateTransferTransactionUseCase(get(), get()) }
 
-    factory { GetAllBudgetsUseCase(get()) }
+    factory { GetAllActiveBudgetsUseCase(get()) }
     factory { GetBudgetingSummaryUseCase(get()) }
     factory { CreateBudgetingUseCase(get(), get()) }
 }

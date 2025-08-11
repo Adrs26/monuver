@@ -11,8 +11,8 @@ class BudgetingRepositoryImpl(
     private val budgetingDao: BudgetingDao
 ) : BudgetingRepository {
 
-    override fun getAllBudgets(): Flow<List<Budgeting>> {
-        return budgetingDao.getAllBudgets().map { entityList ->
+    override fun getAllActiveBudgets(): Flow<List<Budgeting>> {
+        return budgetingDao.getAllActiveBudgets().map { entityList ->
             entityList.map { entity ->
                 BudgetingMapper.budgetingEntityToDomain(entity)
             }
