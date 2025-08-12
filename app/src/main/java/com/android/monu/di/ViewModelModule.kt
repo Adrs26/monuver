@@ -19,27 +19,27 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { HomeViewModel(get(), get(), get()) }
+    viewModel { TransactionViewModel(get(), get()) }
+    viewModel { BudgetingViewModel(get(), get()) }
+    viewModel { AnalyticsViewModel(get(), get(), get(), get()) }
+
     viewModel { AccountViewModel(get(), get()) }
     viewModel { AddAccountViewModel(get()) }
 
-    viewModel { TransactionViewModel(get(), get()) }
-    viewModel { (handle: SavedStateHandle) ->
-        TransactionDetailViewModel(get(), get(), get(), get(), handle)
-    }
-    viewModel { (handle: SavedStateHandle) ->
-        EditTransactionViewModel(get(), get(), get(), handle)
-    }
-    viewModel { (handle: SavedStateHandle) ->
-        EditTransferViewModel(get(), get(), handle)
-    }
     viewModel { AddTransactionViewModel(get(), get(), get()) }
     viewModel { TransferViewModel(get(), get()) }
+    viewModel { (handle: SavedStateHandle) ->
+        TransactionDetailViewModel(handle, get(), get(), get(), get())
+    }
+    viewModel { (handle: SavedStateHandle) ->
+        EditTransactionViewModel(handle, get(), get(), get())
+    }
+    viewModel { (handle: SavedStateHandle) ->
+        EditTransferViewModel(handle, get(), get())
+    }
 
-    viewModel { BudgetingViewModel(get(), get()) }
+    viewModel { AddBudgetingViewModel(get()) }
     viewModel { (handle: SavedStateHandle) ->
         BudgetingDetailViewModel(handle, get(), get(), get())
     }
-    viewModel { AddBudgetingViewModel(get()) }
-
-    viewModel { AnalyticsViewModel(get(), get(), get(), get()) }
 }

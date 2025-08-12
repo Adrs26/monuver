@@ -11,7 +11,7 @@ import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentState
 import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.TransactionType
-import com.android.monu.ui.navigation.MainTransactionDetail
+import com.android.monu.ui.navigation.EditTransaction
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,18 +23,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class EditTransactionViewModel(
+    private val savedStateHandle: SavedStateHandle,
     private val getTransactionByIdUseCase: GetTransactionByIdUseCase,
     private val updateIncomeTransactionUseCase: UpdateIncomeTransactionUseCase,
     private val updateExpenseTransactionUseCase: UpdateExpenseTransactionUseCase,
-    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _transaction = MutableStateFlow<Transaction?>(null)
     val transaction = _transaction
         .onStart {
-            val id = savedStateHandle.toRoute<MainTransactionDetail>().id
+            val id = savedStateHandle.toRoute<EditTransaction>().id
             getTransactionById(id)
-        }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), null)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val _initialTransaction = MutableStateFlow<Transaction?>(null)
     val initialTransaction: StateFlow<Transaction?> = _initialTransaction

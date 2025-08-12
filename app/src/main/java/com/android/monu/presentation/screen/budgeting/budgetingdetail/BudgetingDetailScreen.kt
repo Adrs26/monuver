@@ -15,7 +15,6 @@ import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.components.BudgetingDetailAppBar
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.components.BudgetingDetailContent
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.components.DeleteBudgetingDialog
-import com.android.monu.presentation.utils.DatabaseCodeMapper
 import com.android.monu.presentation.utils.showMessageWithToast
 
 @Composable
@@ -32,7 +31,7 @@ fun BudgetingDetailScreen(
     Scaffold(
         topBar = {
             BudgetingDetailAppBar(
-                title = stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetingState.category)),
+                title = stringResource(R.string.budgeting_detail),
                 onNavigateBack = onNavigateBack,
                 onEditClick = {},
                 onDeleteClick = { showRemoveDialog = true }

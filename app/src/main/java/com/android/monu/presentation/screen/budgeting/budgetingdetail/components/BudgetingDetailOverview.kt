@@ -48,59 +48,25 @@ fun BudgetingDetailOverview(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(R.string.budgeting_period),
-                    modifier = Modifier.weight(1.5f),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 12.sp
-                    )
-                )
-                Text(
-                    text = ": ${stringResource(DatabaseCodeMapper.toBudgetingPeriod(budgetingState.period))}",
-                    modifier = Modifier.weight(2.5f),
-                    style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
-                )
-            }
-            Row(
-                modifier = Modifier.padding(top = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(R.string.budgeting_time_period),
-                    modifier = Modifier.weight(1.5f),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 12.sp
-                    )
-                )
-                Text(
-                    text = ": ${formatBudgetingDate(budgetingState.startDate, budgetingState.endDate)}",
-                    modifier = Modifier.weight(2.5f),
-                    style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
-                )
-            }
-            Row(
-                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = stringResource(R.string.maximum_amount),
-                    modifier = Modifier.weight(1.5f),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 12.sp
-                    )
-                )
-                Text(
-                    text = ": ${NumberFormatHelper.formatToRupiah(budgetingState.maxAmount)}",
-                    modifier = Modifier.weight(2.5f),
-                    style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
-                )
-            }
+            BudgetingDetailData(
+                title = stringResource(R.string.category),
+                content = stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetingState.category))
+            )
+            BudgetingDetailData(
+                title = stringResource(R.string.budgeting_period),
+                content = stringResource(DatabaseCodeMapper.toBudgetingPeriod(budgetingState.period)),
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            BudgetingDetailData(
+                title = stringResource(R.string.budgeting_time_period),
+                content = formatBudgetingDate(budgetingState.startDate, budgetingState.endDate),
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            BudgetingDetailData(
+                title = stringResource(R.string.maximum_amount),
+                content = NumberFormatHelper.formatToRupiah(budgetingState.maxAmount),
+                modifier = Modifier.padding(top = 8.dp, bottom = 24.dp)
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -169,5 +135,31 @@ fun BudgetingDetailOverview(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun BudgetingDetailData(
+    title: String,
+    content: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = title,
+            modifier = Modifier.weight(1.5f),
+            style = MaterialTheme.typography.labelSmall.copy(
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = 12.sp
+            )
+        )
+        Text(
+            text = ": $content",
+            modifier = Modifier.weight(2.5f),
+            style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
+        )
     }
 }

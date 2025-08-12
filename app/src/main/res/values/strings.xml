@@ -164,7 +164,7 @@
     <string name="funds_source">Sumber dana</string>
     <string name="choose_funds_source">Pilih sumber dana</string>
     <string name="cannot_select_future_date">Transaksi tidak bisa dicatat untuk tanggal di masa depan</string>
-    <string name="transaction_detail">Detail Transaksi</string>
+    <string name="transaction_detail">Detail transaksi</string>
     <string name="source">Sumber</string>
     <string name="destination">Tujuan</string>
     <string name="edit_transaction">Edit transaksi</string>
@@ -219,4 +219,5 @@
     <string name="bugdeting_auto_update">Otomatis perbarui budget setelah selesai</string>
     <string name="budgeting_time_period">Jangka waktu</string>
     <string name="transaction_history">Riwayat transaksi</string>
+    <string name="budgeting_detail">Detail budget</string>
 </resources>

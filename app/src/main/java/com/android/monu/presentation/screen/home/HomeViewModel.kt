@@ -2,62 +2,25 @@ package com.android.monu.presentation.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.domain.model.budgeting.BudgetingSummary
-import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
 import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val getTotalAccountBalanceUseCase: GetTotalAccountBalanceUseCase,
-    private val getRecentTransactionsUseCase: GetRecentTransactionsUseCase,
-    private val getBudgetingSummaryUseCase: GetBudgetingSummaryUseCase
+    getTotalAccountBalanceUseCase: GetTotalAccountBalanceUseCase,
+    getRecentTransactionsUseCase: GetRecentTransactionsUseCase,
+    getBudgetingSummaryUseCase: GetBudgetingSummaryUseCase
 ) : ViewModel() {
 
-    private val _totalAccountBalance = MutableStateFlow<Long>(0)
-    val totalAccountBalance = _totalAccountBalance
-        .onStart {
-            getTotalAccountBalance()
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
+    val totalAccountBalance = getTotalAccountBalanceUseCase().map{ it ?: 0 }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
-    private val _recentTransactions = MutableStateFlow<List<Transaction>>(emptyList())
-    val recentTransactions = _recentTransactions
-        .onStart {
-            getRecentTransactions()
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val recentTransactions = getRecentTransactionsUseCase()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _budgetingSummary = MutableStateFlow<BudgetingSummary?>(null)
-    val budgetingSummary = _budgetingSummary
-        .onStart {
-            getBudgetingSummary()
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
-
-    private fun getTotalAccountBalance() {
-        viewModelScope.launch {
-            getTotalAccountBalanceUseCase().collect { balance ->
-                _totalAccountBalance.value = balance ?: 0
-            }
-        }
-    }
-
-    private fun getRecentTransactions() {
-        viewModelScope.launch {
-            getRecentTransactionsUseCase().collect { transactions ->
-                _recentTransactions.value = transactions
-            }
-        }
-    }
-
-    private fun getBudgetingSummary() {
-        viewModelScope.launch {
-            getBudgetingSummaryUseCase().collect { summary ->
-                _budgetingSummary.value = summary
-            }
-        }
-    }
+    val budgetingSummary = getBudgetingSummaryUseCase()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 }

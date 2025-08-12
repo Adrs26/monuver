@@ -3,8 +3,8 @@ package com.android.monu.presentation.screen.analytics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
-import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionBalanceSummaryUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionSummaryUseCase
 import com.android.monu.presentation.utils.DateHelper
 import com.android.monu.presentation.utils.TransactionType
@@ -13,14 +13,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 
 class AnalyticsViewModel(
-    private val getDistinctTransactionYearsUseCase: GetDistinctTransactionYearsUseCase,
+    getDistinctTransactionYearsUseCase: GetDistinctTransactionYearsUseCase,
     private val getTransactionBalanceSummaryUseCase: GetTransactionBalanceSummaryUseCase,
     private val getTransactionCategorySummaryUseCase: GetTransactionCategorySummaryUseCase,
     private val getTransactionSummaryUseCase: GetTransactionSummaryUseCase
@@ -29,48 +27,26 @@ class AnalyticsViewModel(
     private val _filterState = MutableStateFlow(AnalyticsFilterState())
     val filterState = _filterState.asStateFlow()
 
-    private val _yearFilterOptions = MutableStateFlow<List<Int>>(emptyList())
-    val yearFilterOptions = _yearFilterOptions
-        .onStart {
-            getYearFilterOptions()
-        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    val yearFilterOptions = getDistinctTransactionYearsUseCase()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val transactionAmountSummary = _filterState
         .flatMapLatest { filters ->
-            getTransactionBalanceSummaryUseCase(
-                month = filters.month,
-                year = filters.year
-            )
+            getTransactionBalanceSummaryUseCase(filters.month, filters.year)
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val transactionCategorySummaries = _filterState
         .flatMapLatest { filters ->
-            getTransactionCategorySummaryUseCase(
-                type = filters.type,
-                month = filters.month,
-                year = filters.year
-            )
+            getTransactionCategorySummaryUseCase(filters.type, filters.month, filters.year)
         }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val transactionDailySummaries = _filterState
         .flatMapLatest { filters ->
-            getTransactionSummaryUseCase(
-                month = filters.month,
-                year = filters.year,
-                week = filters.week
-            )
+            getTransactionSummaryUseCase(filters.month, filters.year, filters.week)
         }
-
-    private fun getYearFilterOptions() {
-        viewModelScope.launch {
-            getDistinctTransactionYearsUseCase().collect { availableYears ->
-                _yearFilterOptions.value = availableYears
-            }
-        }
-    }
 
     fun changeMonthFilter(month: Int) {
         _filterState.update { it.copy(month = month) }

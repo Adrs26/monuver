@@ -12,34 +12,21 @@ import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.presentation.utils.TransactionChildCategory
 import com.android.monu.presentation.utils.TransactionType
 import com.android.monu.ui.navigation.MainTransactionDetail
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class TransactionDetailViewModel(
-    private val getTransactionByIdUseCase: GetTransactionByIdUseCase,
+    savedStateHandle: SavedStateHandle,
+    getTransactionByIdUseCase: GetTransactionByIdUseCase,
     private val deleteIncomeTransactionUseCase: DeleteIncomeTransactionUseCase,
     private val deleteExpenseTransactionUseCase: DeleteExpenseTransactionUseCase,
-    private val deleteTransferTransactionUseCase: DeleteTransferTransactionUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val deleteTransferTransactionUseCase: DeleteTransferTransactionUseCase
 ) : ViewModel() {
 
-    private val _transaction = MutableStateFlow<Transaction?>(null)
-    val transaction = _transaction
-        .onStart {
-            val id = savedStateHandle.toRoute<MainTransactionDetail>().id
-            getTransactionById(id)
-        }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), null)
-
-    private fun getTransactionById(id: Long) {
-        viewModelScope.launch {
-            getTransactionByIdUseCase(id).collect { transaction ->
-                _transaction.value = transaction
-            }
-        }
-    }
+    val transaction = getTransactionByIdUseCase(
+        savedStateHandle.toRoute<MainTransactionDetail>().id
+    ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     fun deleteTransaction(transaction: Transaction) {
         viewModelScope.launch {

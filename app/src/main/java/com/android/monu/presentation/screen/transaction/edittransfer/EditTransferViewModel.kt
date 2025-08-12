@@ -4,43 +4,30 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.usecase.finance.UpdateTransferTransactionUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.presentation.screen.transaction.edittransfer.components.EditTransferContentState
 import com.android.monu.presentation.utils.DatabaseResultMessage
-import com.android.monu.ui.navigation.MainTransactionDetail
+import com.android.monu.ui.navigation.EditTransfer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class EditTransferViewModel(
-    private val getTransactionByIdUseCase: GetTransactionByIdUseCase,
-    private val updateTransferTransactionUseCase: UpdateTransferTransactionUseCase,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    getTransactionByIdUseCase: GetTransactionByIdUseCase,
+    private val updateTransferTransactionUseCase: UpdateTransferTransactionUseCase
 ) : ViewModel() {
 
-    private val _transaction = MutableStateFlow<Transaction?>(null)
-    val transaction = _transaction
-        .onStart {
-            val id = savedStateHandle.toRoute<MainTransactionDetail>().id
-            getTransactionById(id)
-        }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), null)
+    val transaction = getTransactionByIdUseCase(
+        savedStateHandle.toRoute<EditTransfer>().id
+    ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val _updateResult = MutableStateFlow<DatabaseResultMessage?>(null)
     val updateResult = _updateResult.asStateFlow()
-
-    private fun getTransactionById(id: Long) {
-        viewModelScope.launch {
-            getTransactionByIdUseCase(id).collect { transaction ->
-                _transaction.value = transaction
-            }
-        }
-    }
 
     fun updateTransaction(transferState: EditTransferContentState) {
         viewModelScope.launch {
