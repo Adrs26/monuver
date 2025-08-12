@@ -106,7 +106,7 @@ object DateHelper {
 
     fun formatToShortDate(inputDate: String): String {
         val parsedDate = LocalDate.parse(inputDate)
-        val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale("id", "ID"))
+        val formatter = DateTimeFormatter.ofPattern("d MMM yyyy", Locale("id", "ID"))
         return parsedDate.format(formatter)
     }
 }

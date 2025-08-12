@@ -33,6 +33,7 @@ import com.android.monu.R
 import com.android.monu.presentation.components.TextAmountInputField
 import com.android.monu.presentation.components.TextDateInputField
 import com.android.monu.presentation.components.TextInputField
+import com.android.monu.presentation.utils.BudgetingPeriod
 import com.android.monu.presentation.utils.DatabaseCodeMapper
 import com.android.monu.presentation.utils.DateHelper
 
@@ -141,7 +142,7 @@ fun PeriodFilterField(
         modifier = modifier
     ) {
         Text(
-            text = "Periode",
+            text = stringResource(R.string.budgeting_period),
             modifier = Modifier.padding(bottom = 4.dp),
             style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
         )
@@ -154,7 +155,11 @@ fun PeriodFilterField(
                     shape = MaterialTheme.shapes.extraSmall
                 )
         ) {
-            listOf(1, 2, 3).forEach { period ->
+            listOf(
+                BudgetingPeriod.MONTHLY,
+                BudgetingPeriod.WEEKLY,
+                BudgetingPeriod.CUSTOM
+            ).forEach { period ->
                 Box(
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.extraSmall)
@@ -167,7 +172,7 @@ fun PeriodFilterField(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(toBudgetingPeriod(period)),
+                        text = stringResource(DatabaseCodeMapper.toBudgetingPeriod(period)),
                         modifier = Modifier.padding(vertical = 8.dp),
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = if (period == selectedPeriod) MaterialTheme.colorScheme.onPrimary else
@@ -251,14 +256,6 @@ fun TextWithSwitch(
                 disabledUncheckedBorderColor = MaterialTheme.colorScheme.surfaceVariant
             )
         )
-    }
-}
-
-private fun toBudgetingPeriod(code: Int): Int {
-    return when (code) {
-        1 -> R.string.monthly
-        2 -> R.string.weekly
-        else -> R.string.custom
     }
 }
 

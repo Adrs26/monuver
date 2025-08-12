@@ -12,7 +12,7 @@ import com.android.monu.presentation.screen.budgeting.components.BudgetingConten
 fun BudgetingScreen(
     budgetingState: BudgetingState,
     onHistoryClick: () -> Unit,
-    onItemClick: () -> Unit
+    onItemClick: (Long) -> Unit
 ) {
     Scaffold(
         topBar = {

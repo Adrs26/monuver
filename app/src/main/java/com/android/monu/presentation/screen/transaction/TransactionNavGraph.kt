@@ -211,7 +211,7 @@ fun NavGraphBuilder.transferNavGraph(
     }
 }
 
-fun NavGraphBuilder.detailTransactionNavGraph(
+fun NavGraphBuilder.transactionDetailNavGraph(
     navController: NavHostController
 ) {
     navigation<TransactionDetail>(startDestination = MainTransactionDetail()) {

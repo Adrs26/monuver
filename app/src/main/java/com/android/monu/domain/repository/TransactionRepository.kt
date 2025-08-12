@@ -21,6 +21,12 @@ interface TransactionRepository {
 
     fun getTransactionById(transactionId: Long): Flow<Transaction?>
 
+    fun getTransactionsByParentCategoryAndDateRange(
+        category: Int,
+        startDate: String,
+        endDate: String
+    ): Flow<List<Transaction>>
+
     fun getDistinctTransactionYears(): Flow<List<Int>>
 
     fun getTotalMonthlyTransactionAmount(type: Int, month: Int, year: Int): Flow<Long?>

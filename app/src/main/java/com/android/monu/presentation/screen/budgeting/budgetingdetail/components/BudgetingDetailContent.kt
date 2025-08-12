@@ -1,4 +1,4 @@
-package com.android.monu.presentation.screen.budgeting.components
+package com.android.monu.presentation.screen.budgeting.budgetingdetail.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,32 +16,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.budgeting.Budgeting
+import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.presentation.components.TransactionListItem
+import com.android.monu.presentation.components.TransactionListItemState
+import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailState
 
 @Composable
-fun BudgetingContent(
-    totalMaxAmount: Long,
-    totalUsedAmount: Long,
-    budgets: List<Budgeting>,
-    onItemClick: (Long) -> Unit,
+fun BudgetingDetailContent(
+    budgetingState: BudgetingDetailState,
+    transactions: List<Transaction>,
+    onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when  {
-        budgets.isEmpty() -> {
-            BudgetingEmptyListContent(
-                totalMaxAmount = totalMaxAmount,
-                totalUsedAmount = totalUsedAmount,
+        transactions.isEmpty() -> {
+            BudgetingDetailEmptyListContent(
+                budgetingState = budgetingState,
                 modifier = modifier
                     .padding(horizontal = 16.dp)
                     .padding(top = 8.dp)
             )
         }
         else -> {
-            BudgetingListContent(
-                totalMaxAmount = totalMaxAmount,
-                totalUsedAmount = totalUsedAmount,
-                budgets = budgets,
-                onItemClick = onItemClick,
+            BudgetingDetailListContent(
+                budgetingState = budgetingState,
+                transactions = transactions,
+                onNavigateToTransactionDetail = onNavigateToTransactionDetail,
                 modifier = modifier.padding(top = 8.dp)
             )
         }
@@ -49,11 +49,10 @@ fun BudgetingContent(
 }
 
 @Composable
-fun BudgetingListContent(
-    totalMaxAmount: Long,
-    totalUsedAmount: Long,
-    budgets: List<Budgeting>,
-    onItemClick: (Long) -> Unit,
+fun BudgetingDetailListContent(
+    budgetingState: BudgetingDetailState,
+    transactions: List<Transaction>,
+    onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -62,45 +61,46 @@ fun BudgetingListContent(
             .background(MaterialTheme.colorScheme.background)
     ) {
         item {
-            BudgetingOverview(
-                totalMaxAmount = totalMaxAmount,
-                totalUsedAmount = totalUsedAmount,
+            BudgetingDetailOverview(
+                budgetingState = budgetingState,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
         item {
             Text(
-                text = stringResource(R.string.list_active_budgeting),
+                text = stringResource(R.string.transaction_history),
                 modifier = Modifier.padding(start = 16.dp, top = 24.dp, bottom = 8.dp),
                 style = MaterialTheme.typography.titleMedium
             )
         }
         items(
-            count = budgets.size,
-            key = { index -> budgets[index].id }
+            count = transactions.size,
+            key = { index -> transactions[index].id }
         ) { index ->
-            val budgetingState = BudgetingListItemState(
-                id = budgets[index].id,
-                category = budgets[index].category,
-                startDate = budgets[index].startDate,
-                endDate = budgets[index].endDate,
-                maxAmount = budgets[index].maxAmount,
-                usedAmount = budgets[index].usedAmount
+            val transactionState = TransactionListItemState(
+                id = transactions[index].id,
+                title = transactions[index].title,
+                type = transactions[index].type,
+                parentCategory = transactions[index].parentCategory,
+                childCategory = transactions[index].childCategory,
+                date = transactions[index].date,
+                amount = transactions[index].amount,
+                sourceName = transactions[index].sourceName
             )
 
-            BudgetingListItem(
-                budgetingState = budgetingState,
+            TransactionListItem(
+                transactionState = transactionState,
                 modifier = Modifier
-                    .clickable { onItemClick(budgetingState.id) }
+                    .clickable { onNavigateToTransactionDetail(transactionState.id) }
+                    .padding(horizontal = 16.dp, vertical = 2.dp)
             )
         }
     }
 }
 
 @Composable
-fun BudgetingEmptyListContent(
-    totalMaxAmount: Long,
-    totalUsedAmount: Long,
+fun BudgetingDetailEmptyListContent(
+    budgetingState: BudgetingDetailState,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -109,12 +109,11 @@ fun BudgetingEmptyListContent(
             .background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        BudgetingOverview(
-            totalMaxAmount = totalMaxAmount,
-            totalUsedAmount = totalUsedAmount
+        BudgetingDetailOverview(
+            budgetingState = budgetingState
         )
         Text(
-            text = stringResource(R.string.list_active_budgeting),
+            text = stringResource(R.string.transaction_history),
             modifier = Modifier.padding(top = 24.dp),
             style = MaterialTheme.typography.titleMedium
         )
@@ -125,7 +124,7 @@ fun BudgetingEmptyListContent(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = stringResource(R.string.you_have_not_active_budgeting),
+                text = "Belum ada transaksi untuk kategori ini",
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onSurface
                 )

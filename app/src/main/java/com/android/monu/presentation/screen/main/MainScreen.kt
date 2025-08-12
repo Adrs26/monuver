@@ -56,11 +56,11 @@ import com.android.monu.presentation.screen.transaction.TransactionViewModel
 import com.android.monu.presentation.utils.TransactionType
 import com.android.monu.ui.navigation.Analytics
 import com.android.monu.ui.navigation.Budgeting
-import com.android.monu.ui.navigation.BudgetingDetail
 import com.android.monu.ui.navigation.Home
 import com.android.monu.ui.navigation.MainAccount
 import com.android.monu.ui.navigation.MainAddBudgeting
 import com.android.monu.ui.navigation.MainAddTransaction
+import com.android.monu.ui.navigation.MainBudgetingDetail
 import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.Settings
 import com.android.monu.ui.navigation.Transaction
@@ -245,7 +245,9 @@ fun MainScreen(
                 BudgetingScreen(
                     budgetingState = budgetingState,
                     onHistoryClick = { },
-                    onItemClick = { rootNavController.navigate(BudgetingDetail) }
+                    onItemClick = { budgetingId ->
+                        rootNavController.navigate(MainBudgetingDetail(id = budgetingId))
+                    }
                 )
             }
             composable<Analytics> {

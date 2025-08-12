@@ -88,6 +88,7 @@
     <string name="my_account">Akun</string>
     <string name="add">Tambah</string>
     <string name="delete_this_transaction">Transaksi yang telah dihapus tidak dapat dipulihkan. Tetap ingin menghapus?</string>
+    <string name="delete_this_budgeting">Budget yang telah dihapus tidak dapat dipulihkan. Tetap ingin menghapus?</string>
     <string name="transaction_type">Jenis transaksi</string>
     <string name="transaction_year">Tahun transaksi</string>
     <string name="transaction_month">Bulan transaksi</string>
@@ -201,7 +202,8 @@
     <string name="empty_account_balance">Saldo awal akun tidak boleh kosong</string>
     <string name="empty_budgeting_category">Kategori transaksi budget tidak boleh kosong</string>
     <string name="empty_budgeting_max_amount">Saldo maksimal budget tidak boleh kosong</string>
-    <string name="budgeting_successfully_added">Budgeting berhasil ditambahkan</string>
+    <string name="budgeting_successfully_added">Budget berhasil ditambahkan</string>
+    <string name="budgeting_successfully_deleted">Budget berhasil dihapus</string>"
     <string name="your_budgeting_this_period">Budget kamu periode ini</string>
     <string name="already_used">telah digunakan</string>
     <string name="list_active_budgeting">Daftar budget aktif</string>
@@ -215,4 +217,6 @@
     <string name="choose_budgeting_end_date">Pilih tanggal budget selesai</string>
     <string name="budgeting_overflow_allowed">Izinkan budget melebihi batas maksimum</string>
     <string name="bugdeting_auto_update">Otomatis perbarui budget setelah selesai</string>
+    <string name="budgeting_time_period">Jangka waktu</string>
+    <string name="transaction_history">Riwayat transaksi</string>
 </resources>

@@ -20,15 +20,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.theme.Green600
-import com.android.monu.ui.theme.MonuTheme
+import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailState
+import com.android.monu.presentation.screen.budgeting.components.calculateProgressBar
+import com.android.monu.presentation.screen.budgeting.components.formatBudgetingDate
+import com.android.monu.presentation.utils.DatabaseCodeMapper
+import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun BudgetingDetailOverview(
+    budgetingState: BudgetingDetailState,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -49,7 +52,7 @@ fun BudgetingDetailOverview(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.category),
+                    text = stringResource(R.string.budgeting_period),
                     modifier = Modifier.weight(1.5f),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -57,7 +60,7 @@ fun BudgetingDetailOverview(
                     )
                 )
                 Text(
-                    text = ": Tagihan & utilitas",
+                    text = ": ${stringResource(DatabaseCodeMapper.toBudgetingPeriod(budgetingState.period))}",
                     modifier = Modifier.weight(2.5f),
                     style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
                 )
@@ -67,7 +70,7 @@ fun BudgetingDetailOverview(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = stringResource(R.string.budgeting_period),
+                    text = stringResource(R.string.budgeting_time_period),
                     modifier = Modifier.weight(1.5f),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -75,7 +78,7 @@ fun BudgetingDetailOverview(
                     )
                 )
                 Text(
-                    text = ": 1 Sep 2025 - 30 Sep 2025",
+                    text = ": ${formatBudgetingDate(budgetingState.startDate, budgetingState.endDate)}",
                     modifier = Modifier.weight(2.5f),
                     style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
                 )
@@ -93,7 +96,7 @@ fun BudgetingDetailOverview(
                     )
                 )
                 Text(
-                    text = ": Rp10.000.000",
+                    text = ": ${NumberFormatHelper.formatToRupiah(budgetingState.maxAmount)}",
                     modifier = Modifier.weight(2.5f),
                     style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
                 )
@@ -102,19 +105,27 @@ fun BudgetingDetailOverview(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 LinearProgressIndicator(
-                    progress = { 0.5f },
+                    progress = {
+                        calculateProgressBar(budgetingState.usedAmount, budgetingState.maxAmount)
+                    },
                     modifier = Modifier
                         .weight(0.8f)
                         .clip(CircleShape)
                         .height(10.dp),
-                    color = Green600,
+                    color = DatabaseCodeMapper.toParentCategoryIconBackground(budgetingState.category),
                     trackColor = MaterialTheme.colorScheme.surfaceVariant,
                     strokeCap = StrokeCap.Square,
                     gapSize = 0.dp,
                     drawStopIndicator = { null }
                 )
                 Text(
-                    text = "50%",
+                    text = stringResource(
+                        R.string.percentage_value,
+                        NumberFormatHelper.formatToPercentageValue(
+                            budgetingState.usedAmount,
+                            budgetingState.maxAmount
+                        )
+                    ),
                     modifier = Modifier.padding(start = 16.dp),
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.SemiBold
@@ -146,23 +157,17 @@ fun BudgetingDetailOverview(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Rp5.000.000",
+                    text = NumberFormatHelper.formatToRupiah(budgetingState.usedAmount),
                     style = MaterialTheme.typography.labelMedium.copy(fontSize = 13.sp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "Rp5.000.000",
+                    text = NumberFormatHelper.formatToRupiah(
+                        budgetingState.maxAmount - budgetingState.usedAmount
+                    ),
                     style = MaterialTheme.typography.labelMedium.copy(fontSize = 13.sp)
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BudgetingDetailOverviewPreview() {
-    MonuTheme {
-        BudgetingDetailOverview()
     }
 }

@@ -19,6 +19,12 @@ class BudgetingRepositoryImpl(
         }
     }
 
+    override fun getBudgetingById(id: Long): Flow<Budgeting?> {
+        return budgetingDao.getBudgetingById(id).map { entity ->
+            BudgetingMapper.budgetingEntityToDomain(entity ?: return@map null)
+        }
+    }
+
     override fun getTotalBudgetingMaxAmount(): Flow<Long> {
         return budgetingDao.getTotalBudgetingMaxAmount()
     }
@@ -44,5 +50,9 @@ class BudgetingRepositoryImpl(
         return budgetingDao.getBudgetingForDate(category, date)?.let { entity ->
             BudgetingMapper.budgetingEntityToDomain(entity)
         }
+    }
+
+    override suspend fun deleteBudgetingById(id: Long) {
+        budgetingDao.deleteBudgetingById(id)
     }
 }

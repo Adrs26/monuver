@@ -13,6 +13,9 @@ interface BudgetingDao {
     @Query("SELECT * FROM budgeting WHERE isActive = 1")
     fun getAllActiveBudgets(): Flow<List<BudgetingEntity>>
 
+    @Query("SELECT * FROM budgeting WHERE id = :id")
+    fun getBudgetingById(id: Long): Flow<BudgetingEntity?>
+
     @Query("""
         SELECT IFNULL(SUM(maxAmount), 0) 
         FROM budgeting
@@ -61,4 +64,7 @@ interface BudgetingDao {
         AND :date BETWEEN startDate AND endDate
     """)
     suspend fun decreaseBudgetingUsedAmount(category: Int, date: String, delta: Long)
+
+    @Query("DELETE FROM budgeting WHERE id = :id")
+    suspend fun deleteBudgetingById(id: Long)
 }

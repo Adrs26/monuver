@@ -109,3 +109,9 @@ object Month {
     const val DECEMBER = 12
 }
 
+object BudgetingPeriod {
+    const val MONTHLY = 1
+    const val WEEKLY = 2
+    const val CUSTOM = 3
+}
+

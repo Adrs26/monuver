@@ -32,6 +32,7 @@ class CreateBudgetingUseCase(
 
         val budgeting = Budgeting(
             category = budgetingState.category,
+            period = budgetingState.period,
             startDate = budgetingState.startDate,
             endDate = budgetingState.endDate,
             maxAmount = budgetingState.maxAmount,

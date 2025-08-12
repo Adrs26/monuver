@@ -3,7 +3,9 @@ package com.android.monu.di
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
 import com.android.monu.domain.usecase.budgeting.CreateBudgetingUseCase
+import com.android.monu.domain.usecase.budgeting.DeleteBudgetingUseCase
 import com.android.monu.domain.usecase.budgeting.GetAllActiveBudgetsUseCase
+import com.android.monu.domain.usecase.budgeting.GetBudgetingByIdUseCase
 import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
 import com.android.monu.domain.usecase.finance.CreateAccountUseCase
 import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
@@ -22,6 +24,7 @@ import com.android.monu.domain.usecase.transaction.GetTransactionBalanceSummaryU
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionSummaryUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionsByCategoryAndDateRangeUseCase
 import org.koin.dsl.module
 
 val domainModule = module {
@@ -32,6 +35,7 @@ val domainModule = module {
     factory { GetRecentTransactionsUseCase(get()) }
     factory { GetAllTransactionsUseCase(get()) }
     factory { GetTransactionByIdUseCase(get()) }
+    factory { GetTransactionsByCategoryAndDateRangeUseCase(get()) }
     factory { GetDistinctTransactionYearsUseCase(get()) }
     factory { GetTransactionBalanceSummaryUseCase(get()) }
     factory { GetTransactionCategorySummaryUseCase(get()) }
@@ -48,7 +52,9 @@ val domainModule = module {
     factory { UpdateExpenseTransactionUseCase(get(), get(), get()) }
     factory { UpdateTransferTransactionUseCase(get(), get()) }
 
-    factory { GetAllActiveBudgetsUseCase(get()) }
-    factory { GetBudgetingSummaryUseCase(get()) }
     factory { CreateBudgetingUseCase(get(), get()) }
+    factory { DeleteBudgetingUseCase(get()) }
+    factory { GetAllActiveBudgetsUseCase(get()) }
+    factory { GetBudgetingByIdUseCase(get()) }
+    factory { GetBudgetingSummaryUseCase(get()) }
 }

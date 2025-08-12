@@ -7,6 +7,8 @@ interface BudgetingRepository {
 
     fun getAllActiveBudgets(): Flow<List<Budgeting>>
 
+    fun getBudgetingById(id: Long): Flow<Budgeting?>
+
     fun getTotalBudgetingMaxAmount(): Flow<Long>
 
     fun getTotalBudgetingUsedAmount(): Flow<Long>
@@ -16,4 +18,6 @@ interface BudgetingRepository {
     suspend fun createNewBudgeting(budgeting: Budgeting): Long
 
     suspend fun getBudgetingForDate(category: Int, date: String): Budgeting?
+
+    suspend fun deleteBudgetingById(id: Long)
 }

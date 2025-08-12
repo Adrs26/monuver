@@ -156,7 +156,7 @@ fun BudgetingListItemIcon(
     }
 }
 
-private fun formatBudgetingDate(startDate: String, endDate: String): String {
+fun formatBudgetingDate(startDate: String, endDate: String): String {
     return if (startDate == endDate) {
         DateHelper.formatToShortDate(startDate)
     } else {

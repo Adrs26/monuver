@@ -22,7 +22,6 @@ fun DetailTransactionScreen(
     transactionActions: TransactionDetailActions
 ) {
     var showRemoveDialog by remember { mutableStateOf(false) }
-
     val context = LocalContext.current
 
     Scaffold(
