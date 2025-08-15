@@ -60,6 +60,7 @@ import com.android.monu.ui.navigation.Home
 import com.android.monu.ui.navigation.MainAccount
 import com.android.monu.ui.navigation.MainAddBudgeting
 import com.android.monu.ui.navigation.MainAddTransaction
+import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction
 import com.android.monu.ui.navigation.MainBudgetingDetail
 import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.Settings
@@ -287,6 +288,18 @@ fun MainScreen(
 
                     override fun onWeekChange(week: Int) {
                         viewModel.changeWeekFilter(week)
+                    }
+
+                    override fun onNavigateToAnalyticsCategoryTransaction(
+                        category: Int,
+                        month: Int,
+                        year: Int
+                    ) {
+                        rootNavController.navigate(MainAnalyticsCategoryTransaction(
+                            category = category,
+                            month = month,
+                            year = year
+                        ))
                     }
                 }
 

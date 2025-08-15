@@ -76,6 +76,20 @@ class TransactionRepositoryImpl(
         }
     }
 
+    override fun getTransactionsByParentCategoryAndMonthAndYear(
+        category: Int,
+        month: Int,
+        year: Int
+    ): Flow<List<Transaction>> {
+        return transactionDao.getTransactionsByParentCategoryAndMonthAndYear(
+            category, month, year
+        ).map { entityList ->
+            entityList.map { entity ->
+                TransactionMapper.transactionEntityToDomain(entity)
+            }
+        }
+    }
+
     override fun getDistinctTransactionYears(): Flow<List<Int>> {
         return transactionDao.getDistinctTransactionYears()
     }

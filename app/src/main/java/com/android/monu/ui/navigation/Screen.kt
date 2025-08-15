@@ -37,3 +37,10 @@ import kotlinx.serialization.Serializable
 @Serializable object AddBudgeting
 @Serializable object MainAddBudgeting
 @Serializable object AddBudgetingCategory
+
+@Serializable object AnalyticsCategoryTransaction
+@Serializable data class MainAnalyticsCategoryTransaction(
+    val category: Int = 0,
+    val month: Int = 0,
+    val year: Int = 0
+)

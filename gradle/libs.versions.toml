@@ -1,6 +1,6 @@
 [versions]
 accompanistSystemuicontroller = "0.30.1"
-agp = "8.9.3"
+agp = "8.10.1"
 core = "1.0.2"
 koinAndroid = "3.5.3"
 koinAndroidxCompose = "3.5.3"

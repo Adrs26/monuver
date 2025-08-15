@@ -27,6 +27,12 @@ interface TransactionRepository {
         endDate: String
     ): Flow<List<Transaction>>
 
+    fun getTransactionsByParentCategoryAndMonthAndYear(
+        category: Int,
+        month: Int,
+        year: Int
+    ): Flow<List<Transaction>>
+
     fun getDistinctTransactionYears(): Flow<List<Int>>
 
     fun getTotalMonthlyTransactionAmount(type: Int, month: Int, year: Int): Flow<Long?>

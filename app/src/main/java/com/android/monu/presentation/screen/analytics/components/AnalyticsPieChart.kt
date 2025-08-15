@@ -41,10 +41,10 @@ import com.android.monu.presentation.utils.NumberFormatHelper
 
 @Composable
 fun AnalyticsPieChart(
-    typeValue: Int,
-    categorySummaries: List<TransactionCategorySummary>,
-    modifier: Modifier = Modifier,
-    onTypeChange: (Int) -> Unit
+    pieChartState: AnalyticsPieChartState,
+    onTypeChange: (Int) -> Unit,
+    onNavigateToAnalyticsCategoryTransaction: (Int, Int, Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize()
@@ -59,7 +59,7 @@ fun AnalyticsPieChart(
                 style = MaterialTheme.typography.titleMedium
             )
             TypeFilterDropdown(
-                typeValue = typeValue,
+                typeValue = pieChartState.typeFilter,
                 onTypeChange = onTypeChange
             )
         }
@@ -69,9 +69,14 @@ fun AnalyticsPieChart(
                 .padding(32.dp),
             contentAlignment = Alignment.Center
         ) {
-            PieChart(values = categorySummaries)
+            PieChart(values = pieChartState.categorySummaries)
         }
-        AnalyticsPieChartDetail(categorySummaries = categorySummaries)
+        AnalyticsPieChartDetail(
+            categorySummaries = pieChartState.categorySummaries,
+            monthValue = pieChartState.monthFilter,
+            yearValue = pieChartState.yearFilter,
+            onNavigateToAnalyticsCategoryTransaction = onNavigateToAnalyticsCategoryTransaction
+        )
     }
 }
 
@@ -132,7 +137,10 @@ fun TypeFilterDropdown(
 
 @Composable
 fun AnalyticsPieChartDetail(
+    monthValue: Int,
+    yearValue: Int,
     categorySummaries: List<TransactionCategorySummary>,
+    onNavigateToAnalyticsCategoryTransaction: (Int, Int, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -144,7 +152,11 @@ fun AnalyticsPieChartDetail(
                 amount = data.totalAmount,
                 total = categorySummaries.sumOf { it.totalAmount },
                 modifier = Modifier
-                    .clickable { }
+                    .clickable {
+                        onNavigateToAnalyticsCategoryTransaction(
+                            data.parentCategory, monthValue, yearValue
+                        )
+                    }
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
@@ -202,3 +214,10 @@ fun AnalyticsPieChartDetailData(
         )
     }
 }
+
+data class AnalyticsPieChartState(
+    val typeFilter: Int,
+    val monthFilter: Int,
+    val yearFilter: Int,
+    val categorySummaries: List<TransactionCategorySummary>,
+)

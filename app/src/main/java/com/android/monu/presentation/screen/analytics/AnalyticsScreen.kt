@@ -19,6 +19,7 @@ import com.android.monu.presentation.screen.analytics.components.AnalyticsBalanc
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChart
 import com.android.monu.presentation.screen.analytics.components.AnalyticsBarChartState
 import com.android.monu.presentation.screen.analytics.components.AnalyticsPieChart
+import com.android.monu.presentation.screen.analytics.components.AnalyticsPieChartState
 
 @Composable
 fun AnalyticsScreen(
@@ -30,6 +31,13 @@ fun AnalyticsScreen(
         yearFilter = analyticsState.yearFilter,
         weekFilter = analyticsState.weekFilter,
         dailySummaries = analyticsState.dailySummaries
+    )
+
+    val analyticsPieChartState = AnalyticsPieChartState(
+        typeFilter = analyticsState.typeFilter,
+        monthFilter = analyticsState.monthFilter,
+        yearFilter = analyticsState.yearFilter,
+        categorySummaries = analyticsState.categorySummaries
     )
 
     Scaffold(
@@ -69,10 +77,12 @@ fun AnalyticsScreen(
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
             AnalyticsPieChart(
-                typeValue = analyticsState.typeFilter,
-                categorySummaries = analyticsState.categorySummaries,
+                pieChartState = analyticsPieChartState,
+                onTypeChange = { analyticsActions.onTypeChange(it) },
+                onNavigateToAnalyticsCategoryTransaction = { category, month, year ->
+                    analyticsActions.onNavigateToAnalyticsCategoryTransaction(category, month, year)
+                },
                 modifier = Modifier.padding(bottom = 24.dp),
-                onTypeChange = { analyticsActions.onTypeChange(it) }
             )
         }
     }
@@ -94,4 +104,5 @@ interface AnalyticsActions {
     fun onYearChange(year: Int)
     fun onTypeChange(type: Int)
     fun onWeekChange(week: Int)
+    fun onNavigateToAnalyticsCategoryTransaction(category: Int, month: Int, year: Int)
 }

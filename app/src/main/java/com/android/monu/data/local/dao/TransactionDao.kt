@@ -53,6 +53,18 @@ interface TransactionDao {
         endDate: String
     ): Flow<List<TransactionEntity>>
 
+    @Query("""
+        SELECT * 
+        FROM `transaction`
+        WHERE parentCategory = :category AND month = :month AND year = :year
+        ORDER BY date DESC, timeStamp DESC
+    """)
+    fun getTransactionsByParentCategoryAndMonthAndYear(
+        category: Int,
+        month: Int,
+        year: Int
+    ): Flow<List<TransactionEntity>>
+
     @Query("SELECT DISTINCT year FROM `transaction` ORDER BY year DESC")
     fun getDistinctTransactionYears(): Flow<List<Int>>
 
