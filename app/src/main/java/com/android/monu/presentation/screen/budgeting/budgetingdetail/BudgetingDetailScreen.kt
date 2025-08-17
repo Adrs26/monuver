@@ -21,9 +21,7 @@ import com.android.monu.presentation.utils.showMessageWithToast
 fun BudgetingDetailScreen(
     budgetingState: BudgetingDetailState,
     transactions: List<Transaction>,
-    onNavigateBack: () -> Unit,
-    onNavigateToTransactionDetail: (Long) -> Unit,
-    onRemoveBudgeting: (Long) -> Unit,
+    budgetingActions: BudgetingDetailActions,
 ) {
     var showRemoveDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -32,16 +30,19 @@ fun BudgetingDetailScreen(
         topBar = {
             BudgetingDetailAppBar(
                 title = stringResource(R.string.budgeting_detail),
-                onNavigateBack = onNavigateBack,
-                onEditClick = {},
-                onDeleteClick = { showRemoveDialog = true }
+                isBudgetingActive = budgetingState.isActive,
+                onNavigateBack = { budgetingActions.onNavigateBack() },
+                onNavigateToEditBudgeting = {
+                    budgetingActions.onNavigateToEditBudgeting(budgetingState.id)
+                },
+                onRemoveBudgeting = { showRemoveDialog = true }
             )
         }
     ) { innerPadding ->
         BudgetingDetailContent(
             budgetingState = budgetingState,
             transactions = transactions,
-            onNavigateToTransactionDetail = onNavigateToTransactionDetail,
+            onNavigateToTransactionDetail = { budgetingActions.onNavigateToTransactionDetail(it) },
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -51,9 +52,9 @@ fun BudgetingDetailScreen(
             onDismissRequest = { showRemoveDialog = false },
             onRemoveBudgeting = {
                 showRemoveDialog = false
-                onRemoveBudgeting(budgetingState.id)
+                budgetingActions.onRemoveBudgeting(budgetingState.id)
                 context.getString(R.string.budgeting_successfully_deleted).showMessageWithToast(context)
-                onNavigateBack()
+                budgetingActions.onNavigateBack()
             }
         )
     }
@@ -66,5 +67,13 @@ data class BudgetingDetailState(
     val startDate: String,
     val endDate: String,
     val maxAmount: Long,
-    val usedAmount: Long
+    val usedAmount: Long,
+    val isActive: Boolean
 )
+
+interface BudgetingDetailActions {
+    fun onNavigateBack()
+    fun onNavigateToEditBudgeting(budgetingId: Long)
+    fun onRemoveBudgeting(budgetingId: Long)
+    fun onNavigateToTransactionDetail(transactionId: Long)
+}

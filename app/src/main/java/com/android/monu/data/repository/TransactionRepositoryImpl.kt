@@ -52,8 +52,7 @@ class TransactionRepositoryImpl(
                 pagingData.map { entity ->
                     TransactionMapper.transactionEntityToDomain(entity)
                 }
-            }
-            .cachedIn(scope)
+            }.cachedIn(scope)
     }
 
     override fun getTransactionById(transactionId: Long): Flow<Transaction?> {

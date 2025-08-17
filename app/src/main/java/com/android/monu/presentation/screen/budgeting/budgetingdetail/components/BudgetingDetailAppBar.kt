@@ -17,9 +17,10 @@ import com.android.monu.R
 @Composable
 fun BudgetingDetailAppBar(
     title: String,
+    isBudgetingActive: Boolean,
     onNavigateBack: () -> Unit,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onNavigateToEditBudgeting: () -> Unit,
+    onRemoveBudgeting: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -42,17 +43,19 @@ fun BudgetingDetailAppBar(
             }
         },
         actions = {
-            IconButton(
-                onClick = onEditClick
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_edit),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+            if (isBudgetingActive) {
+                IconButton(
+                    onClick = onNavigateToEditBudgeting
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_edit),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
             IconButton(
-                onClick = onDeleteClick
+                onClick = onRemoveBudgeting
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_delete),

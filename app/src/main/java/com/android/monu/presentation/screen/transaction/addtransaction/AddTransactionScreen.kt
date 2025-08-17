@@ -24,7 +24,6 @@ import com.android.monu.presentation.screen.transaction.addtransaction.component
 import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.NumberFormatHelper
 import com.android.monu.presentation.utils.TransactionType
-import com.android.monu.presentation.utils.mapResultMessageToStringResource
 import com.android.monu.presentation.utils.showMessageWithToast
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -100,7 +99,7 @@ fun AddTransactionScreen(
 
     LaunchedEffect(transactionState.addResult) {
         transactionState.addResult?.let { result ->
-            context.getString(mapResultMessageToStringResource(result)).showMessageWithToast(context)
+            context.getString(result.message).showMessageWithToast(context)
             if (result == DatabaseResultMessage.CreateTransactionSuccess) {
                 transactionActions.onNavigateBack()
             }

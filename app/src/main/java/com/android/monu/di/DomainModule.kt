@@ -5,8 +5,11 @@ import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
 import com.android.monu.domain.usecase.budgeting.CreateBudgetingUseCase
 import com.android.monu.domain.usecase.budgeting.DeleteBudgetingUseCase
 import com.android.monu.domain.usecase.budgeting.GetAllActiveBudgetsUseCase
+import com.android.monu.domain.usecase.budgeting.GetAllInactiveBudgetsUseCase
 import com.android.monu.domain.usecase.budgeting.GetBudgetingByIdUseCase
 import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
+import com.android.monu.domain.usecase.budgeting.HandleExpiredBudgetingUseCase
+import com.android.monu.domain.usecase.budgeting.UpdateBudgetingUseCase
 import com.android.monu.domain.usecase.finance.CreateAccountUseCase
 import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateIncomeTransactionUseCase
@@ -57,6 +60,9 @@ val domainModule = module {
     factory { CreateBudgetingUseCase(get(), get()) }
     factory { DeleteBudgetingUseCase(get()) }
     factory { GetAllActiveBudgetsUseCase(get()) }
+    factory { GetAllInactiveBudgetsUseCase(get()) }
     factory { GetBudgetingByIdUseCase(get()) }
     factory { GetBudgetingSummaryUseCase(get()) }
+    factory { HandleExpiredBudgetingUseCase(get()) }
+    factory { UpdateBudgetingUseCase(get(), get()) }
 }

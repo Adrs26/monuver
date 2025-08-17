@@ -62,6 +62,7 @@ import com.android.monu.ui.navigation.MainAddBudgeting
 import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction
 import com.android.monu.ui.navigation.MainBudgetingDetail
+import com.android.monu.ui.navigation.MainInactiveBudgeting
 import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.Settings
 import com.android.monu.ui.navigation.Transaction
@@ -140,6 +141,10 @@ fun MainScreen(
                 val budgetingSummary by viewModel.budgetingSummary.collectAsStateWithLifecycle()
 
                 val homeActions = object : HomeActions {
+                    override fun onHandleExpiredBudgeting() {
+                        viewModel.handleExpiredBudgeting()
+                    }
+
                     override fun onNavigateToSettings() {
                         rootNavController.navigate(Settings)
                     }
@@ -245,7 +250,9 @@ fun MainScreen(
 
                 BudgetingScreen(
                     budgetingState = budgetingState,
-                    onHistoryClick = { },
+                    onNavigateToInactiveBudgeting = {
+                        rootNavController.navigate(MainInactiveBudgeting)
+                    },
                     onItemClick = { budgetingId ->
                         rootNavController.navigate(MainBudgetingDetail(id = budgetingId))
                     }

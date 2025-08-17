@@ -203,7 +203,8 @@
     <string name="empty_budgeting_category">Kategori transaksi budget tidak boleh kosong</string>
     <string name="empty_budgeting_max_amount">Saldo maksimal budget tidak boleh kosong</string>
     <string name="budgeting_successfully_added">Budget berhasil ditambahkan</string>
-    <string name="budgeting_successfully_deleted">Budget berhasil dihapus</string>"
+    <string name="budgeting_successfully_saved">Budget berhasil disimpan</string>
+    <string name="budgeting_successfully_deleted">Budget berhasil dihapus</string>
     <string name="your_budgeting_this_period">Budget kamu periode ini</string>
     <string name="already_used">telah digunakan</string>
     <string name="list_active_budgeting">Daftar budget aktif</string>

@@ -4,15 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
 import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
+import com.android.monu.domain.usecase.budgeting.HandleExpiredBudgetingUseCase
 import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
     getTotalAccountBalanceUseCase: GetTotalAccountBalanceUseCase,
     getRecentTransactionsUseCase: GetRecentTransactionsUseCase,
-    getBudgetingSummaryUseCase: GetBudgetingSummaryUseCase
+    getBudgetingSummaryUseCase: GetBudgetingSummaryUseCase,
+    private val handleExpiredBudgetingUseCase: HandleExpiredBudgetingUseCase
 ) : ViewModel() {
 
     val totalAccountBalance = getTotalAccountBalanceUseCase().map{ it ?: 0 }
@@ -23,4 +26,15 @@ class HomeViewModel(
 
     val budgetingSummary = getBudgetingSummaryUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    private var isExpiredBudgetingHandled = false
+
+    fun handleExpiredBudgeting() {
+        if (!isExpiredBudgetingHandled) {
+            viewModelScope.launch {
+                handleExpiredBudgetingUseCase()
+                isExpiredBudgetingHandled = true
+            }
+        }
+    }
 }

@@ -36,4 +36,21 @@ object BudgetingMapper {
             isAutoUpdate = budgeting.isAutoUpdate
         )
     }
+
+    fun budgetingDomainToEntityForUpdate(
+        budgeting: Budgeting
+    ): BudgetingEntity {
+        return BudgetingEntity(
+            id = budgeting.id,
+            category = budgeting.category,
+            period = budgeting.period,
+            startDate = budgeting.startDate,
+            endDate = budgeting.endDate,
+            maxAmount = budgeting.maxAmount,
+            usedAmount = budgeting.usedAmount,
+            isActive = budgeting.isActive,
+            isOverflowAllowed = budgeting.isOverflowAllowed,
+            isAutoUpdate = budgeting.isAutoUpdate
+        )
+    }
 }

@@ -109,4 +109,20 @@ object DateHelper {
         val formatter = DateTimeFormatter.ofPattern("d MMM yyyy", Locale("id", "ID"))
         return parsedDate.format(formatter)
     }
+
+    fun getNextMonthSameDate(inputDate: String): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val date = LocalDate.parse(inputDate, formatter)
+
+        val nextMonthDate = date.plusMonths(1)
+        return nextMonthDate.format(formatter)
+    }
+
+    fun getNextWeekSameDate(dateStr: String): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val date = LocalDate.parse(dateStr, formatter)
+
+        val nextWeekDate = date.plusWeeks(1)
+        return nextWeekDate.format(formatter)
+    }
 }

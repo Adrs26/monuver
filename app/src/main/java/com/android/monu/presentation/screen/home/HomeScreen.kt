@@ -9,6 +9,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.android.monu.domain.model.budgeting.BudgetingSummary
@@ -26,6 +27,10 @@ fun HomeScreen(
     budgetingSummary: BudgetingSummary,
     homeActions: HomeActions
 ) {
+    LaunchedEffect(Unit) {
+        homeActions.onHandleExpiredBudgeting()
+    }
+
     Scaffold(
         topBar = {
             HomeAppBar(
@@ -80,6 +85,7 @@ fun HomeScreen(
 }
 
 interface HomeActions {
+    fun onHandleExpiredBudgeting()
     fun onNavigateToSettings()
     fun onNavigateToAccount()
     fun onNavigateToAddIncomeTransaction()

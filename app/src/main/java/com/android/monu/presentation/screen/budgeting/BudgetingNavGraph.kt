@@ -6,21 +6,31 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.presentation.screen.budgeting.addbudgeting.AddBudgetingActions
 import com.android.monu.presentation.screen.budgeting.addbudgeting.AddBudgetingScreen
 import com.android.monu.presentation.screen.budgeting.addbudgeting.AddBudgetingViewModel
 import com.android.monu.presentation.screen.budgeting.addbudgeting.components.AddBudgetingCategoryScreen
 import com.android.monu.presentation.screen.budgeting.addbudgeting.components.AddBudgetingContentState
+import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailActions
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailScreen
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailState
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailViewModel
+import com.android.monu.presentation.screen.budgeting.editbudgeting.EditBudgetingScreen
+import com.android.monu.presentation.screen.budgeting.editbudgeting.EditBudgetingState
+import com.android.monu.presentation.screen.budgeting.editbudgeting.EditBudgetingViewModel
+import com.android.monu.presentation.screen.budgeting.inactivebudgeting.InactiveBudgetingScreen
+import com.android.monu.presentation.screen.budgeting.inactivebudgeting.InactiveBudgetingViewModel
 import com.android.monu.presentation.utils.NavigationAnimation
 import com.android.monu.presentation.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.AddBudgeting
 import com.android.monu.ui.navigation.AddBudgetingCategory
 import com.android.monu.ui.navigation.BudgetingDetail
+import com.android.monu.ui.navigation.EditBudgeting
+import com.android.monu.ui.navigation.InactiveBudgeting
 import com.android.monu.ui.navigation.MainAddBudgeting
 import com.android.monu.ui.navigation.MainBudgetingDetail
+import com.android.monu.ui.navigation.MainInactiveBudgeting
 import com.android.monu.ui.navigation.MainTransactionDetail
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -101,19 +111,92 @@ fun NavGraphBuilder.budgetingDetailNavGraph(
                     startDate = budgeting.startDate,
                     endDate = budgeting.endDate,
                     maxAmount = budgeting.maxAmount,
-                    usedAmount = budgeting.usedAmount
+                    usedAmount = budgeting.usedAmount,
+                    isActive = budgeting.isActive
                 )
+
+                val budgetingActions = object : BudgetingDetailActions {
+                    override fun onNavigateBack() {
+                        navController.navigateUp()
+                    }
+
+                    override fun onNavigateToEditBudgeting(budgetingId: Long) {
+                        navController.navigate(EditBudgeting(id = budgetingId))
+                    }
+
+                    override fun onRemoveBudgeting(budgetingId: Long) {
+                        viewModel.deleteBudgeting(budgetingId)
+                    }
+
+                    override fun onNavigateToTransactionDetail(transactionId: Long) {
+                        navController.navigate(MainTransactionDetail(id = transactionId))
+                    }
+                }
 
                 BudgetingDetailScreen(
                     budgetingState = budgetingState,
                     transactions = transactions,
-                    onNavigateBack = { navController.navigateUp() },
-                    onNavigateToTransactionDetail = { transactionId ->
-                        navController.navigate(MainTransactionDetail(id = transactionId))
-                    },
-                    onRemoveBudgeting = viewModel::deleteBudgeting
+                    budgetingActions = budgetingActions
                 )
             }
+        }
+
+        composable<EditBudgeting>(
+            enterTransition = { NavigationAnimation.enter },
+            exitTransition = { NavigationAnimation.exit },
+            popEnterTransition = { NavigationAnimation.popEnter },
+            popExitTransition = { NavigationAnimation.popExit }
+        ) {
+            val viewModel = koinViewModel<EditBudgetingViewModel>(
+                viewModelStoreOwner = it,
+                parameters = { parametersOf(it.savedStateHandle) }
+            )
+            val budgeting by viewModel.budgeting.collectAsStateWithLifecycle()
+            val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
+
+            budgeting?.let { budgeting ->
+                val editBudgetingState = EditBudgetingState(
+                    id = budgeting.id,
+                    category = budgeting.category,
+                    maxAmount = budgeting.maxAmount,
+                    period = budgeting.period,
+                    startDate = budgeting.startDate,
+                    endDate = budgeting.endDate,
+                    isOverflowAllowed = budgeting.isOverflowAllowed,
+                    isAutoUpdate = budgeting.isAutoUpdate,
+                    editResult = editResult
+                )
+
+                EditBudgetingScreen(
+                    budgetingState = editBudgetingState,
+                    onNavigateBack = { navController.navigateUp() },
+                    onEditBudgeting = viewModel::updateBudgeting
+                )
+            }
+        }
+    }
+}
+
+fun NavGraphBuilder.inactiveBudgetingNavGraph(
+    navController: NavHostController
+) {
+    navigation<InactiveBudgeting>(startDestination = MainInactiveBudgeting) {
+        composable<MainInactiveBudgeting>(
+            enterTransition = { NavigationAnimation.enter },
+            exitTransition = { NavigationAnimation.exit },
+            popEnterTransition = { NavigationAnimation.popEnter },
+            popExitTransition = { NavigationAnimation.popExit }
+        ) {
+            val viewModel = koinViewModel<InactiveBudgetingViewModel>()
+            val budgets = viewModel.budgets.collectAsLazyPagingItems()
+
+            InactiveBudgetingScreen(
+                budgets = budgets,
+                onNavigateBack = { navController.navigateUp() },
+                onNavigateToBudgetingDetail = { budgetingId ->
+                    navController.navigate(MainBudgetingDetail(id = budgetingId))
+                }
+            )
         }
     }
 }

@@ -129,7 +129,8 @@ fun BudgetingDetailOverview(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = NumberFormatHelper.formatToRupiah(
-                        budgetingState.maxAmount - budgetingState.usedAmount
+                        if (budgetingState.maxAmount - budgetingState.usedAmount < 0) 0
+                        else budgetingState.maxAmount - budgetingState.usedAmount
                     ),
                     style = MaterialTheme.typography.labelMedium.copy(fontSize = 13.sp)
                 )

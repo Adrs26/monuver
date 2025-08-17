@@ -23,7 +23,6 @@ import com.android.monu.presentation.screen.transaction.edittransfer.components.
 import com.android.monu.presentation.screen.transaction.edittransfer.components.EditTransferContentState
 import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.NumberFormatHelper
-import com.android.monu.presentation.utils.mapResultMessageToStringResource
 import com.android.monu.presentation.utils.showMessageWithToast
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
@@ -86,7 +85,7 @@ fun EditTransferScreen(
 
     LaunchedEffect(transferState.editResult) {
         transferState.editResult?.let { result ->
-            context.getString(mapResultMessageToStringResource(result)).showMessageWithToast(context)
+            context.getString(result.message).showMessageWithToast(context)
             if (result == DatabaseResultMessage.UpdateTransactionSuccess) {
                 transferActions.onNavigateBack()
             }

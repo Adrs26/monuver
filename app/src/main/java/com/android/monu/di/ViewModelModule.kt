@@ -8,6 +8,8 @@ import com.android.monu.presentation.screen.analytics.analyticscategorytransacti
 import com.android.monu.presentation.screen.budgeting.BudgetingViewModel
 import com.android.monu.presentation.screen.budgeting.addbudgeting.AddBudgetingViewModel
 import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailViewModel
+import com.android.monu.presentation.screen.budgeting.editbudgeting.EditBudgetingViewModel
+import com.android.monu.presentation.screen.budgeting.inactivebudgeting.InactiveBudgetingViewModel
 import com.android.monu.presentation.screen.home.HomeViewModel
 import com.android.monu.presentation.screen.transaction.TransactionViewModel
 import com.android.monu.presentation.screen.transaction.addtransaction.AddTransactionViewModel
@@ -19,7 +21,7 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { HomeViewModel(get(), get(), get()) }
+    viewModel { HomeViewModel(get(), get(), get(), get()) }
     viewModel { TransactionViewModel(get(), get()) }
     viewModel { BudgetingViewModel(get(), get()) }
     viewModel { AnalyticsViewModel(get(), get(), get(), get()) }
@@ -43,6 +45,11 @@ val viewModelModule = module {
     viewModel { (handle: SavedStateHandle) ->
         BudgetingDetailViewModel(handle, get(), get(), get())
     }
+    viewModel { (handle: SavedStateHandle) ->
+        EditBudgetingViewModel(handle, get(), get())
+    }
+
+    viewModel { InactiveBudgetingViewModel(get()) }
 
     viewModel { (handle: SavedStateHandle) ->
         AnalyticsCategoryTransactionViewModel(handle, get())

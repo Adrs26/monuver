@@ -22,7 +22,6 @@ import com.android.monu.presentation.screen.account.addaccount.components.AddAcc
 import com.android.monu.presentation.screen.account.addaccount.components.AddAccountContentState
 import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.NumberFormatHelper
-import com.android.monu.presentation.utils.mapResultMessageToStringResource
 import com.android.monu.presentation.utils.showMessageWithToast
 
 @Composable
@@ -78,7 +77,7 @@ fun AddAccountScreen(
 
     LaunchedEffect(addResult) {
         addResult?.let { result ->
-            context.getString(mapResultMessageToStringResource(result)).showMessageWithToast(context)
+            context.getString(result.message).showMessageWithToast(context)
             if (result == DatabaseResultMessage.CreateAccountSuccess) {
                 accountActions.onNavigateBack()
             }

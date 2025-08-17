@@ -33,10 +33,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable object BudgetingDetail
 @Serializable data class MainBudgetingDetail(val id: Long = 0)
+@Serializable data class EditBudgeting(val id: Long = 0)
 
 @Serializable object AddBudgeting
 @Serializable object MainAddBudgeting
 @Serializable object AddBudgetingCategory
+
+@Serializable object InactiveBudgeting
+@Serializable object MainInactiveBudgeting
 
 @Serializable object AnalyticsCategoryTransaction
 @Serializable data class MainAnalyticsCategoryTransaction(

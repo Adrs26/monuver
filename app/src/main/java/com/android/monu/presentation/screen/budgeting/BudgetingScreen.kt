@@ -11,13 +11,13 @@ import com.android.monu.presentation.screen.budgeting.components.BudgetingConten
 @Composable
 fun BudgetingScreen(
     budgetingState: BudgetingState,
-    onHistoryClick: () -> Unit,
+    onNavigateToInactiveBudgeting: () -> Unit,
     onItemClick: (Long) -> Unit
 ) {
     Scaffold(
         topBar = {
             BudgetingAppBar(
-                onHistoryClick = onHistoryClick
+                onHistoryClick = onNavigateToInactiveBudgeting
             )
         }
     ) { innerPadding ->

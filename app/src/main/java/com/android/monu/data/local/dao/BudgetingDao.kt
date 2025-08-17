@@ -1,17 +1,22 @@
 package com.android.monu.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.android.monu.data.local.entity.room.BudgetingEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BudgetingDao {
 
-    @Query("SELECT * FROM budgeting WHERE isActive = 1")
+    @Query("SELECT * FROM budgeting WHERE isActive = 1 ORDER BY endDate ASC")
     fun getAllActiveBudgets(): Flow<List<BudgetingEntity>>
+
+    @Query("SELECT * FROM budgeting WHERE isActive = 0 ORDER BY endDate DESC")
+    fun getAllInactiveBudgets(): PagingSource<Int, BudgetingEntity>
 
     @Query("SELECT * FROM budgeting WHERE id = :id")
     fun getBudgetingById(id: Long): Flow<BudgetingEntity?>
@@ -65,6 +70,12 @@ interface BudgetingDao {
     """)
     suspend fun decreaseBudgetingUsedAmount(category: Int, date: String, delta: Long)
 
+    @Query("UPDATE budgeting SET isActive = 0 WHERE category = :category")
+    suspend fun updateBudgetingStatusToInactive(category: Int)
+
     @Query("DELETE FROM budgeting WHERE id = :id")
     suspend fun deleteBudgetingById(id: Long)
+
+    @Update
+    suspend fun updateBudgeting(budgeting: BudgetingEntity)
 }
