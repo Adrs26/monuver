@@ -50,14 +50,14 @@ fun AnalyticsAppBar(
         actions = {
             MonthFilterDropdown(
                 monthValue = monthValue,
-                modifier = Modifier.padding(end = 16.dp),
-                onMonthChange = onMonthChange
+                onMonthChange = onMonthChange,
+                modifier = Modifier.padding(end = 16.dp)
             )
             YearFilterDropdown(
                 yearValue = yearValue,
                 yearFilterOptions = yearFilterOptions,
-                modifier = Modifier.padding(end = 16.dp),
-                onYearChange = onYearChange
+                onYearChange = onYearChange,
+                modifier = Modifier.padding(end = 16.dp)
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -69,8 +69,8 @@ fun AnalyticsAppBar(
 @Composable
 fun MonthFilterDropdown(
     monthValue: Int,
-    modifier: Modifier = Modifier,
-    onMonthChange: (Int) -> Unit
+    onMonthChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
     val monthFilterOptions = DataProvider.getMonthFilterOptions().drop(1)
@@ -125,8 +125,8 @@ fun MonthFilterDropdown(
 fun YearFilterDropdown(
     yearValue: Int,
     yearFilterOptions: List<Int>,
-    modifier: Modifier = Modifier,
-    onYearChange: (Int) -> Unit
+    onYearChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
 

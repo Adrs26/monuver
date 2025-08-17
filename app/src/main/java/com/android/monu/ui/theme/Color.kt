@@ -2,8 +2,6 @@ package com.android.monu.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Blue = Color(0xFF3674B5)
-val LightGrey = Color(0xFFE9EDF4)
 val BluePrimary = Color(0xFF0077C0)
 val SoftWhite = Color(0xFFF8FCFB)
 val GrayBlue = Color(0xFFE9EDF4)

@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.core)
     implementation(libs.calendar)
     implementation(libs.threetenabp)
+    implementation(libs.lottie.compose)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

@@ -56,8 +56,8 @@ fun HomeAppBar(
 @Composable
 fun HomeIconButton(
     icon: Int,
-    modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     DebouncedIconButton(
         onClick = onClick,

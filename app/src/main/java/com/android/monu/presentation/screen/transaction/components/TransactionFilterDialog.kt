@@ -41,9 +41,9 @@ import kotlin.math.ceil
 @Composable
 fun TransactionFilterDialog(
     filterState: TransactionFilterState,
-    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onFilterApply: (Int?, Int?, Int?) -> Unit
+    onFilterApply: (Int?, Int?, Int?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Dialog(
         onDismissRequest = onDismissRequest
@@ -68,9 +68,9 @@ fun TransactionFilterDialog(
 @Composable
 fun TransactionFilterMenu(
     filterState: TransactionFilterState,
-    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onFilterApply: (Int?, Int?, Int?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val typeFilterOptions = DataProvider.getTransactionTypeFilterOptions()
     val yearFilterOptions = listOf(0) + filterState.yearFilterOptions

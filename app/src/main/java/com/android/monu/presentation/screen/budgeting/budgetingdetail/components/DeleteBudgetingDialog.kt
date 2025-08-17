@@ -26,9 +26,9 @@ import com.android.monu.R
 
 @Composable
 fun DeleteBudgetingDialog(
-    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onRemoveBudgeting: () -> Unit
+    onRemoveBudgeting: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Dialog(
         onDismissRequest = onDismissRequest

@@ -83,8 +83,8 @@ fun AnalyticsPieChart(
 @Composable
 fun TypeFilterDropdown(
     typeValue: Int,
-    modifier: Modifier = Modifier,
-    onTypeChange: (Int) -> Unit
+    onTypeChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
     val typeFilterOptions = DataProvider.getTransactionTypeFilterOptions().subList(1, 3)

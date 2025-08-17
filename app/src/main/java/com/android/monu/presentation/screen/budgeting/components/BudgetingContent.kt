@@ -18,13 +18,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.budgeting.Budgeting
+import com.android.monu.presentation.components.CommonLottieAnimation
 
 @Composable
 fun BudgetingContent(
     totalMaxAmount: Long,
     totalUsedAmount: Long,
     budgets: List<Budgeting>,
-    onItemClick: (Long) -> Unit,
+    onNavigateToBudgetingDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when  {
@@ -42,7 +43,7 @@ fun BudgetingContent(
                 totalMaxAmount = totalMaxAmount,
                 totalUsedAmount = totalUsedAmount,
                 budgets = budgets,
-                onItemClick = onItemClick,
+                onNavigateToBudgetingDetail = onNavigateToBudgetingDetail,
                 modifier = modifier.padding(top = 8.dp)
             )
         }
@@ -54,7 +55,7 @@ fun BudgetingListContent(
     totalMaxAmount: Long,
     totalUsedAmount: Long,
     budgets: List<Budgeting>,
-    onItemClick: (Long) -> Unit,
+    onNavigateToBudgetingDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -93,7 +94,7 @@ fun BudgetingListContent(
             BudgetingListItem(
                 budgetingState = budgetingState,
                 modifier = Modifier
-                    .clickable { onItemClick(budgetingState.id) }
+                    .clickable { onNavigateToBudgetingDetail(budgetingState.id) }
             )
         }
     }
@@ -126,12 +127,7 @@ fun BudgetingEmptyListContent(
                 .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = stringResource(R.string.you_have_not_active_budgeting),
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            )
+            CommonLottieAnimation(lottieAnimation = R.raw.empty)
         }
     }
 }

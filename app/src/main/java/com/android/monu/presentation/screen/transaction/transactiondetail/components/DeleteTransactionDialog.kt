@@ -26,9 +26,9 @@ import com.android.monu.R
 
 @Composable
 fun DeleteTransactionDialog(
-    modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
-    onRemoveTransaction: () -> Unit
+    onRemoveTransaction: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Dialog(
         onDismissRequest = onDismissRequest

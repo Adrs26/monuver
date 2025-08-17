@@ -40,34 +40,34 @@ fun HomeMenuButtonBar(
             icon = painterResource(R.drawable.ic_arrow_upward),
             iconColor = Green600,
             title = stringResource(R.string.income),
+            onClick = { onNavigateToAddIncomeTransaction() },
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .weight(1f),
-            onClick = { onNavigateToAddIncomeTransaction() }
+                .weight(1f)
         )
         HomeMenuButton(
             icon = painterResource(R.drawable.ic_arrow_downward),
             iconColor = Red600,
             title = stringResource(R.string.expense),
+            onClick = { onNavigateToAddExpenseTransaction() },
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .weight(1f),
-            onClick = { onNavigateToAddExpenseTransaction() }
+                .weight(1f)
         )
         HomeMenuButton(
             icon = painterResource(R.drawable.ic_compare_arrows),
             iconColor = Blue800,
             title = stringResource(R.string.transfer),
+            onClick = { onNavigateToTransfer() },
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .weight(1f),
-            onClick = { onNavigateToTransfer() }
+                .weight(1f)
         )
         SavingMenuButton(
+            onClick = { },
             modifier = Modifier
                 .padding(horizontal = 4.dp)
-                .weight(1f),
-            onClick = { }
+                .weight(1f)
         )
     }
 }
@@ -77,8 +77,8 @@ fun HomeMenuButton(
     icon: Painter,
     iconColor: Color,
     title: String,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,
@@ -114,8 +114,8 @@ fun HomeMenuButton(
 
 @Composable
 fun SavingMenuButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier,

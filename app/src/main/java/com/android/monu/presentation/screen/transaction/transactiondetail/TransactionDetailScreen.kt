@@ -28,14 +28,14 @@ fun DetailTransactionScreen(
         topBar = {
             TransactionDetailAppBar(
                 onNavigateBack = { transactionActions.onNavigateBack() },
-                onEditClick = {
-                    transactionActions.onNavigateToEdit(
+                onNavigateToEditTransaction = {
+                    transactionActions.onNavigateToEditTransaction(
                         transactionId = transaction.id,
                         transactionType = transaction.type,
                         transactionCategory = transaction.childCategory
                     )
                 },
-                onDeleteClick = { showRemoveDialog = true }
+                onRemoveTransaction = { showRemoveDialog = true }
             )
         }
     ) { innerPadding ->
@@ -60,6 +60,6 @@ fun DetailTransactionScreen(
 
 interface TransactionDetailActions {
     fun onNavigateBack()
-    fun onNavigateToEdit(transactionId: Long, transactionType: Int, transactionCategory: Int)
+    fun onNavigateToEditTransaction(transactionId: Long, transactionType: Int, transactionCategory: Int)
     fun onRemoveTransaction(transaction: Transaction)
 }

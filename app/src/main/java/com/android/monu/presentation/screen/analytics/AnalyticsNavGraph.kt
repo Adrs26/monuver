@@ -35,10 +35,10 @@ fun NavGraphBuilder.analyticsCategoryTransactionNavGraph(
             AnalyticsCategoryTransactionScreen(
                 category = category,
                 transactions = transactions,
+                onNavigateBack = { navController.navigateUp() },
                 onNavigateToTransactionDetail = { transactionId ->
                     navController.navigate(MainTransactionDetail(id = transactionId))
-                },
-                onNavigateBack = { navController.navigateUp() }
+                }
             )
         }
     }

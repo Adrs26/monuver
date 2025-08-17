@@ -7,17 +7,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
+import com.android.monu.R
 import com.android.monu.domain.model.budgeting.Budgeting
 import com.android.monu.presentation.components.CommonAppBar
+import com.android.monu.presentation.components.CommonLottieAnimation
 import com.android.monu.presentation.screen.budgeting.components.BudgetingListItem
 import com.android.monu.presentation.screen.budgeting.components.BudgetingListItemState
 
@@ -41,11 +41,7 @@ fun InactiveBudgetingScreen(
                 .padding(innerPadding)
         ) {
             if (budgets.itemCount == 0 && budgets.loadState.refresh is LoadState.NotLoading) {
-                Text(
-                    text = "Belum ada budget selesai",
-                    modifier = Modifier.align(Alignment.Center),
-                    style = MaterialTheme.typography.labelMedium
-                )
+                CommonLottieAnimation(lottieAnimation = R.raw.empty)
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),

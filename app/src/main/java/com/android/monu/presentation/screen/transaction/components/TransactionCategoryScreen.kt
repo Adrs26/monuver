@@ -62,9 +62,9 @@ fun TransactionCategoryScreen(
                     transactionType = transactionType,
                     parentCategory = parentCategory,
                     childCategories = childCategories,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                     onNavigateBack = onNavigateBack,
-                    onCategorySelect = onCategorySelect
+                    onCategorySelect = onCategorySelect,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
         }
@@ -76,9 +76,9 @@ fun CategorySection(
     transactionType: Int,
     parentCategory: Int,
     childCategories: List<Int>,
-    modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
-    onCategorySelect: (Int, Int) -> Unit
+    onCategorySelect: (Int, Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val spacerWeight = when {
         childCategories.size % 4 == 1 -> 3f

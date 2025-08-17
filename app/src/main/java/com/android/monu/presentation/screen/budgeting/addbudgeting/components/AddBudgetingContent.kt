@@ -111,8 +111,8 @@ fun AddBudgetingContent(
         )
         TextSwitchField(
             isOverflowAllowed = budgetingState.isOverflowAllowed,
-            isAutoUpdate = budgetingState.isAutoUpdate,
             onOverflowAllowedChange = { budgetingActions.onOverflowAllowedChange(it) },
+            isAutoUpdate = budgetingState.isAutoUpdate,
             onAutoUpdateChange = { budgetingActions.onAutoUpdateChange(it) },
             budgetingPeriod = budgetingState.period,
             modifier = Modifier.padding(horizontal = 16.dp)
@@ -189,8 +189,8 @@ fun PeriodFilterField(
 @Composable
 fun TextSwitchField(
     isOverflowAllowed: Boolean,
-    isAutoUpdate: Boolean,
     onOverflowAllowedChange: (Boolean) -> Unit,
+    isAutoUpdate: Boolean,
     onAutoUpdateChange: (Boolean) -> Unit,
     budgetingPeriod: Int,
     modifier: Modifier = Modifier,

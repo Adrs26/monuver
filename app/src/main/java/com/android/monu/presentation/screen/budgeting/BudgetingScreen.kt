@@ -12,12 +12,12 @@ import com.android.monu.presentation.screen.budgeting.components.BudgetingConten
 fun BudgetingScreen(
     budgetingState: BudgetingState,
     onNavigateToInactiveBudgeting: () -> Unit,
-    onItemClick: (Long) -> Unit
+    onNavigateToBudgetingDetail: (Long) -> Unit
 ) {
     Scaffold(
         topBar = {
             BudgetingAppBar(
-                onHistoryClick = onNavigateToInactiveBudgeting
+                onNavigateToInactiveBudgeting = onNavigateToInactiveBudgeting
             )
         }
     ) { innerPadding ->
@@ -25,7 +25,7 @@ fun BudgetingScreen(
             totalMaxAmount = budgetingState.totalMaxAmount,
             totalUsedAmount = budgetingState.totalUsedAmount,
             budgets = budgetingState.budgets,
-            onItemClick = onItemClick,
+            onNavigateToBudgetingDetail = onNavigateToBudgetingDetail,
             modifier = Modifier.padding(innerPadding)
         )
     }

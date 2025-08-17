@@ -102,7 +102,7 @@ fun MainScreen(
                 )
                 BottomNavigationBar(
                     navController = mainNavController,
-                    onItemClick = { selectedMenu = it }
+                    onNavigate = { selectedMenu = it }
                 )
             }
         },
@@ -253,7 +253,7 @@ fun MainScreen(
                     onNavigateToInactiveBudgeting = {
                         rootNavController.navigate(MainInactiveBudgeting)
                     },
-                    onItemClick = { budgetingId ->
+                    onNavigateToBudgetingDetail = { budgetingId ->
                         rootNavController.navigate(MainBudgetingDetail(id = budgetingId))
                     }
                 )

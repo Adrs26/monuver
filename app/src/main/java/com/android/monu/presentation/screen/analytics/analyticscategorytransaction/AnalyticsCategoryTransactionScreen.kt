@@ -19,8 +19,8 @@ import com.android.monu.presentation.utils.DatabaseCodeMapper
 fun AnalyticsCategoryTransactionScreen(
     category: Int,
     transactions: List<Transaction>,
-    onNavigateToTransactionDetail: (Long) -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToTransactionDetail: (Long) -> Unit
 ) {
     Scaffold(
         topBar = {

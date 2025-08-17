@@ -29,7 +29,7 @@ import com.android.monu.ui.navigation.Transaction
 fun BottomNavigationBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    onItemClick: (String) -> Unit
+    onNavigate: (String) -> Unit
 ) {
     NavigationBar(
         modifier = modifier
@@ -82,7 +82,7 @@ fun BottomNavigationBar(
                         restoreState = true
                         launchSingleTop = true
                     }
-                    onItemClick(item.route)
+                    onNavigate(item.route)
                 },
                 icon = {
                     Icon(

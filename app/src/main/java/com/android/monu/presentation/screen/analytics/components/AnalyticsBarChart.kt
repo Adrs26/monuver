@@ -46,15 +46,14 @@ import com.android.monu.domain.model.transaction.TransactionDailySummary
 import com.android.monu.presentation.utils.DateHelper
 import com.android.monu.presentation.utils.NumberFormatHelper
 import com.android.monu.presentation.utils.toHighestRangeValue
-import com.android.monu.ui.theme.Blue
 import com.android.monu.ui.theme.Green600
 import com.android.monu.ui.theme.Red600
 
 @Composable
 fun AnalyticsBarChart(
     barChartState: AnalyticsBarChartState,
-    modifier: Modifier = Modifier,
-    onWeekChange: (Int) -> Unit
+    onWeekChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -110,8 +109,8 @@ fun AnalyticsBarChart(
 @Composable
 fun WeekFilterDropdown(
     barChartState: AnalyticsBarChartState,
-    modifier: Modifier = Modifier,
-    onWeekChange: (Int) -> Unit
+    onWeekChange: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
     val weekFilterOptions = DateHelper.getWeekOptions(
@@ -272,7 +271,7 @@ fun BarChartGraph(
                         .weight(1f)
                         .fillMaxHeight(incomeGraphValue)
                         .offset { IntOffset(x = 0, y = offsetY.value.toInt()) }
-                        .background(if (isSelected) Blue else Green600)
+                        .background(if (isSelected) MaterialTheme.colorScheme.primary else Green600)
                 )
                 Box(
                     modifier = Modifier
@@ -280,7 +279,7 @@ fun BarChartGraph(
                         .weight(1f)
                         .fillMaxHeight(expenseGraphValue)
                         .offset { IntOffset(x = 0, y = offsetY.value.toInt()) }
-                        .background(if (isSelected) Blue else Red600)
+                        .background(if (isSelected) MaterialTheme.colorScheme.primary else Red600)
                 )
                 if (dailySummaries.size < 7) {
                     Spacer(modifier = Modifier.weight(graphSpacerWeight))

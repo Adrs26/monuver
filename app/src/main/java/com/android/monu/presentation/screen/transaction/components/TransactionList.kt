@@ -7,35 +7,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.android.monu.R
 import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.presentation.components.CommonLottieAnimation
 import com.android.monu.presentation.components.TransactionListItem
 import com.android.monu.presentation.components.TransactionListItemState
 
 @Composable
 fun TransactionList(
     transactions: LazyPagingItems<Transaction>,
-    modifier: Modifier = Modifier,
-    onNavigateToTransactionDetail: (Long) -> Unit
+    onNavigateToTransactionDetail: (Long) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
         if (transactions.itemCount == 0 && transactions.loadState.refresh is LoadState.NotLoading) {
-            Text(
-                text = stringResource(R.string.no_transactions_yet),
-                modifier = Modifier.align(Alignment.Center),
-                style = MaterialTheme.typography.labelMedium
-            )
+            CommonLottieAnimation(lottieAnimation = R.raw.empty)
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),

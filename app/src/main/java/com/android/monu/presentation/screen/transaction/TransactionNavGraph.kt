@@ -232,7 +232,7 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                     navController.navigateUp()
                 }
 
-                override fun onNavigateToEdit(
+                override fun onNavigateToEditTransaction(
                     transactionId: Long,
                     transactionType: Int,
                     transactionCategory: Int

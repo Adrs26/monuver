@@ -19,7 +19,7 @@ fun NavGraphBuilder.settingsNavGraph(
             popExitTransition = { NavigationAnimation.popExit }
         ) {
             SettingsScreen(
-                navigateBack = { navController.navigateUp() }
+                onNavigateBack = { navController.navigateUp() }
             )
         }
     }

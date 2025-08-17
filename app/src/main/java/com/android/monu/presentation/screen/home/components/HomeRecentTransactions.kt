@@ -63,8 +63,8 @@ fun HomeRecentTransactions(
 @Composable
 fun RecentTransactionList(
     recentTransactions: List<Transaction>,
-    modifier: Modifier = Modifier,
     onNavigateToTransactionDetail: (Long) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.fillMaxWidth(),

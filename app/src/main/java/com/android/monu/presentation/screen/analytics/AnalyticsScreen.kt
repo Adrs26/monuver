@@ -69,8 +69,8 @@ fun AnalyticsScreen(
             )
             AnalyticsBarChart(
                 barChartState = analyticsBarChartState,
-                modifier = Modifier.padding(horizontal = 16.dp),
                 onWeekChange = { analyticsActions.onWeekChange(it) },
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),

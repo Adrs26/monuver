@@ -32,8 +32,8 @@ import com.android.monu.ui.theme.MonuTheme
 fun TransactionTopBar(
     query: String,
     onQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    onFilterButtonClick: () -> Unit
+    onFilterButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = modifier,
@@ -53,8 +53,8 @@ fun TransactionTopBar(
 fun TransactionSearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    onFilterButtonClick: () -> Unit
+    onFilterButtonClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier.border(

@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -19,8 +18,8 @@ import com.android.monu.presentation.components.DebouncedIconButton
 @Composable
 fun TransactionDetailAppBar(
     onNavigateBack: () -> Unit,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onNavigateToEditTransaction: () -> Unit,
+    onRemoveTransaction: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -32,7 +31,7 @@ fun TransactionDetailAppBar(
             )
         },
         navigationIcon = {
-            IconButton(
+            DebouncedIconButton(
                 onClick = onNavigateBack
             ) {
                 Icon(
@@ -44,7 +43,7 @@ fun TransactionDetailAppBar(
         },
         actions = {
             DebouncedIconButton(
-                onClick = onEditClick
+                onClick = onNavigateToEditTransaction
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_edit),
@@ -53,7 +52,7 @@ fun TransactionDetailAppBar(
                 )
             }
             DebouncedIconButton(
-                onClick = onDeleteClick
+                onClick = onRemoveTransaction
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_delete),
