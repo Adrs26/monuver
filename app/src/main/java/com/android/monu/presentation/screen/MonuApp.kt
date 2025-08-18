@@ -7,9 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.android.monu.presentation.screen.account.accountNavGraph
 import com.android.monu.presentation.screen.analytics.analyticsCategoryTransactionNavGraph
-import com.android.monu.presentation.screen.budgeting.addBudgetingNavGraph
-import com.android.monu.presentation.screen.budgeting.budgetingDetailNavGraph
-import com.android.monu.presentation.screen.budgeting.inactiveBudgetingNavGraph
+import com.android.monu.presentation.screen.budgeting.addBudgetNavGraph
+import com.android.monu.presentation.screen.budgeting.budgetDetailNavGraph
+import com.android.monu.presentation.screen.budgeting.inactiveBudgetNavGraph
 import com.android.monu.presentation.screen.main.MainScreen
 import com.android.monu.presentation.screen.settings.settingsNavGraph
 import com.android.monu.presentation.screen.transaction.addTransactionNavGraph
@@ -36,9 +36,9 @@ fun MonuApp() {
         transactionDetailNavGraph(navController = rootNavController)
         addTransactionNavGraph(navController = rootNavController)
         transferNavGraph(navController = rootNavController)
-        budgetingDetailNavGraph(navController = rootNavController)
-        addBudgetingNavGraph(navController = rootNavController)
-        inactiveBudgetingNavGraph(navController = rootNavController)
+        budgetDetailNavGraph(navController = rootNavController)
+        addBudgetNavGraph(navController = rootNavController)
+        inactiveBudgetNavGraph(navController = rootNavController)
         analyticsCategoryTransactionNavGraph(navController = rootNavController)
     }
 }

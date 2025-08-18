@@ -2,14 +2,14 @@ package com.android.monu.di
 
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
-import com.android.monu.domain.usecase.budgeting.CreateBudgetingUseCase
-import com.android.monu.domain.usecase.budgeting.DeleteBudgetingUseCase
-import com.android.monu.domain.usecase.budgeting.GetAllActiveBudgetsUseCase
-import com.android.monu.domain.usecase.budgeting.GetAllInactiveBudgetsUseCase
-import com.android.monu.domain.usecase.budgeting.GetBudgetingByIdUseCase
-import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
-import com.android.monu.domain.usecase.budgeting.HandleExpiredBudgetingUseCase
-import com.android.monu.domain.usecase.budgeting.UpdateBudgetingUseCase
+import com.android.monu.domain.usecase.budget.CreateBudgetUseCase
+import com.android.monu.domain.usecase.budget.DeleteBudgetUseCase
+import com.android.monu.domain.usecase.budget.GetAllActiveBudgetsUseCase
+import com.android.monu.domain.usecase.budget.GetAllInactiveBudgetsUseCase
+import com.android.monu.domain.usecase.budget.GetBudgetByIdUseCase
+import com.android.monu.domain.usecase.budget.GetBudgetSummaryUseCase
+import com.android.monu.domain.usecase.budget.HandleExpiredBudgetUseCase
+import com.android.monu.domain.usecase.budget.UpdateBudgetUseCase
 import com.android.monu.domain.usecase.finance.CreateAccountUseCase
 import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateIncomeTransactionUseCase
@@ -57,12 +57,12 @@ val domainModule = module {
     factory { UpdateExpenseTransactionUseCase(get(), get(), get()) }
     factory { UpdateTransferTransactionUseCase(get(), get()) }
 
-    factory { CreateBudgetingUseCase(get(), get()) }
-    factory { DeleteBudgetingUseCase(get()) }
+    factory { CreateBudgetUseCase(get(), get()) }
+    factory { DeleteBudgetUseCase(get()) }
     factory { GetAllActiveBudgetsUseCase(get()) }
     factory { GetAllInactiveBudgetsUseCase(get()) }
-    factory { GetBudgetingByIdUseCase(get()) }
-    factory { GetBudgetingSummaryUseCase(get()) }
-    factory { HandleExpiredBudgetingUseCase(get()) }
-    factory { UpdateBudgetingUseCase(get(), get()) }
+    factory { GetBudgetByIdUseCase(get()) }
+    factory { GetBudgetSummaryUseCase(get()) }
+    factory { HandleExpiredBudgetUseCase(get()) }
+    factory { UpdateBudgetUseCase(get(), get()) }
 }

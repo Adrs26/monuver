@@ -101,7 +101,8 @@ fun NavGraphBuilder.addTransactionNavGraph(
 
             AddTransactionScreen(
                 transactionState = addTransactionState,
-                transactionActions = addTransactionActions
+                transactionActions = addTransactionActions,
+                navController = navController
             )
         }
         composable<AddTransactionCategory>(

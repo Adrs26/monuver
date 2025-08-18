@@ -31,16 +31,16 @@ import kotlinx.serialization.Serializable
 @Serializable object MainTransfer
 @Serializable data class TransferAccount(val type: Int = 0)
 
-@Serializable object BudgetingDetail
-@Serializable data class MainBudgetingDetail(val id: Long = 0)
-@Serializable data class EditBudgeting(val id: Long = 0)
+@Serializable object BudgetDetail
+@Serializable data class MainBudgetDetail(val id: Long = 0)
+@Serializable data class EditBudget(val id: Long = 0)
 
-@Serializable object AddBudgeting
-@Serializable object MainAddBudgeting
-@Serializable object AddBudgetingCategory
+@Serializable object AddBudget
+@Serializable object MainAddBudget
+@Serializable object AddBudgetCategory
 
-@Serializable object InactiveBudgeting
-@Serializable object MainInactiveBudgeting
+@Serializable object InactiveBudget
+@Serializable object MainInactiveBudget
 
 @Serializable object AnalyticsCategoryTransaction
 @Serializable data class MainAnalyticsCategoryTransaction(

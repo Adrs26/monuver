@@ -2,16 +2,17 @@ package com.android.monu.domain.usecase.finance
 
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.AccountRepository
-import com.android.monu.domain.repository.BudgetingRepository
+import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContentState
+import com.android.monu.presentation.utils.BudgetWarningCondition
 import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.DateHelper
 
 class CreateExpenseTransactionUseCase(
     private val financeRepository: FinanceRepository,
     private val accountRepository: AccountRepository,
-    private val budgetingRepository: BudgetingRepository
+    private val budgetRepository: BudgetRepository
 ) {
     suspend operator fun invoke(transactionState: AddTransactionContentState): DatabaseResultMessage {
         when {
@@ -38,7 +39,7 @@ class CreateExpenseTransactionUseCase(
         )
 
         val accountBalance = accountRepository.getAccountBalance(transaction.sourceId)
-        val budgeting = budgetingRepository.getBudgetingForDate(
+        val budget = budgetRepository.getBudgetForDate(
             category = transaction.parentCategory,
             date = transaction.date
         )
@@ -48,14 +49,40 @@ class CreateExpenseTransactionUseCase(
         }
 
         if (
-            budgeting != null &&
-            budgeting.usedAmount + transaction.amount > budgeting.maxAmount &&
-            !budgeting.isOverflowAllowed
+            budget != null &&
+            budget.usedAmount + transaction.amount > budget.maxAmount &&
+            !budget.isOverflowAllowed
         ) {
             return DatabaseResultMessage.CurrentBudgetAmountExceedsMaximumLimit
         }
 
         financeRepository.createExpenseTransaction(transaction)
+
+        if (budget != null) {
+            val budgetUsage = budgetRepository.getBudgetUsagePercentage(budget.category)
+            return calculateBudgetUsage(budgetUsage, budget.category)
+        }
+
         return DatabaseResultMessage.CreateTransactionSuccess
+    }
+
+    private fun calculateBudgetUsage(budgetUsage: Float, budgetCategory: Int): DatabaseResultMessage {
+        return when {
+            budgetUsage > 100F -> {
+                DatabaseResultMessage.CreateSuccessWithWarningCondition(
+                    category = budgetCategory,
+                    warningCondition = BudgetWarningCondition.OVER_BUDGET
+                )
+            }
+            budgetUsage >= 100F -> DatabaseResultMessage.CreateSuccessWithWarningCondition(
+                category = budgetCategory,
+                warningCondition = BudgetWarningCondition.FULL_BUDGET
+            )
+            budgetUsage >= 80F -> DatabaseResultMessage.CreateSuccessWithWarningCondition(
+                category = budgetCategory,
+                warningCondition = BudgetWarningCondition.LOW_REMAINING_BUDGET
+            )
+            else -> DatabaseResultMessage.CreateTransactionSuccess
+        }
     }
 }

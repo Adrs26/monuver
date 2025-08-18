@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.navigation.NavHostController
 import com.android.monu.R
 import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.transaction.addtransaction.components.AddTransactionContent
@@ -36,7 +37,8 @@ import org.threeten.bp.format.DateTimeFormatter
 @Composable
 fun AddTransactionScreen(
     transactionState: AddTransactionState,
-    transactionActions: AddTransactionActions
+    transactionActions: AddTransactionActions,
+    navController: NavHostController
 ) {
     var transactionTitle by rememberSaveable { mutableStateOf("") }
     var transactionDate by rememberSaveable { mutableStateOf("") }
@@ -100,8 +102,21 @@ fun AddTransactionScreen(
     LaunchedEffect(transactionState.addResult) {
         transactionState.addResult?.let { result ->
             context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CreateTransactionSuccess) {
-                transactionActions.onNavigateBack()
+
+            when (result) {
+                is DatabaseResultMessage.CreateSuccessWithWarningCondition -> {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("warning_condition", result.warningCondition)
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("budget_category", result.category)
+                    transactionActions.onNavigateBack()
+                }
+                is DatabaseResultMessage.CreateTransactionSuccess -> {
+                    transactionActions.onNavigateBack()
+                }
+                else -> {}
             }
         }
     }

@@ -1,9 +1,9 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.budgeting.Budgeting
+import com.android.monu.domain.model.budget.Budget
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.AccountRepository
-import com.android.monu.domain.repository.BudgetingRepository
+import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentState
 import com.android.monu.presentation.utils.DatabaseResultMessage
@@ -12,7 +12,7 @@ import com.android.monu.presentation.utils.DateHelper
 class UpdateExpenseTransactionUseCase(
     private val financeRepository: FinanceRepository,
     private val accountRepository: AccountRepository,
-    private val budgetingRepository: BudgetingRepository
+    private val budgetRepository: BudgetRepository
 ) {
     suspend operator fun invoke(transactionState: EditTransactionContentState): DatabaseResultMessage {
         when {
@@ -43,22 +43,22 @@ class UpdateExpenseTransactionUseCase(
             return DatabaseResultMessage.InsufficientAccountBalance
         }
 
-        val oldBudgeting = budgetingRepository.getBudgetingForDate(
+        val oldBudget = budgetRepository.getBudgetForDate(
             category = transactionState.initialParentCategory,
             date = transactionState.initialDate
         )
-        val newBudgeting = budgetingRepository.getBudgetingForDate(
+        val newBudget = budgetRepository.getBudgetForDate(
             category = transaction.parentCategory,
             date = transaction.date
         )
 
-        val budgetingStatus = getBudgetingStatus(oldBudgeting, newBudgeting)
+        val budgetStatus = getBudgetStatus(oldBudget, newBudget)
 
-        newBudgeting?.let { budget ->
+        newBudget?.let { budget ->
             if (!budget.isOverflowAllowed) {
-                val amountToAdd = when (budgetingStatus) {
-                    BudgetingStatus.SameBudgeting -> difference
-                    BudgetingStatus.DifferentBudgeting, BudgetingStatus.NoOldBudgeting -> transaction.amount
+                val amountToAdd = when (budgetStatus) {
+                    BudgetStatus.SameBudget -> difference
+                    BudgetStatus.DifferentBudget, BudgetStatus.NoOldBudget -> transaction.amount
                     else -> 0L
                 }
 
@@ -73,26 +73,26 @@ class UpdateExpenseTransactionUseCase(
             initialParentCategory = transactionState.initialParentCategory,
             initialDate = transactionState.initialDate,
             initialAmount = transactionState.initialAmount,
-            budgetingStatus = budgetingStatus
+            budgetStatus = budgetStatus
         )
         return DatabaseResultMessage.UpdateTransactionSuccess
     }
 
-    private fun getBudgetingStatus(oldBudgeting: Budgeting?, newBudgeting: Budgeting?): BudgetingStatus {
+    private fun getBudgetStatus(oldBudget: Budget?, newBudget: Budget?): BudgetStatus {
         return when {
-            oldBudgeting == null && newBudgeting != null -> BudgetingStatus.NoOldBudgeting
-            oldBudgeting != null && newBudgeting == null -> BudgetingStatus.NoNewBudgeting
-            oldBudgeting == null && newBudgeting == null -> BudgetingStatus.NoBudgeting
-            oldBudgeting?.category == newBudgeting?.category -> BudgetingStatus.SameBudgeting
-            else -> BudgetingStatus.DifferentBudgeting
+            oldBudget == null && newBudget != null -> BudgetStatus.NoOldBudget
+            oldBudget != null && newBudget == null -> BudgetStatus.NoNewBudget
+            oldBudget == null && newBudget == null -> BudgetStatus.NoBudget
+            oldBudget?.category == newBudget?.category -> BudgetStatus.SameBudget
+            else -> BudgetStatus.DifferentBudget
         }
     }
 }
 
-sealed class BudgetingStatus {
-    object NoOldBudgeting : BudgetingStatus()
-    object NoNewBudgeting : BudgetingStatus()
-    object NoBudgeting : BudgetingStatus()
-    object SameBudgeting : BudgetingStatus()
-    object DifferentBudgeting : BudgetingStatus()
+sealed class BudgetStatus {
+    object NoOldBudget : BudgetStatus()
+    object NoNewBudget : BudgetStatus()
+    object NoBudget : BudgetStatus()
+    object SameBudget : BudgetStatus()
+    object DifferentBudget : BudgetStatus()
 }

@@ -10,17 +10,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.presentation.components.DebouncedIconButton
-import com.android.monu.ui.theme.MonuTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeAppBar(
     onNavigateToBill: () -> Unit,
-    onNavigateToSaving: () -> Unit,
+    onNavigateToSave: () -> Unit,
     onNavigateToSettings: () -> Unit
 ) {
     TopAppBar(
@@ -40,7 +38,7 @@ fun HomeAppBar(
             )
             HomeIconButton(
                 icon = R.drawable.ic_savings,
-                onClick = onNavigateToSaving
+                onClick = onNavigateToSave
             )
             HomeIconButton(
                 icon = R.drawable.ic_settings,
@@ -67,18 +65,6 @@ fun HomeIconButton(
             painter = painterResource(icon),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeTopBarPreview() {
-    MonuTheme {
-        HomeAppBar(
-            onNavigateToBill = {},
-            onNavigateToSaving = {},
-            onNavigateToSettings = {}
         )
     }
 }

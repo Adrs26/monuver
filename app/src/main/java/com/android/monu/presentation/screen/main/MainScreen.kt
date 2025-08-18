@@ -42,13 +42,14 @@ import com.android.monu.presentation.screen.analytics.AnalyticsActions
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.analytics.AnalyticsState
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
+import com.android.monu.presentation.screen.budgeting.BudgetState
 import com.android.monu.presentation.screen.budgeting.BudgetingScreen
-import com.android.monu.presentation.screen.budgeting.BudgetingState
 import com.android.monu.presentation.screen.budgeting.BudgetingViewModel
 import com.android.monu.presentation.screen.home.HomeActions
 import com.android.monu.presentation.screen.home.HomeScreen
 import com.android.monu.presentation.screen.home.HomeViewModel
 import com.android.monu.presentation.screen.main.components.BottomNavigationBar
+import com.android.monu.presentation.screen.main.components.BudgetWarningDialog
 import com.android.monu.presentation.screen.transaction.TransactionActions
 import com.android.monu.presentation.screen.transaction.TransactionScreen
 import com.android.monu.presentation.screen.transaction.TransactionState
@@ -58,11 +59,11 @@ import com.android.monu.ui.navigation.Analytics
 import com.android.monu.ui.navigation.Budgeting
 import com.android.monu.ui.navigation.Home
 import com.android.monu.ui.navigation.MainAccount
-import com.android.monu.ui.navigation.MainAddBudgeting
+import com.android.monu.ui.navigation.MainAddBudget
 import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction
-import com.android.monu.ui.navigation.MainBudgetingDetail
-import com.android.monu.ui.navigation.MainInactiveBudgeting
+import com.android.monu.ui.navigation.MainBudgetDetail
+import com.android.monu.ui.navigation.MainInactiveBudget
 import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.Settings
 import com.android.monu.ui.navigation.Transaction
@@ -85,11 +86,33 @@ fun MainScreen(
     var selectedMenu by rememberSaveable { mutableStateOf(menuItems[0]) }
     var showFab by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
+    var showBudgetWarningDialog by remember { mutableStateOf(false) }
+
+    val budgetWarningCondition = rootNavController
+        .currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow("warning_condition", 0)
+        ?.collectAsStateWithLifecycle()
+
+    val budgetCategory = rootNavController
+        .currentBackStackEntry
+        ?.savedStateHandle
+        ?.getStateFlow("budget_category", 0)
+        ?.collectAsStateWithLifecycle()
 
     LaunchedEffect(selectedMenu) {
         showFab = false
         delay(200)
         if (selectedMenu == menuItems[1] || selectedMenu == menuItems[2]) { showFab = true }
+    }
+
+    LaunchedEffect(budgetWarningCondition?.value, budgetCategory?.value) {
+        val warningValue = budgetWarningCondition?.value
+        val categoryValue = budgetCategory?.value
+
+        if (warningValue != 0 && categoryValue != 0) {
+            showBudgetWarningDialog = true
+        }
     }
 
     Scaffold(
@@ -122,7 +145,7 @@ fun MainScreen(
                     CommonFloatingActionButton {
                         when (selectedMenu) {
                             menuItems[1] -> showBottomSheet = true
-                            menuItems[2] -> rootNavController.navigate(MainAddBudgeting)
+                            menuItems[2] -> rootNavController.navigate(MainAddBudget)
                         }
                     }
                 }
@@ -138,11 +161,11 @@ fun MainScreen(
                 val viewModel = koinViewModel<HomeViewModel>()
                 val totalBalance by viewModel.totalAccountBalance.collectAsStateWithLifecycle()
                 val recentTransactions by viewModel.recentTransactions.collectAsStateWithLifecycle()
-                val budgetingSummary by viewModel.budgetingSummary.collectAsStateWithLifecycle()
+                val budgetSummary by viewModel.budgetSummary.collectAsStateWithLifecycle()
 
                 val homeActions = object : HomeActions {
-                    override fun onHandleExpiredBudgeting() {
-                        viewModel.handleExpiredBudgeting()
+                    override fun onHandleExpiredBudget() {
+                        viewModel.handleExpiredBudget()
                     }
 
                     override fun onNavigateToSettings() {
@@ -190,11 +213,11 @@ fun MainScreen(
                     }
                 }
 
-                budgetingSummary?.let { budgetingSummary ->
+                budgetSummary?.let { budgetSummary ->
                     HomeScreen(
                         totalBalance = totalBalance,
                         recentTransactions = recentTransactions,
-                        budgetingSummary = budgetingSummary,
+                        budgetSummary = budgetSummary,
                         homeActions = homeActions
                     )
                 }
@@ -239,22 +262,22 @@ fun MainScreen(
             }
             composable<Budgeting> {
                 val viewModel = koinViewModel<BudgetingViewModel>()
-                val summary by viewModel.budgetingSummary.collectAsStateWithLifecycle()
+                val summary by viewModel.budgetSummary.collectAsStateWithLifecycle()
                 val budgets by viewModel.budgets.collectAsStateWithLifecycle()
 
-                val budgetingState = BudgetingState(
+                val budgetState = BudgetState(
                     totalMaxAmount = summary.totalMaxAmount,
                     totalUsedAmount = summary.totalUsedAmount,
                     budgets = budgets
                 )
 
                 BudgetingScreen(
-                    budgetingState = budgetingState,
-                    onNavigateToInactiveBudgeting = {
-                        rootNavController.navigate(MainInactiveBudgeting)
+                    budgetState = budgetState,
+                    onNavigateToInactiveBudget = {
+                        rootNavController.navigate(MainInactiveBudget)
                     },
-                    onNavigateToBudgetingDetail = { budgetingId ->
-                        rootNavController.navigate(MainBudgetingDetail(id = budgetingId))
+                    onNavigateToBudgetDetail = { budgetId ->
+                        rootNavController.navigate(MainBudgetDetail(id = budgetId))
                     }
                 )
             }
@@ -364,6 +387,19 @@ fun MainScreen(
                     }
                 }
             }
+        }
+
+        if (showBudgetWarningDialog && budgetWarningCondition?.value != 0 && budgetCategory?.value != 0) {
+            BudgetWarningDialog(
+                budgetCategory = budgetCategory?.value ?: 0,
+                budgetWarningCondition = budgetWarningCondition?.value ?: 0,
+                onDismissRequest = {
+                    showBudgetWarningDialog = false
+                    rootNavController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("warning_condition", 0)
+                }
+            )
         }
     }
 }

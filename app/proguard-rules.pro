@@ -52,3 +52,5 @@
 
 # Keep all kotlinx serialization-related classes and methods
 -keep class kotlinx.serialization.** { *; }
+
+-dontwarn javax.annotation.Nullable

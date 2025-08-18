@@ -2,7 +2,7 @@ package com.android.monu.domain.repository
 
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.usecase.finance.BudgetingStatus
+import com.android.monu.domain.usecase.finance.BudgetStatus
 
 interface FinanceRepository {
 
@@ -38,7 +38,7 @@ interface FinanceRepository {
         initialParentCategory: Int,
         initialDate: String,
         initialAmount: Long,
-        budgetingStatus: BudgetingStatus
+        budgetStatus: BudgetStatus
     ): Int
 
     suspend fun updateTransferTransaction(transaction: Transaction, initialAmount: Long): Int

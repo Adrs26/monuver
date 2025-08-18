@@ -1,8 +1,8 @@
 package com.android.monu
 
-import com.android.monu.domain.model.budgeting.Budgeting
-import com.android.monu.domain.repository.BudgetingRepository
-import com.android.monu.domain.usecase.budgeting.HandleExpiredBudgetingUseCase
+import com.android.monu.domain.model.budget.Budget
+import com.android.monu.domain.repository.BudgetRepository
+import com.android.monu.domain.usecase.budget.HandleExpiredBudgetUseCase
 import com.android.monu.presentation.utils.BudgetingPeriod
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -23,19 +23,19 @@ import java.util.TimeZone
 
 class HandleExpiredBudgetingUseCaseTest {
 
-    private lateinit var repository: BudgetingRepository
-    private lateinit var useCase: HandleExpiredBudgetingUseCase
+    private lateinit var repository: BudgetRepository
+    private lateinit var useCase: HandleExpiredBudgetUseCase
 
     @Before
     fun setup() {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"))
-        repository = mock<BudgetingRepository>()
-        useCase = HandleExpiredBudgetingUseCase(repository)
+        repository = mock<BudgetRepository>()
+        useCase = HandleExpiredBudgetUseCase(repository)
     }
 
     @Test
     fun `expired budgeting should be marked inactive`() = runTest {
-        val budgeting = Budgeting(
+        val budget = Budget(
             id = 1,
             category = 1,
             period = BudgetingPeriod.MONTHLY,
@@ -47,7 +47,7 @@ class HandleExpiredBudgetingUseCaseTest {
             isOverflowAllowed = false,
             isAutoUpdate = false
         )
-        `when`(repository.getAllActiveBudgets()).thenReturn(flowOf(listOf(budgeting)))
+        `when`(repository.getAllActiveBudgets()).thenReturn(flowOf(listOf(budget)))
 
         useCase()
 
@@ -57,7 +57,7 @@ class HandleExpiredBudgetingUseCaseTest {
 
     @Test
     fun `expired budgeting with autoUpdate should create new budgeting`() = runTest {
-        val budgeting = Budgeting(
+        val budget = Budget(
             id = 1,
             category = 1,
             period = BudgetingPeriod.MONTHLY,
@@ -69,23 +69,23 @@ class HandleExpiredBudgetingUseCaseTest {
             isOverflowAllowed = true,
             isAutoUpdate = true
         )
-        `when`(repository.getAllActiveBudgets()).thenReturn(flowOf(listOf(budgeting)))
+        `when`(repository.getAllActiveBudgets()).thenReturn(flowOf(listOf(budget)))
 
         useCase()
 
         verify(repository).updateBudgetingStatusToInactive(1)
-        val captor = argumentCaptor<Budgeting>()
+        val captor = argumentCaptor<Budget>()
         verify(repository).createNewBudgeting(captor.capture())
 
         assertEquals(captor.firstValue.usedAmount, 0L)
-        assertNotEquals(captor.firstValue.startDate, budgeting.startDate)
-        assertNotEquals(captor.firstValue.endDate, budgeting.endDate)
+        assertNotEquals(captor.firstValue.startDate, budget.startDate)
+        assertNotEquals(captor.firstValue.endDate, budget.endDate)
         assertEquals(captor.firstValue.category, 1)
     }
 
     @Test
     fun `non-expired budgeting should not be touched`() = runTest {
-        val budgeting = Budgeting(
+        val budget = Budget(
             id = 1,
             category = 1,
             period = BudgetingPeriod.MONTHLY,
@@ -97,7 +97,7 @@ class HandleExpiredBudgetingUseCaseTest {
             isOverflowAllowed = false,
             isAutoUpdate = true
         )
-        `when`(repository.getAllActiveBudgets()).thenReturn(flowOf(listOf(budgeting)))
+        `when`(repository.getAllActiveBudgets()).thenReturn(flowOf(listOf(budget)))
 
         useCase()
 
@@ -107,7 +107,7 @@ class HandleExpiredBudgetingUseCaseTest {
 
     @Test
     fun `edge case - expired budgeting but next endDate still before today should create new budgeting with endDate after today`() = runTest {
-        val budgeting = Budgeting(
+        val budget = Budget(
             id = 1,
             category = 1,
             period = BudgetingPeriod.MONTHLY,
@@ -122,12 +122,12 @@ class HandleExpiredBudgetingUseCaseTest {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val today = LocalDate.now()
 
-        `when`(repository.getAllActiveBudgets()).thenReturn(flowOf(listOf(budgeting)))
+        `when`(repository.getAllActiveBudgets()).thenReturn(flowOf(listOf(budget)))
 
         useCase()
 
         verify(repository).updateBudgetingStatusToInactive(1)
-        val captor = argumentCaptor<Budgeting>()
+        val captor = argumentCaptor<Budget>()
         verify(repository).createNewBudgeting(captor.capture())
 
         val newEndDate = LocalDate.parse(captor.firstValue.endDate, formatter)

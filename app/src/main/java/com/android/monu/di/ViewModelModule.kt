@@ -6,10 +6,10 @@ import com.android.monu.presentation.screen.account.addaccount.AddAccountViewMod
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
 import com.android.monu.presentation.screen.analytics.analyticscategorytransaction.AnalyticsCategoryTransactionViewModel
 import com.android.monu.presentation.screen.budgeting.BudgetingViewModel
-import com.android.monu.presentation.screen.budgeting.addbudgeting.AddBudgetingViewModel
-import com.android.monu.presentation.screen.budgeting.budgetingdetail.BudgetingDetailViewModel
-import com.android.monu.presentation.screen.budgeting.editbudgeting.EditBudgetingViewModel
-import com.android.monu.presentation.screen.budgeting.inactivebudgeting.InactiveBudgetingViewModel
+import com.android.monu.presentation.screen.budgeting.addbudget.AddBudgetViewModel
+import com.android.monu.presentation.screen.budgeting.budgetdetail.BudgetDetailViewModel
+import com.android.monu.presentation.screen.budgeting.editbudget.EditBudgetViewModel
+import com.android.monu.presentation.screen.budgeting.inactivebudget.InactiveBudgetViewModel
 import com.android.monu.presentation.screen.home.HomeViewModel
 import com.android.monu.presentation.screen.transaction.TransactionViewModel
 import com.android.monu.presentation.screen.transaction.addtransaction.AddTransactionViewModel
@@ -41,15 +41,15 @@ val viewModelModule = module {
         EditTransferViewModel(handle, get(), get())
     }
 
-    viewModel { AddBudgetingViewModel(get()) }
+    viewModel { AddBudgetViewModel(get()) }
     viewModel { (handle: SavedStateHandle) ->
-        BudgetingDetailViewModel(handle, get(), get(), get())
+        BudgetDetailViewModel(handle, get(), get(), get())
     }
     viewModel { (handle: SavedStateHandle) ->
-        EditBudgetingViewModel(handle, get(), get())
+        EditBudgetViewModel(handle, get(), get())
     }
 
-    viewModel { InactiveBudgetingViewModel(get()) }
+    viewModel { InactiveBudgetViewModel(get()) }
 
     viewModel { (handle: SavedStateHandle) ->
         AnalyticsCategoryTransactionViewModel(handle, get())

@@ -273,10 +273,10 @@ object DatabaseCodeMapper {
         }
     }
 
-    fun toBudgetingPeriod(code: Int): Int {
+    fun toBudgetPeriod(code: Int): Int {
         return when (code) {
-            BudgetingPeriod.MONTHLY -> R.string.monthly
-            BudgetingPeriod.WEEKLY -> R.string.weekly
+            BudgetPeriod.MONTHLY -> R.string.monthly
+            BudgetPeriod.WEEKLY -> R.string.weekly
             else -> R.string.custom
         }
     }

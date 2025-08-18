@@ -4,35 +4,35 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.android.monu.domain.model.budgeting.Budgeting
-import com.android.monu.presentation.screen.budgeting.components.BudgetingAppBar
+import com.android.monu.domain.model.budget.Budget
+import com.android.monu.presentation.screen.budgeting.components.BudgetAppBar
 import com.android.monu.presentation.screen.budgeting.components.BudgetingContent
 
 @Composable
 fun BudgetingScreen(
-    budgetingState: BudgetingState,
-    onNavigateToInactiveBudgeting: () -> Unit,
-    onNavigateToBudgetingDetail: (Long) -> Unit
+    budgetState: BudgetState,
+    onNavigateToInactiveBudget: () -> Unit,
+    onNavigateToBudgetDetail: (Long) -> Unit
 ) {
     Scaffold(
         topBar = {
-            BudgetingAppBar(
-                onNavigateToInactiveBudgeting = onNavigateToInactiveBudgeting
+            BudgetAppBar(
+                onNavigateToInactiveBudget = onNavigateToInactiveBudget
             )
         }
     ) { innerPadding ->
         BudgetingContent(
-            totalMaxAmount = budgetingState.totalMaxAmount,
-            totalUsedAmount = budgetingState.totalUsedAmount,
-            budgets = budgetingState.budgets,
-            onNavigateToBudgetingDetail = onNavigateToBudgetingDetail,
+            totalMaxAmount = budgetState.totalMaxAmount,
+            totalUsedAmount = budgetState.totalUsedAmount,
+            budgets = budgetState.budgets,
+            onNavigateToBudgetDetail = onNavigateToBudgetDetail,
             modifier = Modifier.padding(innerPadding)
         )
     }
 }
 
-data class BudgetingState(
+data class BudgetState(
     val totalMaxAmount: Long,
     val totalUsedAmount: Long,
-    val budgets: List<Budgeting>,
+    val budgets: List<Budget>,
 )

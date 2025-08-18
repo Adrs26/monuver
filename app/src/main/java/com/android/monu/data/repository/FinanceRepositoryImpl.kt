@@ -3,21 +3,21 @@ package com.android.monu.data.repository
 import androidx.room.withTransaction
 import com.android.monu.data.local.MonuDatabase
 import com.android.monu.data.local.dao.AccountDao
-import com.android.monu.data.local.dao.BudgetingDao
+import com.android.monu.data.local.dao.BudgetDao
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.AccountMapper
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.domain.usecase.finance.BudgetingStatus
+import com.android.monu.domain.usecase.finance.BudgetStatus
 import kotlin.math.absoluteValue
 
 class FinanceRepositoryImpl(
     private val database: MonuDatabase,
     private val accountDao: AccountDao,
     private val transactionDao: TransactionDao,
-    private val budgetingDao: BudgetingDao
+    private val budgetDao: BudgetDao
 ) : FinanceRepository {
 
     override suspend fun createAccount(account: Account, transaction: Transaction): Long {
@@ -49,7 +49,7 @@ class FinanceRepositoryImpl(
                 TransactionMapper.transactionDomainToEntity(transaction)
             )
             accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
-            budgetingDao.increaseBudgetingUsedAmount(transaction.parentCategory, transaction.date, transaction.amount)
+            budgetDao.increaseBudgetUsedAmount(transaction.parentCategory, transaction.date, transaction.amount)
             transactionId
         }
     }
@@ -83,7 +83,7 @@ class FinanceRepositoryImpl(
         return database.withTransaction {
             val rowDeleted = transactionDao.deleteTransactionById(id)
             accountDao.increaseAccountBalance(sourceId, amount)
-            budgetingDao.decreaseBudgetingUsedAmount(parentCategory, date, amount)
+            budgetDao.decreaseBudgetUsedAmount(parentCategory, date, amount)
             rowDeleted
         }
     }
@@ -127,7 +127,7 @@ class FinanceRepositoryImpl(
         initialParentCategory: Int,
         initialDate: String,
         initialAmount: Long,
-        budgetingStatus: BudgetingStatus
+        budgetStatus: BudgetStatus
     ): Int {
         return database.withTransaction {
             val rowUpdated = transactionDao.updateTransaction(
@@ -142,28 +142,28 @@ class FinanceRepositoryImpl(
                 }
             }
 
-            when(budgetingStatus) {
-                BudgetingStatus.NoOldBudgeting -> budgetingDao.increaseBudgetingUsedAmount(
+            when(budgetStatus) {
+                BudgetStatus.NoOldBudget -> budgetDao.increaseBudgetUsedAmount(
                     transaction.parentCategory,
                     transaction.date,
                     transaction.amount
                 )
-                BudgetingStatus.NoNewBudgeting -> budgetingDao.decreaseBudgetingUsedAmount(
+                BudgetStatus.NoNewBudget -> budgetDao.decreaseBudgetUsedAmount(
                     initialParentCategory,
                     initialDate,
                     initialAmount
                 )
-                BudgetingStatus.NoBudgeting -> {}
-                BudgetingStatus.SameBudgeting -> {
+                BudgetStatus.NoBudget -> {}
+                BudgetStatus.SameBudget -> {
                     if (difference != 0L) {
                         if (difference > 0) {
-                            budgetingDao.increaseBudgetingUsedAmount(
+                            budgetDao.increaseBudgetUsedAmount(
                                 transaction.parentCategory,
                                 transaction.date,
                                 difference
                             )
                         } else {
-                            budgetingDao.decreaseBudgetingUsedAmount(
+                            budgetDao.decreaseBudgetUsedAmount(
                                 transaction.parentCategory,
                                 transaction.date,
                                 difference.absoluteValue
@@ -171,13 +171,13 @@ class FinanceRepositoryImpl(
                         }
                     }
                 }
-                BudgetingStatus.DifferentBudgeting -> {
-                    budgetingDao.decreaseBudgetingUsedAmount(
+                BudgetStatus.DifferentBudget -> {
+                    budgetDao.decreaseBudgetUsedAmount(
                         initialParentCategory,
                         initialDate,
                         initialAmount
                     )
-                    budgetingDao.increaseBudgetingUsedAmount(
+                    budgetDao.increaseBudgetUsedAmount(
                         transaction.parentCategory,
                         transaction.date,
                         transaction.amount

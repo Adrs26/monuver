@@ -3,8 +3,8 @@ package com.android.monu.presentation.screen.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
-import com.android.monu.domain.usecase.budgeting.GetBudgetingSummaryUseCase
-import com.android.monu.domain.usecase.budgeting.HandleExpiredBudgetingUseCase
+import com.android.monu.domain.usecase.budget.GetBudgetSummaryUseCase
+import com.android.monu.domain.usecase.budget.HandleExpiredBudgetUseCase
 import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 class HomeViewModel(
     getTotalAccountBalanceUseCase: GetTotalAccountBalanceUseCase,
     getRecentTransactionsUseCase: GetRecentTransactionsUseCase,
-    getBudgetingSummaryUseCase: GetBudgetingSummaryUseCase,
-    private val handleExpiredBudgetingUseCase: HandleExpiredBudgetingUseCase
+    getBudgetSummaryUseCase: GetBudgetSummaryUseCase,
+    private val handleExpiredBudgetUseCase: HandleExpiredBudgetUseCase
 ) : ViewModel() {
 
     val totalAccountBalance = getTotalAccountBalanceUseCase().map{ it ?: 0 }
@@ -24,16 +24,16 @@ class HomeViewModel(
     val recentTransactions = getRecentTransactionsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val budgetingSummary = getBudgetingSummaryUseCase()
+    val budgetSummary = getBudgetSummaryUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    private var isExpiredBudgetingHandled = false
+    private var isExpiredBudgetHandled = false
 
-    fun handleExpiredBudgeting() {
-        if (!isExpiredBudgetingHandled) {
+    fun handleExpiredBudget() {
+        if (!isExpiredBudgetHandled) {
             viewModelScope.launch {
-                handleExpiredBudgetingUseCase()
-                isExpiredBudgetingHandled = true
+                handleExpiredBudgetUseCase()
+                isExpiredBudgetHandled = true
             }
         }
     }

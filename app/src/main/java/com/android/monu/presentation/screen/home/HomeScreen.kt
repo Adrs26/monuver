@@ -12,11 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.android.monu.domain.model.budgeting.BudgetingSummary
+import com.android.monu.domain.model.budget.BudgetSummary
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.presentation.screen.home.components.HomeAppBar
 import com.android.monu.presentation.screen.home.components.HomeBalanceOverview
-import com.android.monu.presentation.screen.home.components.HomeBudgetingOverview
+import com.android.monu.presentation.screen.home.components.HomeBudgetOverview
 import com.android.monu.presentation.screen.home.components.HomeMenuButtonBar
 import com.android.monu.presentation.screen.home.components.HomeRecentTransactions
 
@@ -24,18 +24,18 @@ import com.android.monu.presentation.screen.home.components.HomeRecentTransactio
 fun HomeScreen(
     totalBalance: Long,
     recentTransactions: List<Transaction>,
-    budgetingSummary: BudgetingSummary,
+    budgetSummary: BudgetSummary,
     homeActions: HomeActions
 ) {
     LaunchedEffect(Unit) {
-        homeActions.onHandleExpiredBudgeting()
+        homeActions.onHandleExpiredBudget()
     }
 
     Scaffold(
         topBar = {
             HomeAppBar(
                 onNavigateToBill = {},
-                onNavigateToSaving = {},
+                onNavigateToSave = {},
                 onNavigateToSettings = { homeActions.onNavigateToSettings() }
             )
         }
@@ -72,9 +72,9 @@ fun HomeScreen(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
-            HomeBudgetingOverview(
-                totalUsedAmount = budgetingSummary.totalUsedAmount,
-                totalMaxAmount = budgetingSummary.totalMaxAmount,
+            HomeBudgetOverview(
+                totalUsedAmount = budgetSummary.totalUsedAmount,
+                totalMaxAmount = budgetSummary.totalMaxAmount,
                 onNavigateToBudgeting = { homeActions.onNavigateToBudgeting() },
                 modifier = Modifier
                     .padding(start = 16.dp, end = 8.dp)
@@ -85,7 +85,7 @@ fun HomeScreen(
 }
 
 interface HomeActions {
-    fun onHandleExpiredBudgeting()
+    fun onHandleExpiredBudget()
     fun onNavigateToSettings()
     fun onNavigateToAccount()
     fun onNavigateToAddIncomeTransaction()
