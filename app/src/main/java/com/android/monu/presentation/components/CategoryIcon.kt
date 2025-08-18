@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import com.android.monu.ui.theme.SoftWhite
 
 @Composable
 fun CategoryIcon(
@@ -26,7 +27,7 @@ fun CategoryIcon(
         Icon(
             painter = painterResource(icon),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.background
+            tint = SoftWhite
         )
     }
 }

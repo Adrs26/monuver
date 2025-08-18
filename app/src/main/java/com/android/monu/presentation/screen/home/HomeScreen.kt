@@ -34,7 +34,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeAppBar(
-                onNavigateToBill = {},
+                onNavigateToBill = { homeActions.onNavigateToBill() },
                 onNavigateToSave = {},
                 onNavigateToSettings = { homeActions.onNavigateToSettings() }
             )
@@ -86,6 +86,7 @@ fun HomeScreen(
 
 interface HomeActions {
     fun onHandleExpiredBudget()
+    fun onNavigateToBill()
     fun onNavigateToSettings()
     fun onNavigateToAccount()
     fun onNavigateToAddIncomeTransaction()

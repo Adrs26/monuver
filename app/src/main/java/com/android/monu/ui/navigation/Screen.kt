@@ -48,3 +48,6 @@ import kotlinx.serialization.Serializable
     val month: Int = 0,
     val year: Int = 0
 )
+
+@Serializable object Bill
+@Serializable object MainBill

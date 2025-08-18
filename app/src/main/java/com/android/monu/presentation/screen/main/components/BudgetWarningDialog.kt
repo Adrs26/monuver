@@ -72,7 +72,7 @@ fun BudgetWarningDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Ya, saya mengerti",
+                        text = stringResource(R.string.yes_i_am_understand),
                         style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
                     )
                 }
@@ -96,13 +96,22 @@ private fun getWarningText(
 ): String {
     return when (budgetWarningCondition) {
         BudgetWarningCondition.LOW_REMAINING_BUDGET -> {
-            "Budget kamu untuk kategori ${stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetCategory))} hampir habis. Yuk, lebih hemat dalam penggunaannya"
+            stringResource(
+                R.string.low_remaining_budget_warning,
+                stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetCategory))
+            )
         }
         BudgetWarningCondition.FULL_BUDGET -> {
-            "Budget kamu untuk kategori ${stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetCategory))} sudah habis. Hindari pengeluaran lebih lanjut agar tidak melebihi batas"
+            stringResource(
+                R.string.full_budget_warning,
+                stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetCategory))
+            )
         }
         else -> {
-            "Pengeluaran kamu sudah melebihi budget pada kategori ${stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetCategory))}. Coba evaluasi dan atur kembali keuanganmu, ya"
+            stringResource(
+                R.string.over_budget_warning,
+                stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetCategory))
+            )
         }
     }
 }

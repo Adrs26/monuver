@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContent {
-            MonuTheme(darkTheme = false) {
+            MonuTheme {
                 MonuApp()
             }
         }

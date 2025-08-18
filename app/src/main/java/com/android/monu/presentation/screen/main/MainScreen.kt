@@ -62,6 +62,7 @@ import com.android.monu.ui.navigation.MainAccount
 import com.android.monu.ui.navigation.MainAddBudget
 import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction
+import com.android.monu.ui.navigation.MainBill
 import com.android.monu.ui.navigation.MainBudgetDetail
 import com.android.monu.ui.navigation.MainInactiveBudget
 import com.android.monu.ui.navigation.MainTransactionDetail
@@ -166,6 +167,10 @@ fun MainScreen(
                 val homeActions = object : HomeActions {
                     override fun onHandleExpiredBudget() {
                         viewModel.handleExpiredBudget()
+                    }
+
+                    override fun onNavigateToBill() {
+                        rootNavController.navigate(MainBill)
                     }
 
                     override fun onNavigateToSettings() {

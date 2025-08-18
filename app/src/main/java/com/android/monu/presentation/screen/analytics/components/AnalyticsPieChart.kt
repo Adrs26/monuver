@@ -38,6 +38,7 @@ import com.android.monu.presentation.components.PieChart
 import com.android.monu.presentation.utils.DataProvider
 import com.android.monu.presentation.utils.DatabaseCodeMapper
 import com.android.monu.presentation.utils.NumberFormatHelper
+import com.android.monu.ui.theme.SoftWhite
 
 @Composable
 fun AnalyticsPieChart(
@@ -187,9 +188,7 @@ fun AnalyticsPieChartDetailData(
                     R.string.percentage_value,
                     NumberFormatHelper.formatToPercentageValue(value = amount, total = total)
                 ),
-                style = MaterialTheme.typography.labelSmall.copy(
-                    color = MaterialTheme.colorScheme.background
-                )
+                style = MaterialTheme.typography.labelSmall.copy(color = SoftWhite)
             )
         }
         Text(

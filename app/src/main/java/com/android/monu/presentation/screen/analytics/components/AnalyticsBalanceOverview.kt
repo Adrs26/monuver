@@ -1,5 +1,6 @@
 package com.android.monu.presentation.screen.analytics.components
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,10 @@ import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.transaction.TransactionBalanceSummary
 import com.android.monu.presentation.utils.NumberFormatHelper
+import com.android.monu.ui.theme.Green100
+import com.android.monu.ui.theme.Green600
+import com.android.monu.ui.theme.Red100
+import com.android.monu.ui.theme.Red600
 
 @Composable
 fun AnalyticsBalanceOverview(
@@ -31,14 +36,14 @@ fun AnalyticsBalanceOverview(
     ) {
         BalanceData(
             title = stringResource(R.string.total_income),
-            containerColor = Color(0xFFC8E6C9),
+            containerColor = if (isSystemInDarkTheme()) Green600 else Green100,
             totalAmount = amountSummary.totalIncomeAmount,
             averageAmount = amountSummary.averageIncomeAmount,
             modifier = Modifier.weight(1f)
         )
         BalanceData(
             title = stringResource(R.string.total_expense),
-            containerColor = Color(0xFFFFCDD2),
+            containerColor = if (isSystemInDarkTheme()) Red600 else Red100,
             totalAmount = amountSummary.totalExpenseAmount,
             averageAmount = amountSummary.averageExpenseAmount,
             modifier = Modifier.weight(1f)

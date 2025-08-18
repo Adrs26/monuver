@@ -70,7 +70,9 @@ fun AccountListItem(
             }
             Text(
                 text = NumberFormatHelper.formatToRupiah(account.balance),
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             )
         }
     }

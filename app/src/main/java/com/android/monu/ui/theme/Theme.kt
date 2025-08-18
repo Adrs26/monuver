@@ -11,13 +11,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-private val DarkColorScheme = darkColorScheme()
+private val DarkColorScheme = darkColorScheme(
+    primary = BluePrimary,
+    onPrimary = SoftWhite,
+    background = SoftBlack,
+    onBackground = SoftWhite,
+    surface = SoftBlack,
+    onSurface = LightGrayBlue,
+    surfaceVariant = Color.Gray,
+    onSurfaceVariant = Color.LightGray,
+    secondaryContainer = BluePrimary,
+    onSecondaryContainer = SoftBlack,
+)
 
 private val LightColorScheme = lightColorScheme(
     primary = BluePrimary,
     onPrimary = SoftWhite,
     background = SoftWhite,
-    onBackground = Color.Black,
+    onBackground = SoftBlack,
     surface = GrayBlue,
     onSurface = Charcoal,
     surfaceVariant = Color.LightGray,

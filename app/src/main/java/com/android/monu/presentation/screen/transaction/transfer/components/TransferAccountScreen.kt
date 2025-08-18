@@ -64,13 +64,13 @@ fun TransferAccountScreen(
                                 .padding(horizontal = 16.dp, vertical = 2.dp)
                         } else {
                             Modifier
-                                .background(MaterialTheme.colorScheme.surface)
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .padding(horizontal = 16.dp, vertical = 2.dp)
                         },
                         containerColor = if (!isAccountSelected) {
                             MaterialTheme.colorScheme.background
                         } else {
-                            MaterialTheme.colorScheme.surface
+                            MaterialTheme.colorScheme.surfaceVariant
                         }
                     )
                 }

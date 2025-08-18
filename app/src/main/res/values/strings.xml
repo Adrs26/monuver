@@ -222,4 +222,8 @@
     <string name="transaction_history">Riwayat transaksi</string>
     <string name="budgeting_detail">Detail budget</string>
     <string name="inactive_budget">Budget selesai</string>
+    <string name="low_remaining_budget_warning">Budget kamu untuk kategori %1$s hampir habis. Yuk, lebih hemat dalam penggunaannya</string>
+    <string name="full_budget_warning">Budget kamu untuk kategori %1$s sudah habis. Hindari pengeluaran lebih lanjut agar tidak melebihi batas</string>
+    <string name="over_budget_warning">Pengeluaran kamu sudah melebihi budget pada kategori %1$s. Coba evaluasi dan atur kembali keuanganmu, ya</string>
+    <string name="yes_i_am_understand">Ya, saya mengerti</string>
 </resources>
