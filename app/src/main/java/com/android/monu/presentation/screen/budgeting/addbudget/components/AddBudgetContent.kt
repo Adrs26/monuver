@@ -33,7 +33,7 @@ import com.android.monu.R
 import com.android.monu.presentation.components.TextAmountInputField
 import com.android.monu.presentation.components.TextDateInputField
 import com.android.monu.presentation.components.TextInputField
-import com.android.monu.presentation.utils.BudgetPeriod
+import com.android.monu.presentation.utils.Cycle
 import com.android.monu.presentation.utils.DatabaseCodeMapper
 import com.android.monu.presentation.utils.DateHelper
 
@@ -68,9 +68,10 @@ fun AddBudgetContent(
             onValueChange = { budgetActions.onAmountChange(it) },
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-        PeriodFilterField(
-            selectedPeriod = budgetState.period,
-            onPeriodChange = { budgetActions.onPeriodChange(it) },
+        CycleFilterField(
+            cycles = listOf(Cycle.MONTHLY, Cycle.WEEKLY, Cycle.CUSTOM),
+            selectedCycle = budgetState.period,
+            onCycleChange = { budgetActions.onPeriodChange(it) },
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextDateInputField(
@@ -78,13 +79,13 @@ fun AddBudgetContent(
             value = DateHelper.formatDateToReadable(budgetState.startDate),
             onValueChange = { },
             placeholderText = stringResource(R.string.choose_budgeting_start_date),
-            isEnable = budgetState.period == 3,
+            isEnable = budgetState.period == Cycle.CUSTOM,
             modifier = Modifier
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = {
-                        if (budgetState.period == 3) {
+                        if (budgetState.period == Cycle.CUSTOM) {
                             budgetActions.onStartDateClick()
                         }
                     }
@@ -96,13 +97,13 @@ fun AddBudgetContent(
             value = DateHelper.formatDateToReadable(budgetState.endDate),
             onValueChange = { },
             placeholderText = stringResource(R.string.choose_budgeting_end_date),
-            isEnable = budgetState.period == 3,
+            isEnable = budgetState.period == Cycle.CUSTOM,
             modifier = Modifier
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
                     onClick = {
-                        if (budgetState.period == 3) {
+                        if (budgetState.period == Cycle.CUSTOM) {
                             budgetActions.onEndDateClick()
                         }
                     }
@@ -133,16 +134,17 @@ fun AddBudgetContent(
 }
 
 @Composable
-fun PeriodFilterField(
-    selectedPeriod: Int,
-    onPeriodChange: (Int) -> Unit,
+fun CycleFilterField(
+    cycles: List<Int>,
+    selectedCycle: Int,
+    onCycleChange: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
     ) {
         Text(
-            text = stringResource(R.string.budgeting_period),
+            text = stringResource(R.string.cycle),
             modifier = Modifier.padding(bottom = 4.dp),
             style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
         )
@@ -155,23 +157,23 @@ fun PeriodFilterField(
                     shape = MaterialTheme.shapes.extraSmall
                 )
         ) {
-            listOf(BudgetPeriod.MONTHLY, BudgetPeriod.WEEKLY, BudgetPeriod.CUSTOM).forEach { period ->
+            cycles.forEach { cycle ->
                 Box(
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.extraSmall)
                         .background(
-                            if (period == selectedPeriod) MaterialTheme.colorScheme.primary else
+                            if (cycle == selectedCycle) MaterialTheme.colorScheme.primary else
                                 MaterialTheme.colorScheme.background,
                         )
-                        .clickable { onPeriodChange(period) }
+                        .clickable { onCycleChange(cycle) }
                         .weight(1f),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(DatabaseCodeMapper.toBudgetPeriod(period)),
+                        text = stringResource(DatabaseCodeMapper.toCycle(cycle)),
                         modifier = Modifier.padding(vertical = 8.dp),
                         style = MaterialTheme.typography.labelSmall.copy(
-                            color = if (period == selectedPeriod) MaterialTheme.colorScheme.onPrimary else
+                            color = if (cycle == selectedCycle) MaterialTheme.colorScheme.onPrimary else
                                 MaterialTheme.colorScheme.onBackground,
                             fontSize = 12.sp
                         )
@@ -204,7 +206,7 @@ fun TextSwitchField(
             text = stringResource(R.string.bugdeting_auto_update),
             checked = isAutoUpdate,
             onCheckedChange = { onAutoUpdateChange(it) },
-            isEnable = budgetingPeriod != 3
+            isEnable = budgetingPeriod != Cycle.CUSTOM
         )
     }
 }

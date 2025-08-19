@@ -45,9 +45,7 @@ class EditTransactionViewModel(
     private fun getTransactionById(id: Long) {
         viewModelScope.launch {
             getTransactionByIdUseCase(id).collect { transaction ->
-                if (_initialTransaction.value == null) {
-                    _initialTransaction.value = transaction
-                }
+                _initialTransaction.value = transaction
                 _transaction.value = transaction
             }
         }
@@ -62,7 +60,6 @@ class EditTransactionViewModel(
     fun restoreOriginalTransaction() {
         _initialTransaction.value.let {
             _transaction.value = it
-            _initialTransaction.value = null
         }
     }
 

@@ -2,7 +2,7 @@ package com.android.monu.domain.usecase.budget
 
 import com.android.monu.domain.model.budget.Budget
 import com.android.monu.domain.repository.BudgetRepository
-import com.android.monu.presentation.utils.BudgetPeriod
+import com.android.monu.presentation.utils.Cycle
 import kotlinx.coroutines.flow.first
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -58,11 +58,11 @@ class HandleExpiredBudgetUseCase(
 
     private fun shiftDate(period: Int, date: LocalDate, isStartDate: Boolean): LocalDate {
         return when (period) {
-            BudgetPeriod.MONTHLY -> {
+            Cycle.MONTHLY -> {
                 val shifted = date.plusMonths(1)
                 if (isStartDate) shifted else shifted.withDayOfMonth(shifted.lengthOfMonth())
             }
-            BudgetPeriod.WEEKLY -> date.plusWeeks(1)
+            Cycle.WEEKLY -> date.plusWeeks(1)
             else -> date
         }
     }

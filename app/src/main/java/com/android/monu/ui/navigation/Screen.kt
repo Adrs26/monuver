@@ -51,3 +51,4 @@ import kotlinx.serialization.Serializable
 
 @Serializable object Bill
 @Serializable object MainBill
+@Serializable object AddBill

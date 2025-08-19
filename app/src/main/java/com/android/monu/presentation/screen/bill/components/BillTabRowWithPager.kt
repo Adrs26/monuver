@@ -1,6 +1,5 @@
 package com.android.monu.presentation.screen.bill.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +13,6 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
@@ -64,39 +62,9 @@ fun BillTabRowWithPager(
             modifier = Modifier.fillMaxSize()
         ) { page ->
             when (page) {
-                0 -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "BELUM DIBAYAR",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
-                }
-                1 -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "TERLAMBAT",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
-                }
-                2 -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "SUDAH DIBAYAR",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
-                }
+                0 -> PendingBillScreen()
+                1 -> DueBillScreen()
+                2 -> PaidBillScreen()
             }
         }
     }

@@ -109,10 +109,11 @@ object Month {
     const val DECEMBER = 12
 }
 
-object BudgetPeriod {
-    const val MONTHLY = 1
-    const val WEEKLY = 2
-    const val CUSTOM = 3
+object Cycle {
+    const val YEARLY = 1
+    const val MONTHLY = 2
+    const val WEEKLY = 3
+    const val CUSTOM = 4
 }
 
 object BudgetWarningCondition {

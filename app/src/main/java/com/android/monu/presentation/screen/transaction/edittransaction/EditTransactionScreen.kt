@@ -1,5 +1,6 @@
 package com.android.monu.presentation.screen.transaction.edittransaction
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -110,6 +111,8 @@ fun EditTransactionScreen(
             }
         }
     }
+
+    BackHandler { transactionActions.onNavigateBack() }
 
     Scaffold(
         topBar = {

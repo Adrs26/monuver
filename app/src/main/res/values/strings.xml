@@ -175,7 +175,7 @@
     <string name="choose_source_account">Pilih akun sumber</string>
     <string name="choose_destination_account">Pilih akun tujuan</string>
     <string name="sub_category">Sub-kategori</string>
-    <string name="budgeting_period">Periode</string>
+    <string name="cycle">Siklus</string>
     <string name="maximum_amount">Saldo maksimal</string>
     <string name="used">Terpakai</string>
     <string name="remain">Tersisa</string>
@@ -185,6 +185,7 @@
     <string name="see_budgeting">Lihat budget</string>
     <string name="used_amount">Saldo digunakan</string>
     <string name="remained_amount">Saldo tersisa</string>
+    <string name="yearly">Tahunan</string>
     <string name="monthly">Bulanan</string>
     <string name="weekly">Mingguan</string>
     <string name="custom">Kustom</string>
@@ -226,4 +227,5 @@
     <string name="full_budget_warning">Budget kamu untuk kategori %1$s sudah habis. Hindari pengeluaran lebih lanjut agar tidak melebihi batas</string>
     <string name="over_budget_warning">Pengeluaran kamu sudah melebihi budget pada kategori %1$s. Coba evaluasi dan atur kembali keuanganmu, ya</string>
     <string name="yes_i_am_understand">Ya, saya mengerti</string>
+    <string name="you_can_not_select_past_date_for_bill">Tagihan tidak bisa dicatat untuk tanggal sebelum hari ini</string>
 </resources>

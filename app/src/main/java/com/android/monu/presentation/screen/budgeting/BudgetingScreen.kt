@@ -3,6 +3,7 @@ package com.android.monu.presentation.screen.budgeting
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.android.monu.domain.model.budget.Budget
 import com.android.monu.presentation.screen.budgeting.components.BudgetAppBar
@@ -11,13 +12,16 @@ import com.android.monu.presentation.screen.budgeting.components.BudgetingConten
 @Composable
 fun BudgetingScreen(
     budgetState: BudgetState,
-    onNavigateToInactiveBudget: () -> Unit,
-    onNavigateToBudgetDetail: (Long) -> Unit
+    budgetActions: BudgetActions
 ) {
+    LaunchedEffect(Unit) {
+        budgetActions.onHandleExpiredBudget()
+    }
+
     Scaffold(
         topBar = {
             BudgetAppBar(
-                onNavigateToInactiveBudget = onNavigateToInactiveBudget
+                onNavigateToInactiveBudget = budgetActions::onNavigateToInactiveBudget
             )
         }
     ) { innerPadding ->
@@ -25,7 +29,7 @@ fun BudgetingScreen(
             totalMaxAmount = budgetState.totalMaxAmount,
             totalUsedAmount = budgetState.totalUsedAmount,
             budgets = budgetState.budgets,
-            onNavigateToBudgetDetail = onNavigateToBudgetDetail,
+            onNavigateToBudgetDetail = budgetActions::onNavigateToBudgetDetail,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -36,3 +40,9 @@ data class BudgetState(
     val totalUsedAmount: Long,
     val budgets: List<Budget>,
 )
+
+interface BudgetActions {
+    fun onNavigateToInactiveBudget()
+    fun onNavigateToBudgetDetail(budgetId: Long)
+    fun onHandleExpiredBudget()
+}

@@ -53,8 +53,8 @@ fun BudgetDetailOverview(
                 content = stringResource(DatabaseCodeMapper.toParentCategoryTitle(budgetState.category))
             )
             BudgetDetailData(
-                title = stringResource(R.string.budgeting_period),
-                content = stringResource(DatabaseCodeMapper.toBudgetPeriod(budgetState.period)),
+                title = stringResource(R.string.cycle),
+                content = stringResource(DatabaseCodeMapper.toCycle(budgetState.period)),
                 modifier = Modifier.padding(top = 8.dp)
             )
             BudgetDetailData(

@@ -11,7 +11,8 @@ import com.android.monu.presentation.screen.bill.components.BillTabRowWithPager
 
 @Composable
 fun BillScreen(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNavigateToAddBill: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -20,7 +21,9 @@ fun BillScreen(
             )
         },
         floatingActionButton = {
-            CommonFloatingActionButton {  }
+            CommonFloatingActionButton {
+                onNavigateToAddBill()
+            }
         }
     ) { innerPadding ->
         BillTabRowWithPager(

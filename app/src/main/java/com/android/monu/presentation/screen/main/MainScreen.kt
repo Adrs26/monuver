@@ -42,6 +42,7 @@ import com.android.monu.presentation.screen.analytics.AnalyticsActions
 import com.android.monu.presentation.screen.analytics.AnalyticsScreen
 import com.android.monu.presentation.screen.analytics.AnalyticsState
 import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
+import com.android.monu.presentation.screen.budgeting.BudgetActions
 import com.android.monu.presentation.screen.budgeting.BudgetState
 import com.android.monu.presentation.screen.budgeting.BudgetingScreen
 import com.android.monu.presentation.screen.budgeting.BudgetingViewModel
@@ -276,14 +277,23 @@ fun MainScreen(
                     budgets = budgets
                 )
 
-                BudgetingScreen(
-                    budgetState = budgetState,
-                    onNavigateToInactiveBudget = {
+                val budgetActions = object : BudgetActions {
+                    override fun onNavigateToInactiveBudget() {
                         rootNavController.navigate(MainInactiveBudget)
-                    },
-                    onNavigateToBudgetDetail = { budgetId ->
+                    }
+
+                    override fun onNavigateToBudgetDetail(budgetId: Long) {
                         rootNavController.navigate(MainBudgetDetail(id = budgetId))
                     }
+
+                    override fun onHandleExpiredBudget() {
+                        viewModel.handleExpiredBudget()
+                    }
+                }
+
+                BudgetingScreen(
+                    budgetState = budgetState,
+                    budgetActions = budgetActions
                 )
             }
             composable<Analytics> {

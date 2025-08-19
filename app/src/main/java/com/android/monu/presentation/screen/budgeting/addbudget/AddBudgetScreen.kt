@@ -22,6 +22,7 @@ import com.android.monu.presentation.components.CommonAppBar
 import com.android.monu.presentation.screen.budgeting.addbudget.components.AddBudgetContent
 import com.android.monu.presentation.screen.budgeting.addbudget.components.AddBudgetContentActions
 import com.android.monu.presentation.screen.budgeting.addbudget.components.AddBudgetContentState
+import com.android.monu.presentation.utils.Cycle
 import com.android.monu.presentation.utils.DatabaseResultMessage
 import com.android.monu.presentation.utils.DateHelper
 import com.android.monu.presentation.utils.NumberFormatHelper
@@ -44,7 +45,7 @@ fun AddBudgetScreen(
     var budgetMaxAmountFormat by remember {
         mutableStateOf(TextFieldValue(text = NumberFormatHelper.formatToRupiah(budgetMaxAmount)))
     }
-    var budgetPeriod by rememberSaveable { mutableIntStateOf(1) }
+    var budgetPeriod by rememberSaveable { mutableIntStateOf(Cycle.MONTHLY) }
     var budgetStartDate by rememberSaveable {
         mutableStateOf(DateHelper.getFirstDayOfCurrentMonth())
     }
@@ -95,7 +96,7 @@ fun AddBudgetScreen(
             budgetStartDate = getBudgetStartDate(period, previousStartDate)
             val previousEndDate = budgetEndDate
             budgetEndDate = getBudgetEndDate(period, previousEndDate)
-            if (period == 3) isBudgetAutoUpdate = false
+            if (period == Cycle.CUSTOM) isBudgetAutoUpdate = false
         }
 
         override fun onStartDateClick() {
@@ -184,16 +185,16 @@ fun AddBudgetScreen(
 
 private fun getBudgetStartDate(budgetPeriod: Int, previousDate: String): String {
     return when (budgetPeriod) {
-        1 -> DateHelper.getFirstDayOfCurrentMonth()
-        2 -> DateHelper.getFirstDayOfCurrentWeek()
+        Cycle.MONTHLY -> DateHelper.getFirstDayOfCurrentMonth()
+        Cycle.WEEKLY -> DateHelper.getFirstDayOfCurrentWeek()
         else -> previousDate
     }
 }
 
 private fun getBudgetEndDate(budgetPeriod: Int, previousDate: String): String {
     return when (budgetPeriod) {
-        1 -> DateHelper.getLastDayOfCurrentMonth()
-        2 -> DateHelper.getLastDayOfCurrentWeek()
+        Cycle.MONTHLY -> DateHelper.getLastDayOfCurrentMonth()
+        Cycle.WEEKLY -> DateHelper.getLastDayOfCurrentWeek()
         else -> previousDate
     }
 }
