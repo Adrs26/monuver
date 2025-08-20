@@ -12,11 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.theme.Red600
 
 @Composable
 fun BillListItem(
-    billStatus: Int,
+    billState: BillListItemState,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -29,7 +31,7 @@ fun BillListItem(
                 .padding(end = 16.dp)
         ) {
             Text(
-                text = "Langganan Spotify",
+                text = billState.title,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 style = MaterialTheme.typography.labelMedium.copy(
@@ -37,23 +39,29 @@ fun BillListItem(
                 )
             )
             Text(
-                text = getBillDateInformationText(billStatus),
+                text = getBillDateInformationText(
+                    status = billState.status,
+                    dueDate = billState.dueDate,
+                    paidDate = billState.paidDate
+                ),
                 modifier = Modifier.padding(top = 4.dp),
                 maxLines = 1,
                 style = MaterialTheme.typography.labelSmall.copy(
-                    color = getBillDateInformationColor(billStatus)
+                    color = getBillDateInformationColor(billState.status)
                 )
             )
-            Text(
-                text = "Pembayaran ke-1",
-                maxLines = 1,
-                style = MaterialTheme.typography.labelSmall.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            if (billState.isRecurring) {
+                Text(
+                    text = "Pembayaran ke-${billState.nowPaidPeriod}",
+                    maxLines = 1,
+                    style = MaterialTheme.typography.labelSmall.copy(
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 )
-            )
+            }
         }
         Text(
-            text = "Rp50.000",
+            text = NumberFormatHelper.formatToRupiah(billState.amount),
             style = MaterialTheme.typography.labelMedium.copy(
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -61,10 +69,10 @@ fun BillListItem(
     }
 }
 
-private fun getBillDateInformationText(billStatus: Int): String {
-    return when (billStatus) {
-        1, 2 -> "Jatuh tempo pada 25 Agustus 2025"
-        else -> "Dilunasi pada 25 Agustus 2025"
+private fun getBillDateInformationText(status: Int, dueDate: String, paidDate: String): String {
+    return when (status) {
+        1, 2 -> "Jatuh tempo pada ${DateHelper.formatDateToReadable(dueDate)}"
+        else -> "Dilunasi pada ${DateHelper.formatDateToReadable(paidDate)}"
     }
 }
 
@@ -75,3 +83,14 @@ private fun getBillDateInformationColor(billStatus: Int): Color {
         else -> Red600
     }
 }
+
+data class BillListItemState(
+    val id: Long,
+    val title: String,
+    val dueDate: String,
+    val paidDate: String,
+    val amount: Long,
+    val isRecurring: Boolean,
+    val status: Int,
+    val nowPaidPeriod: Int,
+)

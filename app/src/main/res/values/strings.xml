@@ -228,4 +228,9 @@
     <string name="over_budget_warning">Pengeluaran kamu sudah melebihi budget pada kategori %1$s. Coba evaluasi dan atur kembali keuanganmu, ya</string>
     <string name="yes_i_am_understand">Ya, saya mengerti</string>
     <string name="you_can_not_select_past_date_for_bill">Tagihan tidak bisa dicatat untuk tanggal sebelum hari ini</string>
+    <string name="empty_bill_title">Judul tagihan tidak boleh kosong</string>
+    <string name="empty_bill_date">Tanggal jatuh tempo tidak boleh kosong</string>
+    <string name="empty_bill_amount">Nominal tagihan tidak boleh kosong</string>
+    <string name="empty_bill_fix_period">Periode pasti pembayaran tidak boleh kosong</string>
+    <string name="bill_successfully_added">Tagihan berhasil ditambahkan</string>
 </resources>

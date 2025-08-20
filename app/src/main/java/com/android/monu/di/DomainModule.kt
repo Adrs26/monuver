@@ -2,6 +2,9 @@ package com.android.monu.di
 
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
+import com.android.monu.domain.usecase.bill.CreateBillUseCase
+import com.android.monu.domain.usecase.bill.GetDueBillsUseCase
+import com.android.monu.domain.usecase.bill.GetPendingBillsUseCase
 import com.android.monu.domain.usecase.budget.CreateBudgetUseCase
 import com.android.monu.domain.usecase.budget.DeleteBudgetUseCase
 import com.android.monu.domain.usecase.budget.GetAllActiveBudgetsUseCase
@@ -65,4 +68,8 @@ val domainModule = module {
     factoryOf(::GetBudgetSummaryUseCase)
     factoryOf(::HandleExpiredBudgetUseCase)
     factoryOf(::UpdateBudgetUseCase)
+
+    factoryOf(::CreateBillUseCase)
+    factoryOf(::GetPendingBillsUseCase)
+    factoryOf(::GetDueBillsUseCase)
 }

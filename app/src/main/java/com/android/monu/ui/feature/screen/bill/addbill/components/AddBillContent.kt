@@ -60,7 +60,7 @@ fun AddBillContent(
         TextInputField(
             title = stringResource(R.string.title),
             value = billState.title,
-            onValueChange = { billActions.onTitleChange(it) },
+            onValueChange = billActions::onTitleChange,
             placeholderText = "Masukkan judul tagihan",
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
@@ -74,20 +74,20 @@ fun AddBillContent(
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = { billActions.onDateClick() }
+                    onClick = billActions::onDateClick
                 )
                 .padding(horizontal = 16.dp)
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
             value = billState.amountFormat,
-            onValueChange = { billActions.onAmountChange(it) },
+            onValueChange = billActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextWithSwitch(
             text = "Tagihan berulang",
             checked = billState.isRecurring,
-            onCheckedChange = { billActions.onRecurringChange(it) },
+            onCheckedChange = billActions::onRecurringChange,
             isEnable = true,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -102,20 +102,20 @@ fun AddBillContent(
                 CycleFilterField(
                     cycles = listOf(Cycle.YEARLY, Cycle.MONTHLY, Cycle.WEEKLY),
                     selectedCycle = billState.cycle,
-                    onCycleChange = { billActions.onCycleChange(it)  },
+                    onCycleChange = billActions::onCycleChange,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 BillPeriodRadioGroupField(
-                    selectedPeriod = billState.selectedPeriod,
-                    onPeriodSelect = { billActions.onSelectedPeriodChange(it) },
+                    selectedPeriod = billState.period,
+                    onPeriodSelect = billActions::onPeriodChange,
                     fixPeriod = billState.fixPeriod,
-                    onFixPeriodChange = { billActions.onFixPeriodChange(it) },
+                    onFixPeriodChange = billActions::onFixPeriodChange,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
         }
         Button(
-            onClick = {  },
+            onClick = { billActions.onAddNewBill(billState) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -239,7 +239,7 @@ data class AddBillContentState(
     val amountFormat: TextFieldValue,
     val isRecurring: Boolean,
     val cycle: Int,
-    val selectedPeriod: Int,
+    val period: Int,
     val fixPeriod: String
 )
 
@@ -249,6 +249,7 @@ interface AddBillContentActions {
     fun onAmountChange(amountFormat: TextFieldValue)
     fun onRecurringChange(isRecurring: Boolean)
     fun onCycleChange(cycle: Int)
-    fun onSelectedPeriodChange(selectedPeriod: Int)
-    fun onFixPeriodChange(period: String)
+    fun onPeriodChange(period: Int)
+    fun onFixPeriodChange(fixPeriod: String)
+    fun onAddNewBill(billState: AddBillContentState)
 }

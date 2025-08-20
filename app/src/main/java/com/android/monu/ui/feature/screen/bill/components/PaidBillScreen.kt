@@ -8,16 +8,33 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.android.monu.domain.model.bill.Bill
 
 @Composable
-fun PaidBillScreen() {
+fun PaidBillScreen(
+    bills: List<Bill>
+) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = 8.dp)
     ) {
-        items(20) {
+        items(
+            count = bills.size,
+            key = { index -> bills[index].id }
+        ) { index ->
+            val billState = BillListItemState(
+                id = bills[index].id,
+                title = bills[index].title,
+                dueDate = bills[index].dueDate,
+                paidDate = bills[index].paidDate ?: "",
+                amount = bills[index].amount,
+                isRecurring = bills[index].isRecurring,
+                status = 3,
+                nowPaidPeriod = bills[index].nowPaidPeriod
+            )
+
             BillListItem(
-                billStatus = 3,
+                billState = billState,
                 modifier = Modifier
                     .clickable { }
                     .padding(horizontal = 16.dp, vertical = 12.dp)

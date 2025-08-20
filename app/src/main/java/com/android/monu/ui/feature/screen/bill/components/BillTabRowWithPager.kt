@@ -15,10 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
+import com.android.monu.domain.model.bill.Bill
 import kotlinx.coroutines.launch
 
 @Composable
 fun BillTabRowWithPager(
+    pendingBills: List<Bill>,
+    dueBills: List<Bill>,
+    paidBills: List<Bill>,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(pageCount = { 3 })
@@ -62,9 +66,9 @@ fun BillTabRowWithPager(
             modifier = Modifier.fillMaxSize()
         ) { page ->
             when (page) {
-                0 -> PendingBillScreen()
-                1 -> DueBillScreen()
-                2 -> PaidBillScreen()
+                0 -> PendingBillScreen(pendingBills)
+                1 -> DueBillScreen(dueBills)
+                2 -> PaidBillScreen(paidBills)
             }
         }
     }

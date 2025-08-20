@@ -21,10 +21,6 @@ sealed class DatabaseResultMessage(val message: Int) {
         val warningCondition: Int
     ) : DatabaseResultMessage(R.string.transaction_successfully_added)
     object UpdateTransactionSuccess : DatabaseResultMessage(R.string.transaction_successfully_saved)
-    data class UpdateSuccessWithWarningCondition(
-        val category: Int,
-        val warningCondition: Int
-    ) : DatabaseResultMessage(R.string.transaction_successfully_saved)
 
     object EmptyBudgetCategory : DatabaseResultMessage(R.string.empty_budgeting_category)
     object EmptyBudgetMaxAmount : DatabaseResultMessage(R.string.empty_budgeting_max_amount)
@@ -32,4 +28,10 @@ sealed class DatabaseResultMessage(val message: Int) {
     object UpdateBudgetSuccess : DatabaseResultMessage(R.string.budgeting_successfully_saved)
     object ActiveBudgetWithCategoryAlreadyExists : DatabaseResultMessage(R.string.active_budgeting_with_category_already_exists)
     object CurrentBudgetAmountExceedsMaximumLimit : DatabaseResultMessage(R.string.current_budget_amount_exceeds_maximum_limit)
+
+    object EmptyBillTitle : DatabaseResultMessage(R.string.empty_bill_title)
+    object EmptyBillDate : DatabaseResultMessage(R.string.empty_bill_date)
+    object EmptyBillAmount : DatabaseResultMessage(R.string.empty_bill_amount)
+    object EmptyBillFixPeriod : DatabaseResultMessage(R.string.empty_bill_fix_period)
+    object CreateBillSuccess : DatabaseResultMessage(R.string.bill_successfully_added)
 }

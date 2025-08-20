@@ -1,10 +1,12 @@
 package com.android.monu.di
 
 import com.android.monu.data.repository.AccountRepositoryImpl
+import com.android.monu.data.repository.BillRepositoryImpl
 import com.android.monu.data.repository.BudgetRepositoryImpl
 import com.android.monu.data.repository.FinanceRepositoryImpl
 import com.android.monu.data.repository.TransactionRepositoryImpl
 import com.android.monu.domain.repository.AccountRepository
+import com.android.monu.domain.repository.BillRepository
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.domain.repository.TransactionRepository
@@ -17,4 +19,5 @@ val dataModule = module {
     singleOf(::AccountRepositoryImpl){ bind<AccountRepository>()}
     singleOf(::FinanceRepositoryImpl){ bind<FinanceRepository>()}
     singleOf(::BudgetRepositoryImpl){ bind<BudgetRepository>()}
+    singleOf(::BillRepositoryImpl){ bind<BillRepository>()}
 }
