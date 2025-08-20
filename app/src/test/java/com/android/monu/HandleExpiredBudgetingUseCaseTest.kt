@@ -3,7 +3,7 @@ package com.android.monu
 import com.android.monu.domain.model.budget.Budget
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.usecase.budget.HandleExpiredBudgetUseCase
-import com.android.monu.presentation.utils.BudgetingPeriod
+import com.android.monu.presentation.utils.Cycle
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.flow.flowOf
@@ -34,11 +34,11 @@ class HandleExpiredBudgetingUseCaseTest {
     }
 
     @Test
-    fun `expired budgeting should be marked inactive`() = runTest {
+    fun `expired budget should be marked inactive`() = runTest {
         val budget = Budget(
             id = 1,
             category = 1,
-            period = BudgetingPeriod.MONTHLY,
+            cycle = Cycle.MONTHLY,
             startDate = "2025-07-01",
             endDate = "2025-07-31",
             maxAmount = 1_000_000,
@@ -51,16 +51,16 @@ class HandleExpiredBudgetingUseCaseTest {
 
         useCase()
 
-        verify(repository).updateBudgetingStatusToInactive(1)
-        verify(repository, never()).createNewBudgeting(any())
+        verify(repository).updateBudgetStatusToInactive(1)
+        verify(repository, never()).createNewBudget(any())
     }
 
     @Test
-    fun `expired budgeting with autoUpdate should create new budgeting`() = runTest {
+    fun `expired budget with autoUpdate should create new budget`() = runTest {
         val budget = Budget(
             id = 1,
             category = 1,
-            period = BudgetingPeriod.MONTHLY,
+            cycle = Cycle.MONTHLY,
             startDate = "2024-07-01",
             endDate = "2024-07-31",
             maxAmount = 500_000,
@@ -73,9 +73,9 @@ class HandleExpiredBudgetingUseCaseTest {
 
         useCase()
 
-        verify(repository).updateBudgetingStatusToInactive(1)
+        verify(repository).updateBudgetStatusToInactive(1)
         val captor = argumentCaptor<Budget>()
-        verify(repository).createNewBudgeting(captor.capture())
+        verify(repository).createNewBudget(captor.capture())
 
         assertEquals(captor.firstValue.usedAmount, 0L)
         assertNotEquals(captor.firstValue.startDate, budget.startDate)
@@ -84,11 +84,11 @@ class HandleExpiredBudgetingUseCaseTest {
     }
 
     @Test
-    fun `non-expired budgeting should not be touched`() = runTest {
+    fun `non-expired budget should not be touched`() = runTest {
         val budget = Budget(
             id = 1,
             category = 1,
-            period = BudgetingPeriod.MONTHLY,
+            cycle = Cycle.MONTHLY,
             startDate = "2024-08-01",
             endDate = "2099-12-31",
             maxAmount = 2_000_000,
@@ -101,16 +101,16 @@ class HandleExpiredBudgetingUseCaseTest {
 
         useCase()
 
-        verify(repository, never()).updateBudgetingStatusToInactive(any())
-        verify(repository, never()).createNewBudgeting(any())
+        verify(repository, never()).updateBudgetStatusToInactive(any())
+        verify(repository, never()).createNewBudget(any())
     }
 
     @Test
-    fun `edge case - expired budgeting but next endDate still before today should create new budgeting with endDate after today`() = runTest {
+    fun `edge case - expired budget but next endDate still before today should create new budget with endDate after today`() = runTest {
         val budget = Budget(
             id = 1,
             category = 1,
-            period = BudgetingPeriod.MONTHLY,
+            cycle = Cycle.MONTHLY,
             startDate = "2023-01-01",
             endDate = "2023-01-31",
             maxAmount = 500_000,
@@ -126,9 +126,9 @@ class HandleExpiredBudgetingUseCaseTest {
 
         useCase()
 
-        verify(repository).updateBudgetingStatusToInactive(1)
+        verify(repository).updateBudgetStatusToInactive(1)
         val captor = argumentCaptor<Budget>()
-        verify(repository).createNewBudgeting(captor.capture())
+        verify(repository).createNewBudget(captor.capture())
 
         val newEndDate = LocalDate.parse(captor.firstValue.endDate, formatter)
 

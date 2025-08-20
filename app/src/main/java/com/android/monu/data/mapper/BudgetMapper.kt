@@ -10,7 +10,7 @@ object BudgetMapper {
         return Budget(
             id = budgetEntity.id,
             category = budgetEntity.category,
-            period = budgetEntity.period,
+            cycle = budgetEntity.cycle,
             startDate = budgetEntity.startDate,
             endDate = budgetEntity.endDate,
             maxAmount = budgetEntity.maxAmount,
@@ -26,7 +26,7 @@ object BudgetMapper {
     ): BudgetEntity {
         return BudgetEntity(
             category = budget.category,
-            period = budget.period,
+            cycle = budget.cycle,
             startDate = budget.startDate,
             endDate = budget.endDate,
             maxAmount = budget.maxAmount,
@@ -43,7 +43,7 @@ object BudgetMapper {
         return BudgetEntity(
             id = budget.id,
             category = budget.category,
-            period = budget.period,
+            cycle = budget.cycle,
             startDate = budget.startDate,
             endDate = budget.endDate,
             maxAmount = budget.maxAmount,

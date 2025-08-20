@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Monu"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.screen.MainActivity"
+            android:name=".ui.feature.screen.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Monu">
             <intent-filter>

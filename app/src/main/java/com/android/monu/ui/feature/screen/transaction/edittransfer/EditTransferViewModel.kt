@@ -1,0 +1,40 @@
+package com.android.monu.ui.feature.screen.transaction.edittransfer
+
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
+import com.android.monu.domain.usecase.finance.UpdateTransferTransactionUseCase
+import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
+import com.android.monu.ui.feature.screen.transaction.edittransfer.components.EditTransferContentState
+import com.android.monu.ui.feature.utils.DatabaseResultMessage
+import com.android.monu.ui.navigation.EditTransfer
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+class EditTransferViewModel(
+    savedStateHandle: SavedStateHandle,
+    getTransactionByIdUseCase: GetTransactionByIdUseCase,
+    private val updateTransferTransactionUseCase: UpdateTransferTransactionUseCase
+) : ViewModel() {
+
+    val transaction = getTransactionByIdUseCase(
+        savedStateHandle.toRoute<EditTransfer>().id
+    ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+
+    private val _updateResult = MutableStateFlow<DatabaseResultMessage?>(null)
+    val updateResult = _updateResult.asStateFlow()
+
+    fun updateTransaction(transferState: EditTransferContentState) {
+        viewModelScope.launch {
+            val result = updateTransferTransactionUseCase(transferState)
+            _updateResult.value = result
+            delay(500)
+            _updateResult.value = null
+        }
+    }
+}

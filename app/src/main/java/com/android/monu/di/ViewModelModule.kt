@@ -1,57 +1,44 @@
 package com.android.monu.di
 
-import androidx.lifecycle.SavedStateHandle
-import com.android.monu.presentation.screen.account.AccountViewModel
-import com.android.monu.presentation.screen.account.addaccount.AddAccountViewModel
-import com.android.monu.presentation.screen.analytics.AnalyticsViewModel
-import com.android.monu.presentation.screen.analytics.analyticscategorytransaction.AnalyticsCategoryTransactionViewModel
-import com.android.monu.presentation.screen.budgeting.BudgetingViewModel
-import com.android.monu.presentation.screen.budgeting.addbudget.AddBudgetViewModel
-import com.android.monu.presentation.screen.budgeting.budgetdetail.BudgetDetailViewModel
-import com.android.monu.presentation.screen.budgeting.editbudget.EditBudgetViewModel
-import com.android.monu.presentation.screen.budgeting.inactivebudget.InactiveBudgetViewModel
-import com.android.monu.presentation.screen.home.HomeViewModel
-import com.android.monu.presentation.screen.transaction.TransactionViewModel
-import com.android.monu.presentation.screen.transaction.addtransaction.AddTransactionViewModel
-import com.android.monu.presentation.screen.transaction.transactiondetail.TransactionDetailViewModel
-import com.android.monu.presentation.screen.transaction.edittransaction.EditTransactionViewModel
-import com.android.monu.presentation.screen.transaction.edittransfer.EditTransferViewModel
-import com.android.monu.presentation.screen.transaction.transfer.TransferViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+
+import com.android.monu.ui.feature.screen.account.AccountViewModel
+import com.android.monu.ui.feature.screen.account.addaccount.AddAccountViewModel
+import com.android.monu.ui.feature.screen.analytics.AnalyticsViewModel
+import com.android.monu.ui.feature.screen.analytics.analyticscategorytransaction.AnalyticsCategoryTransactionViewModel
+import com.android.monu.ui.feature.screen.budgeting.BudgetingViewModel
+import com.android.monu.ui.feature.screen.budgeting.addbudget.AddBudgetViewModel
+import com.android.monu.ui.feature.screen.budgeting.budgetdetail.BudgetDetailViewModel
+import com.android.monu.ui.feature.screen.budgeting.editbudget.EditBudgetViewModel
+import com.android.monu.ui.feature.screen.budgeting.inactivebudget.InactiveBudgetViewModel
+import com.android.monu.ui.feature.screen.home.HomeViewModel
+import com.android.monu.ui.feature.screen.transaction.TransactionViewModel
+import com.android.monu.ui.feature.screen.transaction.addtransaction.AddTransactionViewModel
+import com.android.monu.ui.feature.screen.transaction.edittransaction.EditTransactionViewModel
+import com.android.monu.ui.feature.screen.transaction.edittransfer.EditTransferViewModel
+import com.android.monu.ui.feature.screen.transaction.transactiondetail.TransactionDetailViewModel
+import com.android.monu.ui.feature.screen.transaction.transfer.TransferViewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { HomeViewModel(get(), get(), get(), get()) }
-    viewModel { TransactionViewModel(get(), get()) }
-    viewModel { BudgetingViewModel(get(), get(), get()) }
-    viewModel { AnalyticsViewModel(get(), get(), get(), get()) }
+    viewModelOf(::HomeViewModel)
+    viewModelOf(::TransactionViewModel)
+    viewModelOf(::BudgetingViewModel)
+    viewModelOf(::AnalyticsViewModel)
 
-    viewModel { AccountViewModel(get(), get()) }
-    viewModel { AddAccountViewModel(get()) }
+    viewModelOf(::AccountViewModel)
+    viewModelOf(::AddAccountViewModel)
 
-    viewModel { AddTransactionViewModel(get(), get(), get()) }
-    viewModel { TransferViewModel(get(), get()) }
-    viewModel { (handle: SavedStateHandle) ->
-        TransactionDetailViewModel(handle, get(), get(), get(), get())
-    }
-    viewModel { (handle: SavedStateHandle) ->
-        EditTransactionViewModel(handle, get(), get(), get())
-    }
-    viewModel { (handle: SavedStateHandle) ->
-        EditTransferViewModel(handle, get(), get())
-    }
+    viewModelOf(::AddTransactionViewModel)
+    viewModelOf(::TransferViewModel)
+    viewModelOf(::TransactionDetailViewModel)
+    viewModelOf(::EditTransactionViewModel)
+    viewModelOf(::EditTransferViewModel)
 
-    viewModel { AddBudgetViewModel(get()) }
-    viewModel { (handle: SavedStateHandle) ->
-        BudgetDetailViewModel(handle, get(), get(), get())
-    }
-    viewModel { (handle: SavedStateHandle) ->
-        EditBudgetViewModel(handle, get(), get())
-    }
+    viewModelOf(::AddBudgetViewModel)
+    viewModelOf(::BudgetDetailViewModel)
+    viewModelOf(::EditBudgetViewModel)
+    viewModelOf(::InactiveBudgetViewModel)
 
-    viewModel { InactiveBudgetViewModel(get()) }
-
-    viewModel { (handle: SavedStateHandle) ->
-        AnalyticsCategoryTransactionViewModel(handle, get())
-    }
+    viewModelOf(::AnalyticsCategoryTransactionViewModel)
 }

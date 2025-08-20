@@ -2,9 +2,9 @@ package com.android.monu.domain.usecase.finance
 
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.presentation.screen.transaction.edittransaction.components.EditTransactionContentState
-import com.android.monu.presentation.utils.DatabaseResultMessage
-import com.android.monu.presentation.utils.DateHelper
+import com.android.monu.ui.feature.screen.transaction.edittransaction.components.EditTransactionContentState
+import com.android.monu.ui.feature.utils.DatabaseResultMessage
+import com.android.monu.ui.feature.utils.DateHelper
 
 class UpdateIncomeTransactionUseCase(
     private val repository: FinanceRepository

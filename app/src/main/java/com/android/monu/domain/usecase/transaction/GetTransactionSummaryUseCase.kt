@@ -2,12 +2,11 @@ package com.android.monu.domain.usecase.transaction
 
 import com.android.monu.domain.model.transaction.TransactionDailySummary
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.presentation.utils.DateHelper
-import com.android.monu.presentation.utils.TransactionType
+import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.ui.feature.utils.TransactionType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import org.threeten.bp.LocalDate
-import kotlin.collections.fold
 
 class GetTransactionSummaryUseCase(
     private val repository: TransactionRepository

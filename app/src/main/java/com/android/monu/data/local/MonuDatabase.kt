@@ -21,7 +21,7 @@ import com.android.monu.data.local.entity.room.TransactionEntity
         SaveEntity::class,
         BillEntity::class
                ],
-    version = 11,
+    version = 12,
     exportSchema = false
 )
 abstract class MonuDatabase : RoomDatabase() {

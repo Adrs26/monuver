@@ -29,40 +29,40 @@ import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionSummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionsByCategoryAndDateRangeUseCase
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val domainModule = module {
+    factoryOf(::GetAllAccountsUseCase)
+    factoryOf(::GetTotalAccountBalanceUseCase)
 
-    factory { GetAllAccountsUseCase(get()) }
-    factory { GetTotalAccountBalanceUseCase(get()) }
+    factoryOf(::GetRecentTransactionsUseCase)
+    factoryOf(::GetAllTransactionsUseCase)
+    factoryOf(::GetAllTransactionsByCategoryUseCase)
+    factoryOf(::GetTransactionByIdUseCase)
+    factoryOf(::GetTransactionsByCategoryAndDateRangeUseCase)
+    factoryOf(::GetDistinctTransactionYearsUseCase)
+    factoryOf(::GetTransactionBalanceSummaryUseCase)
+    factoryOf(::GetTransactionCategorySummaryUseCase)
+    factoryOf(::GetTransactionSummaryUseCase)
 
-    factory { GetRecentTransactionsUseCase(get()) }
-    factory { GetAllTransactionsUseCase(get()) }
-    factory { GetAllTransactionsByCategoryUseCase(get()) }
-    factory { GetTransactionByIdUseCase(get()) }
-    factory { GetTransactionsByCategoryAndDateRangeUseCase(get()) }
-    factory { GetDistinctTransactionYearsUseCase(get()) }
-    factory { GetTransactionBalanceSummaryUseCase(get()) }
-    factory { GetTransactionCategorySummaryUseCase(get()) }
-    factory { GetTransactionSummaryUseCase(get()) }
+    factoryOf(::CreateAccountUseCase)
+    factoryOf(::CreateIncomeTransactionUseCase)
+    factoryOf(::CreateExpenseTransactionUseCase)
+    factoryOf(::CreateTransferTransactionUseCase)
+    factoryOf(::DeleteIncomeTransactionUseCase)
+    factoryOf(::DeleteExpenseTransactionUseCase)
+    factoryOf(::DeleteTransferTransactionUseCase)
+    factoryOf(::UpdateIncomeTransactionUseCase)
+    factoryOf(::UpdateExpenseTransactionUseCase)
+    factoryOf(::UpdateTransferTransactionUseCase)
 
-    factory { CreateAccountUseCase(get()) }
-    factory { CreateIncomeTransactionUseCase(get()) }
-    factory { CreateExpenseTransactionUseCase(get(), get(), get()) }
-    factory { CreateTransferTransactionUseCase(get(), get()) }
-    factory { DeleteIncomeTransactionUseCase(get()) }
-    factory { DeleteExpenseTransactionUseCase(get()) }
-    factory { DeleteTransferTransactionUseCase(get()) }
-    factory { UpdateIncomeTransactionUseCase(get()) }
-    factory { UpdateExpenseTransactionUseCase(get(), get(), get()) }
-    factory { UpdateTransferTransactionUseCase(get(), get()) }
-
-    factory { CreateBudgetUseCase(get(), get()) }
-    factory { DeleteBudgetUseCase(get()) }
-    factory { GetAllActiveBudgetsUseCase(get()) }
-    factory { GetAllInactiveBudgetsUseCase(get()) }
-    factory { GetBudgetByIdUseCase(get()) }
-    factory { GetBudgetSummaryUseCase(get()) }
-    factory { HandleExpiredBudgetUseCase(get()) }
-    factory { UpdateBudgetUseCase(get(), get()) }
+    factoryOf(::CreateBudgetUseCase)
+    factoryOf(::DeleteBudgetUseCase)
+    factoryOf(::GetAllActiveBudgetsUseCase)
+    factoryOf(::GetAllInactiveBudgetsUseCase)
+    factoryOf(::GetBudgetByIdUseCase)
+    factoryOf(::GetBudgetSummaryUseCase)
+    factoryOf(::HandleExpiredBudgetUseCase)
+    factoryOf(::UpdateBudgetUseCase)
 }

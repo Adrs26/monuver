@@ -8,11 +8,13 @@ import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.domain.repository.TransactionRepository
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val dataModule = module {
-    single<TransactionRepository> { TransactionRepositoryImpl(get()) }
-    single<AccountRepository> { AccountRepositoryImpl(get()) }
-    single<FinanceRepository> { FinanceRepositoryImpl(get(), get(), get(), get()) }
-    single<BudgetRepository> { BudgetRepositoryImpl(get()) }
+    singleOf(::TransactionRepositoryImpl){ bind<TransactionRepository>()}
+    singleOf(::AccountRepositoryImpl){ bind<AccountRepository>()}
+    singleOf(::FinanceRepositoryImpl){ bind<FinanceRepository>()}
+    singleOf(::BudgetRepositoryImpl){ bind<BudgetRepository>()}
 }

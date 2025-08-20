@@ -2,7 +2,7 @@ package com.android.monu.domain.usecase.transaction
 
 import com.android.monu.domain.model.transaction.TransactionBalanceSummary
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.presentation.utils.TransactionType
+import com.android.monu.ui.feature.utils.TransactionType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 

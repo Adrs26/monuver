@@ -2,7 +2,7 @@ package com.android.monu.domain.usecase.budget
 
 import com.android.monu.domain.model.budget.Budget
 import com.android.monu.domain.repository.BudgetRepository
-import com.android.monu.presentation.utils.Cycle
+import com.android.monu.ui.feature.utils.Cycle
 import kotlinx.coroutines.flow.first
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -24,14 +24,14 @@ class HandleExpiredBudgetUseCase(
                     var newEndDate = LocalDate.parse(budget.endDate, formatter)
 
                     while (newEndDate.isBefore(today)) {
-                        newStartDate = shiftDate(budget.period, newStartDate, true)
-                        newEndDate = shiftDate(budget.period, newEndDate, false)
+                        newStartDate = shiftDate(budget.cycle, newStartDate, true)
+                        newEndDate = shiftDate(budget.cycle, newEndDate, false)
                     }
 
                     if (!newEndDate.isBefore(today)) {
                         val newBudget = Budget(
                             category = budget.category,
-                            period = budget.period,
+                            cycle = budget.cycle,
                             startDate = newStartDate.format(formatter),
                             endDate = newEndDate.format(formatter),
                             maxAmount = budget.maxAmount,

@@ -3,8 +3,8 @@ package com.android.monu.domain.usecase.budget
 import com.android.monu.domain.model.budget.Budget
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.presentation.screen.budgeting.editbudget.components.EditBudgetContentState
-import com.android.monu.presentation.utils.DatabaseResultMessage
+import com.android.monu.ui.feature.screen.budgeting.editbudget.components.EditBudgetContentState
+import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class UpdateBudgetUseCase(
     private val budgetRepository: BudgetRepository,
@@ -28,7 +28,7 @@ class UpdateBudgetUseCase(
         val budget = Budget(
             id = budgetState.id,
             category = budgetState.category,
-            period = budgetState.period,
+            cycle = budgetState.cycle,
             startDate = budgetState.startDate,
             endDate = budgetState.endDate,
             maxAmount = budgetState.maxAmount,
