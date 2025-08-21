@@ -1,6 +1,7 @@
 package com.android.monu.domain.repository
 
 import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.model.bill.Bill
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.usecase.finance.BudgetStatus
 
@@ -42,4 +43,12 @@ interface FinanceRepository {
     ): Int
 
     suspend fun updateTransferTransaction(transaction: Transaction, initialAmount: Long): Int
+
+    suspend fun payBill(
+        billId: Long,
+        billPaidDate: String,
+        transaction: Transaction,
+        isRecurring: Boolean,
+        bill: Bill
+    )
 }

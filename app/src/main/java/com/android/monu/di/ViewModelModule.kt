@@ -1,12 +1,13 @@
 package com.android.monu.di
 
-
 import com.android.monu.ui.feature.screen.account.AccountViewModel
 import com.android.monu.ui.feature.screen.account.addaccount.AddAccountViewModel
 import com.android.monu.ui.feature.screen.analytics.AnalyticsViewModel
 import com.android.monu.ui.feature.screen.analytics.analyticscategorytransaction.AnalyticsCategoryTransactionViewModel
 import com.android.monu.ui.feature.screen.bill.BillViewModel
 import com.android.monu.ui.feature.screen.bill.addbill.AddBillViewModel
+import com.android.monu.ui.feature.screen.bill.billdetail.BillDetailViewModel
+import com.android.monu.ui.feature.screen.bill.paybill.PayBillViewModel
 import com.android.monu.ui.feature.screen.budgeting.BudgetingViewModel
 import com.android.monu.ui.feature.screen.budgeting.addbudget.AddBudgetViewModel
 import com.android.monu.ui.feature.screen.budgeting.budgetdetail.BudgetDetailViewModel
@@ -46,4 +47,6 @@ val viewModelModule = module {
 
     viewModelOf(::BillViewModel)
     viewModelOf(::AddBillViewModel)
+    viewModelOf(::BillDetailViewModel)
+    viewModelOf(::PayBillViewModel)
 }

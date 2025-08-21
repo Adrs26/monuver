@@ -5,6 +5,7 @@ data class Bill(
     val title: String,
     val dueDate: String,
     val paidDate: String?,
+    val timeStamp: Long,
     val amount: Long,
     val isRecurring: Boolean,
     val cycle: Int?,

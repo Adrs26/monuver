@@ -34,4 +34,5 @@ sealed class DatabaseResultMessage(val message: Int) {
     object EmptyBillAmount : DatabaseResultMessage(R.string.empty_bill_amount)
     object EmptyBillFixPeriod : DatabaseResultMessage(R.string.empty_bill_fix_period)
     object CreateBillSuccess : DatabaseResultMessage(R.string.bill_successfully_added)
+    object PayBillSuccess : DatabaseResultMessage(R.string.bill_successfully_paid)
 }

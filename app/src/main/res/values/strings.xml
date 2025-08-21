@@ -233,4 +233,25 @@
     <string name="empty_bill_amount">Nominal tagihan tidak boleh kosong</string>
     <string name="empty_bill_fix_period">Periode pasti pembayaran tidak boleh kosong</string>
     <string name="bill_successfully_added">Tagihan berhasil ditambahkan</string>
+    <string name="bill_successfully_paid">Tagihan berhasil dibayar</string>
+    <string name="pending">Menunggu</string>
+    <string name="due">Jatuh tempo</string>
+    <string name="paid">Lunas</string>
+    <string name="due_date">Tanggal jatuh tempo</string>
+    <string name="choose_due_date">Pilih tanggal jatuh tempo</string>
+    <string name="recurring_bill">Tagihan berulang</string>
+    <string name="bill_period">Periode pembayaran</string>
+    <string name="unlimited">Tanpa batas</string>
+    <string name="times">kali</string>
+    <string name="add_bill">Tambah tagihan</string>
+    <string name="bill_detail">Detail tagihan</string>
+    <string name="overdue">Lewat jatuh tempo</string>
+    <string name="waiting_for_pay">Menunggu pembayaran</string>
+    <string name="one_time_bill">Tagihan sekali</string>
+    <string name="fix_period_times">%1$s kali</string>
+    <string name="payment_number">Pembayaran ke</string>
+    <string name="status">Status</string>
+    <string name="paid_on">Dilunasi pada</string>
+    <string name="pay_bill">Bayar tagihan</string>
+    <string name="pay">Bayar</string>
 </resources>

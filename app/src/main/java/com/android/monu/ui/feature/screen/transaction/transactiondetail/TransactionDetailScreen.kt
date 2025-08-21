@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.ui.feature.screen.transaction.transactiondetail.components.DeleteTransactionDialog
@@ -41,7 +42,9 @@ fun DetailTransactionScreen(
     ) { innerPadding ->
         TransactionDetailContent(
             transaction = transaction,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp, vertical = 32.dp),
         )
     }
 

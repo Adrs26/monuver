@@ -27,49 +27,47 @@ fun TransactionDetailContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 32.dp),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        DetailTransactionData(
+        TransactionDetailData(
             title = stringResource(R.string.title),
             content = transaction.title
         )
         DataDivider()
-        DetailTransactionData(
+        TransactionDetailData(
             title = stringResource(R.string.type),
             content = stringResource(DatabaseCodeMapper.toTransactionType(transaction.type))
         )
         DataDivider()
-        DetailTransactionData(
+        TransactionDetailData(
             title = stringResource(R.string.category),
             content = stringResource(DatabaseCodeMapper.toParentCategoryTitle(transaction.parentCategory))
         )
         DataDivider()
-        DetailTransactionData(
+        TransactionDetailData(
             title = stringResource(R.string.sub_category),
             content = stringResource(DatabaseCodeMapper.toChildCategoryTitle(transaction.childCategory))
         )
         DataDivider()
-        DetailTransactionData(
+        TransactionDetailData(
             title = stringResource(R.string.date),
             content = DateHelper.formatDateToReadable(transaction.date)
         )
         DataDivider()
-        DetailTransactionData(
+        TransactionDetailData(
             title = stringResource(R.string.amount),
             content = NumberFormatHelper.formatToRupiah(transaction.amount)
         )
         DataDivider()
-        DetailTransactionData(
+        TransactionDetailData(
             title = stringResource(R.string.source),
             content = transaction.sourceName
         )
 
         if (transaction.type == TransactionType.TRANSFER) {
             DataDivider()
-            DetailTransactionData(
+            TransactionDetailData(
                 title = stringResource(R.string.destination),
                 content = transaction.destinationName.toString()
             )
@@ -78,7 +76,7 @@ fun TransactionDetailContent(
 }
 
 @Composable
-fun DetailTransactionData(
+fun TransactionDetailData(
     title: String,
     content: String,
     modifier: Modifier = Modifier

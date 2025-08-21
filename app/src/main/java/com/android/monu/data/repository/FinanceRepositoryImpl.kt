@@ -3,11 +3,14 @@ package com.android.monu.data.repository
 import androidx.room.withTransaction
 import com.android.monu.data.local.MonuDatabase
 import com.android.monu.data.local.dao.AccountDao
+import com.android.monu.data.local.dao.BillDao
 import com.android.monu.data.local.dao.BudgetDao
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.AccountMapper
+import com.android.monu.data.mapper.BillMapper
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.model.bill.Bill
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.domain.usecase.finance.BudgetStatus
@@ -17,7 +20,8 @@ class FinanceRepositoryImpl(
     private val database: MonuDatabase,
     private val accountDao: AccountDao,
     private val transactionDao: TransactionDao,
-    private val budgetDao: BudgetDao
+    private val budgetDao: BudgetDao,
+    private val billDao: BillDao
 ) : FinanceRepository {
 
     override suspend fun createAccount(account: Account, transaction: Transaction): Long {
@@ -208,6 +212,24 @@ class FinanceRepositoryImpl(
                 }
             }
             rowUpdated
+        }
+    }
+
+    override suspend fun payBill(
+        billId: Long,
+        billPaidDate: String,
+        transaction: Transaction,
+        isRecurring: Boolean,
+        bill: Bill
+    ) {
+        database.withTransaction {
+            billDao.payBill(billId, billPaidDate)
+            transactionDao.createNewTransaction(TransactionMapper.transactionDomainToEntity(transaction))
+            accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
+
+            if (isRecurring) {
+                billDao.createNewBill(BillMapper.billDomainToEntity(bill))
+            }
         }
     }
 }

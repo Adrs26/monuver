@@ -23,6 +23,7 @@ class CreateBillUseCase(
             dueDate = billState.date,
             paidDate = null,
             amount = billState.amount,
+            timeStamp = System.currentTimeMillis(),
             isRecurring = billState.isRecurring,
             cycle = if (billState.isRecurring == true) billState.cycle else null,
             period = if (billState.isRecurring == true) billState.period else null,

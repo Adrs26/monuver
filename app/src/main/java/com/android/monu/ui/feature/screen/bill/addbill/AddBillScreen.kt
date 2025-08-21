@@ -1,6 +1,5 @@
 package com.android.monu.ui.feature.screen.bill.addbill
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -15,8 +14,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.android.monu.R
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.bill.addbill.components.AddBillContent
 import com.android.monu.ui.feature.screen.bill.addbill.components.AddBillContentActions
@@ -124,7 +125,7 @@ fun AddBillScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = "Tambah tagihan",
+                title = stringResource(R.string.add_bill),
                 onNavigateBack = onNavigateBack
             )
         }

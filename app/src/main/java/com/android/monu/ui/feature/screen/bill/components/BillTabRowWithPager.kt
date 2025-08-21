@@ -14,20 +14,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.R
+import com.android.monu.ui.feature.screen.bill.BillState
 import kotlinx.coroutines.launch
 
 @Composable
 fun BillTabRowWithPager(
-    pendingBills: List<Bill>,
-    dueBills: List<Bill>,
-    paidBills: List<Bill>,
+    billState: BillState,
+    onNavigateToBillDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
-    val tabTitles = listOf("Menunggu", "Jatuh tempo", "Lunas")
+    val tabTitles = listOf(
+        stringResource(R.string.pending),
+        stringResource(R.string.due),
+        stringResource(R.string.paid)
+    )
 
     Column(
         modifier = modifier
@@ -66,9 +71,18 @@ fun BillTabRowWithPager(
             modifier = Modifier.fillMaxSize()
         ) { page ->
             when (page) {
-                0 -> PendingBillScreen(pendingBills)
-                1 -> DueBillScreen(dueBills)
-                2 -> PaidBillScreen(paidBills)
+                0 -> PendingBillScreen(
+                    bills = billState.pendingBills,
+                    onNavigateToBillDetail = onNavigateToBillDetail
+                )
+                1 -> DueBillScreen(
+                    bills = billState.dueBills,
+                    onNavigateToBillDetail = onNavigateToBillDetail
+                )
+                2 -> PaidBillScreen(
+                    bills = billState.paidBills,
+                    onNavigateToBillDetail = onNavigateToBillDetail
+                )
             }
         }
     }

@@ -3,13 +3,15 @@ package com.android.monu.ui.feature.screen.bill
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.bill.GetDueBillsUseCase
+import com.android.monu.domain.usecase.bill.GetPaidBillsUseCase
 import com.android.monu.domain.usecase.bill.GetPendingBillsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
 class BillViewModel(
     getPendingBillsUseCase: GetPendingBillsUseCase,
-    getDueBillsUseCase: GetDueBillsUseCase
+    getDueBillsUseCase: GetDueBillsUseCase,
+    getPaidBillsUseCase: GetPaidBillsUseCase
 ) : ViewModel() {
 
     val pendingBills = getPendingBillsUseCase()
@@ -17,4 +19,6 @@ class BillViewModel(
 
     val dueBills = getDueBillsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val paidBills = getPaidBillsUseCase(viewModelScope)
 }

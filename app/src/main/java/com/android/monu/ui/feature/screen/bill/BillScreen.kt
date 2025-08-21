@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.paging.compose.LazyPagingItems
 import com.android.monu.domain.model.bill.Bill
 import com.android.monu.ui.feature.components.CommonFloatingActionButton
 import com.android.monu.ui.feature.screen.bill.components.BillAppBar
@@ -12,31 +13,39 @@ import com.android.monu.ui.feature.screen.bill.components.BillTabRowWithPager
 
 @Composable
 fun BillScreen(
-    pendingBills: List<Bill>,
-    dueBills: List<Bill>,
-    paidBills: List<Bill>,
-    onNavigateBack: () -> Unit,
-    onNavigateToAddBill: () -> Unit
+    billState: BillState,
+    billActions: BillActions
 ) {
     Scaffold(
         topBar = {
             BillAppBar(
-                onNavigateBack = onNavigateBack
+                onNavigateBack = billActions::onNavigateBack
             )
         },
         floatingActionButton = {
             CommonFloatingActionButton {
-                onNavigateToAddBill()
+                billActions.onNavigateToAddBill()
             }
         }
     ) { innerPadding ->
         BillTabRowWithPager(
-            pendingBills = pendingBills,
-            dueBills = dueBills,
-            paidBills = paidBills,
+            billState = billState,
+            onNavigateToBillDetail = billActions::onNavigateToBillDetail,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         )
     }
+}
+
+data class BillState(
+    val pendingBills: List<Bill>,
+    val dueBills: List<Bill>,
+    val paidBills: LazyPagingItems<Bill>
+)
+
+interface BillActions {
+    fun onNavigateBack()
+    fun onNavigateToAddBill()
+    fun onNavigateToBillDetail(billId: Long)
 }

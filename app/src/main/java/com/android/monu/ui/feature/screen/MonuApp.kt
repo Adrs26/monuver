@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import com.android.monu.ui.feature.screen.account.accountNavGraph
 import com.android.monu.ui.feature.screen.analytics.analyticsCategoryTransactionNavGraph
 import com.android.monu.ui.feature.screen.bill.billNavGraph
+import com.android.monu.ui.feature.screen.bill.payBillNavGraph
 import com.android.monu.ui.feature.screen.budgeting.addBudgetNavGraph
 import com.android.monu.ui.feature.screen.budgeting.budgetDetailNavGraph
 import com.android.monu.ui.feature.screen.budgeting.inactiveBudgetNavGraph
@@ -54,5 +55,6 @@ fun MonuApp() {
         inactiveBudgetNavGraph(navController = rootNavController)
         analyticsCategoryTransactionNavGraph(navController = rootNavController)
         billNavGraph(navController = rootNavController)
+        payBillNavGraph(navController = rootNavController)
     }
 }

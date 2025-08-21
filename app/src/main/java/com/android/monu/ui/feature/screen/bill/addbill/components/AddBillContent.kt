@@ -65,10 +65,10 @@ fun AddBillContent(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
         TextDateInputField(
-            title = "Tanggal jatuh tempo",
+            title = stringResource(R.string.due_date),
             value = DateHelper.formatDateToReadable(billState.date),
             onValueChange = { },
-            placeholderText = "Pilih tanggal jatuh tempo",
+            placeholderText = stringResource(R.string.choose_due_date),
             isEnable = true,
             modifier = Modifier
                 .clickable(
@@ -85,7 +85,7 @@ fun AddBillContent(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextWithSwitch(
-            text = "Tagihan berulang",
+            text = stringResource(R.string.recurring_bill),
             checked = billState.isRecurring,
             onCheckedChange = billActions::onRecurringChange,
             isEnable = true,
@@ -141,7 +141,7 @@ fun BillPeriodRadioGroupField(
         modifier = modifier
     ) {
         Text(
-            text = "Periode pembayaran",
+            text = stringResource(R.string.bill_period),
             modifier = Modifier.padding(bottom = 12.dp),
             style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
         )
@@ -163,7 +163,7 @@ fun BillPeriodRadioGroupField(
                     )
                 )
                 Text(
-                    text = "Tanpa batas",
+                    text = stringResource(R.string.unlimited),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 13.sp
@@ -203,13 +203,13 @@ fun BillPeriodRadioGroupField(
                                 .background(
                                     if (selectedPeriod == 1)
                                         MaterialTheme.colorScheme.surfaceVariant else
-                                            MaterialTheme.colorScheme.background
+                                        MaterialTheme.colorScheme.background
                                 )
                                 .border(
                                     width = 1.dp,
                                     color = if (selectedPeriod == 1)
                                         MaterialTheme.colorScheme.surfaceVariant else
-                                            MaterialTheme.colorScheme.onSurfaceVariant,
+                                        MaterialTheme.colorScheme.onSurfaceVariant,
                                     shape = MaterialTheme.shapes.medium
                                 )
                                 .padding(horizontal = 12.dp),
@@ -220,7 +220,7 @@ fun BillPeriodRadioGroupField(
                     }
                 )
                 Text(
-                    text = "kali",
+                    text = stringResource(R.string.times),
                     modifier = Modifier.padding(start = 8.dp),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onBackground,
