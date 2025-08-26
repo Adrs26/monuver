@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.android.monu.data.local.entity.room.BillEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -28,4 +29,10 @@ interface BillDao {
 
     @Query("UPDATE bill SET isPaid = 1, paidDate = :paidDate WHERE id = :id")
     suspend fun payBill(id: Long, paidDate: String)
+
+    @Query("DELETE FROM bill WHERE id = :id")
+    suspend fun deleteBill(id: Long)
+
+    @Update
+    suspend fun updateBill(bill: BillEntity)
 }

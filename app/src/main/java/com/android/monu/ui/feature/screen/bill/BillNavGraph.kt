@@ -9,8 +9,12 @@ import androidx.navigation.navigation
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.ui.feature.screen.bill.addbill.AddBillScreen
 import com.android.monu.ui.feature.screen.bill.addbill.AddBillViewModel
+import com.android.monu.ui.feature.screen.bill.billdetail.BillDetailActions
 import com.android.monu.ui.feature.screen.bill.billdetail.BillDetailScreen
 import com.android.monu.ui.feature.screen.bill.billdetail.BillDetailViewModel
+import com.android.monu.ui.feature.screen.bill.editbill.EditBillScreen
+import com.android.monu.ui.feature.screen.bill.editbill.EditBillState
+import com.android.monu.ui.feature.screen.bill.editbill.EditBillViewModel
 import com.android.monu.ui.feature.screen.bill.paybill.PayBillActions
 import com.android.monu.ui.feature.screen.bill.paybill.PayBillScreen
 import com.android.monu.ui.feature.screen.bill.paybill.PayBillState
@@ -18,12 +22,14 @@ import com.android.monu.ui.feature.screen.bill.paybill.PayBillViewModel
 import com.android.monu.ui.feature.screen.bill.paybill.components.PayBillContentState
 import com.android.monu.ui.feature.screen.transaction.addtransaction.components.AddTransactionSourceScreen
 import com.android.monu.ui.feature.screen.transaction.components.TransactionCategoryScreen
+import com.android.monu.ui.feature.utils.Cycle
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.TransactionType
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.AddBill
 import com.android.monu.ui.navigation.Bill
 import com.android.monu.ui.navigation.BillDetail
+import com.android.monu.ui.navigation.EditBill
 import com.android.monu.ui.navigation.MainBill
 import com.android.monu.ui.navigation.MainPayBill
 import com.android.monu.ui.navigation.PayBill
@@ -100,12 +106,61 @@ fun NavGraphBuilder.billNavGraph(
             val bill by viewModel.bill.collectAsStateWithLifecycle()
 
             bill?.let { bill ->
+                val billDetailActions = object : BillDetailActions {
+                    override fun onNavigateBack() {
+                        navController.navigateUp()
+                    }
+
+                    override fun onNavigateToEditBill(billId: Long) {
+                        navController.navigate(EditBill(billId))
+                    }
+
+                    override fun onRemoveBill(billId: Long) {
+                        viewModel.deleteBill(billId)
+                    }
+
+                    override fun onNavigateToPayBill(billId: Long) {
+                        navController.navigate(MainPayBill(billId))
+                    }
+                }
+
                 BillDetailScreen(
                     bill = bill,
-                    onNavigateToPayBill = { billId ->
-                        navController.navigate(MainPayBill(billId))
-                    },
-                    onNavigateBack = navController::navigateUp
+                    billDetailActions = billDetailActions
+                )
+            }
+        }
+        composable<EditBill>(
+            enterTransition = { NavigationAnimation.enter },
+            exitTransition = { NavigationAnimation.exit },
+            popEnterTransition = { NavigationAnimation.popEnter },
+            popExitTransition = { NavigationAnimation.popExit }
+        ) {
+            val viewModel = koinViewModel<EditBillViewModel>(
+                viewModelStoreOwner = it,
+                parameters = { parametersOf(it.savedStateHandle) }
+            )
+            val bill by viewModel.bill.collectAsStateWithLifecycle()
+            val updateResult by viewModel.updateResult.collectAsStateWithLifecycle()
+
+            bill?.let { bill ->
+                val editBillState = EditBillState(
+                    id = bill.id,
+                    title = bill.title,
+                    date = bill.dueDate,
+                    amount = bill.amount,
+                    isRecurring = bill.isRecurring,
+                    cycle = bill.cycle ?: Cycle.YEARLY,
+                    period = bill.period ?: 1,
+                    fixPeriod = (bill.fixPeriod ?: "").toString(),
+                    nowPaidPeriod = bill.nowPaidPeriod,
+                    editResult = updateResult
+                )
+
+                EditBillScreen(
+                    billState = editBillState,
+                    onNavigateBack = navController::navigateUp,
+                    onEditBill = viewModel::updateBill
                 )
             }
         }

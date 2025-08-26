@@ -17,6 +17,7 @@ import com.android.monu.ui.feature.components.DebouncedIconButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BillDetailAppBar(
+    isPaid: Boolean,
     onNavigateBack: () -> Unit,
     onNavigateToEditBill: () -> Unit,
     onRemoveBill: () -> Unit
@@ -42,14 +43,16 @@ fun BillDetailAppBar(
             }
         },
         actions = {
-            DebouncedIconButton(
-                onClick = onNavigateToEditBill
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_edit),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+            if (!isPaid) {
+                DebouncedIconButton(
+                    onClick = onNavigateToEditBill
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_edit),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
             DebouncedIconButton(
                 onClick = onRemoveBill

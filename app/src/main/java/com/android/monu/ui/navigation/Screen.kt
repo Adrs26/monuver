@@ -53,6 +53,7 @@ import kotlinx.serialization.Serializable
 @Serializable object MainBill
 @Serializable object AddBill
 @Serializable data class BillDetail(val id: Long = 0)
+@Serializable data class EditBill(val id: Long = 0)
 
 @Serializable object PayBill
 @Serializable data class MainPayBill(val id: Long = 0)

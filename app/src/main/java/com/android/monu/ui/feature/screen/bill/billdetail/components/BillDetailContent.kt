@@ -91,7 +91,7 @@ fun BillDetailContent(
                 onClick = { onNavigateToPayBill(bill.id) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(horizontal = 8.dp),
             ) {
                 Text(
                     text = stringResource(R.string.pay_bill),
@@ -137,7 +137,7 @@ private fun getStatusInformationText(dueDate: String, isPaid: Boolean): String {
         val inputDate = LocalDate.parse(dueDate, formatter)
         val today = LocalDate.now()
 
-        if (inputDate.isBefore(today)) {
+        if (inputDate.isBefore(today) || inputDate == today) {
             stringResource(R.string.overdue)
         } else {
             stringResource(R.string.waiting_for_pay)

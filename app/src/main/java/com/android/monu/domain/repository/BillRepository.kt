@@ -16,4 +16,8 @@ interface BillRepository {
     fun getBillById(id: Long): Flow<Bill?>
 
     suspend fun createNewBill(bill: Bill)
+
+    suspend fun deleteBill(id: Long)
+
+    suspend fun updateBill(bill: Bill)
 }

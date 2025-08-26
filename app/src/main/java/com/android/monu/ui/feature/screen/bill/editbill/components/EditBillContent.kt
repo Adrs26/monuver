@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.screen.bill.addbill.components
+package com.android.monu.ui.feature.screen.bill.editbill.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -33,9 +33,9 @@ import com.android.monu.ui.feature.utils.Cycle
 import com.android.monu.ui.feature.utils.DateHelper
 
 @Composable
-fun AddBillContent(
-    billState: AddBillContentState,
-    billActions: AddBillContentActions,
+fun EditBillContent(
+    billState: EditBillContentState,
+    billActions: EditBillContentActions,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -101,13 +101,13 @@ fun AddBillContent(
         }
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = { billActions.onAddNewBill(billState) },
+            onClick = { billActions.onEditBill(billState) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
         ) {
             Text(
-                text = stringResource(R.string.add),
+                text = stringResource(R.string.save),
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.labelMedium
             )
@@ -115,7 +115,8 @@ fun AddBillContent(
     }
 }
 
-data class AddBillContentState(
+data class EditBillContentState(
+    val id: Long,
     val title: String,
     val date: String,
     val amount: Long,
@@ -123,10 +124,11 @@ data class AddBillContentState(
     val isRecurring: Boolean,
     val cycle: Int,
     val period: Int,
-    val fixPeriod: String
+    val fixPeriod: String,
+    val nowPaidPeriod: Int
 )
 
-interface AddBillContentActions {
+interface EditBillContentActions {
     fun onTitleChange(title: String)
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
@@ -134,5 +136,5 @@ interface AddBillContentActions {
     fun onCycleChange(cycle: Int)
     fun onPeriodChange(period: Int)
     fun onFixPeriodChange(fixPeriod: String)
-    fun onAddNewBill(billState: AddBillContentState)
+    fun onEditBill(billState: EditBillContentState)
 }

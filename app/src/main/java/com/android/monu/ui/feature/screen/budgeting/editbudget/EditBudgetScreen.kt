@@ -13,6 +13,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
@@ -114,7 +115,7 @@ fun EditBudgetScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = "Edit Budgeting",
+                title = stringResource(R.string.edit_budget),
                 onNavigateBack = onNavigateBack
             )
         }

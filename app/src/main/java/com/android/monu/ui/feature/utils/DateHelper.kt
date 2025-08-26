@@ -9,7 +9,7 @@ import java.util.Locale
 
 object DateHelper {
     fun formatDateToReadable(inputDate: String): String {
-        val localeIndonesia = Locale("id", "ID")
+        val localeIndonesia = Locale.forLanguageTag("id-ID")
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", localeIndonesia)
         val outputFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", localeIndonesia)
 
@@ -23,7 +23,8 @@ object DateHelper {
 
     fun getMonthAndYear(inputDate: String): Pair<Int, Int> {
         return try {
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale("id", "ID"))
+            val localeIndonesia = Locale.forLanguageTag("id-ID")
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", localeIndonesia)
             val date = LocalDate.parse(inputDate, formatter)
             Pair(date.monthValue, date.year)
         } catch (_: Exception) {
@@ -106,23 +107,8 @@ object DateHelper {
 
     fun formatToShortDate(inputDate: String): String {
         val parsedDate = LocalDate.parse(inputDate)
-        val formatter = DateTimeFormatter.ofPattern("d MMM yyyy", Locale("id", "ID"))
+        val localeIndonesia = Locale.forLanguageTag("id-ID")
+        val formatter = DateTimeFormatter.ofPattern("d MMM yyyy", localeIndonesia)
         return parsedDate.format(formatter)
-    }
-
-    fun getNextMonthSameDate(inputDate: String): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val date = LocalDate.parse(inputDate, formatter)
-
-        val nextMonthDate = date.plusMonths(1)
-        return nextMonthDate.format(formatter)
-    }
-
-    fun getNextWeekSameDate(dateStr: String): String {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val date = LocalDate.parse(dateStr, formatter)
-
-        val nextWeekDate = date.plusWeeks(1)
-        return nextWeekDate.format(formatter)
     }
 }

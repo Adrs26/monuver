@@ -40,4 +40,23 @@ object BillMapper {
             nowPaidPeriod = bill.nowPaidPeriod
         )
     }
+
+    fun billDomainToEntityForUpdate(
+        bill: Bill
+    ): BillEntity {
+        return BillEntity(
+            id = bill.id,
+            title = bill.title,
+            dueDate = bill.dueDate,
+            paidDate = bill.paidDate,
+            timeStamp = bill.timeStamp,
+            amount = bill.amount,
+            isRecurring = bill.isRecurring,
+            cycle = bill.cycle,
+            period = bill.period,
+            fixPeriod = bill.fixPeriod,
+            isPaid = bill.isPaid,
+            nowPaidPeriod = bill.nowPaidPeriod
+        )
+    }
 }

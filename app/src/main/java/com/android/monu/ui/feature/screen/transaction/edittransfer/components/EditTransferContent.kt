@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -62,11 +63,12 @@ fun EditTransferContent(
             onValueChange = transferActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
+        Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = { transferActions.onEditTransfer(transferState) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(24.dp),
         ) {
             Text(
                 text = stringResource(R.string.save),

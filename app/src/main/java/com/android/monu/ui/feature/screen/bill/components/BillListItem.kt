@@ -10,8 +10,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.android.monu.R
 import com.android.monu.ui.feature.utils.DateHelper
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.theme.Red600
@@ -69,10 +71,17 @@ fun BillListItem(
     }
 }
 
+@Composable
 private fun getBillDateInformationText(status: Int, dueDate: String, paidDate: String): String {
     return when (status) {
-        1, 2 -> "Jatuh tempo pada ${DateHelper.formatDateToReadable(dueDate)}"
-        else -> "Dilunasi pada ${DateHelper.formatDateToReadable(paidDate)}"
+        1, 2 -> stringResource(
+            R.string.unpaid_bill_date_information,
+            DateHelper.formatDateToReadable(dueDate)
+        )
+        else -> stringResource(
+            R.string.paid_bill_date_information,
+            DateHelper.formatDateToReadable(paidDate)
+        )
     }
 }
 

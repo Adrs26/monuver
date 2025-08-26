@@ -7,7 +7,6 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.android.monu.data.local.dao.BillDao
 import com.android.monu.data.mapper.BillMapper
-import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.bill.Bill
 import com.android.monu.domain.repository.BillRepository
 import kotlinx.coroutines.CoroutineScope
@@ -59,5 +58,13 @@ class BillRepositoryImpl(
 
     override suspend fun createNewBill(bill: Bill) {
         billDao.createNewBill(BillMapper.billDomainToEntity(bill))
+    }
+
+    override suspend fun deleteBill(id: Long) {
+        billDao.deleteBill(id)
+    }
+
+    override suspend fun updateBill(bill: Bill) {
+        billDao.updateBill(BillMapper.billDomainToEntityForUpdate(bill))
     }
 }
