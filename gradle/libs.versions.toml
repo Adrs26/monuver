@@ -1,6 +1,7 @@
 [versions]
 accompanistSystemuicontroller = "0.30.1"
 agp = "8.10.1"
+sqlCipherAndroid = "4.10.0"
 core = "1.0.2"
 koinAndroid = "4.0.3"
 kotlin = "2.2.0"
@@ -55,6 +56,7 @@ lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 threetenabp = { module = "com.jakewharton.threetenabp:threetenabp", version.ref = "threetenabp" }
+sqlcipher-android = { module = "net.zetetic:sqlcipher-android", version.ref = "sqlCipherAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
