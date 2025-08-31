@@ -16,16 +16,6 @@
     <string name="add_income">Tambah pemasukan</string>
     <string name="add_expense">Tambah pengeluaran</string>
     <string name="settings">Pengaturan</string>
-    <string name="account_preference"><![CDATA[Akun & Preferensi]]></string>
-    <string name="change_username">Ubah nama pengguna</string>
-    <string name="change_language">Ubah bahasa</string>
-    <string name="privacy_security"><![CDATA[Keamanan & Privasi]]></string>
-    <string name="enable_security_code">Aktifkan pin keamanan</string>
-    <string name="enable_fingerprint">Aktifkan keamanan sidik jari</string>
-    <string name="reset_all_transactions_data">Reset semua data transaksi</string>
-    <string name="about">Tentang</string>
-    <string name="about_application">Tentang aplikasi</string>
-    <string name="version">Versi aplikasi</string>
     <string name="save">Simpan</string>
     <string name="food_beverages"><![CDATA[Makanan & minuman]]></string>
     <string name="bills_utilities"><![CDATA[Tagihan & utilitas]]></string>
@@ -249,4 +239,18 @@
     <string name="invalid_bill_fix_period">Periode pembayaran tagihan sudah melebihi batas periode</string>
     <string name="unpaid_bill_date_information">Jatuh tempo pada %1$s</string>
     <string name="paid_bill_date_information">Dilunasi pada %1$s</string>
+    <string name="application_data">Data aplikasi</string>
+    <string name="export_data">Ekspor data</string>
+    <string name="backup_data">Cadangkan data</string>
+    <string name="restore_data">Pulihkan data</string>
+    <string name="delete_all_application_data">Hapus semua data aplikasi</string>
+    <string name="preference">Preferensi</string>
+    <string name="notification">Notifikasi</string>
+    <string name="theme">Tema</string>
+    <string name="light">Terang</string>
+    <string name="dark">Gelap</string>
+    <string name="default_system">Default sistem</string>
+    <string name="security">Keamanan</string>
+    <string name="activated_pin_authentication">Aktifkan autentikasi pin</string>
+    <string name="activated_fingerprint_authentication">Aktifkan autentikasi sidik jari</string>
 </resources>

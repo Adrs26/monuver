@@ -35,9 +35,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.airbnb.lottie.compose.LottieConstants
 import com.android.monu.R
 import com.android.monu.domain.model.transaction.TransactionBalanceSummary
 import com.android.monu.ui.feature.components.CommonFloatingActionButton
+import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.screen.analytics.AnalyticsActions
 import com.android.monu.ui.feature.screen.analytics.AnalyticsScreen
 import com.android.monu.ui.feature.screen.analytics.AnalyticsState
@@ -215,11 +217,16 @@ fun MainScreen(
                     }
                 }
 
-                budgetSummary?.let { budgetSummary ->
+                if (budgetSummary == null) {
+                    CommonLottieAnimation(
+                        lottieAnimation = R.raw.loading,
+                        iterations = LottieConstants.IterateForever
+                    )
+                } else {
                     HomeScreen(
                         totalBalance = totalBalance,
                         recentTransactions = recentTransactions,
-                        budgetSummary = budgetSummary,
+                        budgetSummary = budgetSummary!!,
                         homeActions = homeActions
                     )
                 }

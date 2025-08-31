@@ -3,12 +3,19 @@ package com.android.monu.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import com.android.monu.data.datastore.ThemeSetting
 
 @Composable
 fun MonuTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    themeSetting: ThemeSetting,
     content: @Composable () -> Unit
 ) {
+    val darkTheme = when (themeSetting) {
+        ThemeSetting.LIGHT -> false
+        ThemeSetting.DARK -> true
+        else -> isSystemInDarkTheme()
+    }
+
     val colorScheme = when {
         darkTheme -> DarkColorScheme
         else -> LightColorScheme

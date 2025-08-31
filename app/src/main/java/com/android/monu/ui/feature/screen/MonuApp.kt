@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.ui.feature.screen.account.accountNavGraph
 import com.android.monu.ui.feature.screen.analytics.analyticsCategoryTransactionNavGraph
 import com.android.monu.ui.feature.screen.bill.billNavGraph
@@ -25,15 +26,21 @@ import com.android.monu.ui.navigation.Main
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun MonuApp() {
+fun MonuApp(
+    themeSetting: ThemeSetting
+) {
     val systemUiController = rememberSystemUiController()
     val statusBarColor = MaterialTheme.colorScheme.background
-    val isDarkIcons = isSystemInDarkTheme()
+    val isDarkIcons = when (themeSetting) {
+        ThemeSetting.LIGHT -> true
+        ThemeSetting.DARK -> false
+        else -> !isSystemInDarkTheme()
+    }
 
     SideEffect {
         systemUiController.setStatusBarColor(
             color = statusBarColor,
-            darkIcons = !isDarkIcons
+            darkIcons = isDarkIcons
         )
     }
 

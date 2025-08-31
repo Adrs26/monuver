@@ -13,10 +13,14 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 
 @Composable
 fun CommonLottieAnimation(
-    lottieAnimation: Int
+    lottieAnimation: Int,
+    iterations: Int = 1
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(lottieAnimation))
-    val progress by animateLottieCompositionAsState(composition)
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = iterations
+    )
 
     Box(
         modifier = Modifier.fillMaxSize(),

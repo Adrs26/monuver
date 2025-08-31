@@ -5,7 +5,10 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.android.monu.ui.theme.MonuTheme
+import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("SourceLockedOrientationActivity")
 class MainActivity : ComponentActivity() {
@@ -13,8 +16,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContent {
-            MonuTheme {
-                MonuApp()
+            val viewModel = koinViewModel<MainViewModel>()
+            val themeSetting by viewModel.themeSetting.collectAsStateWithLifecycle()
+
+            MonuTheme(themeSetting = themeSetting) {
+                MonuApp(themeSetting = themeSetting)
             }
         }
     }

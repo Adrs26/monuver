@@ -1,5 +1,6 @@
 package com.android.monu.di
 
+import com.android.monu.ui.feature.screen.MainViewModel
 import com.android.monu.ui.feature.screen.account.AccountViewModel
 import com.android.monu.ui.feature.screen.account.addaccount.AddAccountViewModel
 import com.android.monu.ui.feature.screen.analytics.AnalyticsViewModel
@@ -15,6 +16,7 @@ import com.android.monu.ui.feature.screen.budgeting.budgetdetail.BudgetDetailVie
 import com.android.monu.ui.feature.screen.budgeting.editbudget.EditBudgetViewModel
 import com.android.monu.ui.feature.screen.budgeting.inactivebudget.InactiveBudgetViewModel
 import com.android.monu.ui.feature.screen.home.HomeViewModel
+import com.android.monu.ui.feature.screen.settings.SettingsViewModel
 import com.android.monu.ui.feature.screen.transaction.TransactionViewModel
 import com.android.monu.ui.feature.screen.transaction.addtransaction.AddTransactionViewModel
 import com.android.monu.ui.feature.screen.transaction.edittransaction.EditTransactionViewModel
@@ -25,6 +27,8 @@ import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val viewModelModule = module {
+    viewModelOf(::MainViewModel)
+
     viewModelOf(::HomeViewModel)
     viewModelOf(::TransactionViewModel)
     viewModelOf(::BudgetingViewModel)
@@ -51,4 +55,6 @@ val viewModelModule = module {
     viewModelOf(::BillDetailViewModel)
     viewModelOf(::PayBillViewModel)
     viewModelOf(::EditBillViewModel)
+
+    viewModelOf(::SettingsViewModel)
 }

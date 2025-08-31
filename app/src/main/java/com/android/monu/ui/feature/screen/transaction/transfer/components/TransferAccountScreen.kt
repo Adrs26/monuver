@@ -13,14 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.account.Account
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.account.components.AccountListItem
 import com.android.monu.ui.feature.utils.SelectAccountType
-import com.android.monu.ui.theme.MonuTheme
 
 @Composable
 fun TransferAccountScreen(
@@ -90,19 +88,5 @@ fun TransferAccountScreen(
                 )
             }
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun TransferAccountScreenPreview() {
-    MonuTheme {
-        TransferAccountScreen(
-            selectAccountType = SelectAccountType.SOURCE,
-            accounts = emptyList(),
-            selectedAccounts = emptyList(),
-            onNavigateBack = {},
-            onAccountSelect = { _, _ -> }
-        )
     }
 }
