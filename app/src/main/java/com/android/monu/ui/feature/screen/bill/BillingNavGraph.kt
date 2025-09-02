@@ -38,7 +38,7 @@ import com.android.monu.ui.navigation.PayBillSource
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-fun NavGraphBuilder.billNavGraph(
+fun NavGraphBuilder.billingNavGraph(
     navController: NavHostController
 ) {
     navigation<Bill>(startDestination = MainBill) {
@@ -48,7 +48,7 @@ fun NavGraphBuilder.billNavGraph(
             popEnterTransition = { NavigationAnimation.popEnter },
             popExitTransition = { NavigationAnimation.popExit }
         ) {
-            val viewModel = koinViewModel<BillViewModel>()
+            val viewModel = koinViewModel<BillingViewModel>()
             val pendingBills by viewModel.pendingBills.collectAsStateWithLifecycle()
             val dueBills by viewModel.dueBills.collectAsStateWithLifecycle()
             val paidBills = viewModel.paidBills.collectAsLazyPagingItems()
@@ -73,7 +73,7 @@ fun NavGraphBuilder.billNavGraph(
                 }
             }
 
-            BillScreen(
+            BillingScreen(
                 billState = billState,
                 billActions = billActions
             )

@@ -12,7 +12,7 @@ import com.android.monu.ui.feature.screen.bill.components.BillAppBar
 import com.android.monu.ui.feature.screen.bill.components.BillTabRowWithPager
 
 @Composable
-fun BillScreen(
+fun BillingScreen(
     billState: BillState,
     billActions: BillActions
 ) {

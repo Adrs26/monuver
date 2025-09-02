@@ -8,7 +8,7 @@ import com.android.monu.domain.usecase.bill.GetPendingBillsUseCase
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
-class BillViewModel(
+class BillingViewModel(
     getPendingBillsUseCase: GetPendingBillsUseCase,
     getDueBillsUseCase: GetDueBillsUseCase,
     getPaidBillsUseCase: GetPaidBillsUseCase

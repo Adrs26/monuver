@@ -226,6 +226,7 @@ class FinanceRepositoryImpl(
             billDao.payBill(billId, billPaidDate)
             transactionDao.createNewTransaction(TransactionMapper.transactionDomainToEntity(transaction))
             accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
+            budgetDao.increaseBudgetUsedAmount(transaction.parentCategory, transaction.date, transaction.amount)
 
             if (isRecurring) {
                 billDao.createNewBill(BillMapper.billDomainToEntity(bill))
