@@ -67,9 +67,10 @@ import com.android.monu.ui.navigation.MainAccount
 import com.android.monu.ui.navigation.MainAddBudget
 import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction
-import com.android.monu.ui.navigation.MainBill
+import com.android.monu.ui.navigation.MainBilling
 import com.android.monu.ui.navigation.MainBudgetDetail
 import com.android.monu.ui.navigation.MainInactiveBudget
+import com.android.monu.ui.navigation.MainSaving
 import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.Settings
 import com.android.monu.ui.navigation.Transaction
@@ -175,7 +176,11 @@ fun MainScreen(
                     }
 
                     override fun onNavigateToBill() {
-                        rootNavController.navigate(MainBill)
+                        rootNavController.navigate(MainBilling)
+                    }
+
+                    override fun onNavigateToSave() {
+                        rootNavController.navigate(MainSaving)
                     }
 
                     override fun onNavigateToSettings() {

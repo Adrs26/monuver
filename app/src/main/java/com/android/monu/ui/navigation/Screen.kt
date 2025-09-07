@@ -49,8 +49,8 @@ import kotlinx.serialization.Serializable
     val year: Int = 0
 )
 
-@Serializable object Bill
-@Serializable object MainBill
+@Serializable object Billing
+@Serializable object MainBilling
 @Serializable object AddBill
 @Serializable data class BillDetail(val id: Long = 0)
 @Serializable data class EditBill(val id: Long = 0)
@@ -59,3 +59,7 @@ import kotlinx.serialization.Serializable
 @Serializable data class MainPayBill(val id: Long = 0)
 @Serializable object PayBillCategory
 @Serializable object PayBillSource
+
+@Serializable object Saving
+@Serializable object MainSaving
+@Serializable data class SaveDetail(val id: Long = 0)

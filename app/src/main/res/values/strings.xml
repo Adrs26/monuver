@@ -159,7 +159,7 @@
     <string name="maximum_amount">Saldo maksimal</string>
     <string name="used">Terpakai</string>
     <string name="remain">Tersisa</string>
-    <string name="saving">Menabung</string>
+    <string name="saving">Tabungan</string>
     <string name="see_all">Lihat semua</string>
     <string name="budgeting_recap">Rekap budget periode ini</string>
     <string name="see_budgeting">Lihat budget</string>
@@ -253,4 +253,7 @@
     <string name="security">Keamanan</string>
     <string name="activated_pin_authentication">Aktifkan autentikasi pin</string>
     <string name="activated_fingerprint_authentication">Aktifkan autentikasi sidik jari</string>
+    <string name="save_total_balance">Total saldo tabungan</string>
+    <string name="bill">Tagihan</string>
+    <string name="list_active_save">Daftar tabungan aktif</string>
 </resources>

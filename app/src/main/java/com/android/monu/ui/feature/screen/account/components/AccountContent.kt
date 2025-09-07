@@ -95,7 +95,7 @@ fun AccountEmptyListContent(
         AccountOverview(totalBalance = totalBalance)
         Text(
             text = stringResource(R.string.your_list_account),
-            modifier = Modifier.padding(top = 24.dp),
+            modifier = Modifier.padding(top = 16.dp),
             style = MaterialTheme.typography.titleMedium
         )
         Box(

@@ -99,7 +99,7 @@ fun EditBudgetingContent(
                 .padding(24.dp),
         ) {
             Text(
-                text = stringResource(R.string.add),
+                text = stringResource(R.string.save),
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.labelMedium
             )

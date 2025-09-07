@@ -5,11 +5,11 @@ import com.android.monu.ui.feature.screen.account.AccountViewModel
 import com.android.monu.ui.feature.screen.account.addaccount.AddAccountViewModel
 import com.android.monu.ui.feature.screen.analytics.AnalyticsViewModel
 import com.android.monu.ui.feature.screen.analytics.analyticscategorytransaction.AnalyticsCategoryTransactionViewModel
-import com.android.monu.ui.feature.screen.bill.BillingViewModel
-import com.android.monu.ui.feature.screen.bill.addbill.AddBillViewModel
-import com.android.monu.ui.feature.screen.bill.billdetail.BillDetailViewModel
-import com.android.monu.ui.feature.screen.bill.editbill.EditBillViewModel
-import com.android.monu.ui.feature.screen.bill.paybill.PayBillViewModel
+import com.android.monu.ui.feature.screen.billing.BillingViewModel
+import com.android.monu.ui.feature.screen.billing.addbill.AddBillViewModel
+import com.android.monu.ui.feature.screen.billing.billdetail.BillDetailViewModel
+import com.android.monu.ui.feature.screen.billing.editbill.EditBillViewModel
+import com.android.monu.ui.feature.screen.billing.paybill.PayBillViewModel
 import com.android.monu.ui.feature.screen.budgeting.BudgetingViewModel
 import com.android.monu.ui.feature.screen.budgeting.addbudget.AddBudgetViewModel
 import com.android.monu.ui.feature.screen.budgeting.budgetdetail.BudgetDetailViewModel

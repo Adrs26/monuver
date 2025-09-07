@@ -35,7 +35,7 @@ fun HomeScreen(
         topBar = {
             HomeAppBar(
                 onNavigateToBill = homeActions::onNavigateToBill,
-                onNavigateToSave = {},
+                onNavigateToSave = homeActions::onNavigateToSave,
                 onNavigateToSettings = homeActions::onNavigateToSettings
             )
         }
@@ -87,6 +87,7 @@ fun HomeScreen(
 interface HomeActions {
     fun onHandleExpiredBudget()
     fun onNavigateToBill()
+    fun onNavigateToSave()
     fun onNavigateToSettings()
     fun onNavigateToAccount()
     fun onNavigateToAddIncomeTransaction()

@@ -30,7 +30,7 @@ fun BudgetingContent(
 ) {
     when  {
         budgets.isEmpty() -> {
-            BudgetingEmptyListContent(
+            BudgetEmptyListContent(
                 totalMaxAmount = totalMaxAmount,
                 totalUsedAmount = totalUsedAmount,
                 modifier = modifier
@@ -39,7 +39,7 @@ fun BudgetingContent(
             )
         }
         else -> {
-            BudgetingListContent(
+            BudgetListContent(
                 totalMaxAmount = totalMaxAmount,
                 totalUsedAmount = totalUsedAmount,
                 budgets = budgets,
@@ -51,7 +51,7 @@ fun BudgetingContent(
 }
 
 @Composable
-fun BudgetingListContent(
+fun BudgetListContent(
     totalMaxAmount: Long,
     totalUsedAmount: Long,
     budgets: List<Budget>,
@@ -93,15 +93,14 @@ fun BudgetingListContent(
 
             BudgetListItem(
                 budgetState = budgetState,
-                modifier = Modifier
-                    .clickable { onNavigateToBudgetDetail(budgetState.id) }
+                modifier = Modifier.clickable { onNavigateToBudgetDetail(budgetState.id) }
             )
         }
     }
 }
 
 @Composable
-fun BudgetingEmptyListContent(
+fun BudgetEmptyListContent(
     totalMaxAmount: Long,
     totalUsedAmount: Long,
     modifier: Modifier = Modifier
@@ -118,7 +117,7 @@ fun BudgetingEmptyListContent(
         )
         Text(
             text = stringResource(R.string.list_active_budgeting),
-            modifier = Modifier.padding(top = 24.dp),
+            modifier = Modifier.padding(top = 16.dp),
             style = MaterialTheme.typography.titleMedium
         )
         Box(

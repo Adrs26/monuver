@@ -62,9 +62,15 @@ fun BudgetDetailListContent(
             .background(MaterialTheme.colorScheme.background)
     ) {
         item {
-            BudgetDetailOverview(
+            BudgetDetailMainOverview(
                 budgetState = budgetState,
                 modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
+        item {
+            BudgetDetailAmountOverview(
+                budgetState = budgetState,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
             )
         }
         item {
@@ -110,12 +116,14 @@ fun BudgetDetailEmptyListContent(
             .background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        BudgetDetailOverview(
-            budgetState = budgetState
+        BudgetDetailMainOverview(budgetState = budgetState)
+        BudgetDetailAmountOverview(
+            budgetState = budgetState,
+            modifier = Modifier.padding(top = 8.dp)
         )
         Text(
             text = stringResource(R.string.transaction_history),
-            modifier = Modifier.padding(top = 24.dp),
+            modifier = Modifier.padding(top = 16.dp),
             style = MaterialTheme.typography.titleMedium
         )
         Box(

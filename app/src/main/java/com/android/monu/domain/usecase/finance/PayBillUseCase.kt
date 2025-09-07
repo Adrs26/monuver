@@ -5,7 +5,7 @@ import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.screen.bill.paybill.components.PayBillContentState
+import com.android.monu.ui.feature.screen.billing.paybill.components.PayBillContentState
 import com.android.monu.ui.feature.utils.Cycle
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.DateHelper
