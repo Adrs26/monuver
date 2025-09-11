@@ -30,7 +30,8 @@ class CreateIncomeTransactionUseCase(
             timeStamp = System.currentTimeMillis(),
             amount = transactionState.amount,
             sourceId = transactionState.sourceId,
-            sourceName = transactionState.sourceName
+            sourceName = transactionState.sourceName,
+            isLocked = false
         )
 
         repository.createIncomeTransaction(transaction)

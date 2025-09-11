@@ -38,6 +38,7 @@ import com.android.monu.ui.feature.components.PieChart
 import com.android.monu.ui.feature.utils.DataProvider
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.ui.feature.utils.debouncedClickable
 import com.android.monu.ui.theme.SoftWhite
 
 @Composable
@@ -153,7 +154,7 @@ fun AnalyticsPieChartDetail(
                 amount = data.totalAmount,
                 total = categorySummaries.sumOf { it.totalAmount },
                 modifier = Modifier
-                    .clickable {
+                    .debouncedClickable {
                         onNavigateToAnalyticsCategoryTransaction(
                             data.parentCategory, monthValue, yearValue
                         )

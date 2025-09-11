@@ -33,7 +33,8 @@ class UpdateExpenseTransactionUseCase(
             timeStamp = System.currentTimeMillis(),
             amount = transactionState.amount,
             sourceId = transactionState.sourceId,
-            sourceName = transactionState.sourceName
+            sourceName = transactionState.sourceName,
+            isLocked = transactionState.isLocked
         )
 
         val accountBalance = accountRepository.getAccountBalance(transaction.sourceId)

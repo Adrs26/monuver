@@ -20,7 +20,6 @@ import kotlinx.serialization.Serializable
 @Serializable data class MainTransactionDetail(val id: Long = 0)
 @Serializable data class EditTransaction(val id: Long = 0)
 @Serializable data class EditTransactionCategory(val type: Int = 0)
-@Serializable data class EditTransfer(val id: Long = 0)
 
 @Serializable object AddTransaction
 @Serializable data class MainAddTransaction(val type: Int = 0)
@@ -64,3 +63,11 @@ import kotlinx.serialization.Serializable
 @Serializable object MainSaving
 @Serializable object AddSave
 @Serializable data class SaveDetail(val id: Long = 0)
+
+@Serializable object Deposit
+@Serializable data class MainDeposit(
+    val saveId: Long? = null,
+    val saveName: String? = null
+)
+@Serializable object DepositDestination
+@Serializable object DepositSource

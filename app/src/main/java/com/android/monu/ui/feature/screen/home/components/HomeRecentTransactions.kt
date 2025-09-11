@@ -1,6 +1,5 @@
 package com.android.monu.ui.feature.screen.home.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -90,13 +89,14 @@ fun RecentTransactionList(
                         childCategory = transaction.childCategory,
                         date = transaction.date,
                         amount = transaction.amount,
-                        sourceName = transaction.sourceName
+                        sourceName = transaction.sourceName,
+                        isLocked = transaction.isLocked
                     )
 
                     TransactionListItem(
                         transactionState = transactionState,
                         modifier = Modifier
-                            .clickable { onNavigateToTransactionDetail(transactionState.id) }
+                            .debouncedClickable { onNavigateToTransactionDetail(transactionState.id) }
                             .padding(horizontal = 16.dp, vertical = 2.dp)
                     )
                 }

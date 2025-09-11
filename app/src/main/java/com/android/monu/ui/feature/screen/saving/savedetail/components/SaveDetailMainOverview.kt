@@ -14,7 +14,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.save.Save
 import com.android.monu.ui.feature.utils.DateHelper
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter

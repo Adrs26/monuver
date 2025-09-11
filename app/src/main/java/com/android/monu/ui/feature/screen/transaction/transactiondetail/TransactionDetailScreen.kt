@@ -28,6 +28,7 @@ fun DetailTransactionScreen(
     Scaffold(
         topBar = {
             TransactionDetailAppBar(
+                isTransactionLocked = transaction.isLocked,
                 onNavigateBack = transactionActions::onNavigateBack,
                 onNavigateToEditTransaction = {
                     transactionActions.onNavigateToEditTransaction(

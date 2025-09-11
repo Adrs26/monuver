@@ -1,7 +1,6 @@
 package com.android.monu.ui.feature.screen.budgeting.budgetdetail.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +20,7 @@ import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.components.TransactionListItem
 import com.android.monu.ui.feature.components.TransactionListItemState
 import com.android.monu.ui.feature.screen.budgeting.budgetdetail.BudgetDetailState
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun BudgetDetailContent(
@@ -92,13 +92,14 @@ fun BudgetDetailListContent(
                 childCategory = transactions[index].childCategory,
                 date = transactions[index].date,
                 amount = transactions[index].amount,
-                sourceName = transactions[index].sourceName
+                sourceName = transactions[index].sourceName,
+                isLocked = transactions[index].isLocked
             )
 
             TransactionListItem(
                 transactionState = transactionState,
                 modifier = Modifier
-                    .clickable { onNavigateToTransactionDetail(transactionState.id) }
+                    .debouncedClickable { onNavigateToTransactionDetail(transactionState.id) }
                     .padding(horizontal = 16.dp, vertical = 2.dp)
             )
         }

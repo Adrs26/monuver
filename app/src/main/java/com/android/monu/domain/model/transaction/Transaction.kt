@@ -15,5 +15,6 @@ data class Transaction(
     val sourceName: String,
     val destinationId: Int? = null,
     val destinationName: String? = null,
-    val saveId: Long? = null
+    val saveId: Long? = null,
+    val isLocked: Boolean
 )

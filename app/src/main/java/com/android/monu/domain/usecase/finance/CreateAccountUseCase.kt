@@ -43,7 +43,8 @@ class CreateAccountUseCase(
             timeStamp = System.currentTimeMillis(),
             amount = accountState.balance,
             sourceId = 0,
-            sourceName = accountState.name
+            sourceName = accountState.name,
+            isLocked = true
         )
 
         repository.createAccount(account = account, transaction = transaction)

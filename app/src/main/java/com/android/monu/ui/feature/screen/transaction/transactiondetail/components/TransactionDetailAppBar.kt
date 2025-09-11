@@ -17,6 +17,7 @@ import com.android.monu.ui.feature.components.DebouncedIconButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionDetailAppBar(
+    isTransactionLocked: Boolean,
     onNavigateBack: () -> Unit,
     onNavigateToEditTransaction: () -> Unit,
     onRemoveTransaction: () -> Unit
@@ -42,23 +43,25 @@ fun TransactionDetailAppBar(
             }
         },
         actions = {
-            DebouncedIconButton(
-                onClick = onNavigateToEditTransaction
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_edit),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            DebouncedIconButton(
-                onClick = onRemoveTransaction
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_delete),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+            if (!isTransactionLocked) {
+                DebouncedIconButton(
+                    onClick = onNavigateToEditTransaction
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_edit),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                DebouncedIconButton(
+                    onClick = onRemoveTransaction
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_delete),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

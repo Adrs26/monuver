@@ -36,7 +36,8 @@ class CreateTransferTransactionUseCase(
             sourceId = transferState.sourceId,
             sourceName = transferState.sourceName,
             destinationId = transferState.destinationId,
-            destinationName = transferState.destinationName
+            destinationName = transferState.destinationName,
+            isLocked = true
         )
 
         val accountBalance = accountRepository.getAccountBalance(transaction.sourceId)

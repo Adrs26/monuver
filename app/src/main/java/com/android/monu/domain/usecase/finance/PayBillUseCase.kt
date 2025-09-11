@@ -56,7 +56,8 @@ class PayBillUseCase(
             timeStamp = System.currentTimeMillis(),
             amount = payBillState.amount,
             sourceId = payBillState.sourceId,
-            sourceName = payBillState.sourceName
+            sourceName = payBillState.sourceName,
+            isLocked = true
         )
 
         val isRecurring = (bill.period == 1) || (bill.nowPaidPeriod < (bill.fixPeriod ?: 0))

@@ -64,7 +64,8 @@ fun EditTransactionScreen(
         amountFormat = transactionAmountFormat,
         initialAmount = initialTransaction.amount,
         sourceId = transactionState.sourceId,
-        sourceName = transactionState.sourceName
+        sourceName = transactionState.sourceName,
+        isLocked = transactionState.isLocked
     )
 
     val editTransactionContentActions = object : EditTransactionContentActions {
@@ -158,6 +159,7 @@ data class EditTransactionState(
     val amount: Long,
     val sourceId: Int,
     val sourceName: String,
+    val isLocked: Boolean,
     val editResult: DatabaseResultMessage?
 )
 

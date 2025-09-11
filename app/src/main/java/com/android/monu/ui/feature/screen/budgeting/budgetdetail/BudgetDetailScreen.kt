@@ -9,7 +9,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import com.android.monu.R
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.ui.feature.screen.budgeting.budgetdetail.components.BudgetDetailAppBar
@@ -29,7 +28,6 @@ fun BudgetDetailScreen(
     Scaffold(
         topBar = {
             BudgetDetailAppBar(
-                title = stringResource(R.string.budgeting_detail),
                 isBudgetActive = budgetState.isActive,
                 onNavigateBack = budgetActions::onNavigateBack,
                 onNavigateToEditBudget = { budgetActions.onNavigateToEditBudget(budgetState.id) },

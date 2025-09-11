@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
@@ -23,6 +24,8 @@ import com.android.monu.ui.theme.Red600
 
 @Composable
 fun SaveDetailButtonBar(
+    onAddAmountClick: () -> Unit,
+    onWithdrawAmountClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -31,17 +34,17 @@ fun SaveDetailButtonBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         SaveDetailButton(
-            text = "Tambah saldo",
+            text = stringResource(R.string.add_amount),
             icon = R.drawable.ic_arrow_upward,
             color = Green600,
-            onClick = {},
+            onClick = onAddAmountClick,
             modifier = Modifier.weight(1f)
         )
         SaveDetailButton(
-            text = "Tarik saldo",
+            text = stringResource(R.string.withdraw_amount),
             icon = R.drawable.ic_arrow_downward,
             color = Red600,
-            onClick = {},
+            onClick = onWithdrawAmountClick,
             modifier = Modifier.weight(1f)
         )
     }

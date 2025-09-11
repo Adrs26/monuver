@@ -9,8 +9,8 @@ import androidx.navigation.navigation
 import com.android.monu.ui.feature.screen.account.addaccount.AddAccountActions
 import com.android.monu.ui.feature.screen.account.addaccount.AddAccountScreen
 import com.android.monu.ui.feature.screen.account.addaccount.AddAccountViewModel
-import com.android.monu.ui.feature.screen.account.addaccount.components.AccountTypeScreen
 import com.android.monu.ui.feature.screen.account.addaccount.components.AddAccountContentState
+import com.android.monu.ui.feature.screen.account.addaccount.components.AddAccountTypeScreen
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.Account
@@ -79,7 +79,7 @@ fun NavGraphBuilder.accountNavGraph(
         ) {
             val viewModel = it.sharedKoinViewModel<AddAccountViewModel>(navController)
 
-            AccountTypeScreen(
+            AddAccountTypeScreen(
                 onNavigateBack = navController::navigateUp,
                 onTypeSelect = viewModel::changeAccountType
             )

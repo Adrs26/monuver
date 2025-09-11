@@ -5,6 +5,7 @@ import com.android.monu.data.local.MonuDatabase
 import com.android.monu.data.local.dao.AccountDao
 import com.android.monu.data.local.dao.BillDao
 import com.android.monu.data.local.dao.BudgetDao
+import com.android.monu.data.local.dao.SaveDao
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.AccountMapper
 import com.android.monu.data.mapper.BillMapper
@@ -21,7 +22,8 @@ class FinanceRepositoryImpl(
     private val accountDao: AccountDao,
     private val transactionDao: TransactionDao,
     private val budgetDao: BudgetDao,
-    private val billDao: BillDao
+    private val billDao: BillDao,
+    private val saveDao: SaveDao
 ) : FinanceRepository {
 
     override suspend fun createAccount(account: Account, transaction: Transaction): Long {
@@ -66,6 +68,16 @@ class FinanceRepositoryImpl(
             accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
             accountDao.increaseAccountBalance(transaction.destinationId ?: 0, transaction.amount)
             transactionId
+        }
+    }
+
+    override suspend fun createDepositTransaction(saveId: Long, transaction: Transaction) {
+        return database.withTransaction {
+            saveDao.increaseSaveCurrentAmount(saveId, transaction.amount)
+            accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
+            transactionDao.createNewTransaction(
+                TransactionMapper.transactionDomainToEntity(transaction)
+            )
         }
     }
 
@@ -189,28 +201,6 @@ class FinanceRepositoryImpl(
                 }
             }
 
-            rowUpdated
-        }
-    }
-
-    override suspend fun updateTransferTransaction(
-        transaction: Transaction,
-        initialAmount: Long
-    ): Int {
-        return database.withTransaction {
-            val rowUpdated = transactionDao.updateTransaction(
-                TransactionMapper.transactionDomainToEntityForUpdate(transaction)
-            )
-            val difference = transaction.amount - initialAmount
-            if (difference != 0L) {
-                if (difference > 0) {
-                    accountDao.decreaseAccountBalance(transaction.sourceId, difference)
-                    accountDao.increaseAccountBalance(transaction.destinationId ?: 0, difference)
-                } else {
-                    accountDao.increaseAccountBalance(transaction.sourceId, difference.absoluteValue)
-                    accountDao.decreaseAccountBalance(transaction.destinationId ?: 0, difference.absoluteValue)
-                }
-            }
             rowUpdated
         }
     }

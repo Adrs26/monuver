@@ -61,6 +61,14 @@ class TransactionRepositoryImpl(
         }
     }
 
+    override fun getTransactionsBySaveId(saveId: Long): Flow<List<Transaction>> {
+        return transactionDao.getTransactionsBySaveId(saveId).map { transactions ->
+            transactions.map { transaction ->
+                TransactionMapper.transactionEntityToDomain(transaction)
+            }
+        }
+    }
+
     override fun getTransactionsByParentCategoryAndDateRange(
         category: Int,
         startDate: String,

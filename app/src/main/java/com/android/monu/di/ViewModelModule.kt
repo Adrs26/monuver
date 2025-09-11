@@ -18,12 +18,12 @@ import com.android.monu.ui.feature.screen.budgeting.inactivebudget.InactiveBudge
 import com.android.monu.ui.feature.screen.home.HomeViewModel
 import com.android.monu.ui.feature.screen.saving.SavingViewModel
 import com.android.monu.ui.feature.screen.saving.addsave.AddSaveViewModel
+import com.android.monu.ui.feature.screen.saving.deposit.DepositViewModel
 import com.android.monu.ui.feature.screen.saving.savedetail.SaveDetailViewModel
 import com.android.monu.ui.feature.screen.settings.SettingsViewModel
 import com.android.monu.ui.feature.screen.transaction.TransactionViewModel
 import com.android.monu.ui.feature.screen.transaction.addtransaction.AddTransactionViewModel
 import com.android.monu.ui.feature.screen.transaction.edittransaction.EditTransactionViewModel
-import com.android.monu.ui.feature.screen.transaction.edittransfer.EditTransferViewModel
 import com.android.monu.ui.feature.screen.transaction.transactiondetail.TransactionDetailViewModel
 import com.android.monu.ui.feature.screen.transaction.transfer.TransferViewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -44,7 +44,6 @@ val viewModelModule = module {
     viewModelOf(::TransferViewModel)
     viewModelOf(::TransactionDetailViewModel)
     viewModelOf(::EditTransactionViewModel)
-    viewModelOf(::EditTransferViewModel)
 
     viewModelOf(::AddBudgetViewModel)
     viewModelOf(::BudgetDetailViewModel)
@@ -62,6 +61,7 @@ val viewModelModule = module {
     viewModelOf(::SavingViewModel)
     viewModelOf(::AddSaveViewModel)
     viewModelOf(::SaveDetailViewModel)
+    viewModelOf(::DepositViewModel)
 
     viewModelOf(::SettingsViewModel)
 }

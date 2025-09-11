@@ -20,11 +20,6 @@ import com.android.monu.ui.feature.screen.transaction.edittransaction.EditTransa
 import com.android.monu.ui.feature.screen.transaction.edittransaction.EditTransactionState
 import com.android.monu.ui.feature.screen.transaction.edittransaction.EditTransactionViewModel
 import com.android.monu.ui.feature.screen.transaction.edittransaction.components.EditTransactionContentState
-import com.android.monu.ui.feature.screen.transaction.edittransfer.EditTransferActions
-import com.android.monu.ui.feature.screen.transaction.edittransfer.EditTransferScreen
-import com.android.monu.ui.feature.screen.transaction.edittransfer.EditTransferState
-import com.android.monu.ui.feature.screen.transaction.edittransfer.EditTransferViewModel
-import com.android.monu.ui.feature.screen.transaction.edittransfer.components.EditTransferContentState
 import com.android.monu.ui.feature.screen.transaction.transactiondetail.DetailTransactionScreen
 import com.android.monu.ui.feature.screen.transaction.transactiondetail.TransactionDetailActions
 import com.android.monu.ui.feature.screen.transaction.transactiondetail.TransactionDetailViewModel
@@ -36,15 +31,12 @@ import com.android.monu.ui.feature.screen.transaction.transfer.components.Transf
 import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferContentState
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.SelectAccountType
-import com.android.monu.ui.feature.utils.TransactionChildCategory
-import com.android.monu.ui.feature.utils.TransactionType
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.AddTransaction
 import com.android.monu.ui.navigation.AddTransactionCategory
 import com.android.monu.ui.navigation.AddTransactionSource
 import com.android.monu.ui.navigation.EditTransaction
 import com.android.monu.ui.navigation.EditTransactionCategory
-import com.android.monu.ui.navigation.EditTransfer
 import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.MainTransfer
@@ -238,16 +230,7 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                     transactionType: Int,
                     transactionCategory: Int
                 ) {
-                    when {
-                        transactionType == TransactionType.INCOME ||
-                                transactionType == TransactionType.EXPENSE -> {
-                            navController.navigate(EditTransaction(transactionId))
-                        }
-                        transactionType == TransactionType.TRANSFER &&
-                                transactionCategory == TransactionChildCategory.TRANSFER_ACCOUNT -> {
-                            navController.navigate(EditTransfer(transactionId))
-                        }
-                    }
+                    navController.navigate(EditTransaction(transactionId))
                 }
 
                 override fun onRemoveTransaction(transaction: Transaction) {
@@ -287,7 +270,8 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                         amount = transaction.amount,
                         sourceId = transaction.sourceId,
                         sourceName = transaction.sourceName,
-                        editResult = editResult
+                        editResult = editResult,
+                        isLocked = transaction.isLocked
                     )
 
                     val editTransactionActions = object : EditTransactionActions {
@@ -327,47 +311,6 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                 onNavigateBack = navController::navigateUp,
                 onCategorySelect = viewModel::changeTransactionCategory
             )
-        }
-        composable<EditTransfer>(
-            enterTransition = { NavigationAnimation.enter },
-            exitTransition = { NavigationAnimation.exit },
-            popEnterTransition = { NavigationAnimation.popEnter },
-            popExitTransition = { NavigationAnimation.popExit }
-        ) {
-            val viewModel = koinViewModel<EditTransferViewModel>(
-                viewModelStoreOwner = it,
-                parameters = { parametersOf(it.savedStateHandle) }
-            )
-            val transaction by viewModel.transaction.collectAsStateWithLifecycle()
-            val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
-
-            transaction?.let { transaction ->
-                val editTransferState = EditTransferState(
-                    id = transaction.id,
-                    date = transaction.date,
-                    amount = transaction.amount,
-                    sourceId = transaction.sourceId,
-                    sourceName = transaction.sourceName,
-                    destinationId = transaction.destinationId ?: 0,
-                    destinationName = transaction.destinationName ?: "",
-                    editResult = editResult
-                )
-
-                val editTransferActions = object : EditTransferActions {
-                    override fun onNavigateBack() {
-                        navController.navigateUp()
-                    }
-
-                    override fun onEditTransfer(transferState: EditTransferContentState) {
-                        viewModel.updateTransaction(transferState)
-                    }
-                }
-
-                EditTransferScreen(
-                    transferState = editTransferState,
-                    transferActions = editTransferActions
-                )
-            }
         }
     }
 }

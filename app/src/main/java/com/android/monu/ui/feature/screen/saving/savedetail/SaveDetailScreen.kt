@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.android.monu.R
 import com.android.monu.domain.model.save.Save
+import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.ui.feature.screen.saving.savedetail.components.SaveDetailAppBar
 import com.android.monu.ui.feature.screen.saving.savedetail.components.SaveDetailBottomBar
 import com.android.monu.ui.feature.screen.saving.savedetail.components.SaveDetailContent
@@ -14,7 +15,11 @@ import com.android.monu.ui.feature.screen.saving.savedetail.components.SaveDetai
 @Composable
 fun SaveDetailScreen(
     save: Save,
-    onNavigateBack: () -> Unit
+    transactions: List<Transaction>,
+    onNavigateBack: () -> Unit,
+    onAddAmountClick: () -> Unit,
+    onWithdrawAmountClick: () -> Unit,
+    onNavigateToTransactionDetail: (Long) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -29,7 +34,10 @@ fun SaveDetailScreen(
     ) { innerPadding ->
         SaveDetailContent(
             saveState = save,
-            transactions = emptyList(),
+            transactions = transactions,
+            onAddAmountClick = onAddAmountClick,
+            onWithdrawAmountClick = onWithdrawAmountClick,
+            onNavigateToTransactionDetail = onNavigateToTransactionDetail,
             modifier = Modifier.padding(innerPadding)
         )
     }

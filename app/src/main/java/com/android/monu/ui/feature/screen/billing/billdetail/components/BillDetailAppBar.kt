@@ -53,15 +53,15 @@ fun BillDetailAppBar(
                         tint = MaterialTheme.colorScheme.onSurface
                     )
                 }
-            }
-            DebouncedIconButton(
-                onClick = onRemoveBill
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_delete),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+                DebouncedIconButton(
+                    onClick = onRemoveBill
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_delete),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

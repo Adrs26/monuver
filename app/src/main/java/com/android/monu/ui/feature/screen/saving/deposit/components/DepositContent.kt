@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.screen.transaction.edittransaction.components
+package com.android.monu.ui.feature.screen.saving.deposit.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -22,44 +22,43 @@ import com.android.monu.ui.feature.components.StaticTextInputField
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
-import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 import com.android.monu.ui.feature.utils.DateHelper
 
 @Composable
-fun EditTransactionContent(
-    transactionState: EditTransactionContentState,
-    transactionActions: EditTransactionContentActions,
+fun DepositContent(
+    depositState: DepositContentState,
+    depositActions: DepositContentActions,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        TextInputField(
-            title = stringResource(R.string.title),
-            value = transactionState.title,
-            onValueChange = transactionActions::onTitleChange,
-            placeholderText = stringResource(R.string.enter_transaction_title),
-            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
-        )
-        TextInputField(
-            title = stringResource(R.string.category),
-            value = if (transactionState.childCategory == 0) "" else
-                stringResource(DatabaseCodeMapper.toChildCategoryTitle(transactionState.childCategory)),
-            onValueChange = { },
-            placeholderText = stringResource(R.string.choose_transaction_category),
-            modifier = Modifier
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = { transactionActions.onNavigateToCategory(transactionState.type) }
-                )
-                .padding(horizontal = 16.dp),
-            isEnable = false
-        )
+        if (depositState.fixDestinationId != null && depositState.fixDestinationName != null) {
+            StaticTextInputField(
+                title = stringResource(R.string.saving),
+                value = depositState.fixDestinationName,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            )
+        } else {
+            TextInputField(
+                title = stringResource(R.string.saving),
+                value = depositState.destinationName,
+                onValueChange = { },
+                placeholderText = stringResource(R.string.choose_saving),
+                modifier = Modifier
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = { depositActions.onNavigateToDestination() }
+                    )
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                isEnable = false
+            )
+        }
         TextDateInputField(
             title = stringResource(R.string.date),
-            value = DateHelper.formatDateToReadable(transactionState.date),
+            value = DateHelper.formatDateToReadable(depositState.date),
             onValueChange = { },
             placeholderText = stringResource(R.string.choose_transaction_date),
             isEnable = true,
@@ -67,30 +66,39 @@ fun EditTransactionContent(
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = { transactionActions.onDateClick() }
+                    onClick = depositActions::onDateClick
                 )
                 .padding(horizontal = 16.dp)
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
-            value = transactionState.amountFormat,
-            onValueChange = transactionActions::onAmountChange,
+            value = depositState.amountFormat,
+            onValueChange = depositActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-        StaticTextInputField(
+        TextInputField(
             title = stringResource(R.string.funds_source),
-            value = transactionState.sourceName,
-            modifier = Modifier.padding(horizontal = 16.dp)
+            value = depositState.sourceName,
+            onValueChange = { },
+            placeholderText = stringResource(R.string.choose_funds_source),
+            modifier = Modifier
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = depositActions::onNavigateToSource
+                )
+                .padding(horizontal = 16.dp),
+            isEnable = false
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = { transactionActions.onEditTransaction(transactionState) },
+            onClick = { depositActions.onAddNewDeposit(depositState) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
         ) {
             Text(
-                text = stringResource(R.string.save),
+                text = stringResource(R.string.add),
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.labelMedium
             )
@@ -98,27 +106,22 @@ fun EditTransactionContent(
     }
 }
 
-data class EditTransactionContentState(
-    val id: Long,
-    val title: String,
-    val type: Int,
-    val parentCategory: Int,
-    val childCategory: Int,
-    val initialParentCategory: Int,
+data class DepositContentState(
     val date: String,
-    val initialDate: String,
     val amount: Long,
     val amountFormat: TextFieldValue,
-    val initialAmount: Long,
     val sourceId: Int,
     val sourceName: String,
-    val isLocked: Boolean
+    val destinationId: Long,
+    val destinationName: String,
+    val fixDestinationId: Long?,
+    val fixDestinationName: String?
 )
 
-interface EditTransactionContentActions {
-    fun onTitleChange(title: String)
-    fun onNavigateToCategory(transactionType: Int)
+interface DepositContentActions {
+    fun onNavigateToDestination()
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
-    fun onEditTransaction(transactionState: EditTransactionContentState)
+    fun onNavigateToSource()
+    fun onAddNewDeposit(depositState: DepositContentState)
 }

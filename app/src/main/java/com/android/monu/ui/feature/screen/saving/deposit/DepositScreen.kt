@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.screen.transaction.edittransfer
+package com.android.monu.ui.feature.screen.saving.deposit
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,9 +18,9 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
 import com.android.monu.ui.feature.components.CommonAppBar
-import com.android.monu.ui.feature.screen.transaction.edittransfer.components.EditTransferContent
-import com.android.monu.ui.feature.screen.transaction.edittransfer.components.EditTransferContentActions
-import com.android.monu.ui.feature.screen.transaction.edittransfer.components.EditTransferContentState
+import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContent
+import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentActions
+import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.feature.utils.showMessageWithToast
@@ -33,61 +33,69 @@ import org.threeten.bp.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditTransferScreen(
-    transferState: EditTransferState,
-    transferActions: EditTransferActions
+fun DepositScreen(
+    depositState: DepositState,
+    depositActions: DepositActions
 ) {
-    var transactionDate by rememberSaveable { mutableStateOf(transferState.date) }
-    var transactionAmount by rememberSaveable { mutableLongStateOf(transferState.amount) }
-    var transactionAmountFormat by remember {
-        mutableStateOf(TextFieldValue(text = NumberFormatHelper.formatToRupiah(transactionAmount)))
+    var depositDate by rememberSaveable { mutableStateOf("") }
+    var depositAmount by rememberSaveable { mutableLongStateOf(0L) }
+    var depositAmountFormat by remember {
+        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(depositAmount)))
     }
 
     val calendarState = rememberSheetState()
     val context = LocalContext.current
 
-    val editTransferContentState = EditTransferContentState(
-        id = transferState.id,
-        sourceId = transferState.sourceId,
-        sourceName = transferState.sourceName,
-        destinationId = transferState.destinationId,
-        destinationName = transferState.destinationName,
-        date = transactionDate,
-        amount = transactionAmount,
-        amountFormat = transactionAmountFormat,
-        initialAmount = transferState.amount
+    val depositContentState = DepositContentState(
+        date = depositDate,
+        amount = depositAmount,
+        amountFormat = depositAmountFormat,
+        sourceId = depositState.source.first,
+        sourceName = depositState.source.second,
+        destinationId = depositState.destination.first,
+        destinationName = depositState.destination.second,
+        fixDestinationId = depositState.fixDestinationId,
+        fixDestinationName = depositState.fixDestinationName
     )
 
-    val editTransferActions = object : EditTransferContentActions {
+    val depositContentActions = object : DepositContentActions {
+        override fun onNavigateToDestination() {
+            depositActions.onNavigateToDestination()
+        }
+
         override fun onDateClick() {
             calendarState.show()
         }
 
         override fun onAmountChange(amountFormat: TextFieldValue) {
             val cleanInput = amountFormat.text.replace(Regex("\\D"), "")
-            transactionAmount = try {
+            depositAmount = try {
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(transactionAmount)
+            val formattedText = NumberFormatHelper.formatToRupiah(depositAmount)
             val newCursorPosition = formattedText.length
 
-            transactionAmountFormat = TextFieldValue(
+            depositAmountFormat = TextFieldValue(
                 text = formattedText,
                 selection = TextRange(newCursorPosition)
             )
         }
 
-        override fun onEditTransfer(transferState: EditTransferContentState) {
-            transferActions.onEditTransfer(transferState)
+        override fun onNavigateToSource() {
+            depositActions.onNavigateToSource()
+        }
+
+        override fun onAddNewDeposit(depositState: DepositContentState) {
+            depositActions.onAddNewDeposit(depositState)
         }
     }
 
-    LaunchedEffect(transferState.editResult) {
-        transferState.editResult?.let { result ->
+    LaunchedEffect(depositState.addResult) {
+        depositState.addResult?.let { result ->
             context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.UpdateTransactionSuccess) {
-                transferActions.onNavigateBack()
+            if (result == DatabaseResultMessage.AddSaveAmountSuccess) {
+                depositActions.onNavigateBack()
             }
         }
     }
@@ -95,14 +103,14 @@ fun EditTransferScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = stringResource(R.string.edit_transfer),
-                onNavigateBack = transferActions::onNavigateBack
+                title = stringResource(R.string.add_save_balance),
+                onNavigateBack = depositActions::onNavigateBack
             )
         }
     ) { innerPadding ->
-        EditTransferContent(
-            transferState = editTransferContentState,
-            transferActions = editTransferActions,
+        DepositContent(
+            depositState = depositContentState,
+            depositActions = depositContentActions,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -116,7 +124,7 @@ fun EditTransferScreen(
             if (isAfterToday) {
                 context.getString(R.string.cannot_select_future_date).showMessageWithToast(context)
             } else {
-                transactionDate = selectedDate.toString()
+                depositDate = selectedDate.toString()
             }
         },
         config = CalendarConfig(
@@ -126,18 +134,17 @@ fun EditTransferScreen(
     )
 }
 
-data class EditTransferState(
-    val id: Long,
-    val date: String,
-    val amount: Long,
-    val sourceId: Int,
-    val sourceName: String,
-    val destinationId: Int,
-    val destinationName: String,
-    val editResult: DatabaseResultMessage?
+data class DepositState(
+    val destination: Pair<Long, String>,
+    val source: Pair<Int, String>,
+    val fixDestinationId: Long?,
+    val fixDestinationName: String?,
+    val addResult: DatabaseResultMessage?
 )
 
-interface EditTransferActions {
+interface DepositActions {
     fun onNavigateBack()
-    fun onEditTransfer(transferState: EditTransferContentState)
+    fun onNavigateToDestination()
+    fun onNavigateToSource()
+    fun onAddNewDeposit(depositState: DepositContentState)
 }

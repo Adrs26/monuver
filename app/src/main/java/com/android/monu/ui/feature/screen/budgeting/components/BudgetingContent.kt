@@ -1,7 +1,6 @@
 package com.android.monu.ui.feature.screen.budgeting.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.budget.Budget
 import com.android.monu.ui.feature.components.CommonLottieAnimation
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun BudgetingContent(
@@ -93,7 +93,7 @@ fun BudgetListContent(
 
             BudgetListItem(
                 budgetState = budgetState,
-                modifier = Modifier.clickable { onNavigateToBudgetDetail(budgetState.id) }
+                modifier = Modifier.debouncedClickable { onNavigateToBudgetDetail(budgetState.id) }
             )
         }
     }

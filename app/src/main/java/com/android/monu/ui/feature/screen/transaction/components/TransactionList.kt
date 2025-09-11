@@ -1,6 +1,5 @@
 package com.android.monu.ui.feature.screen.transaction.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +18,7 @@ import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.components.TransactionListItem
 import com.android.monu.ui.feature.components.TransactionListItemState
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun TransactionList(
@@ -50,14 +50,15 @@ fun TransactionList(
                             childCategory = transaction.childCategory,
                             date = transaction.date,
                             amount = transaction.amount,
-                            sourceName = transaction.sourceName
+                            sourceName = transaction.sourceName,
+                            isLocked = transaction.isLocked
                         )
 
                         TransactionListItem(
                             transactionState = transactionState,
                             modifier = Modifier
                                 .animateItem()
-                                .clickable { onNavigateToTransactionDetail(transactionState.id) }
+                                .debouncedClickable { onNavigateToTransactionDetail(transactionState.id) }
                                 .padding(horizontal = 16.dp, vertical = 2.dp)
                         )
                     }

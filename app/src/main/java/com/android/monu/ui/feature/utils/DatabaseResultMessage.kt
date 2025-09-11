@@ -42,5 +42,9 @@ sealed class DatabaseResultMessage(val message: Int) {
     object EmptySaveTargetAmount : DatabaseResultMessage(R.string.empty_save_target_amount)
     object EmptySaveTargetDate : DatabaseResultMessage(R.string.empty_save_target_date)
     object CreateSaveSuccess : DatabaseResultMessage(R.string.save_successfully_added)
-    object UpdateSaveSuccess : DatabaseResultMessage(R.string.save_successfully_saved)
+    object EmptyAddSaveDestination : DatabaseResultMessage(R.string.empty_add_save_destination)
+    object EmptyAddSaveDate : DatabaseResultMessage(R.string.empty_add_save_date)
+    object EmptyAddSaveAmount : DatabaseResultMessage(R.string.empty_add_save_amount)
+    object EmptyAddSaveSource : DatabaseResultMessage(R.string.empty_add_save_source)
+    object AddSaveAmountSuccess : DatabaseResultMessage(R.string.save_amount_successfully_added)
 }

@@ -15,6 +15,8 @@ interface FinanceRepository {
 
     suspend fun createTransferTransaction(transaction: Transaction): Long
 
+    suspend fun createDepositTransaction(saveId: Long, transaction: Transaction)
+
     suspend fun deleteIncomeTransaction(id: Long, sourceId: Int, amount: Long): Int
 
     suspend fun deleteExpenseTransaction(
@@ -41,8 +43,6 @@ interface FinanceRepository {
         initialAmount: Long,
         budgetStatus: BudgetStatus
     ): Int
-
-    suspend fun updateTransferTransaction(transaction: Transaction, initialAmount: Long): Int
 
     suspend fun payBill(
         billId: Long,

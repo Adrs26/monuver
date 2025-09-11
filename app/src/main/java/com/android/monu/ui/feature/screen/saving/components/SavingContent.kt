@@ -1,7 +1,6 @@
 package com.android.monu.ui.feature.screen.saving.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.save.Save
 import com.android.monu.ui.feature.components.CommonLottieAnimation
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun SavingContent(
@@ -81,7 +81,7 @@ fun SaveListContent(
 
             SaveListItem(
                 save = saveState,
-                modifier = Modifier.clickable { onNavigateToSaveDetail(saveState.id) }
+                modifier = Modifier.debouncedClickable { onNavigateToSaveDetail(saveState.id) }
             )
         }
     }

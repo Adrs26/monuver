@@ -43,6 +43,14 @@ interface TransactionDao {
 
     @Query("""
         SELECT * 
+        FROM `transaction` 
+        WHERE saveId = :saveId
+        ORDER BY date DESC, timeStamp DESC
+    """)
+    fun getTransactionsBySaveId(saveId: Long): Flow<List<TransactionEntity>>
+
+    @Query("""
+        SELECT * 
         FROM `transaction`
         WHERE parentCategory = :category AND date BETWEEN :startDate AND :endDate
         ORDER BY date DESC, timeStamp DESC

@@ -18,6 +18,7 @@ import com.android.monu.domain.usecase.budget.GetBudgetSummaryUseCase
 import com.android.monu.domain.usecase.budget.HandleExpiredBudgetUseCase
 import com.android.monu.domain.usecase.budget.UpdateBudgetUseCase
 import com.android.monu.domain.usecase.finance.CreateAccountUseCase
+import com.android.monu.domain.usecase.finance.CreateDepositTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateIncomeTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateTransferTransactionUseCase
@@ -27,12 +28,12 @@ import com.android.monu.domain.usecase.finance.DeleteTransferTransactionUseCase
 import com.android.monu.domain.usecase.finance.PayBillUseCase
 import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.UpdateIncomeTransactionUseCase
-import com.android.monu.domain.usecase.finance.UpdateTransferTransactionUseCase
 import com.android.monu.domain.usecase.save.CreateSaveUseCase
 import com.android.monu.domain.usecase.save.GetAllSavesUseCase
 import com.android.monu.domain.usecase.save.GetSaveByIdUseCase
 import com.android.monu.domain.usecase.save.GetTotalSaveCurrentAmountUseCase
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsByCategoryUseCase
+import com.android.monu.domain.usecase.transaction.GetAllTransactionsBySaveIdUseCase
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsUseCase
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
 import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
@@ -51,6 +52,7 @@ val domainModule = module {
     factoryOf(::GetRecentTransactionsUseCase)
     factoryOf(::GetAllTransactionsUseCase)
     factoryOf(::GetAllTransactionsByCategoryUseCase)
+    factoryOf(::GetAllTransactionsBySaveIdUseCase)
     factoryOf(::GetTransactionByIdUseCase)
     factoryOf(::GetTransactionsByCategoryAndDateRangeUseCase)
     factoryOf(::GetDistinctTransactionYearsUseCase)
@@ -62,13 +64,13 @@ val domainModule = module {
     factoryOf(::CreateIncomeTransactionUseCase)
     factoryOf(::CreateExpenseTransactionUseCase)
     factoryOf(::CreateTransferTransactionUseCase)
+    factoryOf(::CreateDepositTransactionUseCase)
     factoryOf(::DeleteIncomeTransactionUseCase)
     factoryOf(::DeleteExpenseTransactionUseCase)
     factoryOf(::DeleteTransferTransactionUseCase)
     factoryOf(::PayBillUseCase)
     factoryOf(::UpdateIncomeTransactionUseCase)
     factoryOf(::UpdateExpenseTransactionUseCase)
-    factoryOf(::UpdateTransferTransactionUseCase)
 
     factoryOf(::CreateBudgetUseCase)
     factoryOf(::DeleteBudgetUseCase)

@@ -30,6 +30,7 @@ fun HomeMenuButtonBar(
     onNavigateToAddIncomeTransaction: () -> Unit,
     onNavigateToAddExpenseTransaction: () -> Unit,
     onNavigateToTransfer: () -> Unit,
+    onNavigateToAddSaveAmount: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -40,7 +41,7 @@ fun HomeMenuButtonBar(
             icon = painterResource(R.drawable.ic_arrow_upward),
             iconColor = Green600,
             title = stringResource(R.string.income),
-            onClick = { onNavigateToAddIncomeTransaction() },
+            onClick = onNavigateToAddIncomeTransaction,
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f)
@@ -49,7 +50,7 @@ fun HomeMenuButtonBar(
             icon = painterResource(R.drawable.ic_arrow_downward),
             iconColor = Red600,
             title = stringResource(R.string.expense),
-            onClick = { onNavigateToAddExpenseTransaction() },
+            onClick = onNavigateToAddExpenseTransaction,
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f)
@@ -58,13 +59,13 @@ fun HomeMenuButtonBar(
             icon = painterResource(R.drawable.ic_compare_arrows),
             iconColor = Blue800,
             title = stringResource(R.string.transfer),
-            onClick = { onNavigateToTransfer() },
+            onClick = onNavigateToTransfer,
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f)
         )
         SavingMenuButton(
-            onClick = { },
+            onClick = onNavigateToAddSaveAmount,
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f)

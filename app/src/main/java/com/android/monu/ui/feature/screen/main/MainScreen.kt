@@ -69,6 +69,7 @@ import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction
 import com.android.monu.ui.navigation.MainBilling
 import com.android.monu.ui.navigation.MainBudgetDetail
+import com.android.monu.ui.navigation.MainDeposit
 import com.android.monu.ui.navigation.MainInactiveBudget
 import com.android.monu.ui.navigation.MainSaving
 import com.android.monu.ui.navigation.MainTransactionDetail
@@ -201,6 +202,10 @@ fun MainScreen(
 
                     override fun onNavigateToTransfer() {
                         rootNavController.navigate(Transfer)
+                    }
+
+                    override fun onNavigateToAddSaveAmount() {
+                        rootNavController.navigate(MainDeposit())
                     }
 
                     override fun onNavigateToTransaction() {

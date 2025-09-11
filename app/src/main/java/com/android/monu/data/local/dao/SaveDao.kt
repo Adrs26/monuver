@@ -21,4 +21,18 @@ interface SaveDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createNewSave(save: SaveEntity)
+
+    @Query("""
+        UPDATE save
+        SET currentAmount = currentAmount + :delta 
+        WHERE id = :saveId
+    """)
+    suspend fun increaseSaveCurrentAmount(saveId: Long, delta: Long)
+
+    @Query("""
+        UPDATE save
+        SET currentAmount = currentAmount - :delta 
+        WHERE id = :saveId
+    """)
+    suspend fun decreaseSaveCurrentAmount(saveId: Long, delta: Long)
 }

@@ -151,14 +151,12 @@
     <string name="source_account">Akun sumber</string>
     <string name="destination_account">Akun tujuan</string>
     <string name="choose_transfer_date">Pilih tanggal transfer</string>
-    <string name="edit_transfer">Edit transfer</string>
     <string name="choose_source_account">Pilih akun sumber</string>
     <string name="choose_destination_account">Pilih akun tujuan</string>
     <string name="sub_category">Sub-kategori</string>
     <string name="cycle">Siklus</string>
     <string name="maximum_amount">Saldo maksimal</string>
     <string name="used">Terpakai</string>
-    <string name="remain">Tersisa</string>
     <string name="saving">Tabungan</string>
     <string name="see_all">Lihat semua</string>
     <string name="budgeting_recap">Rekap budget periode ini</string>
@@ -273,4 +271,13 @@
     <string name="saved">Terkumpul</string>
     <string name="target">Target</string>
     <string name="save_detail">Detail tabungan</string>
+    <string name="choose_saving">Pilih tabungan</string>
+    <string name="add_save_balance">Tambah saldo tabungan</string>
+    <string name="empty_add_save_destination">Tabungan tidak boleh kosong</string>
+    <string name="empty_add_save_date">Tanggal transaksi tidak boleh kosong</string>
+    <string name="empty_add_save_amount">Nominal transaksi tidak boleh kosong</string>
+    <string name="empty_add_save_source">Sumber dana tidak boleh kosong</string>
+    <string name="save_amount_successfully_added">Saldo tabungan berhasil ditambahkan</string>
+    <string name="add_amount">Tambah saldo</string>
+    <string name="withdraw_amount">Tarik saldo</string>
 </resources>

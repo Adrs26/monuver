@@ -1,7 +1,6 @@
 package com.android.monu.ui.feature.screen.saving.savedetail.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,17 +20,23 @@ import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.components.TransactionListItem
 import com.android.monu.ui.feature.components.TransactionListItemState
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun SaveDetailContent(
     saveState: Save,
     transactions: List<Transaction>,
+    onAddAmountClick: () -> Unit,
+    onWithdrawAmountClick: () -> Unit,
+    onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when  {
         transactions.isEmpty() -> {
             SaveDetailEmptyListContent(
                 saveState = saveState,
+                onAddAmountClick = onAddAmountClick,
+                onWithdrawAmountClick = onWithdrawAmountClick,
                 modifier = modifier
                     .padding(horizontal = 16.dp)
                     .padding(top = 8.dp)
@@ -41,6 +46,9 @@ fun SaveDetailContent(
             SaveDetailListContent(
                 saveState = saveState,
                 transactions = transactions,
+                onAddAmountClick = onAddAmountClick,
+                onWithdrawAmountClick = onWithdrawAmountClick,
+                onNavigateToTransactionDetail = onNavigateToTransactionDetail,
                 modifier = modifier.padding(top = 8.dp)
             )
         }
@@ -51,6 +59,9 @@ fun SaveDetailContent(
 fun SaveDetailListContent(
     saveState: Save,
     transactions: List<Transaction>,
+    onAddAmountClick: () -> Unit,
+    onWithdrawAmountClick: () -> Unit,
+    onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -74,6 +85,8 @@ fun SaveDetailListContent(
         }
         item {
             SaveDetailButtonBar(
+                onAddAmountClick = onAddAmountClick,
+                onWithdrawAmountClick = onWithdrawAmountClick,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -97,14 +110,16 @@ fun SaveDetailListContent(
                 childCategory = transaction.childCategory,
                 date = transaction.date,
                 amount = transaction.amount,
-                sourceName = transaction.sourceName
+                sourceName = transaction.sourceName,
+                isLocked = transaction.isLocked
             )
 
             TransactionListItem(
                 transactionState = transactionState,
                 modifier = Modifier
-                    .clickable {  }
-                    .padding(horizontal = 16.dp, vertical = 2.dp)
+                    .debouncedClickable { onNavigateToTransactionDetail(transactionState.id) }
+                    .padding(horizontal = 16.dp, vertical = 2.dp),
+                isDepositOrWithdraw = true
             )
         }
     }
@@ -113,6 +128,8 @@ fun SaveDetailListContent(
 @Composable
 fun SaveDetailEmptyListContent(
     saveState: Save,
+    onAddAmountClick: () -> Unit,
+    onWithdrawAmountClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -131,6 +148,8 @@ fun SaveDetailEmptyListContent(
             modifier = Modifier.padding(top = 8.dp)
         )
         SaveDetailButtonBar(
+            onAddAmountClick = onAddAmountClick,
+            onWithdrawAmountClick = onWithdrawAmountClick,
             modifier = Modifier.padding(top = 8.dp)
         )
         Text(

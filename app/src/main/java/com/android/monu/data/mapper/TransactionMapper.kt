@@ -26,7 +26,8 @@ object TransactionMapper {
             sourceName = transactionEntity.sourceName,
             destinationId = transactionEntity.destinationId,
             destinationName = transactionEntity.destinationName,
-            saveId = transactionEntity.saveId
+            saveId = transactionEntity.saveId,
+            isLocked = transactionEntity.isLocked
         )
     }
 
@@ -47,7 +48,8 @@ object TransactionMapper {
             sourceName = transaction.sourceName,
             destinationId = transaction.destinationId,
             destinationName = transaction.destinationName,
-            saveId = transaction.saveId
+            saveId = transaction.saveId,
+            isLocked = transaction.isLocked
         )
     }
 
@@ -69,7 +71,8 @@ object TransactionMapper {
             sourceName = transaction.sourceName,
             destinationId = transaction.destinationId,
             destinationName = transaction.destinationName,
-            saveId = transaction.saveId
+            saveId = transaction.saveId,
+            isLocked = transaction.isLocked
         )
     }
 

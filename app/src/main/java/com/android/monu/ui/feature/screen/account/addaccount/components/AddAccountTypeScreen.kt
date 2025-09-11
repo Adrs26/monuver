@@ -27,7 +27,7 @@ import com.android.monu.ui.feature.utils.DataProvider
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 
 @Composable
-fun AccountTypeScreen(
+fun AddAccountTypeScreen(
     onNavigateBack: () -> Unit,
     onTypeSelect: (Int) -> Unit
 ) {

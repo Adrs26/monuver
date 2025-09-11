@@ -1,6 +1,5 @@
 package com.android.monu.ui.feature.screen.analytics.analyticscategorytransaction
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +13,7 @@ import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.components.TransactionListItem
 import com.android.monu.ui.feature.components.TransactionListItemState
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun AnalyticsCategoryTransactionScreen(
@@ -47,13 +47,14 @@ fun AnalyticsCategoryTransactionScreen(
                     childCategory = transactions[index].childCategory,
                     date = transactions[index].date,
                     amount = transactions[index].amount,
-                    sourceName = transactions[index].sourceName
+                    sourceName = transactions[index].sourceName,
+                    isLocked = transactions[index].isLocked
                 )
 
                 TransactionListItem(
                     transactionState = transactionState,
                     modifier = Modifier
-                        .clickable { onNavigateToTransactionDetail(transactionState.id) }
+                        .debouncedClickable { onNavigateToTransactionDetail(transactionState.id) }
                         .padding(horizontal = 16.dp, vertical = 2.dp)
                 )
             }
