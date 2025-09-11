@@ -18,9 +18,9 @@ class BudgetRepositoryImpl(
 ) : BudgetRepository {
 
     override fun getAllActiveBudgets(): Flow<List<Budget>> {
-        return budgetDao.getAllActiveBudgets().map { entityList ->
-            entityList.map { entity ->
-                BudgetMapper.budgetEntityToDomain(entity)
+        return budgetDao.getAllActiveBudgets().map { budgets ->
+            budgets.map { budget ->
+                BudgetMapper.budgetEntityToDomain(budget)
             }
         }
     }
@@ -36,15 +36,15 @@ class BudgetRepositoryImpl(
             }
         ).flow
             .map { pagingData ->
-                pagingData.map { entity ->
-                    BudgetMapper.budgetEntityToDomain(entity)
+                pagingData.map { budget ->
+                    BudgetMapper.budgetEntityToDomain(budget)
                 }
             }.cachedIn(scope)
     }
 
     override fun getBudgetById(id: Long): Flow<Budget?> {
-        return budgetDao.getBudgetById(id).map { entity ->
-            BudgetMapper.budgetEntityToDomain(entity ?: return@map null)
+        return budgetDao.getBudgetById(id).map { budget ->
+            budget?.let { BudgetMapper.budgetEntityToDomain(it) }
         }
     }
 
@@ -68,8 +68,8 @@ class BudgetRepositoryImpl(
         category: Int,
         date: String
     ): Budget? {
-        return budgetDao.getBudgetForDate(category, date)?.let { entity ->
-            BudgetMapper.budgetEntityToDomain(entity)
+        return budgetDao.getBudgetForDate(category, date)?.let { budget ->
+            BudgetMapper.budgetEntityToDomain(budget)
         }
     }
 

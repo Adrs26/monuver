@@ -10,11 +10,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.monu.R
+import com.android.monu.domain.model.save.Save
+import com.android.monu.ui.feature.utils.DateHelper
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.ChronoUnit
 
 @Composable
 fun SaveDetailMainOverview(
+    title: String,
+    targetDate: String,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -32,11 +41,15 @@ fun SaveDetailMainOverview(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Macbook Pro",
+                text = title,
                 style = MaterialTheme.typography.labelMedium
             )
             Text(
-                text = "26 September 2025 (17 hari menuju target)",
+                text = stringResource(
+                    R.string.save_target_date_information,
+                    DateHelper.formatDateToReadable(targetDate),
+                    getDayDifference(targetDate)
+                ),
                 modifier = Modifier.padding(top = 4.dp),
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -44,5 +57,20 @@ fun SaveDetailMainOverview(
                 )
             )
         }
+    }
+}
+
+@Composable
+private fun getDayDifference(inputDate: String): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val tanggalInput = LocalDate.parse(inputDate, formatter)
+    val today = LocalDate.now()
+
+    val dayDifference = ChronoUnit.DAYS.between(today, tanggalInput).toInt()
+
+    return when {
+        dayDifference > 0 -> stringResource(R.string.day_before_target, dayDifference)
+        dayDifference < 0 -> stringResource(R.string.day_after_target, -dayDifference)
+        else -> stringResource(R.string.today_is_target)
     }
 }

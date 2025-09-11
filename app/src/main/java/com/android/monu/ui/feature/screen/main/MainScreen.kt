@@ -310,6 +310,7 @@ fun MainScreen(
             }
             composable<Analytics> {
                 val viewModel = koinViewModel<AnalyticsViewModel>()
+                val themeSetting by viewModel.themeSetting.collectAsStateWithLifecycle()
                 val filter by viewModel.filterState.collectAsStateWithLifecycle()
                 val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
                 val amountSummary by viewModel.transactionAmountSummary
@@ -358,7 +359,8 @@ fun MainScreen(
 
                 AnalyticsScreen(
                     analyticsState = analyticsState,
-                    analyticsActions = analyticsActions
+                    analyticsActions = analyticsActions,
+                    themeSetting = themeSetting
                 )
             }
         }

@@ -2,6 +2,8 @@ package com.android.monu.ui.feature.screen.analytics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.monu.data.datastore.ThemeSetting
+import com.android.monu.data.datastore.UserPreference
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionBalanceSummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
@@ -18,11 +20,15 @@ import kotlinx.coroutines.flow.update
 import org.threeten.bp.LocalDate
 
 class AnalyticsViewModel(
+    preference: UserPreference,
     getDistinctTransactionYearsUseCase: GetDistinctTransactionYearsUseCase,
     private val getTransactionBalanceSummaryUseCase: GetTransactionBalanceSummaryUseCase,
     private val getTransactionCategorySummaryUseCase: GetTransactionCategorySummaryUseCase,
     private val getTransactionSummaryUseCase: GetTransactionSummaryUseCase
 ) : ViewModel() {
+
+    val themeSetting = preference.themeSetting
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ThemeSetting.SYSTEM)
 
     private val _filterState = MutableStateFlow(AnalyticsFilterState())
     val filterState = _filterState.asStateFlow()

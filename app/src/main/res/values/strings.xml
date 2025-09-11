@@ -256,4 +256,21 @@
     <string name="save_total_balance">Total saldo tabungan</string>
     <string name="bill">Tagihan</string>
     <string name="list_active_save">Daftar tabungan aktif</string>
+    <string name="add_save">Tambah tabungan</string>
+    <string name="enter_save_title">Masukkan judul tabungan</string>
+    <string name="target_date">Target tanggal</string>
+    <string name="choose_target_date">Pilih target tanggal</string>
+    <string name="target_amount">Target saldo</string>
+    <string name="empty_save_title">Judul tabungan tidak boleh kosong</string>
+    <string name="empty_save_target_amount">Target saldo tabungan tidak boleh kosong</string>
+    <string name="empty_save_target_date">Target tanggal tabungan tidak boleh kosong</string>
+    <string name="save_successfully_added">Tabungan berhasil ditambahkan</string>
+    <string name="save_successfully_saved">Tabungan berhasil disimpan</string>
+    <string name="day_before_target">%1$s hari menuju target</string>
+    <string name="day_after_target">%1$s hari melewati target</string>
+    <string name="today_is_target">Hari ini adalah target</string>
+    <string name="save_target_date_information">%1$s (%2$s)</string>
+    <string name="saved">Terkumpul</string>
+    <string name="target">Target</string>
+    <string name="save_detail">Detail tabungan</string>
 </resources>

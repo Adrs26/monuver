@@ -20,9 +20,9 @@ class TransactionRepositoryImpl(
 ) : TransactionRepository {
 
     override fun getRecentTransactions(): Flow<List<Transaction>> {
-        return transactionDao.getRecentTransactions().map { entityList ->
-            entityList.map { entity ->
-                TransactionMapper.transactionEntityToDomain(entity)
+        return transactionDao.getRecentTransactions().map { transactions ->
+            transactions.map { transaction ->
+                TransactionMapper.transactionEntityToDomain(transaction)
             }
         }
     }
@@ -49,15 +49,15 @@ class TransactionRepositoryImpl(
             }
         ).flow
             .map { pagingData ->
-                pagingData.map { entity ->
-                    TransactionMapper.transactionEntityToDomain(entity)
+                pagingData.map { transaction ->
+                    TransactionMapper.transactionEntityToDomain(transaction)
                 }
             }.cachedIn(scope)
     }
 
     override fun getTransactionById(transactionId: Long): Flow<Transaction?> {
-        return transactionDao.getTransactionById(transactionId).map { entity ->
-            TransactionMapper.transactionEntityToDomain(entity ?: return@map null)
+        return transactionDao.getTransactionById(transactionId).map { transaction ->
+            transaction?.let { TransactionMapper.transactionEntityToDomain(it) }
         }
     }
 
@@ -68,9 +68,9 @@ class TransactionRepositoryImpl(
     ): Flow<List<Transaction>> {
         return transactionDao.getTransactionsByParentCategoryAndDateRange(
             category, startDate, endDate
-        ).map { entityList ->
-            entityList.map { entity ->
-                TransactionMapper.transactionEntityToDomain(entity)
+        ).map { transactions ->
+            transactions.map { transaction ->
+                TransactionMapper.transactionEntityToDomain(transaction)
             }
         }
     }
@@ -82,9 +82,9 @@ class TransactionRepositoryImpl(
     ): Flow<List<Transaction>> {
         return transactionDao.getTransactionsByParentCategoryAndMonthAndYear(
             category, month, year
-        ).map { entityList ->
-            entityList.map { entity ->
-                TransactionMapper.transactionEntityToDomain(entity)
+        ).map { transactions ->
+            transactions.map { transaction ->
+                TransactionMapper.transactionEntityToDomain(transaction)
             }
         }
     }
@@ -111,9 +111,9 @@ class TransactionRepositoryImpl(
         year: Int
     ): Flow<List<TransactionCategorySummary>> {
         return transactionDao.getGroupedMonthlyTransactionAmountByParentCategory(type, month, year)
-            .map { entityList ->
-                entityList.map { entity ->
-                    TransactionMapper.transactionCategorySummaryEntityToDomain(entity)
+            .map { transactions ->
+                transactions.map { transaction ->
+                    TransactionMapper.transactionCategorySummaryEntityToDomain(transaction)
                 }
             }
     }
@@ -122,9 +122,9 @@ class TransactionRepositoryImpl(
         startDate: String,
         endDate: String
     ): Flow<List<TransactionSummary>> {
-        return transactionDao.getTransactionsInRange(startDate, endDate).map { entityList ->
-            entityList.map { entity ->
-                TransactionMapper.transactionSummaryEntityToDomain(entity)
+        return transactionDao.getTransactionsInRange(startDate, endDate).map { transactions ->
+            transactions.map { transaction ->
+                TransactionMapper.transactionSummaryEntityToDomain(transaction)
             }
         }
     }

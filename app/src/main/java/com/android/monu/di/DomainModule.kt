@@ -28,6 +28,10 @@ import com.android.monu.domain.usecase.finance.PayBillUseCase
 import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.UpdateIncomeTransactionUseCase
 import com.android.monu.domain.usecase.finance.UpdateTransferTransactionUseCase
+import com.android.monu.domain.usecase.save.CreateSaveUseCase
+import com.android.monu.domain.usecase.save.GetAllSavesUseCase
+import com.android.monu.domain.usecase.save.GetSaveByIdUseCase
+import com.android.monu.domain.usecase.save.GetTotalSaveCurrentAmountUseCase
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsByCategoryUseCase
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsUseCase
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
@@ -82,4 +86,9 @@ val domainModule = module {
     factoryOf(::GetDueBillsUseCase)
     factoryOf(::GetPaidBillsUseCase)
     factoryOf(::UpdateBillUseCase)
+
+    factoryOf(::CreateSaveUseCase)
+    factoryOf(::GetAllSavesUseCase)
+    factoryOf(::GetSaveByIdUseCase)
+    factoryOf(::GetTotalSaveCurrentAmountUseCase)
 }

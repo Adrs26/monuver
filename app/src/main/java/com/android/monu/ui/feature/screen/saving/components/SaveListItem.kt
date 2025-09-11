@@ -27,12 +27,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
+import com.android.monu.domain.model.save.Save
 import com.android.monu.ui.feature.screen.budgeting.components.calculateProgressBar
+import com.android.monu.ui.feature.utils.DateHelper
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.theme.Blue800
 
 @Composable
 fun SaveListItem(
+    save: Save,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -42,8 +45,8 @@ fun SaveListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         SaveListItemIcon(
-            currentAmount = 1000000,
-            targetAmount = 2000000
+            currentAmount = save.currentAmount,
+            targetAmount = save.targetAmount
         )
         Column(
             modifier = Modifier
@@ -51,7 +54,7 @@ fun SaveListItem(
                 .weight(1f)
         ) {
             Text(
-                text = "Macbook Pro",
+                text = save.title,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 style = MaterialTheme.typography.labelMedium.copy(
@@ -59,7 +62,7 @@ fun SaveListItem(
                 )
             )
             Text(
-                text = "26 September 2025",
+                text = DateHelper.formatDateToReadable(save.targetDate),
                 modifier = Modifier.padding(top = 4.dp),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -73,7 +76,7 @@ fun SaveListItem(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(1000000),
+                    text = NumberFormatHelper.formatToRupiah(save.currentAmount),
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 13.sp
@@ -87,7 +90,7 @@ fun SaveListItem(
                     color = Color.Gray
                 )
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(2000000),
+                    text = NumberFormatHelper.formatToRupiah(save.targetAmount),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     style = MaterialTheme.typography.labelSmall.copy(

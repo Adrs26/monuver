@@ -23,11 +23,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
+import com.android.monu.ui.feature.screen.budgeting.components.calculateProgressBar
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.theme.Blue800
 
 @Composable
 fun SaveDetailAmountOverview(
+    currentAmount: Long,
+    targetAmount: Long,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -48,7 +51,7 @@ fun SaveDetailAmountOverview(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 LinearProgressIndicator(
-                    progress = { 0.5f },
+                    progress = { calculateProgressBar(currentAmount, targetAmount) },
                     modifier = Modifier
                         .weight(0.8f)
                         .clip(CircleShape)
@@ -62,7 +65,7 @@ fun SaveDetailAmountOverview(
                 Text(
                     text = stringResource(
                         R.string.percentage_value,
-                        NumberFormatHelper.formatToPercentageValue(1000000, 2000000)
+                        NumberFormatHelper.formatToPercentageValue(currentAmount, targetAmount)
                     ),
                     modifier = Modifier.padding(start = 16.dp),
                     style = MaterialTheme.typography.labelSmall.copy(
@@ -75,7 +78,7 @@ fun SaveDetailAmountOverview(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Terkumpul",
+                    text = stringResource(R.string.saved),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
@@ -83,7 +86,7 @@ fun SaveDetailAmountOverview(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "Target",
+                    text = stringResource(R.string.target),
                     style = MaterialTheme.typography.labelSmall.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         fontSize = 12.sp
@@ -95,12 +98,12 @@ fun SaveDetailAmountOverview(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(1000000),
+                    text = NumberFormatHelper.formatToRupiah(currentAmount),
                     style = MaterialTheme.typography.labelMedium.copy(fontSize = 13.sp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(2000000),
+                    text = NumberFormatHelper.formatToRupiah(targetAmount),
                     style = MaterialTheme.typography.labelMedium.copy(fontSize = 13.sp)
                 )
             }

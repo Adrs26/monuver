@@ -18,6 +18,7 @@ import com.android.monu.ui.feature.utils.NumberFormatHelper
 
 @Composable
 fun SaveOverview(
+    totalCurrentAmount: Long,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -39,7 +40,7 @@ fun SaveOverview(
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
             )
             Text(
-                text = NumberFormatHelper.formatToRupiah(10_000_000),
+                text = NumberFormatHelper.formatToRupiah(totalCurrentAmount),
                 modifier = Modifier.padding(top = 4.dp),
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 24.sp)
             )

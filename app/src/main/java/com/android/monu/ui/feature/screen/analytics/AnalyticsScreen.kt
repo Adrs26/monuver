@@ -11,6 +11,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.domain.model.transaction.TransactionBalanceSummary
 import com.android.monu.domain.model.transaction.TransactionCategorySummary
 import com.android.monu.domain.model.transaction.TransactionDailySummary
@@ -25,6 +26,7 @@ import com.android.monu.ui.feature.screen.analytics.components.AnalyticsPieChart
 fun AnalyticsScreen(
     analyticsState: AnalyticsState,
     analyticsActions: AnalyticsActions,
+    themeSetting: ThemeSetting
 ) {
     val analyticsBarChartState = AnalyticsBarChartState(
         monthFilter = analyticsState.monthFilter,
@@ -59,6 +61,7 @@ fun AnalyticsScreen(
         ) {
             AnalyticsBalanceOverview(
                 amountSummary = analyticsState.amountSummary,
+                themeSetting = themeSetting,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .padding(top = 8.dp)

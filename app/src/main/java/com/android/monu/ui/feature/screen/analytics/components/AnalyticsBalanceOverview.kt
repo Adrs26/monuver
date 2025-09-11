@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.domain.model.transaction.TransactionBalanceSummary
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.theme.Green100
@@ -27,6 +28,7 @@ import com.android.monu.ui.theme.Red600
 @Composable
 fun AnalyticsBalanceOverview(
     amountSummary: TransactionBalanceSummary,
+    themeSetting: ThemeSetting,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -36,14 +38,14 @@ fun AnalyticsBalanceOverview(
     ) {
         BalanceData(
             title = stringResource(R.string.total_income),
-            containerColor = if (isSystemInDarkTheme()) Green600 else Green100,
+            containerColor = changeIncomeContainerColor(themeSetting),
             totalAmount = amountSummary.totalIncomeAmount,
             averageAmount = amountSummary.averageIncomeAmount,
             modifier = Modifier.weight(1f)
         )
         BalanceData(
             title = stringResource(R.string.total_expense),
-            containerColor = if (isSystemInDarkTheme()) Red600 else Red100,
+            containerColor = changeExpenseContainerColor(themeSetting),
             totalAmount = amountSummary.totalExpenseAmount,
             averageAmount = amountSummary.averageExpenseAmount,
             modifier = Modifier.weight(1f)
@@ -87,6 +89,28 @@ fun BalanceData(
                 modifier = Modifier.padding(top = 2.dp),
                 style = MaterialTheme.typography.labelMedium
             )
+        }
+    }
+}
+
+@Composable
+private fun changeIncomeContainerColor(themeSetting: ThemeSetting): Color {
+    return when (themeSetting) {
+        ThemeSetting.LIGHT -> Green100
+        ThemeSetting.DARK -> Green600
+        ThemeSetting.SYSTEM -> {
+            if (isSystemInDarkTheme()) Green600 else Green100
+        }
+    }
+}
+
+@Composable
+private fun changeExpenseContainerColor(themeSetting: ThemeSetting): Color {
+    return when (themeSetting) {
+        ThemeSetting.LIGHT -> Red100
+        ThemeSetting.DARK -> Red600
+        ThemeSetting.SYSTEM -> {
+            if (isSystemInDarkTheme()) Red600 else Red100
         }
     }
 }

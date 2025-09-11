@@ -44,8 +44,8 @@ class BillRepositoryImpl(
             }
         ).flow
             .map { pagingData ->
-                pagingData.map { entity ->
-                    BillMapper.billEntityToDomain(entity)
+                pagingData.map { bill ->
+                    BillMapper.billEntityToDomain(bill)
                 }
             }.cachedIn(scope)
     }

@@ -12,9 +12,9 @@ class AccountRepositoryImpl(
 ) : AccountRepository {
 
     override fun getAllAccounts(): Flow<List<Account>> {
-        return accountDao.getAllAccounts().map { entityList ->
-            entityList.map { entity ->
-                AccountMapper.accountEntityToDomain(entity)
+        return accountDao.getAllAccounts().map { accounts ->
+            accounts.map { account ->
+                AccountMapper.accountEntityToDomain(account)
             }
         }
     }

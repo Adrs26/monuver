@@ -3,7 +3,7 @@ package com.android.monu.data.local.entity.room
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "saving")
+@Entity(tableName = "save")
 data class SaveEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,

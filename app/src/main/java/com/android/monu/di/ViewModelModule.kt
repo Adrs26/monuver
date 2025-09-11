@@ -16,6 +16,9 @@ import com.android.monu.ui.feature.screen.budgeting.budgetdetail.BudgetDetailVie
 import com.android.monu.ui.feature.screen.budgeting.editbudget.EditBudgetViewModel
 import com.android.monu.ui.feature.screen.budgeting.inactivebudget.InactiveBudgetViewModel
 import com.android.monu.ui.feature.screen.home.HomeViewModel
+import com.android.monu.ui.feature.screen.saving.SavingViewModel
+import com.android.monu.ui.feature.screen.saving.addsave.AddSaveViewModel
+import com.android.monu.ui.feature.screen.saving.savedetail.SaveDetailViewModel
 import com.android.monu.ui.feature.screen.settings.SettingsViewModel
 import com.android.monu.ui.feature.screen.transaction.TransactionViewModel
 import com.android.monu.ui.feature.screen.transaction.addtransaction.AddTransactionViewModel
@@ -55,6 +58,10 @@ val viewModelModule = module {
     viewModelOf(::BillDetailViewModel)
     viewModelOf(::PayBillViewModel)
     viewModelOf(::EditBillViewModel)
+
+    viewModelOf(::SavingViewModel)
+    viewModelOf(::AddSaveViewModel)
+    viewModelOf(::SaveDetailViewModel)
 
     viewModelOf(::SettingsViewModel)
 }

@@ -62,4 +62,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable object Saving
 @Serializable object MainSaving
+@Serializable object AddSave
 @Serializable data class SaveDetail(val id: Long = 0)
