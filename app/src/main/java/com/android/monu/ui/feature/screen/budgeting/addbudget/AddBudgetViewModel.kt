@@ -14,7 +14,7 @@ class AddBudgetViewModel(
     private val createBudgetUseCase: CreateBudgetUseCase
 ) : ViewModel() {
 
-    private val _transactionCategory = MutableStateFlow<Int>(0)
+    private val _transactionCategory = MutableStateFlow(0)
     val transactionCategory = _transactionCategory.asStateFlow()
 
     private val _createResult = MutableStateFlow<DatabaseResultMessage?>(null)

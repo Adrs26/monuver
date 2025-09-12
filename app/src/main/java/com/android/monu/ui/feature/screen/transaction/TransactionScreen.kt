@@ -37,7 +37,7 @@ fun TransactionScreen(
     )
 
     LaunchedEffect(showFilterDialog) {
-        if (showFilterDialog == true) {
+        if (showFilterDialog) {
             transactionActions.onYearFilterOptionsRequest()
         }
     }

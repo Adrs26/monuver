@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.screen.transaction.transfer
+package com.android.monu.ui.feature.screen.saving.withdraw
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,9 +18,9 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
 import com.android.monu.ui.feature.components.CommonAppBar
-import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferContent
-import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferContentActions
-import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferContentState
+import com.android.monu.ui.feature.screen.saving.withdraw.components.WithdrawContent
+import com.android.monu.ui.feature.screen.saving.withdraw.components.WithdrawContentActions
+import com.android.monu.ui.feature.screen.saving.withdraw.components.WithdrawContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.feature.utils.showMessageWithToast
@@ -33,67 +33,63 @@ import org.threeten.bp.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransferScreen(
-    transferState: TransferState,
-    transferActions: TransferActions
+fun WithdrawScreen(
+    withdrawState: WithdrawState,
+    withdrawActions: WithdrawActions
 ) {
-    var transferDate by rememberSaveable { mutableStateOf("") }
-    var transferAmount by rememberSaveable { mutableLongStateOf(0L) }
-    var transferAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(transferAmount)))
+    var withdrawDate by rememberSaveable { mutableStateOf("") }
+    var withdrawAmount by rememberSaveable { mutableLongStateOf(0L) }
+    var withdrawAmountFormat by remember {
+        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(withdrawAmount)))
     }
 
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val transferContentState = TransferContentState(
-        sourceId = transferState.source.first,
-        sourceName = transferState.source.second,
-        destinationId = transferState.destination.first,
-        destinationName = transferState.destination.second,
-        date = transferDate,
-        amount = transferAmount,
-        amountFormat = transferAmountFormat
+    val withdrawContentState = WithdrawContentState(
+        date = withdrawDate,
+        amount = withdrawAmount,
+        amountFormat = withdrawAmountFormat,
+        accountId = withdrawState.account.first,
+        accountName = withdrawState.account.second,
+        saveId = withdrawState.save.first,
+        saveName = withdrawState.save.second
     )
 
-    val transferContentActions = object : TransferContentActions {
-        override fun onNavigateToSourceAccount() {
-            transferActions.onNavigateToSourceAccount()
-        }
-
-        override fun onNavigateToDestinationAccount() {
-            transferActions.onNavigateToDestinationAccount()
-        }
-
+    val withdrawContentActions = object : WithdrawContentActions {
         override fun onDateClick() {
             calendarState.show()
         }
 
         override fun onAmountChange(amountFormat: TextFieldValue) {
             val cleanInput = amountFormat.text.replace(Regex("\\D"), "")
-            transferAmount = try {
+            withdrawAmount = try {
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(transferAmount)
+            val formattedText = NumberFormatHelper.formatToRupiah(withdrawAmount)
             val newCursorPosition = formattedText.length
 
-            transferAmountFormat = TextFieldValue(
+            withdrawAmountFormat = TextFieldValue(
                 text = formattedText,
                 selection = TextRange(newCursorPosition)
             )
         }
 
-        override fun onAddNewTransfer(transferState: TransferContentState) {
-            transferActions.onAddNewTransfer(transferState)
+        override fun onNavigateToAccount() {
+            withdrawActions.onNavigateToAccount()
+        }
+
+        override fun onAddNewWithdraw(withdrawState: WithdrawContentState) {
+            withdrawActions.onAddNewWithdraw(withdrawState)
         }
     }
 
-    LaunchedEffect(transferState.addResult) {
-        transferState.addResult?.let { result ->
+    LaunchedEffect(withdrawState.addResult) {
+        withdrawState.addResult?.let { result ->
             context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CreateTransactionSuccess) {
-                transferActions.onNavigateBack()
+            if (result == DatabaseResultMessage.CreateWithdrawTransactionSuccess) {
+                withdrawActions.onNavigateBack()
             }
         }
     }
@@ -101,14 +97,14 @@ fun TransferScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = stringResource(R.string.transfer_account),
-                onNavigateBack = transferActions::onNavigateBack
+                title = stringResource(R.string.withdraw_save_balance),
+                onNavigateBack = withdrawActions::onNavigateBack
             )
         }
     ) { innerPadding ->
-        TransferContent(
-            transferState = transferContentState,
-            transferActions = transferContentActions,
+        WithdrawContent(
+            withdrawState = withdrawContentState,
+            withdrawActions = withdrawContentActions,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -122,7 +118,7 @@ fun TransferScreen(
             if (isAfterToday) {
                 context.getString(R.string.cannot_select_future_date).showMessageWithToast(context)
             } else {
-                transferDate = selectedDate.toString()
+                withdrawDate = selectedDate.toString()
             }
         },
         config = CalendarConfig(
@@ -132,15 +128,14 @@ fun TransferScreen(
     )
 }
 
-data class TransferState(
-    val source: Pair<Int, String>,
-    val destination: Pair<Int, String>,
-    val addResult: DatabaseResultMessage?,
+data class WithdrawState(
+    val account: Pair<Int, String>,
+    val save: Pair<Long, String>,
+    val addResult: DatabaseResultMessage?
 )
 
-interface TransferActions {
+interface WithdrawActions {
     fun onNavigateBack()
-    fun onNavigateToSourceAccount()
-    fun onNavigateToDestinationAccount()
-    fun onAddNewTransfer(transferState: TransferContentState)
+    fun onNavigateToAccount()
+    fun onAddNewWithdraw(withdrawState: WithdrawContentState)
 }

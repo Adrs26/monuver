@@ -24,10 +24,10 @@ class AddTransactionViewModel(
     val accounts = getAllAccountsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _transactionCategory = MutableStateFlow<Pair<Int, Int>>(Pair(0, 0))
+    private val _transactionCategory = MutableStateFlow(Pair(0, 0))
     val transactionCategory = _transactionCategory.asStateFlow()
 
-    private val _transactionSource = MutableStateFlow<Pair<Int, String>>(Pair(0, ""))
+    private val _transactionSource = MutableStateFlow(Pair(0, ""))
     val transactionSource = _transactionSource.asStateFlow()
 
     private val _createResult = MutableStateFlow<DatabaseResultMessage?>(null)

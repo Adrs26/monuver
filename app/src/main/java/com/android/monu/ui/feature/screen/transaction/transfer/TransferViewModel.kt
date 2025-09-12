@@ -22,10 +22,10 @@ class TransferViewModel(
     val accounts = getAllAccountsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _sourceAccount = MutableStateFlow<Pair<Int, String>>(Pair(0, ""))
+    private val _sourceAccount = MutableStateFlow(Pair(0, ""))
     val sourceAccount = _sourceAccount.asStateFlow()
 
-    private val _destinationAccount = MutableStateFlow<Pair<Int, String>>(Pair(0, ""))
+    private val _destinationAccount = MutableStateFlow(Pair(0, ""))
     val destinationAccount = _destinationAccount.asStateFlow()
 
     val selectedAccounts = combine(

@@ -62,6 +62,7 @@ import com.android.monu.ui.feature.screen.transaction.TransactionViewModel
 import com.android.monu.ui.feature.utils.TransactionType
 import com.android.monu.ui.navigation.Analytics
 import com.android.monu.ui.navigation.Budgeting
+import com.android.monu.ui.navigation.Deposit
 import com.android.monu.ui.navigation.Home
 import com.android.monu.ui.navigation.MainAccount
 import com.android.monu.ui.navigation.MainAddBudget
@@ -69,10 +70,9 @@ import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction
 import com.android.monu.ui.navigation.MainBilling
 import com.android.monu.ui.navigation.MainBudgetDetail
-import com.android.monu.ui.navigation.MainDeposit
 import com.android.monu.ui.navigation.MainInactiveBudget
-import com.android.monu.ui.navigation.MainSaving
 import com.android.monu.ui.navigation.MainTransactionDetail
+import com.android.monu.ui.navigation.Saving
 import com.android.monu.ui.navigation.Settings
 import com.android.monu.ui.navigation.Transaction
 import com.android.monu.ui.navigation.Transfer
@@ -181,7 +181,7 @@ fun MainScreen(
                     }
 
                     override fun onNavigateToSave() {
-                        rootNavController.navigate(MainSaving)
+                        rootNavController.navigate(Saving.Main)
                     }
 
                     override fun onNavigateToSettings() {
@@ -201,11 +201,11 @@ fun MainScreen(
                     }
 
                     override fun onNavigateToTransfer() {
-                        rootNavController.navigate(Transfer)
+                        rootNavController.navigate(Transfer.Main)
                     }
 
                     override fun onNavigateToAddSaveAmount() {
-                        rootNavController.navigate(MainDeposit())
+                        rootNavController.navigate(Deposit.Main())
                     }
 
                     override fun onNavigateToTransaction() {
@@ -407,7 +407,7 @@ fun MainScreen(
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             if (!sheetState.isVisible) {
                                 showBottomSheet = false
-                                rootNavController.navigate(Transfer)
+                                rootNavController.navigate(Transfer.Main)
                             }
                         }
                     }

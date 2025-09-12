@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.screen.saving.deposit.components
+package com.android.monu.ui.feature.screen.saving.withdraw.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,40 +25,23 @@ import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.utils.DateHelper
 
 @Composable
-fun DepositContent(
-    depositState: DepositContentState,
-    depositActions: DepositContentActions,
+fun WithdrawContent(
+    withdrawState: WithdrawContentState,
+    withdrawActions: WithdrawContentActions,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        if (depositState.fixSaveId != null && depositState.fixSaveName != null) {
-            StaticTextInputField(
-                title = stringResource(R.string.saving),
-                value = depositState.fixSaveName,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
-            )
-        } else {
-            TextInputField(
-                title = stringResource(R.string.saving),
-                value = depositState.saveName,
-                onValueChange = { },
-                placeholderText = stringResource(R.string.choose_saving),
-                modifier = Modifier
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = depositActions::onNavigateToSave
-                    )
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                isEnable = false
-            )
-        }
+        StaticTextInputField(
+            title = stringResource(R.string.saving),
+            value = withdrawState.saveName,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+        )
         TextDateInputField(
             title = stringResource(R.string.date),
-            value = DateHelper.formatDateToReadable(depositState.date),
+            value = DateHelper.formatDateToReadable(withdrawState.date),
             onValueChange = { },
             placeholderText = stringResource(R.string.choose_transaction_date),
             isEnable = true,
@@ -66,39 +49,39 @@ fun DepositContent(
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = depositActions::onDateClick
+                    onClick = withdrawActions::onDateClick
                 )
                 .padding(horizontal = 16.dp)
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
-            value = depositState.amountFormat,
-            onValueChange = depositActions::onAmountChange,
+            value = withdrawState.amountFormat,
+            onValueChange = withdrawActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextInputField(
-            title = stringResource(R.string.funds_source),
-            value = depositState.accountName,
+            title = stringResource(R.string.destination_account),
+            value = withdrawState.accountName,
             onValueChange = { },
-            placeholderText = stringResource(R.string.choose_funds_source),
+            placeholderText = stringResource(R.string.choose_destination_account),
             modifier = Modifier
                 .clickable(
                     indication = null,
                     interactionSource = remember { MutableInteractionSource() },
-                    onClick = depositActions::onNavigateToAccount
+                    onClick = withdrawActions::onNavigateToAccount
                 )
                 .padding(horizontal = 16.dp),
             isEnable = false
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = { depositActions.onAddNewDeposit(depositState) },
+            onClick = { withdrawActions.onAddNewWithdraw(withdrawState) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),
         ) {
             Text(
-                text = stringResource(R.string.add),
+                text = stringResource(R.string.withdraw),
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.labelMedium
             )
@@ -106,22 +89,19 @@ fun DepositContent(
     }
 }
 
-data class DepositContentState(
+data class WithdrawContentState(
     val date: String,
     val amount: Long,
     val amountFormat: TextFieldValue,
     val accountId: Int,
     val accountName: String,
     val saveId: Long,
-    val saveName: String,
-    val fixSaveId: Long?,
-    val fixSaveName: String?
+    val saveName: String
 )
 
-interface DepositContentActions {
-    fun onNavigateToSave()
+interface WithdrawContentActions {
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
     fun onNavigateToAccount()
-    fun onAddNewDeposit(depositState: DepositContentState)
+    fun onAddNewWithdraw(withdrawState: WithdrawContentState)
 }

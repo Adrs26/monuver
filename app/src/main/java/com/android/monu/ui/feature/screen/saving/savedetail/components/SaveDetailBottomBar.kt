@@ -9,7 +9,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.android.monu.R
 
 @Composable
 fun SaveDetailBottomBar(
@@ -29,7 +31,7 @@ fun SaveDetailBottomBar(
                 .padding(horizontal = 24.dp, vertical = 16.dp),
         ) {
             Text(
-                text = "Selesaikan",
+                text = stringResource(R.string.settled),
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.labelMedium
              )

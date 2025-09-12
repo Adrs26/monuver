@@ -39,10 +39,8 @@ import com.android.monu.ui.navigation.EditTransaction
 import com.android.monu.ui.navigation.EditTransactionCategory
 import com.android.monu.ui.navigation.MainAddTransaction
 import com.android.monu.ui.navigation.MainTransactionDetail
-import com.android.monu.ui.navigation.MainTransfer
 import com.android.monu.ui.navigation.TransactionDetail
 import com.android.monu.ui.navigation.Transfer
-import com.android.monu.ui.navigation.TransferAccount
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -133,8 +131,8 @@ fun NavGraphBuilder.addTransactionNavGraph(
 fun NavGraphBuilder.transferNavGraph(
     navController: NavHostController
 ) {
-    navigation<Transfer>(startDestination = MainTransfer) {
-        composable<MainTransfer>(
+    navigation<Transfer>(startDestination = Transfer.Main) {
+        composable<Transfer.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -157,11 +155,11 @@ fun NavGraphBuilder.transferNavGraph(
                 }
 
                 override fun onNavigateToSourceAccount() {
-                    navController.navigate(TransferAccount(SelectAccountType.SOURCE))
+                    navController.navigate(Transfer.Account(SelectAccountType.SOURCE))
                 }
 
                 override fun onNavigateToDestinationAccount() {
-                    navController.navigate(TransferAccount(SelectAccountType.DESTINATION))
+                    navController.navigate(Transfer.Account(SelectAccountType.DESTINATION))
                 }
 
                 override fun onAddNewTransfer(transferState: TransferContentState) {
@@ -174,13 +172,13 @@ fun NavGraphBuilder.transferNavGraph(
                 transferActions = transferActions
             )
         }
-        composable<TransferAccount>(
+        composable<Transfer.Account>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
             popExitTransition = { NavigationAnimation.popExit }
         ) {
-            val args = it.toRoute<TransferAccount>()
+            val args = it.toRoute<Transfer.Account>()
             val viewModel = it.sharedKoinViewModel<TransferViewModel>(navController)
             val accounts by viewModel.accounts.collectAsStateWithLifecycle()
             val selectedAccount by viewModel.selectedAccounts.collectAsStateWithLifecycle(

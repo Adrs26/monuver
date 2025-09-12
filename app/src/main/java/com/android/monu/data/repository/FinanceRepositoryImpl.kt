@@ -81,6 +81,19 @@ class FinanceRepositoryImpl(
         }
     }
 
+    override suspend fun createWithdrawTransaction(
+        saveId: Long,
+        transaction: Transaction
+    ) {
+        return database.withTransaction {
+            saveDao.decreaseSaveCurrentAmount(saveId, transaction.amount)
+            accountDao.increaseAccountBalance(transaction.destinationId ?: 0, transaction.amount)
+            transactionDao.createNewTransaction(
+                TransactionMapper.transactionDomainToEntity(transaction)
+            )
+        }
+    }
+
     override suspend fun deleteIncomeTransaction(id: Long, sourceId: Int, amount: Long): Int {
         return database.withTransaction {
             val rowDeleted = transactionDao.deleteTransactionById(id)

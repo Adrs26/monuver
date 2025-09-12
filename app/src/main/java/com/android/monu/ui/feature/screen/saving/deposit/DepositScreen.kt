@@ -24,7 +24,7 @@ import com.android.monu.ui.feature.screen.saving.deposit.components.DepositConte
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.feature.utils.showMessageWithToast
-import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
@@ -43,24 +43,24 @@ fun DepositScreen(
         mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(depositAmount)))
     }
 
-    val calendarState = rememberSheetState()
+    val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
     val depositContentState = DepositContentState(
         date = depositDate,
         amount = depositAmount,
         amountFormat = depositAmountFormat,
-        sourceId = depositState.source.first,
-        sourceName = depositState.source.second,
-        destinationId = depositState.destination.first,
-        destinationName = depositState.destination.second,
-        fixDestinationId = depositState.fixDestinationId,
-        fixDestinationName = depositState.fixDestinationName
+        accountId = depositState.account.first,
+        accountName = depositState.account.second,
+        saveId = depositState.save.first,
+        saveName = depositState.save.second,
+        fixSaveId = depositState.fixSaveId,
+        fixSaveName = depositState.fixSaveName
     )
 
     val depositContentActions = object : DepositContentActions {
-        override fun onNavigateToDestination() {
-            depositActions.onNavigateToDestination()
+        override fun onNavigateToSave() {
+            depositActions.onNavigateToSave()
         }
 
         override fun onDateClick() {
@@ -82,8 +82,8 @@ fun DepositScreen(
             )
         }
 
-        override fun onNavigateToSource() {
-            depositActions.onNavigateToSource()
+        override fun onNavigateToAccount() {
+            depositActions.onNavigateToAccount()
         }
 
         override fun onAddNewDeposit(depositState: DepositContentState) {
@@ -94,7 +94,7 @@ fun DepositScreen(
     LaunchedEffect(depositState.addResult) {
         depositState.addResult?.let { result ->
             context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.AddSaveAmountSuccess) {
+            if (result == DatabaseResultMessage.CreateDepositTransactionSuccess) {
                 depositActions.onNavigateBack()
             }
         }
@@ -135,16 +135,16 @@ fun DepositScreen(
 }
 
 data class DepositState(
-    val destination: Pair<Long, String>,
-    val source: Pair<Int, String>,
-    val fixDestinationId: Long?,
-    val fixDestinationName: String?,
+    val account: Pair<Int, String>,
+    val save: Pair<Long, String>,
+    val fixSaveId: Long?,
+    val fixSaveName: String?,
     val addResult: DatabaseResultMessage?
 )
 
 interface DepositActions {
     fun onNavigateBack()
-    fun onNavigateToDestination()
-    fun onNavigateToSource()
+    fun onNavigateToSave()
+    fun onNavigateToAccount()
     fun onAddNewDeposit(depositState: DepositContentState)
 }

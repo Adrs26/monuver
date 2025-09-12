@@ -29,6 +29,10 @@ class SaveRepositoryImpl(
         }
     }
 
+    override suspend fun getSaveBalance(saveId: Long): Long? {
+        return saveDao.getSaveBalance(saveId)
+    }
+
     override suspend fun createNewSave(save: Save) {
         saveDao.createNewSave(SaveMapper.saveDomainToEntity(save))
     }

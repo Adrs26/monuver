@@ -25,7 +25,7 @@ import com.android.monu.ui.feature.screen.budgeting.editbudget.components.EditBu
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.feature.utils.showMessageWithToast
-import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
@@ -49,7 +49,7 @@ fun EditBudgetScreen(
     var isBudgetAutoUpdate by rememberSaveable { mutableStateOf(budgetState.isAutoUpdate) }
 
     var activeField by rememberSaveable { mutableStateOf<CalendarField?>(null) }
-    val calendarState = rememberSheetState()
+    val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
     val editBudgetContentState = EditBudgetContentState(

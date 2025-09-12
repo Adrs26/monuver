@@ -18,8 +18,9 @@ import com.android.monu.ui.feature.screen.budgeting.addBudgetNavGraph
 import com.android.monu.ui.feature.screen.budgeting.budgetDetailNavGraph
 import com.android.monu.ui.feature.screen.budgeting.inactiveBudgetNavGraph
 import com.android.monu.ui.feature.screen.main.MainScreen
-import com.android.monu.ui.feature.screen.saving.addSaveAmountNavGraph
+import com.android.monu.ui.feature.screen.saving.depositNavGraph
 import com.android.monu.ui.feature.screen.saving.savingNavGraph
+import com.android.monu.ui.feature.screen.saving.withdrawNavGraph
 import com.android.monu.ui.feature.screen.settings.settingsNavGraph
 import com.android.monu.ui.feature.screen.transaction.addTransactionNavGraph
 import com.android.monu.ui.feature.screen.transaction.transactionDetailNavGraph
@@ -66,6 +67,7 @@ fun MonuApp(
         billingNavGraph(navController = rootNavController)
         payBillNavGraph(navController = rootNavController)
         savingNavGraph(navController = rootNavController)
-        addSaveAmountNavGraph(navController = rootNavController)
+        depositNavGraph(navController = rootNavController)
+        withdrawNavGraph(navController = rootNavController)
     }
 }

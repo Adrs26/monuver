@@ -13,7 +13,7 @@ class UpdateBillUseCase(
             billState.title.isEmpty() -> return DatabaseResultMessage.EmptyBillTitle
             billState.date.isEmpty() -> return DatabaseResultMessage.EmptyBillDate
             billState.amount == 0L -> return DatabaseResultMessage.EmptyBillAmount
-            billState.isRecurring == true && billState.period == 2 && billState.fixPeriod.isEmpty() ->
+            billState.isRecurring && billState.period == 2 && billState.fixPeriod.isEmpty() ->
                 return DatabaseResultMessage.EmptyBillFixPeriod
             billState.fixPeriod.toInt() < billState.nowPaidPeriod ->
                 return DatabaseResultMessage.InvalidBillFixPeriod
@@ -27,9 +27,9 @@ class UpdateBillUseCase(
             amount = billState.amount,
             timeStamp = System.currentTimeMillis(),
             isRecurring = billState.isRecurring,
-            cycle = if (billState.isRecurring == true) billState.cycle else null,
-            period = if (billState.isRecurring == true) billState.period else null,
-            fixPeriod = if (billState.isRecurring == true && billState.period == 2) billState.fixPeriod.toInt() else null,
+            cycle = if (billState.isRecurring) billState.cycle else null,
+            period = if (billState.isRecurring) billState.period else null,
+            fixPeriod = if (billState.isRecurring && billState.period == 2) billState.fixPeriod.toInt() else null,
             isPaid = false,
             nowPaidPeriod = billState.nowPaidPeriod
         )

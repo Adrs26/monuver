@@ -26,10 +26,10 @@ class DepositViewModel(
     val accounts = getAllAccountsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    private val _transactionSource = MutableStateFlow<Pair<Int, String>>(Pair(0, ""))
+    private val _transactionSource = MutableStateFlow(Pair(0, ""))
     val transactionSource = _transactionSource.asStateFlow()
 
-    private val _transactionDestination = MutableStateFlow<Pair<Long, String>>(Pair(0, ""))
+    private val _transactionDestination = MutableStateFlow(Pair(0L, ""))
     val transactionDestination = _transactionDestination.asStateFlow()
 
     private val _createResult = MutableStateFlow<DatabaseResultMessage?>(null)

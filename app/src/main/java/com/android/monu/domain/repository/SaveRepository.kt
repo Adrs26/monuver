@@ -11,5 +11,7 @@ interface SaveRepository {
 
     fun getSaveById(saveId: Long): Flow<Save?>
 
+    suspend fun getSaveBalance(saveId: Long): Long?
+
     suspend fun createNewSave(save: Save)
 }

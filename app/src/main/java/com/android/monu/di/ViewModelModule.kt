@@ -20,6 +20,7 @@ import com.android.monu.ui.feature.screen.saving.SavingViewModel
 import com.android.monu.ui.feature.screen.saving.addsave.AddSaveViewModel
 import com.android.monu.ui.feature.screen.saving.deposit.DepositViewModel
 import com.android.monu.ui.feature.screen.saving.savedetail.SaveDetailViewModel
+import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawViewModel
 import com.android.monu.ui.feature.screen.settings.SettingsViewModel
 import com.android.monu.ui.feature.screen.transaction.TransactionViewModel
 import com.android.monu.ui.feature.screen.transaction.addtransaction.AddTransactionViewModel
@@ -62,6 +63,7 @@ val viewModelModule = module {
     viewModelOf(::AddSaveViewModel)
     viewModelOf(::SaveDetailViewModel)
     viewModelOf(::DepositViewModel)
+    viewModelOf(::WithdrawViewModel)
 
     viewModelOf(::SettingsViewModel)
 }

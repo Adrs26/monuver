@@ -14,7 +14,7 @@ class AddAccountViewModel(
     private val createAccountUseCase: CreateAccountUseCase
 ) : ViewModel() {
 
-    private val _accountType = MutableStateFlow<Int>(0)
+    private val _accountType = MutableStateFlow(0)
     val accountType = _accountType.asStateFlow()
 
     private val _createResult = MutableStateFlow<DatabaseResultMessage?>(null)

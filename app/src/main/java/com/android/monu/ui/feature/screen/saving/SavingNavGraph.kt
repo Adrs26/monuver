@@ -9,34 +9,35 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.android.monu.ui.feature.screen.saving.addsave.AddSaveScreen
 import com.android.monu.ui.feature.screen.saving.addsave.AddSaveViewModel
+import com.android.monu.ui.feature.screen.saving.components.SaveAccountScreen
+import com.android.monu.ui.feature.screen.saving.components.SaveListScreen
 import com.android.monu.ui.feature.screen.saving.deposit.DepositActions
 import com.android.monu.ui.feature.screen.saving.deposit.DepositScreen
 import com.android.monu.ui.feature.screen.saving.deposit.DepositState
 import com.android.monu.ui.feature.screen.saving.deposit.DepositViewModel
 import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentState
-import com.android.monu.ui.feature.screen.saving.deposit.components.DepositDestinationScreen
-import com.android.monu.ui.feature.screen.saving.deposit.components.DepositSourceScreen
 import com.android.monu.ui.feature.screen.saving.savedetail.SaveDetailScreen
 import com.android.monu.ui.feature.screen.saving.savedetail.SaveDetailViewModel
+import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawActions
+import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawScreen
+import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawState
+import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawViewModel
+import com.android.monu.ui.feature.screen.saving.withdraw.components.WithdrawContentState
 import com.android.monu.ui.feature.utils.NavigationAnimation
+import com.android.monu.ui.feature.utils.TransactionChildCategory
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
-import com.android.monu.ui.navigation.AddSave
 import com.android.monu.ui.navigation.Deposit
-import com.android.monu.ui.navigation.DepositDestination
-import com.android.monu.ui.navigation.DepositSource
-import com.android.monu.ui.navigation.MainDeposit
-import com.android.monu.ui.navigation.MainSaving
 import com.android.monu.ui.navigation.MainTransactionDetail
-import com.android.monu.ui.navigation.SaveDetail
 import com.android.monu.ui.navigation.Saving
+import com.android.monu.ui.navigation.Withdraw
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 fun NavGraphBuilder.savingNavGraph(
     navController: NavHostController
 ) {
-    navigation<Saving>(startDestination = MainSaving) {
-        composable<MainSaving>(
+    navigation<Saving>(startDestination = Saving.Main) {
+        composable<Saving.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -52,11 +53,11 @@ fun NavGraphBuilder.savingNavGraph(
                 }
 
                 override fun onNavigateToAddSave() {
-                    navController.navigate(AddSave)
+                    navController.navigate(Saving.Add)
                 }
 
                 override fun onNavigateToSaveDetail(saveId: Long) {
-                    navController.navigate(SaveDetail(saveId))
+                    navController.navigate(Saving.Detail(saveId))
                 }
             }
 
@@ -66,7 +67,7 @@ fun NavGraphBuilder.savingNavGraph(
                 saveActions = saveActions
             )
         }
-        composable<AddSave>(
+        composable<Saving.Add>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -81,7 +82,7 @@ fun NavGraphBuilder.savingNavGraph(
                 onAddNewSave = viewModel::createNewSave
             )
         }
-        composable<SaveDetail>(
+        composable<Saving.Detail>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -99,8 +100,8 @@ fun NavGraphBuilder.savingNavGraph(
                     save = save,
                     transactions = transactions,
                     onNavigateBack = navController::navigateUp,
-                    onAddAmountClick = { navController.navigate(MainDeposit(save.id, save.title)) },
-                    onWithdrawAmountClick = { },
+                    onAddAmountClick = { navController.navigate(Deposit.Main(save.id, save.title)) },
+                    onWithdrawAmountClick = { navController.navigate(Withdraw.Main(save.id, save.title)) },
                     onNavigateToTransactionDetail = { transactionId ->
                         navController.navigate(MainTransactionDetail(transactionId))
                     }
@@ -110,27 +111,27 @@ fun NavGraphBuilder.savingNavGraph(
     }
 }
 
-fun NavGraphBuilder.addSaveAmountNavGraph(
+fun NavGraphBuilder.depositNavGraph(
     navController: NavHostController
 ) {
-    navigation<Deposit>(startDestination = MainDeposit()) {
-        composable<MainDeposit>(
+    navigation<Deposit>(startDestination = Deposit.Main()) {
+        composable<Deposit.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
             popExitTransition = { NavigationAnimation.popExit }
         ) {
-            val args = it.toRoute<MainDeposit>()
+            val args = it.toRoute<Deposit.Main>()
             val viewModel = it.sharedKoinViewModel<DepositViewModel>(navController)
-            val destination by viewModel.transactionDestination.collectAsStateWithLifecycle()
-            val source by viewModel.transactionSource.collectAsStateWithLifecycle()
+            val save by viewModel.transactionDestination.collectAsStateWithLifecycle()
+            val account by viewModel.transactionSource.collectAsStateWithLifecycle()
             val addResult by viewModel.createResult.collectAsStateWithLifecycle()
 
             val depositState = DepositState(
-                destination = destination,
-                source = source,
-                fixDestinationId = args.saveId,
-                fixDestinationName = args.saveName,
+                save = save,
+                account = account,
+                fixSaveId = args.saveId,
+                fixSaveName = args.saveName,
                 addResult = addResult
             )
 
@@ -139,12 +140,12 @@ fun NavGraphBuilder.addSaveAmountNavGraph(
                     navController.navigateUp()
                 }
 
-                override fun onNavigateToDestination() {
-                    navController.navigate(DepositDestination)
+                override fun onNavigateToSave() {
+                    navController.navigate(Deposit.Save)
                 }
 
-                override fun onNavigateToSource() {
-                    navController.navigate(DepositSource)
+                override fun onNavigateToAccount() {
+                    navController.navigate(Deposit.Account)
                 }
 
                 override fun onAddNewDeposit(depositState: DepositContentState) {
@@ -157,7 +158,7 @@ fun NavGraphBuilder.addSaveAmountNavGraph(
                 depositActions = depositActions
             )
         }
-        composable<DepositDestination>(
+        composable<Deposit.Save>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -166,13 +167,13 @@ fun NavGraphBuilder.addSaveAmountNavGraph(
             val viewModel = it.sharedKoinViewModel<DepositViewModel>(navController)
             val saves by viewModel.saves.collectAsStateWithLifecycle()
 
-            DepositDestinationScreen(
+            SaveListScreen(
                 saves = saves,
                 onNavigateBack = navController::navigateUp,
-                onDestinationSelect = viewModel::changeTransactionDestination
+                onSaveSelect = viewModel::changeTransactionDestination
             )
         }
-        composable<DepositSource>(
+        composable<Deposit.Account>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -181,10 +182,71 @@ fun NavGraphBuilder.addSaveAmountNavGraph(
             val viewModel = it.sharedKoinViewModel<DepositViewModel>(navController)
             val accounts by viewModel.accounts.collectAsStateWithLifecycle()
 
-            DepositSourceScreen(
+            SaveAccountScreen(
+                category = TransactionChildCategory.SAVINGS_IN,
                 accounts = accounts,
                 onNavigateBack = navController::navigateUp,
-                onSourceSelect = viewModel::changeTransactionSource
+                onAccountSelect = viewModel::changeTransactionSource
+            )
+        }
+    }
+}
+
+fun NavGraphBuilder.withdrawNavGraph(
+    navController: NavHostController
+) {
+    navigation<Withdraw>(startDestination = Withdraw.Main()) {
+        composable<Withdraw.Main>(
+            enterTransition = { NavigationAnimation.enter },
+            exitTransition = { NavigationAnimation.exit },
+            popEnterTransition = { NavigationAnimation.popEnter },
+            popExitTransition = { NavigationAnimation.popExit }
+        ) {
+            val args = it.toRoute<Withdraw.Main>()
+            val viewModel = it.sharedKoinViewModel<WithdrawViewModel>(navController)
+            val account by viewModel.transactionDestination.collectAsStateWithLifecycle()
+            val addResult by viewModel.createResult.collectAsStateWithLifecycle()
+            val save = Pair(args.saveId ?: 0, args.saveName ?: "")
+
+            val withdrawState = WithdrawState(
+                account = account,
+                save = save,
+                addResult = addResult
+            )
+
+            val withdrawActions = object : WithdrawActions {
+                override fun onNavigateBack() {
+                    navController.navigateUp()
+                }
+
+                override fun onNavigateToAccount() {
+                    navController.navigate(Withdraw.Account)
+                }
+
+                override fun onAddNewWithdraw(withdrawState: WithdrawContentState) {
+                    viewModel.createNewTransaction(withdrawState)
+                }
+            }
+
+            WithdrawScreen(
+                withdrawState = withdrawState,
+                withdrawActions = withdrawActions
+            )
+        }
+        composable<Withdraw.Account>(
+            enterTransition = { NavigationAnimation.enter },
+            exitTransition = { NavigationAnimation.exit },
+            popEnterTransition = { NavigationAnimation.popEnter },
+            popExitTransition = { NavigationAnimation.popExit }
+        ) {
+            val viewModel = it.sharedKoinViewModel<WithdrawViewModel>(navController)
+            val accounts by viewModel.accounts.collectAsStateWithLifecycle()
+
+            SaveAccountScreen(
+                category = TransactionChildCategory.SAVINGS_OUT,
+                accounts = accounts,
+                onNavigateBack = navController::navigateUp,
+                onAccountSelect = viewModel::changeTransactionDestination
             )
         }
     }

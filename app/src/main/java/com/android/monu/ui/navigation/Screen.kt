@@ -26,9 +26,11 @@ import kotlinx.serialization.Serializable
 @Serializable data class AddTransactionCategory(val type: Int = 0)
 @Serializable object AddTransactionSource
 
-@Serializable object Transfer
-@Serializable object MainTransfer
-@Serializable data class TransferAccount(val type: Int = 0)
+@Serializable
+class Transfer {
+    @Serializable object Main
+    @Serializable data class Account(val type: Int = 0)
+}
 
 @Serializable object BudgetDetail
 @Serializable data class MainBudgetDetail(val id: Long = 0)
@@ -59,15 +61,22 @@ import kotlinx.serialization.Serializable
 @Serializable object PayBillCategory
 @Serializable object PayBillSource
 
-@Serializable object Saving
-@Serializable object MainSaving
-@Serializable object AddSave
-@Serializable data class SaveDetail(val id: Long = 0)
+@Serializable
+class Saving {
+    @Serializable object Main
+    @Serializable object Add
+    @Serializable data class Detail(val id: Long = 0)
+}
 
-@Serializable object Deposit
-@Serializable data class MainDeposit(
-    val saveId: Long? = null,
-    val saveName: String? = null
-)
-@Serializable object DepositDestination
-@Serializable object DepositSource
+@Serializable
+class Deposit {
+    @Serializable data class Main(val saveId: Long? = null, val saveName: String? = null)
+    @Serializable object Save
+    @Serializable object Account
+}
+
+@Serializable
+class Withdraw {
+    @Serializable data class Main(val saveId: Long? = null, val saveName: String? = null)
+    @Serializable object Account
+}

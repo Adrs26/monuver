@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.screen.saving.deposit.components
+package com.android.monu.ui.feature.screen.saving.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,17 +18,21 @@ import com.android.monu.R
 import com.android.monu.domain.model.account.Account
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.account.components.AccountListItem
+import com.android.monu.ui.feature.utils.TransactionChildCategory
 
 @Composable
-fun DepositSourceScreen(
+fun SaveAccountScreen(
+    category: Int,
     accounts: List<Account>,
     onNavigateBack: () -> Unit,
-    onSourceSelect: (Int, String) -> Unit
+    onAccountSelect: (Int, String) -> Unit
 ) {
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = stringResource(R.string.choose_funds_source),
+                title = if (category == TransactionChildCategory.SAVINGS_IN)
+                    stringResource(R.string.choose_funds_source) else
+                        stringResource(R.string.choose_destination_account),
                 onNavigateBack = onNavigateBack
             )
         }
@@ -48,7 +52,7 @@ fun DepositSourceScreen(
                         account = accounts[index],
                         modifier = Modifier
                             .clickable {
-                                onSourceSelect(accounts[index].id, accounts[index].name)
+                                onAccountSelect(accounts[index].id, accounts[index].name)
                                 onNavigateBack()
                             }
                             .padding(horizontal = 16.dp, vertical = 2.dp)

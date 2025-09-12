@@ -26,7 +26,7 @@ import com.android.monu.ui.feature.utils.Cycle
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.feature.utils.showMessageWithToast
-import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
@@ -49,7 +49,7 @@ fun AddBillScreen(
     var billPeriod by rememberSaveable { mutableIntStateOf(1) }
     var billFixPeriod by rememberSaveable { mutableStateOf("") }
 
-    val calendarState = rememberSheetState()
+    val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
     val billState = AddBillContentState(
@@ -102,9 +102,9 @@ fun AddBillScreen(
             }
         }
 
-        override fun onFixPeriodChange(period: String) {
-            if (period.length <= 2 && period.all { it.isDigit() }) {
-                billFixPeriod = period
+        override fun onFixPeriodChange(fixPeriod: String) {
+            if (fixPeriod.length <= 2 && fixPeriod.all { it.isDigit() }) {
+                billFixPeriod = fixPeriod
             }
         }
 

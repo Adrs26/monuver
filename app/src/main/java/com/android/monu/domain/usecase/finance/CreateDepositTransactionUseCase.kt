@@ -12,27 +12,27 @@ import com.android.monu.ui.feature.utils.TransactionType
 
 class CreateDepositTransactionUseCase(
     private val financeRepository: FinanceRepository,
-    private val accountRepository: AccountRepository,
+    private val accountRepository: AccountRepository
 ) {
     suspend operator fun invoke(depositState: DepositContentState): DatabaseResultMessage {
         when {
-            depositState.fixDestinationId == null && depositState.destinationId == 0L ->
-                return DatabaseResultMessage.EmptyAddSaveDestination
-            depositState.date.isEmpty() -> return DatabaseResultMessage.EmptyAddSaveDate
-            depositState.amount == 0L -> return DatabaseResultMessage.EmptyAddSaveAmount
-            depositState.sourceId == 0 -> return DatabaseResultMessage.EmptyAddSaveSource
+            depositState.fixSaveId == null && depositState.saveId == 0L ->
+                return DatabaseResultMessage.EmptyDepositSave
+            depositState.date.isEmpty() -> return DatabaseResultMessage.EmptyDepositDate
+            depositState.amount == 0L -> return DatabaseResultMessage.EmptyDepositAmount
+            depositState.accountId == 0 -> return DatabaseResultMessage.EmptyDepositAccount
         }
 
-        val accountBalance = accountRepository.getAccountBalance(depositState.sourceId)
+        val accountBalance = accountRepository.getAccountBalance(depositState.accountId)
         if (accountBalance == null || accountBalance < depositState.amount) {
             return DatabaseResultMessage.InsufficientAccountBalance
         }
 
-        val destinationId = depositState.fixDestinationId ?: depositState.destinationId
-        val destinationName = depositState.fixDestinationName ?: depositState.destinationName
+        val saveId = depositState.fixSaveId ?: depositState.saveId
+        val saveName = depositState.fixSaveName ?: depositState.saveName
         val (month, year) = DateHelper.getMonthAndYear(depositState.date)
         val transaction = Transaction(
-            title = "Penambahan saldo ke tabungan $destinationName",
+            title = "Penambahan saldo ke tabungan $saveName",
             type = TransactionType.TRANSFER,
             parentCategory = TransactionParentCategory.TRANSFER,
             childCategory = TransactionChildCategory.SAVINGS_IN,
@@ -41,15 +41,15 @@ class CreateDepositTransactionUseCase(
             year = year,
             timeStamp = System.currentTimeMillis(),
             amount = depositState.amount,
-            sourceId = depositState.sourceId,
-            sourceName = depositState.sourceName,
-            destinationId = destinationId.toInt(),
-            destinationName = destinationName,
-            saveId = destinationId,
+            sourceId = depositState.accountId,
+            sourceName = depositState.accountName,
+            destinationId = saveId.toInt(),
+            destinationName = saveName,
+            saveId = saveId,
             isLocked = true
         )
 
-        financeRepository.createDepositTransaction(destinationId, transaction)
-        return DatabaseResultMessage.AddSaveAmountSuccess
+        financeRepository.createDepositTransaction(saveId, transaction)
+        return DatabaseResultMessage.CreateDepositTransactionSuccess
     }
 }

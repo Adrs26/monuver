@@ -263,7 +263,6 @@
     <string name="empty_save_target_amount">Target saldo tabungan tidak boleh kosong</string>
     <string name="empty_save_target_date">Target tanggal tabungan tidak boleh kosong</string>
     <string name="save_successfully_added">Tabungan berhasil ditambahkan</string>
-    <string name="save_successfully_saved">Tabungan berhasil disimpan</string>
     <string name="day_before_target">%1$s hari menuju target</string>
     <string name="day_after_target">%1$s hari melewati target</string>
     <string name="today_is_target">Hari ini adalah target</string>
@@ -273,11 +272,15 @@
     <string name="save_detail">Detail tabungan</string>
     <string name="choose_saving">Pilih tabungan</string>
     <string name="add_save_balance">Tambah saldo tabungan</string>
-    <string name="empty_add_save_destination">Tabungan tidak boleh kosong</string>
-    <string name="empty_add_save_date">Tanggal transaksi tidak boleh kosong</string>
-    <string name="empty_add_save_amount">Nominal transaksi tidak boleh kosong</string>
-    <string name="empty_add_save_source">Sumber dana tidak boleh kosong</string>
+    <string name="empty_deposit_withdraw_save">Tabungan tidak boleh kosong</string>
+    <string name="empty_deposit_withdraw_date">Tanggal transaksi tidak boleh kosong</string>
+    <string name="empty_deposit_withdraw_amount">Nominal transaksi tidak boleh kosong</string>
+    <string name="empty_deposit_withdraw_account">Sumber dana tidak boleh kosong</string>
     <string name="save_amount_successfully_added">Saldo tabungan berhasil ditambahkan</string>
     <string name="add_amount">Tambah saldo</string>
     <string name="withdraw_amount">Tarik saldo</string>
+    <string name="withdraw">Tarik</string>
+    <string name="withdraw_save_amount_successfully">Saldo tabungan berhasil ditarik</string>
+    <string name="withdraw_save_balance">Tarik saldo tabungan</string>
+    <string name="settled">Selesaikan</string>
 </resources>

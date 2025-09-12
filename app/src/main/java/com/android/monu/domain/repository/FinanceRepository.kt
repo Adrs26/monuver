@@ -17,6 +17,8 @@ interface FinanceRepository {
 
     suspend fun createDepositTransaction(saveId: Long, transaction: Transaction)
 
+    suspend fun createWithdrawTransaction(saveId: Long, transaction: Transaction)
+
     suspend fun deleteIncomeTransaction(id: Long, sourceId: Int, amount: Long): Int
 
     suspend fun deleteExpenseTransaction(

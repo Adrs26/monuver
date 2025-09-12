@@ -26,7 +26,7 @@ import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 import com.android.monu.ui.feature.utils.TransactionType
 import com.android.monu.ui.feature.utils.showMessageWithToast
-import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
@@ -47,7 +47,7 @@ fun AddTransactionScreen(
         mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(transactionAmount)))
     }
 
-    val calendarState = rememberSheetState()
+    val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
     val addTransactionContentState = AddTransactionContentState(

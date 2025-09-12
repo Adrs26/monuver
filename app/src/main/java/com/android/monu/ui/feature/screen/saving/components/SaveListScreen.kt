@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.screen.saving.deposit.components
+package com.android.monu.ui.feature.screen.saving.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,15 +27,14 @@ import com.android.monu.R
 import com.android.monu.domain.model.save.Save
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.components.CommonLottieAnimation
-import com.android.monu.ui.feature.screen.saving.components.SaveListItemIcon
 import com.android.monu.ui.feature.utils.DateHelper
 import com.android.monu.ui.feature.utils.NumberFormatHelper
 
 @Composable
-fun DepositDestinationScreen(
+fun SaveListScreen(
     saves: List<Save>,
     onNavigateBack: () -> Unit,
-    onDestinationSelect: (Long, String) -> Unit
+    onSaveSelect: (Long, String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -56,10 +55,10 @@ fun DepositDestinationScreen(
                     count = saves.size,
                     key = { index -> saves[index].id }
                 ) { index ->
-                    SaveListItem(
+                    SaveDestinationListItem(
                         save = saves[index],
                         modifier = Modifier.clickable {
-                            onDestinationSelect(saves[index].id, saves[index].title)
+                            onSaveSelect(saves[index].id, saves[index].title)
                             onNavigateBack()
                         }
                     )
@@ -79,7 +78,7 @@ fun DepositDestinationScreen(
 }
 
 @Composable
-fun SaveListItem(
+fun SaveDestinationListItem(
     save: Save,
     modifier: Modifier = Modifier
 ) {

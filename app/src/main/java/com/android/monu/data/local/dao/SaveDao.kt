@@ -19,6 +19,9 @@ interface SaveDao {
     @Query("SELECT * FROM save WHERE id = :saveId")
     fun getSaveById(saveId: Long): Flow<SaveEntity?>
 
+    @Query("SELECT currentAmount FROM save WHERE id = :saveId")
+    suspend fun getSaveBalance(saveId: Long): Long?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createNewSave(save: SaveEntity)
 
