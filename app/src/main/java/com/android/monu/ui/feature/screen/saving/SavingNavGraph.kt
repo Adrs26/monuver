@@ -16,6 +16,10 @@ import com.android.monu.ui.feature.screen.saving.deposit.DepositScreen
 import com.android.monu.ui.feature.screen.saving.deposit.DepositState
 import com.android.monu.ui.feature.screen.saving.deposit.DepositViewModel
 import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentState
+import com.android.monu.ui.feature.screen.saving.editsave.EditSaveScreen
+import com.android.monu.ui.feature.screen.saving.editsave.EditSaveState
+import com.android.monu.ui.feature.screen.saving.editsave.EditSaveViewModel
+import com.android.monu.ui.feature.screen.saving.savedetail.SaveDetailActions
 import com.android.monu.ui.feature.screen.saving.savedetail.SaveDetailScreen
 import com.android.monu.ui.feature.screen.saving.savedetail.SaveDetailViewModel
 import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawActions
@@ -96,15 +100,62 @@ fun NavGraphBuilder.savingNavGraph(
             val transactions by viewModel.transactions.collectAsStateWithLifecycle()
 
             save?.let { save ->
+                val saveDetailActions = object : SaveDetailActions {
+                    override fun onNavigateBack() {
+                        navController.navigateUp()
+                    }
+
+                    override fun onNavigateToEditSave(saveId: Long) {
+                        navController.navigate(Saving.Edit(saveId))
+                    }
+
+                    override fun onNavigateToDeposit() {
+                        navController.navigate(Deposit.Main(save.id, save.title))
+                    }
+
+                    override fun onNavigateToWithdraw() {
+                        navController.navigate(Withdraw.Main(save.id, save.title))
+                    }
+
+                    override fun onNavigateToTransactionDetail(transactionId: Long) {
+                        navController.navigate(MainTransactionDetail(transactionId))
+                    }
+                }
+
                 SaveDetailScreen(
                     save = save,
                     transactions = transactions,
+                    saveActions = saveDetailActions
+                )
+            }
+        }
+        composable<Saving.Edit>(
+            enterTransition = { NavigationAnimation.enter },
+            exitTransition = { NavigationAnimation.exit },
+            popEnterTransition = { NavigationAnimation.popEnter },
+            popExitTransition = { NavigationAnimation.popExit }
+        ) {
+            val viewModel = koinViewModel<EditSaveViewModel>(
+                viewModelStoreOwner = it,
+                parameters = { parametersOf(it.savedStateHandle) }
+            )
+            val save by viewModel.save.collectAsStateWithLifecycle()
+            val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
+
+            save?.let { save ->
+                val editSaveState = EditSaveState(
+                    id = save.id,
+                    title = save.title,
+                    targetDate = save.targetDate,
+                    currentAmount = save.currentAmount,
+                    targetAmount = save.targetAmount,
+                    editResult = editResult
+                )
+
+                EditSaveScreen(
+                    saveState = editSaveState,
                     onNavigateBack = navController::navigateUp,
-                    onAddAmountClick = { navController.navigate(Deposit.Main(save.id, save.title)) },
-                    onWithdrawAmountClick = { navController.navigate(Withdraw.Main(save.id, save.title)) },
-                    onNavigateToTransactionDetail = { transactionId ->
-                        navController.navigate(MainTransactionDetail(transactionId))
-                    }
+                    onEditSave = viewModel::updateSave
                 )
             }
         }

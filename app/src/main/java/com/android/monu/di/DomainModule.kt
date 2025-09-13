@@ -33,6 +33,7 @@ import com.android.monu.domain.usecase.save.CreateSaveUseCase
 import com.android.monu.domain.usecase.save.GetAllSavesUseCase
 import com.android.monu.domain.usecase.save.GetSaveByIdUseCase
 import com.android.monu.domain.usecase.save.GetTotalSaveCurrentAmountUseCase
+import com.android.monu.domain.usecase.save.UpdateSaveUseCase
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsByCategoryUseCase
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsBySaveIdUseCase
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsUseCase
@@ -95,4 +96,5 @@ val domainModule = module {
     factoryOf(::GetAllSavesUseCase)
     factoryOf(::GetSaveByIdUseCase)
     factoryOf(::GetTotalSaveCurrentAmountUseCase)
+    factoryOf(::UpdateSaveUseCase)
 }

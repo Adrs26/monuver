@@ -24,8 +24,8 @@ import com.android.monu.ui.theme.Red600
 
 @Composable
 fun SaveDetailButtonBar(
-    onAddAmountClick: () -> Unit,
-    onWithdrawAmountClick: () -> Unit,
+    onNavigateToDeposit: () -> Unit,
+    onNavigateToWithdraw: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -37,14 +37,14 @@ fun SaveDetailButtonBar(
             text = stringResource(R.string.add_amount),
             icon = R.drawable.ic_arrow_upward,
             color = Green600,
-            onClick = onAddAmountClick,
+            onClick = onNavigateToDeposit,
             modifier = Modifier.weight(1f)
         )
         SaveDetailButton(
             text = stringResource(R.string.withdraw_amount),
             icon = R.drawable.ic_arrow_downward,
             color = Red600,
-            onClick = onWithdrawAmountClick,
+            onClick = onNavigateToWithdraw,
             modifier = Modifier.weight(1f)
         )
     }

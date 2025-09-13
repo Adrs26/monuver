@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.android.monu.data.local.entity.room.SaveEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -38,4 +39,7 @@ interface SaveDao {
         WHERE id = :saveId
     """)
     suspend fun decreaseSaveCurrentAmount(saveId: Long, delta: Long)
+
+    @Update
+    suspend fun updateSave(saveEntity: SaveEntity)
 }

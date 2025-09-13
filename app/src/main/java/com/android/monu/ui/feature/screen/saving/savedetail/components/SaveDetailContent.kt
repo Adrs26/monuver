@@ -26,8 +26,8 @@ import com.android.monu.ui.feature.utils.debouncedClickable
 fun SaveDetailContent(
     saveState: Save,
     transactions: List<Transaction>,
-    onAddAmountClick: () -> Unit,
-    onWithdrawAmountClick: () -> Unit,
+    onNavigateToDeposit: () -> Unit,
+    onNavigateToWithdraw: () -> Unit,
     onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -35,8 +35,8 @@ fun SaveDetailContent(
         transactions.isEmpty() -> {
             SaveDetailEmptyListContent(
                 saveState = saveState,
-                onAddAmountClick = onAddAmountClick,
-                onWithdrawAmountClick = onWithdrawAmountClick,
+                onNavigateToDeposit = onNavigateToDeposit,
+                onNavigateToWithdraw = onNavigateToWithdraw,
                 modifier = modifier
                     .padding(horizontal = 16.dp)
                     .padding(top = 8.dp)
@@ -46,8 +46,8 @@ fun SaveDetailContent(
             SaveDetailListContent(
                 saveState = saveState,
                 transactions = transactions,
-                onAddAmountClick = onAddAmountClick,
-                onWithdrawAmountClick = onWithdrawAmountClick,
+                onNavigateToDeposit = onNavigateToDeposit,
+                onNavigateToWithdraw = onNavigateToWithdraw,
                 onNavigateToTransactionDetail = onNavigateToTransactionDetail,
                 modifier = modifier.padding(top = 8.dp)
             )
@@ -59,8 +59,8 @@ fun SaveDetailContent(
 fun SaveDetailListContent(
     saveState: Save,
     transactions: List<Transaction>,
-    onAddAmountClick: () -> Unit,
-    onWithdrawAmountClick: () -> Unit,
+    onNavigateToDeposit: () -> Unit,
+    onNavigateToWithdraw: () -> Unit,
     onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -85,8 +85,8 @@ fun SaveDetailListContent(
         }
         item {
             SaveDetailButtonBar(
-                onAddAmountClick = onAddAmountClick,
-                onWithdrawAmountClick = onWithdrawAmountClick,
+                onNavigateToDeposit = onNavigateToDeposit,
+                onNavigateToWithdraw = onNavigateToWithdraw,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -128,8 +128,8 @@ fun SaveDetailListContent(
 @Composable
 fun SaveDetailEmptyListContent(
     saveState: Save,
-    onAddAmountClick: () -> Unit,
-    onWithdrawAmountClick: () -> Unit,
+    onNavigateToDeposit: () -> Unit,
+    onNavigateToWithdraw: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -148,8 +148,8 @@ fun SaveDetailEmptyListContent(
             modifier = Modifier.padding(top = 8.dp)
         )
         SaveDetailButtonBar(
-            onAddAmountClick = onAddAmountClick,
-            onWithdrawAmountClick = onWithdrawAmountClick,
+            onNavigateToDeposit = onNavigateToDeposit,
+            onNavigateToWithdraw = onNavigateToWithdraw,
             modifier = Modifier.padding(top = 8.dp)
         )
         Text(

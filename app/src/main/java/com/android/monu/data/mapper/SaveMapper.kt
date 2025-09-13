@@ -28,4 +28,17 @@ object SaveMapper {
             isActive = save.isActive
         )
     }
+
+    fun saveDomainToEntityForUpdate(
+        save: Save
+    ): SaveEntity {
+        return SaveEntity(
+            id = save.id,
+            title = save.title,
+            targetDate = save.targetDate,
+            targetAmount = save.targetAmount,
+            currentAmount = save.currentAmount,
+            isActive = save.isActive
+        )
+    }
 }

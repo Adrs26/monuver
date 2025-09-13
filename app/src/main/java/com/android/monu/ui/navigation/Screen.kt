@@ -66,6 +66,7 @@ class Saving {
     @Serializable object Main
     @Serializable object Add
     @Serializable data class Detail(val id: Long = 0)
+    @Serializable data class Edit(val id: Long = 0)
 }
 
 @Serializable

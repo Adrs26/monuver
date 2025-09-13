@@ -17,7 +17,9 @@ import com.android.monu.ui.feature.components.DebouncedIconButton
 @Composable
 fun SaveDetailAppBar(
     title: String,
+    isActive: Boolean,
     onNavigateBack: () -> Unit,
+    onNavigateToEditSave: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -40,23 +42,25 @@ fun SaveDetailAppBar(
             }
         },
         actions = {
-            DebouncedIconButton(
-                onClick = {  }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_edit),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            DebouncedIconButton(
-                onClick = {  }
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_delete),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
+            if (isActive) {
+                DebouncedIconButton(
+                    onClick = onNavigateToEditSave
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_edit),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+                DebouncedIconButton(
+                    onClick = { }
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_delete),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

@@ -36,4 +36,8 @@ class SaveRepositoryImpl(
     override suspend fun createNewSave(save: Save) {
         saveDao.createNewSave(SaveMapper.saveDomainToEntity(save))
     }
+
+    override suspend fun updateSave(save: Save) {
+        saveDao.updateSave(SaveMapper.saveDomainToEntityForUpdate(save))
+    }
 }

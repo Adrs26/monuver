@@ -14,4 +14,6 @@ interface SaveRepository {
     suspend fun getSaveBalance(saveId: Long): Long?
 
     suspend fun createNewSave(save: Save)
+
+    suspend fun updateSave(save: Save)
 }

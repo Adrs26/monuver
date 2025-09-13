@@ -55,7 +55,7 @@
     <string name="november">November</string>
     <string name="december">Desember</string>
     <string name="transaction_successfully_added">Transaksi berhasil ditambahkan</string>
-    <string name="transaction_successfully_saved">Transaksi berhasil disimpan</string>
+    <string name="transaction_successfully_saved">Transaksi berhasil diperbarui</string>
     <string name="transaction_successfully_deleted">Transaksi berhasil dihapus</string>
     <string name="cancel">Batal</string>
     <string name="apply">Terapkan</string>
@@ -147,7 +147,7 @@
     <string name="transaction_detail">Detail transaksi</string>
     <string name="source">Sumber</string>
     <string name="destination">Tujuan</string>
-    <string name="edit_transaction">Edit transaksi</string>
+    <string name="edit_transaction">Ubah data transaksi</string>
     <string name="source_account">Akun sumber</string>
     <string name="destination_account">Akun tujuan</string>
     <string name="choose_transfer_date">Pilih tanggal transfer</string>
@@ -182,7 +182,7 @@
     <string name="empty_budgeting_category">Kategori transaksi budget tidak boleh kosong</string>
     <string name="empty_budgeting_max_amount">Saldo maksimal budget tidak boleh kosong</string>
     <string name="budgeting_successfully_added">Budget berhasil ditambahkan</string>
-    <string name="budgeting_successfully_saved">Budget berhasil disimpan</string>
+    <string name="budgeting_successfully_saved">Budget berhasil diperbarui</string>
     <string name="budgeting_successfully_deleted">Budget berhasil dihapus</string>
     <string name="your_budgeting_this_period">Budget kamu periode ini</string>
     <string name="bill_successfully_deleted">Tagihan berhasil dihapus</string>
@@ -211,7 +211,7 @@
     <string name="empty_bill_fix_period">Periode pasti pembayaran tidak boleh kosong</string>
     <string name="bill_successfully_added">Tagihan berhasil ditambahkan</string>
     <string name="bill_successfully_paid">Tagihan berhasil dibayar</string>
-    <string name="bill_successfully_saved">Tagihan berhasil disimpan</string>
+    <string name="bill_successfully_saved">Tagihan berhasil diperbarui</string>
     <string name="pending">Menunggu</string>
     <string name="due">Jatuh tempo</string>
     <string name="paid">Lunas</string>
@@ -232,8 +232,8 @@
     <string name="paid_on">Dilunasi pada</string>
     <string name="pay_bill">Bayar tagihan</string>
     <string name="pay">Bayar</string>
-    <string name="edit_budget">Edit budget</string>
-    <string name="edit_bill">Edit tagihan</string>
+    <string name="edit_budget">Ubah data budget</string>
+    <string name="edit_bill">Ubah data tagihan</string>
     <string name="invalid_bill_fix_period">Periode pembayaran tagihan sudah melebihi batas periode</string>
     <string name="unpaid_bill_date_information">Jatuh tempo pada %1$s</string>
     <string name="paid_bill_date_information">Dilunasi pada %1$s</string>
@@ -283,4 +283,7 @@
     <string name="withdraw_save_amount_successfully">Saldo tabungan berhasil ditarik</string>
     <string name="withdraw_save_balance">Tarik saldo tabungan</string>
     <string name="settled">Selesaikan</string>
+    <string name="current_amount">Saldo saat ini</string>
+    <string name="save_successfully_saved">Tabungan berhasil diperbarui</string>
+    <string name="edit_save">Ubah data tabungan</string>
 </resources>

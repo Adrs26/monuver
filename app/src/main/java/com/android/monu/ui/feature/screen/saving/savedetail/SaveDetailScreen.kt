@@ -16,16 +16,15 @@ import com.android.monu.ui.feature.screen.saving.savedetail.components.SaveDetai
 fun SaveDetailScreen(
     save: Save,
     transactions: List<Transaction>,
-    onNavigateBack: () -> Unit,
-    onAddAmountClick: () -> Unit,
-    onWithdrawAmountClick: () -> Unit,
-    onNavigateToTransactionDetail: (Long) -> Unit
+    saveActions: SaveDetailActions
 ) {
     Scaffold(
         topBar = {
             SaveDetailAppBar(
                 title = stringResource(R.string.save_detail),
-                onNavigateBack = onNavigateBack
+                isActive = save.isActive,
+                onNavigateBack = saveActions::onNavigateBack,
+                onNavigateToEditSave = { saveActions.onNavigateToEditSave(save.id) }
             )
         },
         bottomBar = {
@@ -35,10 +34,18 @@ fun SaveDetailScreen(
         SaveDetailContent(
             saveState = save,
             transactions = transactions,
-            onAddAmountClick = onAddAmountClick,
-            onWithdrawAmountClick = onWithdrawAmountClick,
-            onNavigateToTransactionDetail = onNavigateToTransactionDetail,
+            onNavigateToDeposit = saveActions::onNavigateToDeposit,
+            onNavigateToWithdraw = saveActions::onNavigateToWithdraw,
+            onNavigateToTransactionDetail = saveActions::onNavigateToTransactionDetail,
             modifier = Modifier.padding(innerPadding)
         )
     }
+}
+
+interface SaveDetailActions {
+    fun onNavigateBack()
+    fun onNavigateToEditSave(saveId: Long)
+    fun onNavigateToDeposit()
+    fun onNavigateToWithdraw()
+    fun onNavigateToTransactionDetail(transactionId: Long)
 }
