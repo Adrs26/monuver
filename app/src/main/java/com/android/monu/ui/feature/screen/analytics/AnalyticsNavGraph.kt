@@ -6,8 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.android.monu.ui.feature.screen.analytics.analyticscategorytransaction.AnalyticsCategoryTransactionScreen
-import com.android.monu.ui.feature.screen.analytics.analyticscategorytransaction.AnalyticsCategoryTransactionViewModel
+import com.android.monu.ui.feature.screen.analytics.analyticsCategoryTransaction.AnalyticsCategoryTransactionScreen
+import com.android.monu.ui.feature.screen.analytics.analyticsCategoryTransaction.AnalyticsCategoryTransactionViewModel
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.navigation.AnalyticsCategoryTransaction
 import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction

@@ -21,7 +21,7 @@ interface TransactionRepository {
 
     fun getTransactionById(transactionId: Long): Flow<Transaction?>
 
-    fun getTransactionsBySaveId(saveId: Long): Flow<List<Transaction>>
+    fun getTransactionsBySavingId(savingId: Long): Flow<List<Transaction>>
 
     fun getTransactionsByParentCategoryAndDateRange(
         category: Int,
@@ -55,5 +55,5 @@ interface TransactionRepository {
         endDate: String
     ): Long
 
-    suspend fun getTransactionsBySaveIdSuspend(saveId: Long): List<Transaction>
+    suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<Transaction>
 }

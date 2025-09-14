@@ -3,7 +3,7 @@ package com.android.monu.domain.usecase.finance
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.screen.account.addaccount.components.AddAccountContentState
+import com.android.monu.ui.feature.screen.account.addAccount.components.AddAccountContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.DateHelper
 import com.android.monu.ui.feature.utils.TransactionChildCategory

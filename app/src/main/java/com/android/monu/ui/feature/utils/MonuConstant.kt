@@ -66,6 +66,7 @@ object TransactionChildCategory {
     const val MASSAGE = 95
     const val SPA = 96
     const val GYM = 97
+    const val LAUNDRY = 98
     const val EDUCATION_FEE = 101
     const val BOOKS_STATIONERY = 102
     const val COURSE = 103
@@ -88,6 +89,7 @@ object TransactionChildCategory {
     const val INSURANCE = 132
     const val INVESTMENT = 133
     const val OTHER_EXPENSE = 134
+    const val SAVINGS_COMPLETE = 135
     const val TRANSFER_ACCOUNT = 1003
     const val SAVINGS_IN = 1004
     const val SAVINGS_OUT = 1005

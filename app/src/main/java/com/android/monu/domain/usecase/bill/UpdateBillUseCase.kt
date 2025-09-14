@@ -2,7 +2,7 @@ package com.android.monu.domain.usecase.bill
 
 import com.android.monu.domain.model.bill.Bill
 import com.android.monu.domain.repository.BillRepository
-import com.android.monu.ui.feature.screen.billing.editbill.components.EditBillContentState
+import com.android.monu.ui.feature.screen.billing.editBill.components.EditBillContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class UpdateBillUseCase(

@@ -5,13 +5,13 @@ import com.android.monu.data.repository.AccountRepositoryImpl
 import com.android.monu.data.repository.BillRepositoryImpl
 import com.android.monu.data.repository.BudgetRepositoryImpl
 import com.android.monu.data.repository.FinanceRepositoryImpl
-import com.android.monu.data.repository.SaveRepositoryImpl
+import com.android.monu.data.repository.SavingRepositoryImpl
 import com.android.monu.data.repository.TransactionRepositoryImpl
 import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.BillRepository
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.domain.repository.SaveRepository
+import com.android.monu.domain.repository.SavingRepository
 import com.android.monu.domain.repository.TransactionRepository
 import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
@@ -23,7 +23,7 @@ val dataModule = module {
     singleOf(::FinanceRepositoryImpl){ bind<FinanceRepository>()}
     singleOf(::BudgetRepositoryImpl){ bind<BudgetRepository>()}
     singleOf(::BillRepositoryImpl){ bind<BillRepository>()}
-    singleOf(::SaveRepositoryImpl){ bind<SaveRepository>() }
+    singleOf(::SavingRepositoryImpl){ bind<SavingRepository>() }
 
     singleOf(::UserPreference)
 }

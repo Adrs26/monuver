@@ -21,17 +21,17 @@ interface BillDao {
     @Query("SELECT * FROM bill WHERE isPaid = 1 ORDER BY paidDate DESC, timeStamp DESC")
     fun getPaidBills(): PagingSource<Int, BillEntity>
 
-    @Query("SELECT * FROM bill WHERE id = :id")
-    fun getBillById(id: Long): Flow<BillEntity?>
+    @Query("SELECT * FROM bill WHERE id = :billId")
+    fun getBillById(billId: Long): Flow<BillEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createNewBill(bill: BillEntity)
 
-    @Query("UPDATE bill SET isPaid = 1, paidDate = :paidDate WHERE id = :id")
-    suspend fun payBillById(id: Long, paidDate: String)
+    @Query("UPDATE bill SET isPaid = 1, paidDate = :paidDate WHERE id = :billId")
+    suspend fun payBillById(billId: Long, paidDate: String)
 
-    @Query("DELETE FROM bill WHERE id = :id")
-    suspend fun deleteBillById(id: Long)
+    @Query("DELETE FROM bill WHERE id = :billId")
+    suspend fun deleteBillById(billId: Long)
 
     @Update
     suspend fun updateBill(bill: BillEntity)

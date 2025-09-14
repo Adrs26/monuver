@@ -52,8 +52,8 @@ fun WithdrawScreen(
         amountFormat = withdrawAmountFormat,
         accountId = withdrawState.account.first,
         accountName = withdrawState.account.second,
-        saveId = withdrawState.save.first,
-        saveName = withdrawState.save.second
+        savingId = withdrawState.saving.first,
+        savingName = withdrawState.saving.second
     )
 
     val withdrawContentActions = object : WithdrawContentActions {
@@ -130,7 +130,7 @@ fun WithdrawScreen(
 
 data class WithdrawState(
     val account: Pair<Int, String>,
-    val save: Pair<Long, String>,
+    val saving: Pair<Long, String>,
     val addResult: DatabaseResultMessage?
 )
 

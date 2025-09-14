@@ -38,16 +38,16 @@ interface TransactionDao {
         year: Int?
     ): PagingSource<Int, TransactionEntity>
 
-    @Query("SELECT * FROM `transaction` WHERE id = :id")
-    fun getTransactionById(id: Long): Flow<TransactionEntity?>
+    @Query("SELECT * FROM `transaction` WHERE id = :transactionId")
+    fun getTransactionById(transactionId: Long): Flow<TransactionEntity?>
 
     @Query("""
         SELECT * 
         FROM `transaction` 
-        WHERE saveId = :saveId
+        WHERE saveId = :savingId
         ORDER BY date DESC, timeStamp DESC
     """)
-    fun getTransactionsBySaveId(saveId: Long): Flow<List<TransactionEntity>>
+    fun getTransactionsBySavingId(savingId: Long): Flow<List<TransactionEntity>>
 
     @Query("""
         SELECT * 
@@ -127,8 +127,8 @@ interface TransactionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun createNewTransaction(transaction: TransactionEntity): Long
 
-    @Query("DELETE FROM `transaction` WHERE id = :id")
-    suspend fun deleteTransactionById(id: Long): Int
+    @Query("DELETE FROM `transaction` WHERE id = :transactionId")
+    suspend fun deleteTransactionById(transactionId: Long): Int
 
     @Update
     suspend fun updateTransaction(transaction: TransactionEntity): Int
@@ -147,23 +147,22 @@ interface TransactionDao {
     @Query("""
         UPDATE `transaction`
         SET destinationName = :saveTitle
-        WHERE saveId = :saveId AND type = 1003 AND childCategory = 1004
+        WHERE saveId = :savingId AND type = 1003 AND childCategory = 1004
     """)
-    suspend fun updateSaveTitleOnDepositTransaction(saveId: Long, saveTitle: String
-    )
+    suspend fun updateSavingTitleOnDepositTransaction(savingId: Long, saveTitle: String)
 
     @Query("""
         UPDATE `transaction`
         SET sourceName = :saveTitle
-        WHERE saveId = :saveId AND type = 1003 AND childCategory = 1005
+        WHERE saveId = :savingId AND type = 1003 AND childCategory = 1005
     """)
-    suspend fun updateSaveTitleOnWithdrawTransaction(saveId: Long, saveTitle: String)
+    suspend fun updateSavingTitleOnWithdrawTransaction(savingId: Long, saveTitle: String)
 
     @Query("""
         SELECT * 
         FROM `transaction` 
-        WHERE saveId = :saveId
+        WHERE saveId = :savingId
         ORDER BY date DESC, timeStamp DESC
     """)
-    suspend fun getTransactionsBySaveIdSuspend(saveId: Long): List<TransactionEntity>
+    suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<TransactionEntity>
 }

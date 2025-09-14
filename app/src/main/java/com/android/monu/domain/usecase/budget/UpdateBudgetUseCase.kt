@@ -3,7 +3,7 @@ package com.android.monu.domain.usecase.budget
 import com.android.monu.domain.model.budget.Budget
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.ui.feature.screen.budgeting.editbudget.components.EditBudgetContentState
+import com.android.monu.ui.feature.screen.budgeting.editBudget.components.EditBudgetContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class UpdateBudgetUseCase(

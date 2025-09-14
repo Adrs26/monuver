@@ -5,15 +5,15 @@ import com.android.monu.data.local.MonuDatabase
 import com.android.monu.data.local.dao.AccountDao
 import com.android.monu.data.local.dao.BillDao
 import com.android.monu.data.local.dao.BudgetDao
-import com.android.monu.data.local.dao.SaveDao
+import com.android.monu.data.local.dao.SavingDao
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.AccountMapper
 import com.android.monu.data.mapper.BillMapper
-import com.android.monu.data.mapper.SaveMapper
+import com.android.monu.data.mapper.SavingMapper
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.bill.Bill
-import com.android.monu.domain.model.save.Save
+import com.android.monu.domain.model.saving.Saving
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.domain.usecase.finance.BudgetStatus
@@ -26,7 +26,7 @@ class FinanceRepositoryImpl(
     private val transactionDao: TransactionDao,
     private val budgetDao: BudgetDao,
     private val billDao: BillDao,
-    private val saveDao: SaveDao
+    private val savingDao: SavingDao
 ) : FinanceRepository {
 
     override suspend fun createAccount(account: Account, transaction: Transaction): Long {
@@ -74,9 +74,9 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun createDepositTransaction(saveId: Long, transaction: Transaction) {
+    override suspend fun createDepositTransaction(savingId: Long, transaction: Transaction) {
         return database.withTransaction {
-            saveDao.increaseSaveCurrentAmount(saveId, transaction.amount)
+            savingDao.increaseSavingCurrentAmount(savingId, transaction.amount)
             accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
             transactionDao.createNewTransaction(
                 TransactionMapper.transactionDomainToEntity(transaction)
@@ -85,11 +85,11 @@ class FinanceRepositoryImpl(
     }
 
     override suspend fun createWithdrawTransaction(
-        saveId: Long,
+        savingId: Long,
         transaction: Transaction
     ) {
         return database.withTransaction {
-            saveDao.decreaseSaveCurrentAmount(saveId, transaction.amount)
+            savingDao.decreaseSavingCurrentAmount(savingId, transaction.amount)
             accountDao.increaseAccountBalance(transaction.destinationId ?: 0, transaction.amount)
             transactionDao.createNewTransaction(
                 TransactionMapper.transactionDomainToEntity(transaction)
@@ -120,19 +120,19 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun deleteSaveTransaction(
+    override suspend fun deleteSavingTransaction(
         transactionId: Long,
         category: Int,
         accountId: Int,
-        saveId: Long,
+        savingId: Long,
         amount: Long
     ) {
         return database.withTransaction {
             if (category == TransactionChildCategory.SAVINGS_IN) {
-                saveDao.decreaseSaveCurrentAmount(saveId, amount)
+                savingDao.decreaseSavingCurrentAmount(savingId, amount)
                 accountDao.increaseAccountBalance(accountId, amount)
             } else {
-                saveDao.increaseSaveCurrentAmount(saveId, amount)
+                savingDao.increaseSavingCurrentAmount(savingId, amount)
                 accountDao.decreaseAccountBalance(accountId, amount)
             }
             transactionDao.deleteTransactionById(transactionId)
@@ -245,11 +245,18 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun updateSave(save: Save) {
+    override suspend fun updateSaving(saving: Saving) {
         database.withTransaction {
-            saveDao.updateSave(SaveMapper.saveDomainToEntityForUpdate(save))
-            transactionDao.updateSaveTitleOnDepositTransaction(save.id, save.title)
-            transactionDao.updateSaveTitleOnWithdrawTransaction(save.id, save.title)
+            savingDao.updateSaving(SavingMapper.savingDomainToEntityForUpdate(saving))
+            transactionDao.updateSavingTitleOnDepositTransaction(saving.id, saving.title)
+            transactionDao.updateSavingTitleOnWithdrawTransaction(saving.id, saving.title)
+        }
+    }
+
+    override suspend fun completeSaving(transaction: Transaction, savingId: Long) {
+        database.withTransaction {
+            transactionDao.createNewTransaction(TransactionMapper.transactionDomainToEntity(transaction))
+            savingDao.updateSavingStatusToInactiveById(savingId)
         }
     }
 }

@@ -24,7 +24,7 @@ class CreateTransferTransactionUseCase(
 
         val (month, year) = DateHelper.getMonthAndYear(transferState.date)
         val transaction = Transaction(
-            title = "Transfer",
+            title = "Transfer Saldo",
             type = TransactionType.TRANSFER,
             parentCategory = TransactionParentCategory.TRANSFER,
             childCategory = TransactionChildCategory.TRANSFER_ACCOUNT,

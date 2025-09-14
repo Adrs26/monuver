@@ -18,8 +18,8 @@ interface BudgetDao {
     @Query("SELECT * FROM budget WHERE isActive = 0 ORDER BY endDate DESC")
     fun getAllInactiveBudgets(): PagingSource<Int, BudgetEntity>
 
-    @Query("SELECT * FROM budget WHERE id = :id")
-    fun getBudgetById(id: Long): Flow<BudgetEntity?>
+    @Query("SELECT * FROM budget WHERE id = :budgetId")
+    fun getBudgetById(budgetId: Long): Flow<BudgetEntity?>
 
     @Query("""
         SELECT IFNULL(SUM(maxAmount), 0) 
@@ -76,8 +76,8 @@ interface BudgetDao {
     @Query("UPDATE budget SET isActive = 0 WHERE category = :category")
     suspend fun updateBudgetStatusToInactive(category: Int)
 
-    @Query("DELETE FROM budget WHERE id = :id")
-    suspend fun deleteBudgetById(id: Long)
+    @Query("DELETE FROM budget WHERE id = :budgetId")
+    suspend fun deleteBudgetById(budgetId: Long)
 
     @Update
     suspend fun updateBudget(budget: BudgetEntity)

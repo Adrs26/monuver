@@ -53,7 +53,8 @@ object DataProvider {
                 TransactionChildCategory.PERSONAL_CARE,
                 TransactionChildCategory.MASSAGE,
                 TransactionChildCategory.SPA,
-                TransactionChildCategory.GYM
+                TransactionChildCategory.GYM,
+                TransactionChildCategory.LAUNDRY
             ),
             TransactionParentCategory.EDUCATION to listOf(
                 TransactionChildCategory.EDUCATION_FEE,

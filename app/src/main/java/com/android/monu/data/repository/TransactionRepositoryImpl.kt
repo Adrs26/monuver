@@ -61,8 +61,8 @@ class TransactionRepositoryImpl(
         }
     }
 
-    override fun getTransactionsBySaveId(saveId: Long): Flow<List<Transaction>> {
-        return transactionDao.getTransactionsBySaveId(saveId).map { transactions ->
+    override fun getTransactionsBySavingId(savingId: Long): Flow<List<Transaction>> {
+        return transactionDao.getTransactionsBySavingId(savingId).map { transactions ->
             transactions.map { transaction ->
                 TransactionMapper.transactionEntityToDomain(transaction)
             }
@@ -145,8 +145,8 @@ class TransactionRepositoryImpl(
         return transactionDao.getTotalTransactionAmountInDateRange(category, startDate, endDate)
     }
 
-    override suspend fun getTransactionsBySaveIdSuspend(saveId: Long): List<Transaction> {
-        return transactionDao.getTransactionsBySaveIdSuspend(saveId).map { transaction ->
+    override suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<Transaction> {
+        return transactionDao.getTransactionsBySavingIdSuspend(savingId).map { transaction ->
             TransactionMapper.transactionEntityToDomain(transaction)
         }
     }

@@ -43,6 +43,7 @@ sealed class DatabaseResultMessage(val message: Int) {
     object EmptySaveTargetDate : DatabaseResultMessage(R.string.empty_save_target_date)
     object CreateSaveSuccess : DatabaseResultMessage(R.string.save_successfully_added)
     object UpdateSaveSuccess : DatabaseResultMessage(R.string.save_successfully_saved)
+    object CompleteSaveSuccess : DatabaseResultMessage(R.string.save_successfully_completed)
     object EmptyDepositDate : DatabaseResultMessage(R.string.empty_deposit_withdraw_date)
     object EmptyDepositAmount : DatabaseResultMessage(R.string.empty_deposit_withdraw_amount)
     object EmptyDepositAccount : DatabaseResultMessage(R.string.empty_deposit_withdraw_account)

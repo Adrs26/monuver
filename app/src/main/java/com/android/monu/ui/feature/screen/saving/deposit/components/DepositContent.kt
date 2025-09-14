@@ -36,7 +36,7 @@ fun DepositContent(
     ) {
         StaticTextInputField(
             title = stringResource(R.string.saving),
-            value = depositState.saveName,
+            value = depositState.savingName,
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
         TextDateInputField(
@@ -95,8 +95,8 @@ data class DepositContentState(
     val amountFormat: TextFieldValue,
     val accountId: Int,
     val accountName: String,
-    val saveId: Long,
-    val saveName: String
+    val savingId: Long,
+    val savingName: String
 )
 
 interface DepositContentActions {

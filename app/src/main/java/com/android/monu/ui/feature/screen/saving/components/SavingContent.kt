@@ -16,20 +16,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.save.Save
+import com.android.monu.domain.model.saving.Saving
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun SavingContent(
     totalCurrentAmount: Long,
-    saves: List<Save>,
-    onNavigateToSaveDetail: (Long) -> Unit,
+    savings: List<Saving>,
+    onNavigateToSavingDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when {
-        saves.isEmpty() -> {
-            SaveEmptyListContent(
+        savings.isEmpty() -> {
+            SavingEmptyListContent(
                 totalCurrentAmount = totalCurrentAmount,
                 modifier = modifier
                     .padding(horizontal = 16.dp)
@@ -37,10 +37,10 @@ fun SavingContent(
             )
         }
         else -> {
-            SaveListContent(
+            SavingListContent(
                 totalCurrentAmount = totalCurrentAmount,
-                saves = saves,
-                onNavigateToSaveDetail = onNavigateToSaveDetail,
+                savings = savings,
+                onNavigateToSavingDetail = onNavigateToSavingDetail,
                 modifier = modifier.padding(top = 8.dp)
             )
         }
@@ -48,10 +48,10 @@ fun SavingContent(
 }
 
 @Composable
-fun SaveListContent(
+fun SavingListContent(
     totalCurrentAmount: Long,
-    saves: List<Save>,
-    onNavigateToSaveDetail: (Long) -> Unit,
+    savings: List<Saving>,
+    onNavigateToSavingDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -61,7 +61,7 @@ fun SaveListContent(
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
         item {
-            SaveOverview(
+            SavingOverview(
                 totalCurrentAmount = totalCurrentAmount,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
@@ -74,21 +74,21 @@ fun SaveListContent(
             )
         }
         items(
-            count = saves.size,
-            key = { index -> saves[index].id }
+            count = savings.size,
+            key = { index -> savings[index].id }
         ) { index ->
-            val saveState = saves[index]
+            val savingState = savings[index]
 
-            SaveListItem(
-                save = saveState,
-                modifier = Modifier.debouncedClickable { onNavigateToSaveDetail(saveState.id) }
+            SavingListItem(
+                saving = savingState,
+                modifier = Modifier.debouncedClickable { onNavigateToSavingDetail(savingState.id) }
             )
         }
     }
 }
 
 @Composable
-fun SaveEmptyListContent(
+fun SavingEmptyListContent(
     totalCurrentAmount: Long,
     modifier: Modifier = Modifier
 ) {
@@ -98,7 +98,7 @@ fun SaveEmptyListContent(
             .background(MaterialTheme.colorScheme.background),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        SaveOverview(totalCurrentAmount = totalCurrentAmount)
+        SavingOverview(totalCurrentAmount = totalCurrentAmount)
         Text(
             text = stringResource(R.string.list_active_save),
             modifier = Modifier.padding(top = 16.dp),

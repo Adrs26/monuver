@@ -114,6 +114,7 @@ object DatabaseCodeMapper {
             TransactionChildCategory.MASSAGE -> R.string.massage
             TransactionChildCategory.SPA -> R.string.spa
             TransactionChildCategory.GYM -> R.string.gym
+            TransactionChildCategory.LAUNDRY -> R.string.laundry
 
             TransactionChildCategory.EDUCATION_FEE -> R.string.education_fee
             TransactionChildCategory.BOOKS_STATIONERY -> R.string.books_stationery
@@ -140,6 +141,7 @@ object DatabaseCodeMapper {
             TransactionChildCategory.INSURANCE -> R.string.insurance
             TransactionChildCategory.INVESTMENT -> R.string.investment
             TransactionChildCategory.OTHER_EXPENSE -> R.string.other_expense
+            TransactionChildCategory.SAVINGS_COMPLETE -> R.string.savings_complete
 
             TransactionChildCategory.TRANSFER_ACCOUNT -> R.string.transfer_account
             TransactionChildCategory.SAVINGS_IN -> R.string.savings_in
@@ -182,6 +184,7 @@ object DatabaseCodeMapper {
             TransactionChildCategory.MASSAGE -> R.drawable.ic_massage
             TransactionChildCategory.SPA -> R.drawable.ic_spa
             TransactionChildCategory.GYM -> R.drawable.ic_fitness_center
+            TransactionChildCategory.LAUNDRY -> R.drawable.ic_local_laundry_service
 
             TransactionChildCategory.EDUCATION_FEE -> R.drawable.ic_school
             TransactionChildCategory.BOOKS_STATIONERY -> R.drawable.ic_book
@@ -208,6 +211,7 @@ object DatabaseCodeMapper {
             TransactionChildCategory.INSURANCE -> R.drawable.ic_shield_with_heart
             TransactionChildCategory.INVESTMENT -> R.drawable.ic_finance_mode
             TransactionChildCategory.OTHER_EXPENSE -> R.drawable.ic_more_horiz
+            TransactionChildCategory.SAVINGS_COMPLETE -> R.drawable.ic_savings_filled
 
             TransactionChildCategory.TRANSFER_ACCOUNT -> R.drawable.ic_compare_arrows
             TransactionChildCategory.SAVINGS_IN -> R.drawable.ic_savings_in

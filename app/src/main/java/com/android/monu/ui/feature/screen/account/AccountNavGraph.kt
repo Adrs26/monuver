@@ -6,11 +6,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.android.monu.ui.feature.screen.account.addaccount.AddAccountActions
-import com.android.monu.ui.feature.screen.account.addaccount.AddAccountScreen
-import com.android.monu.ui.feature.screen.account.addaccount.AddAccountViewModel
-import com.android.monu.ui.feature.screen.account.addaccount.components.AddAccountContentState
-import com.android.monu.ui.feature.screen.account.addaccount.components.AddAccountTypeScreen
+import com.android.monu.ui.feature.screen.account.addAccount.AddAccountActions
+import com.android.monu.ui.feature.screen.account.addAccount.AddAccountScreen
+import com.android.monu.ui.feature.screen.account.addAccount.AddAccountViewModel
+import com.android.monu.ui.feature.screen.account.addAccount.components.AddAccountContentState
+import com.android.monu.ui.feature.screen.account.addAccount.components.AddAccountTypeScreen
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.Account

@@ -4,38 +4,40 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.android.monu.domain.model.save.Save
+import com.android.monu.domain.model.saving.Saving
 import com.android.monu.ui.feature.components.CommonFloatingActionButton
-import com.android.monu.ui.feature.screen.saving.components.SaveAppBar
+import com.android.monu.ui.feature.screen.saving.components.SavingAppBar
 import com.android.monu.ui.feature.screen.saving.components.SavingContent
 
 @Composable
 fun SavingScreen(
     totalCurrentAmount: Long,
-    saves: List<Save>,
-    saveActions: SaveActions
+    savings: List<Saving>,
+    savingActions: SavingActions
 ) {
     Scaffold(
         topBar = {
-            SaveAppBar(
-                onNavigateBack = saveActions::onNavigateBack
+            SavingAppBar(
+                onNavigateBack = savingActions::onNavigateBack,
+                onNavigateToInactiveSaving = savingActions::onNavigateToInactiveSaving
             )
         },
         floatingActionButton = {
-            CommonFloatingActionButton { saveActions.onNavigateToAddSave() }
+            CommonFloatingActionButton { savingActions.onNavigateToAddSaving() }
         }
     ) { innerPadding ->
         SavingContent(
             totalCurrentAmount = totalCurrentAmount,
-            saves = saves,
-            onNavigateToSaveDetail = saveActions::onNavigateToSaveDetail,
+            savings = savings,
+            onNavigateToSavingDetail = savingActions::onNavigateToSavingDetail,
             modifier = Modifier.padding(innerPadding)
         )
     }
 }
 
-interface SaveActions {
+interface SavingActions {
     fun onNavigateBack()
-    fun onNavigateToAddSave()
-    fun onNavigateToSaveDetail(saveId: Long)
+    fun onNavigateToInactiveSaving()
+    fun onNavigateToAddSaving()
+    fun onNavigateToSavingDetail(savingId: Long)
 }

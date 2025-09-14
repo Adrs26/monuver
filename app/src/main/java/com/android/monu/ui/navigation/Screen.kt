@@ -67,16 +67,17 @@ class Saving {
     @Serializable object Add
     @Serializable data class Detail(val id: Long = 0)
     @Serializable data class Edit(val id: Long = 0)
+    @Serializable object Inactive
 }
 
 @Serializable
 class Deposit {
-    @Serializable data class Main(val saveId: Long? = null, val saveName: String? = null)
+    @Serializable data class Main(val savingId: Long? = null, val savingName: String? = null)
     @Serializable object Account
 }
 
 @Serializable
 class Withdraw {
-    @Serializable data class Main(val saveId: Long? = null, val saveName: String? = null)
+    @Serializable data class Main(val savingId: Long? = null, val savingName: String? = null)
     @Serializable object Account
 }

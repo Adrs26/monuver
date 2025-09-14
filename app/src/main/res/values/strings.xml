@@ -270,9 +270,7 @@
     <string name="saved">Terkumpul</string>
     <string name="target">Target</string>
     <string name="save_detail">Detail tabungan</string>
-    <string name="choose_saving">Pilih tabungan</string>
     <string name="add_save_balance">Tambah saldo tabungan</string>
-    <string name="empty_deposit_withdraw_save">Tabungan tidak boleh kosong</string>
     <string name="empty_deposit_withdraw_date">Tanggal transaksi tidak boleh kosong</string>
     <string name="empty_deposit_withdraw_amount">Nominal transaksi tidak boleh kosong</string>
     <string name="empty_deposit_withdraw_account">Sumber dana tidak boleh kosong</string>
@@ -289,4 +287,10 @@
     <string name="delete_save_confirmation">Menghapus tabungan juga akan menghapus transaksi terkait dan tindakan ini tidak dapat dipulihkan. Tetap ingin menghapus?</string>
     <string name="save_successfully_deleted">Tabungan berhasil dihapus</string>
     <string name="data_delete_in_progress">Data sedang dihapus. Tetap di halaman ini hingga proses selesai, ya.</string>
+    <string name="laundry">Laundry</string>
+    <string name="savings_complete">Tabungan selesai</string>
+    <string name="save_successfully_completed">Tabungan berhasil diselesaikan</string>
+    <string name="complete_save_confirmation">Saat tabungan diselesaikan, seluruh dana akan otomatis digunakan dan tabungan akan ditutup. Tindakan ini tidak bisa dipulihkan. Tetap lanjut?</string>
+    <string name="next">Lanjut</string>
+    <string name="inactive_save">Tabungan selesai</string>
 </resources>

@@ -2,31 +2,32 @@ package com.android.monu.di
 
 import com.android.monu.ui.feature.screen.MainViewModel
 import com.android.monu.ui.feature.screen.account.AccountViewModel
-import com.android.monu.ui.feature.screen.account.addaccount.AddAccountViewModel
+import com.android.monu.ui.feature.screen.account.addAccount.AddAccountViewModel
 import com.android.monu.ui.feature.screen.analytics.AnalyticsViewModel
-import com.android.monu.ui.feature.screen.analytics.analyticscategorytransaction.AnalyticsCategoryTransactionViewModel
+import com.android.monu.ui.feature.screen.analytics.analyticsCategoryTransaction.AnalyticsCategoryTransactionViewModel
 import com.android.monu.ui.feature.screen.billing.BillingViewModel
-import com.android.monu.ui.feature.screen.billing.addbill.AddBillViewModel
-import com.android.monu.ui.feature.screen.billing.billdetail.BillDetailViewModel
-import com.android.monu.ui.feature.screen.billing.editbill.EditBillViewModel
-import com.android.monu.ui.feature.screen.billing.paybill.PayBillViewModel
+import com.android.monu.ui.feature.screen.billing.addBill.AddBillViewModel
+import com.android.monu.ui.feature.screen.billing.billDetail.BillDetailViewModel
+import com.android.monu.ui.feature.screen.billing.editBill.EditBillViewModel
+import com.android.monu.ui.feature.screen.billing.payBill.PayBillViewModel
 import com.android.monu.ui.feature.screen.budgeting.BudgetingViewModel
-import com.android.monu.ui.feature.screen.budgeting.addbudget.AddBudgetViewModel
-import com.android.monu.ui.feature.screen.budgeting.budgetdetail.BudgetDetailViewModel
-import com.android.monu.ui.feature.screen.budgeting.editbudget.EditBudgetViewModel
-import com.android.monu.ui.feature.screen.budgeting.inactivebudget.InactiveBudgetViewModel
+import com.android.monu.ui.feature.screen.budgeting.addBudget.AddBudgetViewModel
+import com.android.monu.ui.feature.screen.budgeting.budgetDetail.BudgetDetailViewModel
+import com.android.monu.ui.feature.screen.budgeting.editBudget.EditBudgetViewModel
+import com.android.monu.ui.feature.screen.budgeting.inactiveBudget.InactiveBudgetViewModel
 import com.android.monu.ui.feature.screen.home.HomeViewModel
 import com.android.monu.ui.feature.screen.saving.SavingViewModel
-import com.android.monu.ui.feature.screen.saving.addsave.AddSaveViewModel
+import com.android.monu.ui.feature.screen.saving.addSaving.AddSavingViewModel
 import com.android.monu.ui.feature.screen.saving.deposit.DepositViewModel
-import com.android.monu.ui.feature.screen.saving.editsave.EditSaveViewModel
-import com.android.monu.ui.feature.screen.saving.savedetail.SaveDetailViewModel
+import com.android.monu.ui.feature.screen.saving.editSaving.EditSavingViewModel
+import com.android.monu.ui.feature.screen.saving.inactiveSaving.InactiveSavingViewModel
+import com.android.monu.ui.feature.screen.saving.savingDetail.SavingDetailViewModel
 import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawViewModel
 import com.android.monu.ui.feature.screen.settings.SettingsViewModel
 import com.android.monu.ui.feature.screen.transaction.TransactionViewModel
-import com.android.monu.ui.feature.screen.transaction.addtransaction.AddTransactionViewModel
-import com.android.monu.ui.feature.screen.transaction.edittransaction.EditTransactionViewModel
-import com.android.monu.ui.feature.screen.transaction.transactiondetail.TransactionDetailViewModel
+import com.android.monu.ui.feature.screen.transaction.addTransaction.AddTransactionViewModel
+import com.android.monu.ui.feature.screen.transaction.editTransaction.EditTransactionViewModel
+import com.android.monu.ui.feature.screen.transaction.transactionDetail.TransactionDetailViewModel
 import com.android.monu.ui.feature.screen.transaction.transfer.TransferViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -61,11 +62,12 @@ val viewModelModule = module {
     viewModelOf(::EditBillViewModel)
 
     viewModelOf(::SavingViewModel)
-    viewModelOf(::AddSaveViewModel)
-    viewModelOf(::SaveDetailViewModel)
-    viewModelOf(::EditSaveViewModel)
+    viewModelOf(::AddSavingViewModel)
+    viewModelOf(::SavingDetailViewModel)
+    viewModelOf(::EditSavingViewModel)
     viewModelOf(::DepositViewModel)
     viewModelOf(::WithdrawViewModel)
+    viewModelOf(::InactiveSavingViewModel)
 
     viewModelOf(::SettingsViewModel)
 }

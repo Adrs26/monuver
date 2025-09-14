@@ -39,13 +39,13 @@ class CreateDepositTransactionUseCase(
             amount = depositState.amount,
             sourceId = depositState.accountId,
             sourceName = depositState.accountName,
-            destinationId = depositState.saveId.toInt(),
-            destinationName = depositState.saveName,
-            saveId = depositState.saveId,
+            destinationId = depositState.savingId.toInt(),
+            destinationName = depositState.savingName,
+            saveId = depositState.savingId,
             isLocked = true
         )
 
-        financeRepository.createDepositTransaction(depositState.saveId, transaction)
+        financeRepository.createDepositTransaction(depositState.savingId, transaction)
         return DatabaseResultMessage.CreateDepositTransactionSuccess
     }
 }

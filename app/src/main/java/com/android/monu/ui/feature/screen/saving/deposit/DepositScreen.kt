@@ -52,8 +52,8 @@ fun DepositScreen(
         amountFormat = depositAmountFormat,
         accountId = depositState.account.first,
         accountName = depositState.account.second,
-        saveId = depositState.save.first,
-        saveName = depositState.save.second
+        savingId = depositState.saving.first,
+        savingName = depositState.saving.second
     )
 
     val depositContentActions = object : DepositContentActions {
@@ -130,7 +130,7 @@ fun DepositScreen(
 
 data class DepositState(
     val account: Pair<Int, String>,
-    val save: Pair<Long, String>,
+    val saving: Pair<Long, String>,
     val addResult: DatabaseResultMessage?
 )
 
