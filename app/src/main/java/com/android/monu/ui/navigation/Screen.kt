@@ -72,7 +72,6 @@ class Saving {
 @Serializable
 class Deposit {
     @Serializable data class Main(val saveId: Long? = null, val saveName: String? = null)
-    @Serializable object Save
     @Serializable object Account
 }
 

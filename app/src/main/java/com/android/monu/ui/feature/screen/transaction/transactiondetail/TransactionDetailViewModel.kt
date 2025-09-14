@@ -7,9 +7,7 @@ import androidx.navigation.toRoute
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.usecase.finance.DeleteExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteIncomeTransactionUseCase
-import com.android.monu.domain.usecase.finance.DeleteTransferTransactionUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
-import com.android.monu.ui.feature.utils.TransactionChildCategory
 import com.android.monu.ui.feature.utils.TransactionType
 import com.android.monu.ui.navigation.MainTransactionDetail
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,8 +18,7 @@ class TransactionDetailViewModel(
     savedStateHandle: SavedStateHandle,
     getTransactionByIdUseCase: GetTransactionByIdUseCase,
     private val deleteIncomeTransactionUseCase: DeleteIncomeTransactionUseCase,
-    private val deleteExpenseTransactionUseCase: DeleteExpenseTransactionUseCase,
-    private val deleteTransferTransactionUseCase: DeleteTransferTransactionUseCase
+    private val deleteExpenseTransactionUseCase: DeleteExpenseTransactionUseCase
 ) : ViewModel() {
 
     val transaction = getTransactionByIdUseCase(
@@ -30,16 +27,12 @@ class TransactionDetailViewModel(
 
     fun deleteTransaction(transaction: Transaction) {
         viewModelScope.launch {
-            when {
-                transaction.type == TransactionType.INCOME -> {
+            when (transaction.type) {
+                TransactionType.INCOME -> {
                     deleteIncomeTransactionUseCase(transaction)
                 }
-                transaction.type == TransactionType.EXPENSE -> {
+                TransactionType.EXPENSE -> {
                     deleteExpenseTransactionUseCase(transaction)
-                }
-                transaction.type == TransactionType.TRANSFER &&
-                        transaction.childCategory == TransactionChildCategory.TRANSFER_ACCOUNT -> {
-                            deleteTransferTransactionUseCase(transaction)
                 }
                 else -> null
             }

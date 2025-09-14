@@ -60,8 +60,8 @@ class BillRepositoryImpl(
         billDao.createNewBill(BillMapper.billDomainToEntity(bill))
     }
 
-    override suspend fun deleteBill(id: Long) {
-        billDao.deleteBill(id)
+    override suspend fun deleteBillById(billId: Long) {
+        billDao.deleteBillById(billId)
     }
 
     override suspend fun updateBill(bill: Bill) {

@@ -8,7 +8,7 @@ class DeleteIncomeTransactionUseCase(
 ) {
     suspend operator fun invoke(transaction: Transaction) {
         repository.deleteIncomeTransaction(
-            id = transaction.id,
+            transactionId = transaction.id,
             sourceId = transaction.sourceId,
             amount = transaction.amount
         )

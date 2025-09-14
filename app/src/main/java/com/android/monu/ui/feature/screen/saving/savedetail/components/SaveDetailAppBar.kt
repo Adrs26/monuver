@@ -19,7 +19,8 @@ fun SaveDetailAppBar(
     title: String,
     isActive: Boolean,
     onNavigateBack: () -> Unit,
-    onNavigateToEditSave: () -> Unit
+    onNavigateToEditSave: () -> Unit,
+    onRemoveSave: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -53,7 +54,7 @@ fun SaveDetailAppBar(
                     )
                 }
                 DebouncedIconButton(
-                    onClick = { }
+                    onClick = onRemoveSave
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_delete),

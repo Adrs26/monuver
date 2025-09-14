@@ -37,7 +37,7 @@ class SaveRepositoryImpl(
         saveDao.createNewSave(SaveMapper.saveDomainToEntity(save))
     }
 
-    override suspend fun updateSave(save: Save) {
-        saveDao.updateSave(SaveMapper.saveDomainToEntityForUpdate(save))
+    override suspend fun deleteSaveById(saveId: Long) {
+        saveDao.deleteSaveById(saveId)
     }
 }

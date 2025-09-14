@@ -34,28 +34,11 @@ fun DepositContent(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        if (depositState.fixSaveId != null && depositState.fixSaveName != null) {
-            StaticTextInputField(
-                title = stringResource(R.string.saving),
-                value = depositState.fixSaveName,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
-            )
-        } else {
-            TextInputField(
-                title = stringResource(R.string.saving),
-                value = depositState.saveName,
-                onValueChange = { },
-                placeholderText = stringResource(R.string.choose_saving),
-                modifier = Modifier
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = depositActions::onNavigateToSave
-                    )
-                    .padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                isEnable = false
-            )
-        }
+        StaticTextInputField(
+            title = stringResource(R.string.saving),
+            value = depositState.saveName,
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+        )
         TextDateInputField(
             title = stringResource(R.string.date),
             value = DateHelper.formatDateToReadable(depositState.date),
@@ -113,13 +96,10 @@ data class DepositContentState(
     val accountId: Int,
     val accountName: String,
     val saveId: Long,
-    val saveName: String,
-    val fixSaveId: Long?,
-    val fixSaveName: String?
+    val saveName: String
 )
 
 interface DepositContentActions {
-    fun onNavigateToSave()
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
     fun onNavigateToAccount()

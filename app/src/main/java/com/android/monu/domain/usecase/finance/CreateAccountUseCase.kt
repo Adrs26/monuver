@@ -33,7 +33,7 @@ class CreateAccountUseCase(
         val (month, year) = DateHelper.getMonthAndYear(isoDate)
 
         val transaction = Transaction(
-            title = "Penambahan akun baru ${accountState.name}",
+            title = "Penambahan Akun",
             type = TransactionType.INCOME,
             parentCategory = TransactionParentCategory.OTHER_INCOME,
             childCategory = TransactionChildCategory.OTHER_INCOME,

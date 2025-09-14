@@ -28,10 +28,10 @@ interface BillDao {
     suspend fun createNewBill(bill: BillEntity)
 
     @Query("UPDATE bill SET isPaid = 1, paidDate = :paidDate WHERE id = :id")
-    suspend fun payBill(id: Long, paidDate: String)
+    suspend fun payBillById(id: Long, paidDate: String)
 
     @Query("DELETE FROM bill WHERE id = :id")
-    suspend fun deleteBill(id: Long)
+    suspend fun deleteBillById(id: Long)
 
     @Update
     suspend fun updateBill(bill: BillEntity)

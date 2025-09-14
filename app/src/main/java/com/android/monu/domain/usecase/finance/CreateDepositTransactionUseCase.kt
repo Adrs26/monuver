@@ -16,8 +16,6 @@ class CreateDepositTransactionUseCase(
 ) {
     suspend operator fun invoke(depositState: DepositContentState): DatabaseResultMessage {
         when {
-            depositState.fixSaveId == null && depositState.saveId == 0L ->
-                return DatabaseResultMessage.EmptyDepositSave
             depositState.date.isEmpty() -> return DatabaseResultMessage.EmptyDepositDate
             depositState.amount == 0L -> return DatabaseResultMessage.EmptyDepositAmount
             depositState.accountId == 0 -> return DatabaseResultMessage.EmptyDepositAccount
@@ -28,11 +26,9 @@ class CreateDepositTransactionUseCase(
             return DatabaseResultMessage.InsufficientAccountBalance
         }
 
-        val saveId = depositState.fixSaveId ?: depositState.saveId
-        val saveName = depositState.fixSaveName ?: depositState.saveName
         val (month, year) = DateHelper.getMonthAndYear(depositState.date)
         val transaction = Transaction(
-            title = "Penambahan saldo ke tabungan $saveName",
+            title = "Setoran Tabungan",
             type = TransactionType.TRANSFER,
             parentCategory = TransactionParentCategory.TRANSFER,
             childCategory = TransactionChildCategory.SAVINGS_IN,
@@ -43,13 +39,13 @@ class CreateDepositTransactionUseCase(
             amount = depositState.amount,
             sourceId = depositState.accountId,
             sourceName = depositState.accountName,
-            destinationId = saveId.toInt(),
-            destinationName = saveName,
-            saveId = saveId,
+            destinationId = depositState.saveId.toInt(),
+            destinationName = depositState.saveName,
+            saveId = depositState.saveId,
             isLocked = true
         )
 
-        financeRepository.createDepositTransaction(saveId, transaction)
+        financeRepository.createDepositTransaction(depositState.saveId, transaction)
         return DatabaseResultMessage.CreateDepositTransactionSuccess
     }
 }

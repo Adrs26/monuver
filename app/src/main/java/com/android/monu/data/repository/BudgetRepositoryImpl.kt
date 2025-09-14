@@ -42,8 +42,8 @@ class BudgetRepositoryImpl(
             }.cachedIn(scope)
     }
 
-    override fun getBudgetById(id: Long): Flow<Budget?> {
-        return budgetDao.getBudgetById(id).map { budget ->
+    override fun getBudgetById(budgetId: Long): Flow<Budget?> {
+        return budgetDao.getBudgetById(budgetId).map { budget ->
             budget?.let { BudgetMapper.budgetEntityToDomain(it) }
         }
     }
@@ -81,8 +81,8 @@ class BudgetRepositoryImpl(
         budgetDao.updateBudgetStatusToInactive(category)
     }
 
-    override suspend fun deleteBudgetById(id: Long) {
-        budgetDao.deleteBudgetById(id)
+    override suspend fun deleteBudgetById(budgetId: Long) {
+        budgetDao.deleteBudgetById(budgetId)
     }
 
     override suspend fun updateBudget(budget: Budget) {

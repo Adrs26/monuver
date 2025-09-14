@@ -1,12 +1,12 @@
-package com.android.monu.domain.usecase.save
+package com.android.monu.domain.usecase.finance
 
 import com.android.monu.domain.model.save.Save
-import com.android.monu.domain.repository.SaveRepository
+import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.ui.feature.screen.saving.editsave.components.EditSaveContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class UpdateSaveUseCase(
-    private val repository: SaveRepository
+    private val repository: FinanceRepository
 ) {
     suspend operator fun invoke(saveState: EditSaveContentState): DatabaseResultMessage {
         when {

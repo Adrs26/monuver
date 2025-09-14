@@ -9,12 +9,15 @@ import com.android.monu.data.local.dao.SaveDao
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.AccountMapper
 import com.android.monu.data.mapper.BillMapper
+import com.android.monu.data.mapper.SaveMapper
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.model.save.Save
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.domain.usecase.finance.BudgetStatus
+import com.android.monu.ui.feature.utils.TransactionChildCategory
 import kotlin.math.absoluteValue
 
 class FinanceRepositoryImpl(
@@ -94,40 +97,45 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun deleteIncomeTransaction(id: Long, sourceId: Int, amount: Long): Int {
+    override suspend fun deleteIncomeTransaction(transactionId: Long, sourceId: Int, amount: Long): Int {
         return database.withTransaction {
-            val rowDeleted = transactionDao.deleteTransactionById(id)
+            val rowDeleted = transactionDao.deleteTransactionById(transactionId)
             accountDao.decreaseAccountBalance(sourceId, amount)
             rowDeleted
         }
     }
 
     override suspend fun deleteExpenseTransaction(
-        id: Long,
+        transactionId: Long,
         parentCategory: Int,
         date: String,
         sourceId: Int,
         amount: Long
     ): Int {
         return database.withTransaction {
-            val rowDeleted = transactionDao.deleteTransactionById(id)
+            val rowDeleted = transactionDao.deleteTransactionById(transactionId)
             accountDao.increaseAccountBalance(sourceId, amount)
             budgetDao.decreaseBudgetUsedAmount(parentCategory, date, amount)
             rowDeleted
         }
     }
 
-    override suspend fun deleteTransferTransaction(
-        id: Long,
-        sourceId: Int,
-        destinationId: Int,
+    override suspend fun deleteSaveTransaction(
+        transactionId: Long,
+        category: Int,
+        accountId: Int,
+        saveId: Long,
         amount: Long
-    ): Int {
+    ) {
         return database.withTransaction {
-            val rowDeleted = transactionDao.deleteTransactionById(id)
-            accountDao.increaseAccountBalance(sourceId, amount)
-            accountDao.decreaseAccountBalance(destinationId, amount)
-            rowDeleted
+            if (category == TransactionChildCategory.SAVINGS_IN) {
+                saveDao.decreaseSaveCurrentAmount(saveId, amount)
+                accountDao.increaseAccountBalance(accountId, amount)
+            } else {
+                saveDao.increaseSaveCurrentAmount(saveId, amount)
+                accountDao.decreaseAccountBalance(accountId, amount)
+            }
+            transactionDao.deleteTransactionById(transactionId)
         }
     }
 
@@ -226,7 +234,7 @@ class FinanceRepositoryImpl(
         bill: Bill
     ) {
         database.withTransaction {
-            billDao.payBill(billId, billPaidDate)
+            billDao.payBillById(billId, billPaidDate)
             transactionDao.createNewTransaction(TransactionMapper.transactionDomainToEntity(transaction))
             accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
             budgetDao.increaseBudgetUsedAmount(transaction.parentCategory, transaction.date, transaction.amount)
@@ -234,6 +242,14 @@ class FinanceRepositoryImpl(
             if (isRecurring) {
                 billDao.createNewBill(BillMapper.billDomainToEntity(bill))
             }
+        }
+    }
+
+    override suspend fun updateSave(save: Save) {
+        database.withTransaction {
+            saveDao.updateSave(SaveMapper.saveDomainToEntityForUpdate(save))
+            transactionDao.updateSaveTitleOnDepositTransaction(save.id, save.title)
+            transactionDao.updateSaveTitleOnWithdrawTransaction(save.id, save.title)
         }
     }
 }

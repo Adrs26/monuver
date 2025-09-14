@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.android.monu.domain.usecase.save.GetSaveByIdUseCase
-import com.android.monu.domain.usecase.save.UpdateSaveUseCase
+import com.android.monu.domain.usecase.finance.UpdateSaveUseCase
 import com.android.monu.ui.feature.screen.saving.editsave.components.EditSaveContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.navigation.Saving

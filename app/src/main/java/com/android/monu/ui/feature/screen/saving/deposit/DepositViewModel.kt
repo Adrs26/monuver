@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
 import com.android.monu.domain.usecase.finance.CreateDepositTransactionUseCase
-import com.android.monu.domain.usecase.save.GetAllSavesUseCase
 import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import kotlinx.coroutines.delay
@@ -15,13 +14,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class DepositViewModel(
-    getAllSavesUseCase: GetAllSavesUseCase,
     getAllAccountsUseCase: GetAllAccountsUseCase,
     private val createDepositTransactionUseCase: CreateDepositTransactionUseCase
 ) : ViewModel() {
-
-    val saves = getAllSavesUseCase()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val accounts = getAllAccountsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
@@ -29,18 +24,11 @@ class DepositViewModel(
     private val _transactionSource = MutableStateFlow(Pair(0, ""))
     val transactionSource = _transactionSource.asStateFlow()
 
-    private val _transactionDestination = MutableStateFlow(Pair(0L, ""))
-    val transactionDestination = _transactionDestination.asStateFlow()
-
     private val _createResult = MutableStateFlow<DatabaseResultMessage?>(null)
     val createResult = _createResult.asStateFlow()
 
     fun changeTransactionSource(sourceId: Int, sourceName: String) {
         _transactionSource.value = Pair(sourceId, sourceName)
-    }
-
-    fun changeTransactionDestination(destinationId: Long, destinationName: String) {
-        _transactionDestination.value = Pair(destinationId, destinationName)
     }
 
     fun createNewTransaction(depositState: DepositContentState) {

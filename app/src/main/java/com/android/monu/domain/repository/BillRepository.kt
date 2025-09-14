@@ -17,7 +17,7 @@ interface BillRepository {
 
     suspend fun createNewBill(bill: Bill)
 
-    suspend fun deleteBill(id: Long)
+    suspend fun deleteBillById(billId: Long)
 
     suspend fun updateBill(bill: Bill)
 }

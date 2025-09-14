@@ -11,7 +11,7 @@ interface BudgetRepository {
 
     fun getAllInactiveBudgets(scope: CoroutineScope): Flow<PagingData<Budget>>
 
-    fun getBudgetById(id: Long): Flow<Budget?>
+    fun getBudgetById(budgetId: Long): Flow<Budget?>
 
     fun getTotalBudgetMaxAmount(): Flow<Long>
 
@@ -27,7 +27,7 @@ interface BudgetRepository {
 
     suspend fun updateBudgetStatusToInactive(category: Int)
 
-    suspend fun deleteBudgetById(id: Long)
+    suspend fun deleteBudgetById(budgetId: Long)
 
     suspend fun updateBudget(budget: Budget)
 }

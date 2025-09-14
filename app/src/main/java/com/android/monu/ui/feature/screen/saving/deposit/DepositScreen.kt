@@ -53,16 +53,10 @@ fun DepositScreen(
         accountId = depositState.account.first,
         accountName = depositState.account.second,
         saveId = depositState.save.first,
-        saveName = depositState.save.second,
-        fixSaveId = depositState.fixSaveId,
-        fixSaveName = depositState.fixSaveName
+        saveName = depositState.save.second
     )
 
     val depositContentActions = object : DepositContentActions {
-        override fun onNavigateToSave() {
-            depositActions.onNavigateToSave()
-        }
-
         override fun onDateClick() {
             calendarState.show()
         }
@@ -137,14 +131,11 @@ fun DepositScreen(
 data class DepositState(
     val account: Pair<Int, String>,
     val save: Pair<Long, String>,
-    val fixSaveId: Long?,
-    val fixSaveName: String?,
     val addResult: DatabaseResultMessage?
 )
 
 interface DepositActions {
     fun onNavigateBack()
-    fun onNavigateToSave()
     fun onNavigateToAccount()
     fun onAddNewDeposit(depositState: DepositContentState)
 }

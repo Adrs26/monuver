@@ -286,4 +286,7 @@
     <string name="current_amount">Saldo saat ini</string>
     <string name="save_successfully_saved">Tabungan berhasil diperbarui</string>
     <string name="edit_save">Ubah data tabungan</string>
+    <string name="delete_save_confirmation">Menghapus tabungan juga akan menghapus transaksi terkait dan tindakan ini tidak dapat dipulihkan. Tetap ingin menghapus?</string>
+    <string name="save_successfully_deleted">Tabungan berhasil dihapus</string>
+    <string name="data_delete_in_progress">Data sedang dihapus. Tetap di halaman ini hingga proses selesai, ya.</string>
 </resources>

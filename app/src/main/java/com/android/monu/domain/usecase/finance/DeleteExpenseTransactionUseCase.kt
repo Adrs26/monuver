@@ -8,7 +8,7 @@ class DeleteExpenseTransactionUseCase(
 ) {
     suspend operator fun invoke(transaction: Transaction) {
         repository.deleteExpenseTransaction(
-            id = transaction.id,
+            transactionId = transaction.id,
             parentCategory = transaction.parentCategory,
             date = transaction.date,
             sourceId = transaction.sourceId,

@@ -10,7 +10,6 @@ import androidx.navigation.toRoute
 import com.android.monu.ui.feature.screen.saving.addsave.AddSaveScreen
 import com.android.monu.ui.feature.screen.saving.addsave.AddSaveViewModel
 import com.android.monu.ui.feature.screen.saving.components.SaveAccountScreen
-import com.android.monu.ui.feature.screen.saving.components.SaveListScreen
 import com.android.monu.ui.feature.screen.saving.deposit.DepositActions
 import com.android.monu.ui.feature.screen.saving.deposit.DepositScreen
 import com.android.monu.ui.feature.screen.saving.deposit.DepositState
@@ -98,6 +97,7 @@ fun NavGraphBuilder.savingNavGraph(
             )
             val save by viewModel.save.collectAsStateWithLifecycle()
             val transactions by viewModel.transactions.collectAsStateWithLifecycle()
+            val removeProgress by viewModel.deleteProgress.collectAsStateWithLifecycle()
 
             save?.let { save ->
                 val saveDetailActions = object : SaveDetailActions {
@@ -107,6 +107,10 @@ fun NavGraphBuilder.savingNavGraph(
 
                     override fun onNavigateToEditSave(saveId: Long) {
                         navController.navigate(Saving.Edit(saveId))
+                    }
+
+                    override fun onRemoveSave(saveId: Long) {
+                        viewModel.deleteSave(saveId)
                     }
 
                     override fun onNavigateToDeposit() {
@@ -125,6 +129,7 @@ fun NavGraphBuilder.savingNavGraph(
                 SaveDetailScreen(
                     save = save,
                     transactions = transactions,
+                    removeProgress = removeProgress,
                     saveActions = saveDetailActions
                 )
             }
@@ -174,25 +179,19 @@ fun NavGraphBuilder.depositNavGraph(
         ) {
             val args = it.toRoute<Deposit.Main>()
             val viewModel = it.sharedKoinViewModel<DepositViewModel>(navController)
-            val save by viewModel.transactionDestination.collectAsStateWithLifecycle()
             val account by viewModel.transactionSource.collectAsStateWithLifecycle()
             val addResult by viewModel.createResult.collectAsStateWithLifecycle()
+            val save = Pair(args.saveId ?: 0, args.saveName ?: "")
 
             val depositState = DepositState(
-                save = save,
                 account = account,
-                fixSaveId = args.saveId,
-                fixSaveName = args.saveName,
+                save = save,
                 addResult = addResult
             )
 
             val depositActions = object : DepositActions {
                 override fun onNavigateBack() {
                     navController.navigateUp()
-                }
-
-                override fun onNavigateToSave() {
-                    navController.navigate(Deposit.Save)
                 }
 
                 override fun onNavigateToAccount() {
@@ -207,21 +206,6 @@ fun NavGraphBuilder.depositNavGraph(
             DepositScreen(
                 depositState = depositState,
                 depositActions = depositActions
-            )
-        }
-        composable<Deposit.Save>(
-            enterTransition = { NavigationAnimation.enter },
-            exitTransition = { NavigationAnimation.exit },
-            popEnterTransition = { NavigationAnimation.popEnter },
-            popExitTransition = { NavigationAnimation.popExit }
-        ) {
-            val viewModel = it.sharedKoinViewModel<DepositViewModel>(navController)
-            val saves by viewModel.saves.collectAsStateWithLifecycle()
-
-            SaveListScreen(
-                saves = saves,
-                onNavigateBack = navController::navigateUp,
-                onSaveSelect = viewModel::changeTransactionDestination
             )
         }
         composable<Deposit.Account>(

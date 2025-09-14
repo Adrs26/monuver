@@ -2,6 +2,7 @@ package com.android.monu.domain.repository
 
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.model.save.Save
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.usecase.finance.BudgetStatus
 
@@ -19,22 +20,23 @@ interface FinanceRepository {
 
     suspend fun createWithdrawTransaction(saveId: Long, transaction: Transaction)
 
-    suspend fun deleteIncomeTransaction(id: Long, sourceId: Int, amount: Long): Int
+    suspend fun deleteIncomeTransaction(transactionId: Long, sourceId: Int, amount: Long): Int
 
     suspend fun deleteExpenseTransaction(
-        id: Long,
+        transactionId: Long,
         parentCategory: Int,
         date: String,
         sourceId: Int,
         amount: Long
     ): Int
 
-    suspend fun deleteTransferTransaction(
-        id: Long,
-        sourceId: Int,
-        destinationId: Int,
+    suspend fun deleteSaveTransaction(
+        transactionId: Long,
+        category: Int,
+        accountId: Int,
+        saveId: Long,
         amount: Long
-    ): Int
+    )
 
     suspend fun updateIncomeTransaction(transaction: Transaction, initialAmount: Long): Int
 
@@ -53,4 +55,6 @@ interface FinanceRepository {
         isRecurring: Boolean,
         bill: Bill
     )
+
+    suspend fun updateSave(save: Save)
 }

@@ -15,5 +15,5 @@ interface SaveRepository {
 
     suspend fun createNewSave(save: Save)
 
-    suspend fun updateSave(save: Save)
+    suspend fun deleteSaveById(saveId: Long)
 }

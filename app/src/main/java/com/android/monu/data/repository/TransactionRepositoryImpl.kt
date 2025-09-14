@@ -144,4 +144,10 @@ class TransactionRepositoryImpl(
     ): Long {
         return transactionDao.getTotalTransactionAmountInDateRange(category, startDate, endDate)
     }
+
+    override suspend fun getTransactionsBySaveIdSuspend(saveId: Long): List<Transaction> {
+        return transactionDao.getTransactionsBySaveIdSuspend(saveId).map { transaction ->
+            TransactionMapper.transactionEntityToDomain(transaction)
+        }
+    }
 }

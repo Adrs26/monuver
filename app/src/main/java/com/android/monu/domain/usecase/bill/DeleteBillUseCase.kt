@@ -6,6 +6,6 @@ class DeleteBillUseCase(
     private val repository: BillRepository
 ) {
     suspend operator fun invoke(id: Long) {
-        repository.deleteBill(id)
+        repository.deleteBillById(id)
     }
 }

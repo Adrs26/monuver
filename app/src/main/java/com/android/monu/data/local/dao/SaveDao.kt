@@ -42,4 +42,7 @@ interface SaveDao {
 
     @Update
     suspend fun updateSave(saveEntity: SaveEntity)
+
+    @Query("DELETE FROM save WHERE id = :saveId")
+    suspend fun deleteSaveById(saveId: Long)
 }

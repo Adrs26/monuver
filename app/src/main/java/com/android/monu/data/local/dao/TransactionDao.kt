@@ -143,4 +143,27 @@ interface TransactionDao {
         startDate: String,
         endDate: String
     ): Long
+
+    @Query("""
+        UPDATE `transaction`
+        SET destinationName = :saveTitle
+        WHERE saveId = :saveId AND type = 1003 AND childCategory = 1004
+    """)
+    suspend fun updateSaveTitleOnDepositTransaction(saveId: Long, saveTitle: String
+    )
+
+    @Query("""
+        UPDATE `transaction`
+        SET sourceName = :saveTitle
+        WHERE saveId = :saveId AND type = 1003 AND childCategory = 1005
+    """)
+    suspend fun updateSaveTitleOnWithdrawTransaction(saveId: Long, saveTitle: String)
+
+    @Query("""
+        SELECT * 
+        FROM `transaction` 
+        WHERE saveId = :saveId
+        ORDER BY date DESC, timeStamp DESC
+    """)
+    suspend fun getTransactionsBySaveIdSuspend(saveId: Long): List<TransactionEntity>
 }

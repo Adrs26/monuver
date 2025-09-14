@@ -35,7 +35,7 @@ fun PayBillScreen(
     payBillState: PayBillState,
     payBillActions: PayBillActions
 ) {
-    var billTitle by rememberSaveable { mutableStateOf("Pembayaran ${bill.title}") }
+    var billTitle by rememberSaveable { mutableStateOf("Pembayaran Tagihan") }
     var billDate by rememberSaveable {
         mutableStateOf(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
     }

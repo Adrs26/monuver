@@ -55,7 +55,7 @@ fun HomeScreen(
                 onNavigateToAddIncomeTransaction = homeActions::onNavigateToAddIncomeTransaction,
                 onNavigateToAddExpenseTransaction = homeActions::onNavigateToAddExpenseTransaction,
                 onNavigateToTransfer = homeActions::onNavigateToTransfer,
-                onNavigateToAddSaveAmount = homeActions::onNavigateToAddSaveAmount,
+                onNavigateToAddBudget = homeActions::onNavigateToAddBudget,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .padding(top = 24.dp)
@@ -94,7 +94,7 @@ interface HomeActions {
     fun onNavigateToAddIncomeTransaction()
     fun onNavigateToAddExpenseTransaction()
     fun onNavigateToTransfer()
-    fun onNavigateToAddSaveAmount()
+    fun onNavigateToAddBudget()
     fun onNavigateToTransaction()
     fun onNavigateToTransactionDetail(transactionId: Long)
     fun onNavigateToBudgeting()

@@ -16,7 +16,6 @@ class CreateWithdrawTransactionUseCase(
 ) {
     suspend operator fun invoke(withdrawState: WithdrawContentState): DatabaseResultMessage {
         when {
-            withdrawState.saveId == 0L -> return DatabaseResultMessage.EmptyWithdrawSave
             withdrawState.date.isEmpty() -> return DatabaseResultMessage.EmptyWithdrawDate
             withdrawState.amount == 0L -> return DatabaseResultMessage.EmptyWithdrawAmount
             withdrawState.accountId == 0 -> return DatabaseResultMessage.EmptyWithdrawAccount
@@ -29,7 +28,7 @@ class CreateWithdrawTransactionUseCase(
 
         val (month, year) = DateHelper.getMonthAndYear(withdrawState.date)
         val transaction = Transaction(
-            title = "Penarikan saldo dari tabungan ${withdrawState.saveName} ke akun ${withdrawState.accountName}",
+            title = "Penarikan Tabungan",
             type = TransactionType.TRANSFER,
             parentCategory = TransactionParentCategory.TRANSFER,
             childCategory = TransactionChildCategory.SAVINGS_OUT,

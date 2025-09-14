@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.ui.feature.utils.debouncedClickable
 import com.android.monu.ui.theme.Blue800
+import com.android.monu.ui.theme.Charcoal
 import com.android.monu.ui.theme.Green600
 import com.android.monu.ui.theme.Red600
 
@@ -30,7 +31,7 @@ fun HomeMenuButtonBar(
     onNavigateToAddIncomeTransaction: () -> Unit,
     onNavigateToAddExpenseTransaction: () -> Unit,
     onNavigateToTransfer: () -> Unit,
-    onNavigateToAddSaveAmount: () -> Unit,
+    onNavigateToAddBudget: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -64,8 +65,11 @@ fun HomeMenuButtonBar(
                 .padding(horizontal = 4.dp)
                 .weight(1f)
         )
-        SavingMenuButton(
-            onClick = onNavigateToAddSaveAmount,
+        HomeMenuButton(
+            icon = painterResource(R.drawable.ic_budgeting_outlined),
+            iconColor = Charcoal,
+            title = stringResource(R.string.budgeting_menu),
+            onClick = onNavigateToAddBudget,
             modifier = Modifier
                 .padding(horizontal = 4.dp)
                 .weight(1f)

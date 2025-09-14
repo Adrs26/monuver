@@ -54,4 +54,6 @@ interface TransactionRepository {
         startDate: String,
         endDate: String
     ): Long
+
+    suspend fun getTransactionsBySaveIdSuspend(saveId: Long): List<Transaction>
 }
