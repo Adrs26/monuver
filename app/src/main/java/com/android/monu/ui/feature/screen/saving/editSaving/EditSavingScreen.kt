@@ -87,7 +87,7 @@ fun EditSavingScreen(
     LaunchedEffect(savingState.editResult) {
         savingState.editResult?.let { result ->
             context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.UpdateSaveSuccess) {
+            if (result == DatabaseResultMessage.UpdateSavingSuccess) {
                 onNavigateBack()
             }
         }

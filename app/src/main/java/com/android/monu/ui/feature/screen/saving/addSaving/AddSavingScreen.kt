@@ -85,7 +85,7 @@ fun AddSavingScreen(
     LaunchedEffect(addResult) {
         addResult?.let { result ->
             context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CreateSaveSuccess) {
+            if (result == DatabaseResultMessage.CreateSavingSuccess) {
                 onNavigateBack()
             }
         }

@@ -34,6 +34,6 @@ class CompleteSavingUseCase(
         )
 
         financeRepository.completeSaving(transaction, savingId)
-        return DatabaseResultMessage.CompleteSaveSuccess
+        return DatabaseResultMessage.CompleteSavingSuccess
     }
 }

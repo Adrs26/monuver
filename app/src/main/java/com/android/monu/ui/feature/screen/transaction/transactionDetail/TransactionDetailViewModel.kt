@@ -9,7 +9,7 @@ import com.android.monu.domain.usecase.finance.DeleteExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteIncomeTransactionUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
 import com.android.monu.ui.feature.utils.TransactionType
-import com.android.monu.ui.navigation.MainTransactionDetail
+import com.android.monu.ui.navigation.TransactionDetail
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -22,7 +22,7 @@ class TransactionDetailViewModel(
 ) : ViewModel() {
 
     val transaction = getTransactionByIdUseCase(
-        savedStateHandle.toRoute<MainTransactionDetail>().id
+        savedStateHandle.toRoute<TransactionDetail.Main>().transactionId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     fun deleteTransaction(transaction: Transaction) {

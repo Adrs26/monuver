@@ -33,12 +33,6 @@ import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.SelectAccountType
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.AddTransaction
-import com.android.monu.ui.navigation.AddTransactionCategory
-import com.android.monu.ui.navigation.AddTransactionSource
-import com.android.monu.ui.navigation.EditTransaction
-import com.android.monu.ui.navigation.EditTransactionCategory
-import com.android.monu.ui.navigation.MainAddTransaction
-import com.android.monu.ui.navigation.MainTransactionDetail
 import com.android.monu.ui.navigation.TransactionDetail
 import com.android.monu.ui.navigation.Transfer
 import org.koin.androidx.compose.koinViewModel
@@ -47,21 +41,21 @@ import org.koin.core.parameter.parametersOf
 fun NavGraphBuilder.addTransactionNavGraph(
     navController: NavHostController
 ) {
-    navigation<AddTransaction>(startDestination = MainAddTransaction()) {
-        composable<MainAddTransaction>(
+    navigation<AddTransaction>(startDestination = AddTransaction.Main()) {
+        composable<AddTransaction.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
             popExitTransition = { NavigationAnimation.popExit }
         ) {
-            val args = it.toRoute<MainAddTransaction>()
+            val type = it.toRoute<AddTransaction.Main>().transactionType
             val viewModel = it.sharedKoinViewModel<AddTransactionViewModel>(navController)
             val category by viewModel.transactionCategory.collectAsStateWithLifecycle()
             val source by viewModel.transactionSource.collectAsStateWithLifecycle()
             val addResult by viewModel.createResult.collectAsStateWithLifecycle()
 
             val addTransactionState = AddTransactionState(
-                type = args.type,
+                type = type,
                 category = category,
                 source = source,
                 addResult = addResult
@@ -75,11 +69,11 @@ fun NavGraphBuilder.addTransactionNavGraph(
                 }
 
                 override fun onNavigateToCategory(transactionType: Int) {
-                    navController.navigate(AddTransactionCategory(args.type))
+                    navController.navigate(AddTransaction.Category(type))
                 }
 
                 override fun onNavigateToSource() {
-                    navController.navigate(AddTransactionSource)
+                    navController.navigate(AddTransaction.Source)
                 }
 
                 override fun onAddNewTransaction(
@@ -95,22 +89,22 @@ fun NavGraphBuilder.addTransactionNavGraph(
                 navController = navController
             )
         }
-        composable<AddTransactionCategory>(
+        composable<AddTransaction.Category>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
             popExitTransition = { NavigationAnimation.popExit }
         ) {
-            val args = it.toRoute<AddTransactionCategory>()
+            val transactionType = it.toRoute<AddTransaction.Category>().transactionType
             val viewModel = it.sharedKoinViewModel<AddTransactionViewModel>(navController)
 
             TransactionCategoryScreen(
-                transactionType = args.type,
+                transactionType = transactionType,
                 onNavigateBack = navController::navigateUp,
                 onCategorySelect = viewModel::changeTransactionCategory
             )
         }
-        composable<AddTransactionSource>(
+        composable<AddTransaction.Source>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -205,8 +199,8 @@ fun NavGraphBuilder.transferNavGraph(
 fun NavGraphBuilder.transactionDetailNavGraph(
     navController: NavHostController
 ) {
-    navigation<TransactionDetail>(startDestination = MainTransactionDetail()) {
-        composable<MainTransactionDetail>(
+    navigation<TransactionDetail>(startDestination = TransactionDetail.Main()) {
+        composable<TransactionDetail.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -228,7 +222,7 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                     transactionType: Int,
                     transactionCategory: Int
                 ) {
-                    navController.navigate(EditTransaction(transactionId))
+                    navController.navigate(TransactionDetail.Edit(transactionId))
                 }
 
                 override fun onRemoveTransaction(transaction: Transaction) {
@@ -243,7 +237,7 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                 )
             }
         }
-        composable<EditTransaction>(
+        composable<TransactionDetail.Edit>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -279,7 +273,7 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                         }
 
                         override fun onNavigateToCategory(transactionType: Int) {
-                            navController.navigate(EditTransactionCategory(transactionType))
+                            navController.navigate(TransactionDetail.Category(transactionType))
                         }
 
                         override fun onEditTransaction(transactionState: EditTransactionContentState) {
@@ -295,17 +289,17 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                 }
             }
         }
-        composable<EditTransactionCategory>(
+        composable<TransactionDetail.Category>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
             popExitTransition = { NavigationAnimation.popExit }
         ) {
-            val args = it.toRoute<EditTransactionCategory>()
+            val transactionType = it.toRoute<TransactionDetail.Category>().transactionType
             val viewModel = it.sharedKoinViewModel<EditTransactionViewModel>(navController)
 
             TransactionCategoryScreen(
-                transactionType = args.type,
+                transactionType = transactionType,
                 onNavigateBack = navController::navigateUp,
                 onCategorySelect = viewModel::changeTransactionCategory
             )

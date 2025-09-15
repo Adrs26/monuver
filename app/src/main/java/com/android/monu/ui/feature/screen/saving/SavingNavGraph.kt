@@ -34,7 +34,7 @@ import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.TransactionChildCategory
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.Deposit
-import com.android.monu.ui.navigation.MainTransactionDetail
+import com.android.monu.ui.navigation.TransactionDetail
 import com.android.monu.ui.navigation.Withdraw
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -138,7 +138,7 @@ fun NavGraphBuilder.savingNavGraph(
                     }
 
                     override fun onNavigateToTransactionDetail(transactionId: Long) {
-                        navController.navigate(MainTransactionDetail(transactionId))
+                        navController.navigate(TransactionDetail.Main(transactionId))
                     }
 
                     override fun onCompleteSaving(saving: Saving) {

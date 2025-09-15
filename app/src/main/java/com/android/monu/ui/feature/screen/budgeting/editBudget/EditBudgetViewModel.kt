@@ -8,7 +8,7 @@ import com.android.monu.domain.usecase.budget.GetBudgetByIdUseCase
 import com.android.monu.domain.usecase.budget.UpdateBudgetUseCase
 import com.android.monu.ui.feature.screen.budgeting.editBudget.components.EditBudgetContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.navigation.EditBudget
+import com.android.monu.ui.navigation.BudgetDetail
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,7 +23,7 @@ class EditBudgetViewModel(
 ) : ViewModel() {
 
     val budget = getBudgetByIdUseCase(
-        savedStateHandle.toRoute<EditBudget>().id
+        savedStateHandle.toRoute<BudgetDetail.Edit>().budgetId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val _updateResult = MutableStateFlow<DatabaseResultMessage?>(null)

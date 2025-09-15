@@ -48,7 +48,7 @@ fun SavingDetailScreen(
     LaunchedEffect(savingState.completeResult) {
         savingState.completeResult?.let { result ->
             context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CompleteSaveSuccess) {
+            if (result == DatabaseResultMessage.CompleteSavingSuccess) {
                 savingActions.onNavigateBack()
             }
         }

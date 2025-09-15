@@ -7,13 +7,11 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -29,55 +27,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.TransactionBalanceSummary
 import com.android.monu.ui.feature.components.CommonFloatingActionButton
-import com.android.monu.ui.feature.screen.analytics.AnalyticsActions
-import com.android.monu.ui.feature.screen.analytics.AnalyticsScreen
-import com.android.monu.ui.feature.screen.analytics.AnalyticsState
-import com.android.monu.ui.feature.screen.analytics.AnalyticsViewModel
-import com.android.monu.ui.feature.screen.budgeting.BudgetActions
-import com.android.monu.ui.feature.screen.budgeting.BudgetState
-import com.android.monu.ui.feature.screen.budgeting.BudgetingScreen
-import com.android.monu.ui.feature.screen.budgeting.BudgetingViewModel
-import com.android.monu.ui.feature.screen.home.HomeActions
-import com.android.monu.ui.feature.screen.home.HomeScreen
-import com.android.monu.ui.feature.screen.home.HomeViewModel
 import com.android.monu.ui.feature.screen.main.components.BottomNavigationBar
 import com.android.monu.ui.feature.screen.main.components.BudgetWarningDialog
-import com.android.monu.ui.feature.screen.transaction.TransactionActions
-import com.android.monu.ui.feature.screen.transaction.TransactionScreen
-import com.android.monu.ui.feature.screen.transaction.TransactionState
-import com.android.monu.ui.feature.screen.transaction.TransactionViewModel
 import com.android.monu.ui.feature.utils.TransactionType
-import com.android.monu.ui.navigation.Analytics
-import com.android.monu.ui.navigation.Budgeting
-import com.android.monu.ui.navigation.Home
-import com.android.monu.ui.navigation.MainAccount
-import com.android.monu.ui.navigation.MainAddBudget
-import com.android.monu.ui.navigation.MainAddTransaction
-import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction
-import com.android.monu.ui.navigation.MainBilling
-import com.android.monu.ui.navigation.MainBudgetDetail
-import com.android.monu.ui.navigation.MainInactiveBudget
-import com.android.monu.ui.navigation.MainTransactionDetail
-import com.android.monu.ui.navigation.Saving
-import com.android.monu.ui.navigation.Settings
-import com.android.monu.ui.navigation.Transaction
+import com.android.monu.ui.navigation.AddBudget
+import com.android.monu.ui.navigation.AddTransaction
+import com.android.monu.ui.navigation.Main
 import com.android.monu.ui.navigation.Transfer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -152,280 +119,82 @@ fun MainScreen(
                     CommonFloatingActionButton {
                         when (selectedMenu) {
                             menuItems[1] -> showBottomSheet = true
-                            menuItems[2] -> rootNavController.navigate(MainAddBudget)
+                            menuItems[2] -> rootNavController.navigate(AddBudget.Main)
                         }
                     }
                 }
             }
-        }
+        },
+        contentWindowInsets = WindowInsets()
     ) { innerPadding ->
         NavHost(
             navController = mainNavController,
-            startDestination = Home,
+            startDestination = Main.Home,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable<Home> {
-                val viewModel = koinViewModel<HomeViewModel>()
-                val totalBalance by viewModel.totalAccountBalance.collectAsStateWithLifecycle()
-                val recentTransactions by viewModel.recentTransactions.collectAsStateWithLifecycle()
-                val budgetSummary by viewModel.budgetSummary.collectAsStateWithLifecycle()
-
-                val homeActions = object : HomeActions {
-                    override fun onHandleExpiredBudget() {
-                        viewModel.handleExpiredBudget()
-                    }
-
-                    override fun onNavigateToBill() {
-                        rootNavController.navigate(MainBilling)
-                    }
-
-                    override fun onNavigateToSave() {
-                        rootNavController.navigate(Saving.Main)
-                    }
-
-                    override fun onNavigateToSettings() {
-                        rootNavController.navigate(Settings)
-                    }
-
-                    override fun onNavigateToAccount() {
-                        rootNavController.navigate(MainAccount)
-                    }
-
-                    override fun onNavigateToAddIncomeTransaction() {
-                        rootNavController.navigate(MainAddTransaction(TransactionType.INCOME))
-                    }
-
-                    override fun onNavigateToAddExpenseTransaction() {
-                        rootNavController.navigate(MainAddTransaction(TransactionType.EXPENSE))
-                    }
-
-                    override fun onNavigateToTransfer() {
-                        rootNavController.navigate(Transfer.Main)
-                    }
-
-                    override fun onNavigateToAddBudget() {
-                        rootNavController.navigate(MainAddBudget)
-                    }
-
-                    override fun onNavigateToTransaction() {
-                        mainNavController.navigate(Transaction) {
-                            popUpTo(mainNavController.graph.startDestinationId) { saveState = true }
-                            restoreState = true
-                            launchSingleTop = true
-                        }
-                    }
-
-                    override fun onNavigateToTransactionDetail(transactionId: Long) {
-                        rootNavController.navigate(MainTransactionDetail(transactionId))
-                    }
-
-                    override fun onNavigateToBudgeting() {
-                        mainNavController.navigate(Budgeting) {
-                            popUpTo(mainNavController.graph.startDestinationId) { saveState = true }
-                            restoreState = true
-                            launchSingleTop = true
-                        }
-                    }
-                }
-
-                if (budgetSummary == null) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                } else {
-                    HomeScreen(
-                        totalBalance = totalBalance,
-                        recentTransactions = recentTransactions,
-                        budgetSummary = budgetSummary!!,
-                        homeActions = homeActions
-                    )
-                }
-            }
-            composable<Transaction> {
-                val viewModel = koinViewModel<TransactionViewModel>()
-                val transactions = viewModel.transactions.collectAsLazyPagingItems()
-                val filter by viewModel.filterState.collectAsStateWithLifecycle()
-                val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
-
-                val transactionState = TransactionState(
-                    queryFilter = filter.query,
-                    yearFilterOptions = yearFilterOptions,
-                    typeFilter = filter.type,
-                    yearFilter = filter.year,
-                    monthFilter = filter.month,
-                    transactions = transactions
-                )
-
-                val transactionActions = object : TransactionActions {
-                    override fun onQueryChange(query: String) {
-                        viewModel.searchTransactions(query)
-                    }
-
-                    override fun onYearFilterOptionsRequest() {
-                        viewModel.getYearFilterOptions()
-                    }
-
-                    override fun onFilterApply(type: Int?, year: Int?, month: Int?) {
-                        viewModel.applyFilter(type, year, month)
-                    }
-
-                    override fun onNavigateToTransactionDetail(transactionId: Long) {
-                        rootNavController.navigate(MainTransactionDetail(transactionId))
-                    }
-                }
-
-                TransactionScreen(
-                    transactionState = transactionState,
-                    transactionActions = transactionActions
-                )
-            }
-            composable<Budgeting> {
-                val viewModel = koinViewModel<BudgetingViewModel>()
-                val summary by viewModel.budgetSummary.collectAsStateWithLifecycle()
-                val budgets by viewModel.budgets.collectAsStateWithLifecycle()
-
-                val budgetState = BudgetState(
-                    totalMaxAmount = summary.totalMaxAmount,
-                    totalUsedAmount = summary.totalUsedAmount,
-                    budgets = budgets
-                )
-
-                val budgetActions = object : BudgetActions {
-                    override fun onNavigateToInactiveBudget() {
-                        rootNavController.navigate(MainInactiveBudget)
-                    }
-
-                    override fun onNavigateToBudgetDetail(budgetId: Long) {
-                        rootNavController.navigate(MainBudgetDetail(budgetId))
-                    }
-
-                    override fun onHandleExpiredBudget() {
-                        viewModel.handleExpiredBudget()
-                    }
-                }
-
-                BudgetingScreen(
-                    budgetState = budgetState,
-                    budgetActions = budgetActions
-                )
-            }
-            composable<Analytics> {
-                val viewModel = koinViewModel<AnalyticsViewModel>()
-                val themeSetting by viewModel.themeSetting.collectAsStateWithLifecycle()
-                val filter by viewModel.filterState.collectAsStateWithLifecycle()
-                val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
-                val amountSummary by viewModel.transactionAmountSummary
-                    .collectAsStateWithLifecycle(initialValue = TransactionBalanceSummary())
-                val categorySummaries by viewModel.transactionCategorySummaries
-                    .collectAsStateWithLifecycle(initialValue = emptyList())
-                val dailySummaries by viewModel.transactionDailySummaries
-                    .collectAsStateWithLifecycle(initialValue = emptyList())
-
-                val analyticsState = AnalyticsState(
-                    monthFilter = filter.month,
-                    yearFilter = filter.year,
-                    typeFilter = filter.type,
-                    weekFilter = filter.week,
-                    yearFilterOptions = yearFilterOptions,
-                    amountSummary = amountSummary,
-                    categorySummaries = categorySummaries,
-                    dailySummaries = dailySummaries
-                )
-
-                val analyticsActions = object : AnalyticsActions {
-                    override fun onMonthChange(month: Int) {
-                        viewModel.changeMonthFilter(month)
-                    }
-
-                    override fun onYearChange(year: Int) {
-                        viewModel.changeYearFilter(year)
-                    }
-
-                    override fun onTypeChange(type: Int) {
-                        viewModel.changeTypeFilter(type)
-                    }
-
-                    override fun onWeekChange(week: Int) {
-                        viewModel.changeWeekFilter(week)
-                    }
-
-                    override fun onNavigateToAnalyticsCategoryTransaction(
-                        category: Int, month: Int, year: Int
-                    ) {
-                        rootNavController.navigate(
-                            MainAnalyticsCategoryTransaction(category, month, year)
-                        )
-                    }
-                }
-
-                AnalyticsScreen(
-                    analyticsState = analyticsState,
-                    analyticsActions = analyticsActions,
-                    themeSetting = themeSetting
-                )
-            }
-        }
-
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { showBottomSheet = false },
-                sheetState = sheetState,
-                shape = BottomSheetDefaults.HiddenShape,
-                containerColor = MaterialTheme.colorScheme.background,
-                dragHandle = { null }
-            ) {
-                Column(
-                    modifier = Modifier.padding(vertical = 16.dp)
-                ) {
-                    BottomSheetMenu(
-                        title = stringResource(R.string.add_income)
-                    ) {
-                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                showBottomSheet = false
-                                rootNavController.navigate(MainAddTransaction(TransactionType.INCOME))
-                            }
-                        }
-                    }
-                    BottomSheetMenu(
-                        title = stringResource(R.string.add_expense)
-                    ) {
-                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                showBottomSheet = false
-                                rootNavController.navigate(MainAddTransaction(TransactionType.EXPENSE))
-                            }
-                        }
-                    }
-                    BottomSheetMenu(
-                        title = stringResource(R.string.transfer_account)
-                    ) {
-                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                showBottomSheet = false
-                                rootNavController.navigate(Transfer.Main)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (showBudgetWarningDialog && budgetWarningCondition?.value != 0 && budgetCategory?.value != 0) {
-            BudgetWarningDialog(
-                budgetCategory = budgetCategory?.value ?: 0,
-                budgetWarningCondition = budgetWarningCondition?.value ?: 0,
-                onDismissRequest = {
-                    showBudgetWarningDialog = false
-                    rootNavController.currentBackStackEntry
-                        ?.savedStateHandle
-                        ?.set("warning_condition", 0)
-                }
+            mainNavGraph(
+                rootNavController = rootNavController,
+                mainNavController = mainNavController
             )
         }
+    }
+
+    if (showBottomSheet) {
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet = false },
+            sheetState = sheetState,
+            shape = BottomSheetDefaults.HiddenShape,
+            containerColor = MaterialTheme.colorScheme.background,
+            dragHandle = { null }
+        ) {
+            Column(
+                modifier = Modifier.padding(vertical = 16.dp)
+            ) {
+                BottomSheetMenu(
+                    title = stringResource(R.string.add_income)
+                ) {
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                            rootNavController.navigate(AddTransaction.Main(TransactionType.INCOME))
+                        }
+                    }
+                }
+                BottomSheetMenu(
+                    title = stringResource(R.string.add_expense)
+                ) {
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                            rootNavController.navigate(AddTransaction.Main(TransactionType.EXPENSE))
+                        }
+                    }
+                }
+                BottomSheetMenu(
+                    title = stringResource(R.string.transfer_account)
+                ) {
+                    scope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                            rootNavController.navigate(Transfer.Main)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (showBudgetWarningDialog && budgetWarningCondition?.value != 0 && budgetCategory?.value != 0) {
+        BudgetWarningDialog(
+            budgetCategory = budgetCategory?.value ?: 0,
+            budgetWarningCondition = budgetWarningCondition?.value ?: 0,
+            onDismissRequest = {
+                showBudgetWarningDialog = false
+                rootNavController.currentBackStackEntry
+                    ?.savedStateHandle
+                    ?.set("warning_condition", 0)
+            }
+        )
     }
 }
 

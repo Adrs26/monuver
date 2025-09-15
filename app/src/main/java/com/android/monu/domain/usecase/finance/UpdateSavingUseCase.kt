@@ -10,9 +10,9 @@ class UpdateSavingUseCase(
 ) {
     suspend operator fun invoke(savingState: EditSavingContentState): DatabaseResultMessage {
         when {
-            savingState.title.isEmpty() -> return DatabaseResultMessage.EmptySaveTitle
-            savingState.targetDate.isEmpty() -> return DatabaseResultMessage.EmptySaveTargetDate
-            savingState.targetAmount == 0L -> return DatabaseResultMessage.EmptySaveTargetAmount
+            savingState.title.isEmpty() -> return DatabaseResultMessage.EmptySavingTitle
+            savingState.targetDate.isEmpty() -> return DatabaseResultMessage.EmptySavingTargetDate
+            savingState.targetAmount == 0L -> return DatabaseResultMessage.EmptySavingTargetAmount
         }
 
         val saving = Saving(
@@ -25,6 +25,6 @@ class UpdateSavingUseCase(
         )
 
         repository.updateSaving(saving)
-        return DatabaseResultMessage.UpdateSaveSuccess
+        return DatabaseResultMessage.UpdateSavingSuccess
     }
 }

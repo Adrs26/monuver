@@ -24,22 +24,17 @@ import com.android.monu.ui.feature.screen.budgeting.inactiveBudget.InactiveBudge
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.AddBudget
-import com.android.monu.ui.navigation.AddBudgetCategory
 import com.android.monu.ui.navigation.BudgetDetail
-import com.android.monu.ui.navigation.EditBudget
 import com.android.monu.ui.navigation.InactiveBudget
-import com.android.monu.ui.navigation.MainAddBudget
-import com.android.monu.ui.navigation.MainBudgetDetail
-import com.android.monu.ui.navigation.MainInactiveBudget
-import com.android.monu.ui.navigation.MainTransactionDetail
+import com.android.monu.ui.navigation.TransactionDetail
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 fun NavGraphBuilder.addBudgetNavGraph(
     navController: NavHostController
 ) {
-    navigation<AddBudget>(startDestination = MainAddBudget) {
-        composable<MainAddBudget>(
+    navigation<AddBudget>(startDestination = AddBudget.Main) {
+        composable<AddBudget.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -55,7 +50,7 @@ fun NavGraphBuilder.addBudgetNavGraph(
                 }
 
                 override fun onNavigateToCategory() {
-                    navController.navigate(AddBudgetCategory)
+                    navController.navigate(AddBudget.Category)
                 }
 
                 override fun onAddNewBudget(budgetState: AddBudgetContentState) {
@@ -70,7 +65,7 @@ fun NavGraphBuilder.addBudgetNavGraph(
             )
         }
 
-        composable<AddBudgetCategory>(
+        composable<AddBudget.Category>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -89,8 +84,8 @@ fun NavGraphBuilder.addBudgetNavGraph(
 fun NavGraphBuilder.budgetDetailNavGraph(
     navController: NavHostController
 ) {
-    navigation<BudgetDetail>(startDestination = MainBudgetDetail()) {
-        composable<MainBudgetDetail>(
+    navigation<BudgetDetail>(startDestination = BudgetDetail.Main()) {
+        composable<BudgetDetail.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -121,7 +116,7 @@ fun NavGraphBuilder.budgetDetailNavGraph(
                     }
 
                     override fun onNavigateToEditBudget(budgetId: Long) {
-                        navController.navigate(EditBudget(id = budgetId))
+                        navController.navigate(BudgetDetail.Edit(budgetId))
                     }
 
                     override fun onRemoveBudget(budgetId: Long) {
@@ -129,7 +124,7 @@ fun NavGraphBuilder.budgetDetailNavGraph(
                     }
 
                     override fun onNavigateToTransactionDetail(transactionId: Long) {
-                        navController.navigate(MainTransactionDetail(id = transactionId))
+                        navController.navigate(TransactionDetail.Main(transactionId))
                     }
                 }
 
@@ -141,7 +136,7 @@ fun NavGraphBuilder.budgetDetailNavGraph(
             }
         }
 
-        composable<EditBudget>(
+        composable<BudgetDetail.Edit>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -180,8 +175,8 @@ fun NavGraphBuilder.budgetDetailNavGraph(
 fun NavGraphBuilder.inactiveBudgetNavGraph(
     navController: NavHostController
 ) {
-    navigation<InactiveBudget>(startDestination = MainInactiveBudget) {
-        composable<MainInactiveBudget>(
+    navigation<InactiveBudget>(startDestination = InactiveBudget.Main) {
+        composable<InactiveBudget.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -194,7 +189,7 @@ fun NavGraphBuilder.inactiveBudgetNavGraph(
                 budgets = budgets,
                 onNavigateBack = navController::navigateUp,
                 onNavigateToBudgetDetail = { budgetId ->
-                    navController.navigate(MainBudgetDetail(budgetId))
+                    navController.navigate(BudgetDetail.Main(budgetId))
                 }
             )
         }

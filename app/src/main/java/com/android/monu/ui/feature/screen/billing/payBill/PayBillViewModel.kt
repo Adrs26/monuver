@@ -10,7 +10,7 @@ import com.android.monu.domain.usecase.bill.GetBillByIdUseCase
 import com.android.monu.domain.usecase.finance.PayBillUseCase
 import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.navigation.MainPayBill
+import com.android.monu.ui.navigation.PayBill
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -26,7 +26,7 @@ class PayBillViewModel(
 ) : ViewModel() {
 
     val bill = getBillByIdUseCase(
-        savedStateHandle.toRoute<MainPayBill>().id
+        savedStateHandle.toRoute<PayBill.Main>().billId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     val accounts = getAllAccountsUseCase()

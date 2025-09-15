@@ -3,7 +3,7 @@ package com.android.monu
 import com.android.monu.domain.model.budget.Budget
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.usecase.budget.HandleExpiredBudgetUseCase
-import com.android.monu.presentation.utils.Cycle
+import com.android.monu.ui.feature.utils.Cycle
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.flow.flowOf

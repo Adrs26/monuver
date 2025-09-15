@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.android.monu.domain.usecase.transaction.GetAllTransactionsByCategoryUseCase
-import com.android.monu.ui.navigation.MainAnalyticsCategoryTransaction
+import com.android.monu.ui.navigation.AnalyticsCategoryTransaction
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 
@@ -14,7 +14,7 @@ class AnalyticsCategoryTransactionViewModel(
     getAllTransactionsByCategoryUseCase: GetAllTransactionsByCategoryUseCase
 ) : ViewModel() {
 
-    private val args = savedStateHandle.toRoute<MainAnalyticsCategoryTransaction>()
+    private val args = savedStateHandle.toRoute<AnalyticsCategoryTransaction.Main>()
 
     val category: Int = args.category
 

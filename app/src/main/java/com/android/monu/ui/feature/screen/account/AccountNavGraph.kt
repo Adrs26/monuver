@@ -14,16 +14,13 @@ import com.android.monu.ui.feature.screen.account.addAccount.components.AddAccou
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.Account
-import com.android.monu.ui.navigation.AccountType
-import com.android.monu.ui.navigation.AddAccount
-import com.android.monu.ui.navigation.MainAccount
 import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.accountNavGraph(
     navController: NavHostController
 ) {
-    navigation<Account>(startDestination = MainAccount) {
-        composable<MainAccount>(
+    navigation<Account>(startDestination = Account.Main) {
+        composable<Account.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -37,10 +34,10 @@ fun NavGraphBuilder.accountNavGraph(
                 accounts = accounts,
                 totalBalance = totalBalance,
                 onNavigateBack = navController::navigateUp,
-                onNavigateToAddAccount = { navController.navigate(AddAccount) }
+                onNavigateToAddAccount = { navController.navigate(Account.Add) }
             )
         }
-        composable<AddAccount>(
+        composable<Account.Add>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -57,7 +54,7 @@ fun NavGraphBuilder.accountNavGraph(
                 }
 
                 override fun onNavigateToType() {
-                    navController.navigate(AccountType)
+                    navController.navigate(Account.Type)
                 }
 
                 override fun onAddNewAccount(accountState: AddAccountContentState) {
@@ -71,7 +68,7 @@ fun NavGraphBuilder.accountNavGraph(
                 accountActions = addAccountActions
             )
         }
-        composable<AccountType>(
+        composable<Account.Type>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },

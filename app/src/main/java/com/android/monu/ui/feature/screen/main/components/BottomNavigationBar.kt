@@ -20,10 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.android.monu.R
-import com.android.monu.ui.navigation.Analytics
-import com.android.monu.ui.navigation.Budgeting
-import com.android.monu.ui.navigation.Home
-import com.android.monu.ui.navigation.Transaction
+import com.android.monu.ui.navigation.Main
 
 @Composable
 fun BottomNavigationBar(
@@ -46,28 +43,28 @@ fun BottomNavigationBar(
                 title = stringResource(R.string.home_menu),
                 filledIcon = painterResource(R.drawable.ic_home_filled),
                 outlinedIcon = painterResource(R.drawable.ic_home_outlined),
-                destination = Home,
+                destination = Main.Home,
                 route = "Home"
             ),
             BottomNavigationItem(
                 title = stringResource(R.string.transaction_menu),
                 filledIcon = painterResource(R.drawable.ic_receipt_filled),
                 outlinedIcon = painterResource(R.drawable.ic_receipt_outlined),
-                destination = Transaction,
+                destination = Main.Transaction,
                 route = "Transaction"
             ),
             BottomNavigationItem(
                 title = stringResource(R.string.budgeting_menu),
                 filledIcon = painterResource(R.drawable.ic_budgeting_filled),
                 outlinedIcon = painterResource(R.drawable.ic_budgeting_outlined),
-                destination = Budgeting,
+                destination = Main.Budgeting,
                 route = "Budgeting"
             ),
             BottomNavigationItem(
                 title = stringResource(R.string.analytics_menu),
                 filledIcon = painterResource(R.drawable.ic_analytics_filled),
                 outlinedIcon = painterResource(R.drawable.ic_analytics_outlined),
-                destination = Analytics,
+                destination = Main.Analytics,
                 route = "Analytics"
             )
         )

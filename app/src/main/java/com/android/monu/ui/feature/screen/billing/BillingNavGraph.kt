@@ -26,23 +26,16 @@ import com.android.monu.ui.feature.utils.Cycle
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.TransactionType
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
-import com.android.monu.ui.navigation.AddBill
-import com.android.monu.ui.navigation.BillDetail
 import com.android.monu.ui.navigation.Billing
-import com.android.monu.ui.navigation.EditBill
-import com.android.monu.ui.navigation.MainBilling
-import com.android.monu.ui.navigation.MainPayBill
 import com.android.monu.ui.navigation.PayBill
-import com.android.monu.ui.navigation.PayBillCategory
-import com.android.monu.ui.navigation.PayBillSource
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 fun NavGraphBuilder.billingNavGraph(
     navController: NavHostController
 ) {
-    navigation<Billing>(startDestination = MainBilling) {
-        composable<MainBilling>(
+    navigation<Billing>(startDestination = Billing.Main) {
+        composable<Billing.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -65,11 +58,11 @@ fun NavGraphBuilder.billingNavGraph(
                 }
 
                 override fun onNavigateToAddBill() {
-                    navController.navigate(AddBill)
+                    navController.navigate(Billing.Add)
                 }
 
                 override fun onNavigateToBillDetail(billId: Long) {
-                    navController.navigate(BillDetail(billId))
+                    navController.navigate(Billing.Detail(billId))
                 }
             }
 
@@ -78,7 +71,7 @@ fun NavGraphBuilder.billingNavGraph(
                 billActions = billActions
             )
         }
-        composable<AddBill>(
+        composable<Billing.Add>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -93,7 +86,7 @@ fun NavGraphBuilder.billingNavGraph(
                 onAddNewBill = viewModel::createNewBill
             )
         }
-        composable<BillDetail>(
+        composable<Billing.Detail>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -112,7 +105,7 @@ fun NavGraphBuilder.billingNavGraph(
                     }
 
                     override fun onNavigateToEditBill(billId: Long) {
-                        navController.navigate(EditBill(billId))
+                        navController.navigate(Billing.Edit(billId))
                     }
 
                     override fun onRemoveBill(billId: Long) {
@@ -120,7 +113,7 @@ fun NavGraphBuilder.billingNavGraph(
                     }
 
                     override fun onNavigateToPayBill(billId: Long) {
-                        navController.navigate(MainPayBill(billId))
+                        navController.navigate(PayBill.Main(billId))
                     }
                 }
 
@@ -130,7 +123,7 @@ fun NavGraphBuilder.billingNavGraph(
                 )
             }
         }
-        composable<EditBill>(
+        composable<Billing.Edit>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -170,8 +163,8 @@ fun NavGraphBuilder.billingNavGraph(
 fun NavGraphBuilder.payBillNavGraph(
     navController: NavHostController
 ) {
-    navigation<PayBill>(startDestination = MainPayBill()) {
-        composable<MainPayBill>(
+    navigation<PayBill>(startDestination = PayBill.Main()) {
+        composable<PayBill.Main>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -198,11 +191,11 @@ fun NavGraphBuilder.payBillNavGraph(
                     }
 
                     override fun onNavigateToCategory() {
-                        navController.navigate(PayBillCategory)
+                        navController.navigate(PayBill.Category)
                     }
 
                     override fun onNavigateToSource() {
-                        navController.navigate(PayBillSource)
+                        navController.navigate(PayBill.Source)
                     }
 
                     override fun onPayBill(billState: PayBillContentState) {
@@ -217,7 +210,7 @@ fun NavGraphBuilder.payBillNavGraph(
                 )
             }
         }
-        composable<PayBillCategory>(
+        composable<PayBill.Category>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },
@@ -231,7 +224,7 @@ fun NavGraphBuilder.payBillNavGraph(
                 onCategorySelect = viewModel::changeTransactionCategory
             )
         }
-        composable<PayBillSource>(
+        composable<PayBill.Source>(
             enterTransition = { NavigationAnimation.enter },
             exitTransition = { NavigationAnimation.exit },
             popEnterTransition = { NavigationAnimation.popEnter },

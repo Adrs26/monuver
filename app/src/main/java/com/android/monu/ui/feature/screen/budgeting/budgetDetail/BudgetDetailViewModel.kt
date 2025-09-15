@@ -7,7 +7,7 @@ import androidx.navigation.toRoute
 import com.android.monu.domain.usecase.budget.DeleteBudgetUseCase
 import com.android.monu.domain.usecase.budget.GetBudgetByIdUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionsByCategoryAndDateRangeUseCase
-import com.android.monu.ui.navigation.MainBudgetDetail
+import com.android.monu.ui.navigation.BudgetDetail
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
@@ -23,7 +23,7 @@ class BudgetDetailViewModel(
 ) : ViewModel() {
 
     val budget = getBudgetByIdUseCase(
-        savedStateHandle.toRoute<MainBudgetDetail>().id
+        savedStateHandle.toRoute<BudgetDetail.Main>().budgetId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     @OptIn(ExperimentalCoroutinesApi::class)

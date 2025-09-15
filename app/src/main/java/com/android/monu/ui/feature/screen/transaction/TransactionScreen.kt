@@ -1,11 +1,11 @@
 package com.android.monu.ui.feature.screen.transaction
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,22 +42,24 @@ fun TransactionScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-    ) {
-        TransactionTopBar(
-            query = transactionState.queryFilter,
-            onQueryChange = transactionActions::onQueryChange,
-            modifier = Modifier.padding(start = 16.dp, end = 12.dp, top = 16.dp, bottom = 12.dp),
-            onFilterButtonClick = { showFilterDialog = true }
-        )
+    Scaffold(
+        topBar = {
+            TransactionTopBar(
+                query = transactionState.queryFilter,
+                onQueryChange = transactionActions::onQueryChange,
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 12.dp, top = 16.dp, bottom = 12.dp)
+                    .padding(WindowInsets.safeDrawing.asPaddingValues()),
+                onFilterButtonClick = { showFilterDialog = true }
+            )
+        }
+    ) { innerPadding ->
         TransactionList(
             transactions = transactionState.transactions,
             onNavigateToTransactionDetail = { transactionId ->
                 transactionActions.onNavigateToTransactionDetail(transactionId)
-            }
+            },
+            modifier = Modifier.padding(innerPadding)
         )
     }
 

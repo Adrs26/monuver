@@ -69,7 +69,7 @@ data class BudgetDetailState(
 
 interface BudgetDetailActions {
     fun onNavigateBack()
-    fun onNavigateToEditBudget(budgetingId: Long)
-    fun onRemoveBudget(budgetingId: Long)
+    fun onNavigateToEditBudget(budgetId: Long)
+    fun onRemoveBudget(budgetId: Long)
     fun onNavigateToTransactionDetail(transactionId: Long)
 }
