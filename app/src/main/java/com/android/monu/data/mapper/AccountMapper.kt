@@ -11,7 +11,8 @@ object AccountMapper {
             id = accountEntity.id,
             name = accountEntity.name,
             type = accountEntity.type,
-            balance = accountEntity.balance
+            balance = accountEntity.balance,
+            isActive = accountEntity.isActive
         )
     }
 
@@ -21,7 +22,8 @@ object AccountMapper {
         return AccountEntity(
             name = account.name,
             type = account.type,
-            balance = account.balance
+            balance = account.balance,
+            isActive = account.isActive
         )
     }
 }

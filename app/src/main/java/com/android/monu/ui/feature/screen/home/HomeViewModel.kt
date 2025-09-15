@@ -2,7 +2,7 @@ package com.android.monu.ui.feature.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
+import com.android.monu.domain.usecase.account.GetActiveAccountBalanceUseCase
 import com.android.monu.domain.usecase.budget.GetBudgetSummaryUseCase
 import com.android.monu.domain.usecase.budget.HandleExpiredBudgetUseCase
 import com.android.monu.domain.usecase.transaction.GetRecentTransactionsUseCase
@@ -12,13 +12,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    getTotalAccountBalanceUseCase: GetTotalAccountBalanceUseCase,
+    getActiveAccountBalanceUseCase: GetActiveAccountBalanceUseCase,
     getRecentTransactionsUseCase: GetRecentTransactionsUseCase,
     getBudgetSummaryUseCase: GetBudgetSummaryUseCase,
     private val handleExpiredBudgetUseCase: HandleExpiredBudgetUseCase
 ) : ViewModel() {
 
-    val totalAccountBalance = getTotalAccountBalanceUseCase().map{ it ?: 0 }
+    val totalAccountBalance = getActiveAccountBalanceUseCase().map{ it ?: 0 }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0)
 
     val recentTransactions = getRecentTransactionsUseCase()

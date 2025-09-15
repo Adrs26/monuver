@@ -45,7 +45,7 @@ fun DetailTransactionScreen(
             transaction = transaction,
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp, vertical = 32.dp),
+                .padding(horizontal = 16.dp, vertical = 32.dp)
         )
     }
 

@@ -2,7 +2,7 @@ package com.android.monu.ui.feature.screen.saving.withdraw
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
+import com.android.monu.domain.usecase.account.GetActiveAccountsUseCase
 import com.android.monu.domain.usecase.finance.CreateWithdrawTransactionUseCase
 import com.android.monu.ui.feature.screen.saving.withdraw.components.WithdrawContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
@@ -14,11 +14,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class WithdrawViewModel(
-    getAllAccountsUseCase: GetAllAccountsUseCase,
+    getActiveAccountsUseCase: GetActiveAccountsUseCase,
     private val createWithdrawTransactionUseCase: CreateWithdrawTransactionUseCase
 ) : ViewModel() {
 
-    val accounts = getAllAccountsUseCase()
+    val accounts = getActiveAccountsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _transactionDestination = MutableStateFlow(Pair(0, ""))

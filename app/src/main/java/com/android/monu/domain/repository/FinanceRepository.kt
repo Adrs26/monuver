@@ -10,6 +10,8 @@ interface FinanceRepository {
 
     suspend fun createAccount(account: Account, transaction: Transaction): Long
 
+    suspend fun updateAccountStatus(accountId: Int, isActive: Boolean)
+
     suspend fun createIncomeTransaction(transaction: Transaction): Long
 
     suspend fun createExpenseTransaction(transaction: Transaction): Long

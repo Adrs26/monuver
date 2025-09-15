@@ -30,7 +30,8 @@ class CompleteSavingUseCase(
             amount = savingAmount,
             sourceId = savingId.toInt(),
             sourceName = savingName,
-            isLocked = true
+            isLocked = true,
+            isSpecialCase = true
         )
 
         financeRepository.completeSaving(transaction, savingId)

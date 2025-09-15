@@ -2,7 +2,7 @@ package com.android.monu.ui.feature.screen.transaction.transfer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
+import com.android.monu.domain.usecase.account.GetActiveAccountsUseCase
 import com.android.monu.domain.usecase.finance.CreateTransferTransactionUseCase
 import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
@@ -15,11 +15,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class TransferViewModel(
-    getAllAccountsUseCase: GetAllAccountsUseCase,
+    getActiveAccountsUseCase: GetActiveAccountsUseCase,
     private val createTransferTransactionUseCase: CreateTransferTransactionUseCase
 ) : ViewModel() {
 
-    val accounts = getAllAccountsUseCase()
+    val accounts = getActiveAccountsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _sourceAccount = MutableStateFlow(Pair(0, ""))

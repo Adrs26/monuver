@@ -6,6 +6,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.android.monu.ui.feature.screen.account.accountDetail.AccountDetailActions
+import com.android.monu.ui.feature.screen.account.accountDetail.AccountDetailScreen
+import com.android.monu.ui.feature.screen.account.accountDetail.AccountDetailViewModel
 import com.android.monu.ui.feature.screen.account.addAccount.AddAccountActions
 import com.android.monu.ui.feature.screen.account.addAccount.AddAccountScreen
 import com.android.monu.ui.feature.screen.account.addAccount.AddAccountViewModel
@@ -15,6 +18,7 @@ import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.Account
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 fun NavGraphBuilder.accountNavGraph(
     navController: NavHostController
@@ -30,11 +34,24 @@ fun NavGraphBuilder.accountNavGraph(
             val totalBalance by viewModel.totalAccountBalance.collectAsStateWithLifecycle()
             val accounts by viewModel.accounts.collectAsStateWithLifecycle()
 
+            val accountActions = object : AccountActions {
+                override fun onNavigateBack() {
+                    navController.navigateUp()
+                }
+
+                override fun onNavigateToAccountDetail(accountId: Int) {
+                    navController.navigate(Account.Detail(accountId))
+                }
+
+                override fun onNavigateToAddAccount() {
+                    navController.navigate(Account.Add)
+                }
+            }
+
             AccountScreen(
                 accounts = accounts,
                 totalBalance = totalBalance,
-                onNavigateBack = navController::navigateUp,
-                onNavigateToAddAccount = { navController.navigate(Account.Add) }
+                accountActions = accountActions
             )
         }
         composable<Account.Add>(
@@ -80,6 +97,45 @@ fun NavGraphBuilder.accountNavGraph(
                 onNavigateBack = navController::navigateUp,
                 onTypeSelect = viewModel::changeAccountType
             )
+        }
+        composable<Account.Detail>(
+            enterTransition = { NavigationAnimation.enter },
+            exitTransition = { NavigationAnimation.exit },
+            popEnterTransition = { NavigationAnimation.popEnter },
+            popExitTransition = { NavigationAnimation.popExit }
+        ) {
+            val viewModel = koinViewModel<AccountDetailViewModel>(
+                viewModelStoreOwner = it,
+                parameters = { parametersOf(it.savedStateHandle) }
+            )
+            val account by viewModel.account.collectAsStateWithLifecycle()
+            val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
+
+            account?.let { account ->
+                val accountDetailActions = object : AccountDetailActions {
+                    override fun onNavigateBack() {
+                        navController.navigateUp()
+                    }
+
+                    override fun onNavigateToEditAccount(accountId: Int) {
+                        TODO("Not yet implemented")
+                    }
+
+                    override fun onDeactivateAccount(accountId: Int) {
+                        viewModel.updateAccountStatus(accountId, false)
+                    }
+
+                    override fun onActivateAccount(accountId: Int) {
+                        viewModel.updateAccountStatus(accountId, true)
+                    }
+                }
+
+                AccountDetailScreen(
+                    account = account,
+                    editResult = editResult,
+                    accountActions = accountDetailActions
+                )
+            }
         }
     }
 }

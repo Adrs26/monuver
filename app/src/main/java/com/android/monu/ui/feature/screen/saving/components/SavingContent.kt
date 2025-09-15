@@ -110,7 +110,7 @@ fun SavingEmptyListContent(
                 .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            CommonLottieAnimation(lottieAnimation = R.raw.empty)
+            CommonLottieAnimation(lottieAnimation = R.raw.empty_box)
         }
     }
 }

@@ -165,4 +165,11 @@ interface TransactionDao {
         ORDER BY date DESC, timeStamp DESC
     """)
     suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<TransactionEntity>
+
+    @Query("""
+        UPDATE `transaction`
+        SET isLocked = :isLocked
+        WHERE (type = 1001 OR type = 1002) AND isSpecialCase = 0 AND sourceId = :accountId
+    """)
+    suspend fun updateTransactionLockStatusByAccountId(accountId: Int, isLocked: Boolean)
 }

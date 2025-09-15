@@ -2,7 +2,7 @@ package com.android.monu.ui.feature.screen.saving.deposit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
+import com.android.monu.domain.usecase.account.GetActiveAccountsUseCase
 import com.android.monu.domain.usecase.finance.CreateDepositTransactionUseCase
 import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
@@ -14,11 +14,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class DepositViewModel(
-    getAllAccountsUseCase: GetAllAccountsUseCase,
+    getActiveAccountsUseCase: GetActiveAccountsUseCase,
     private val createDepositTransactionUseCase: CreateDepositTransactionUseCase
 ) : ViewModel() {
 
-    val accounts = getAllAccountsUseCase()
+    val accounts = getActiveAccountsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _transactionSource = MutableStateFlow(Pair(0, ""))

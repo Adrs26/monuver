@@ -25,6 +25,7 @@ class Account {
     @Serializable object Main
     @Serializable object Add
     @Serializable object Type
+    @Serializable data class Detail(val accountId: Int = 0)
 }
 
 @Serializable

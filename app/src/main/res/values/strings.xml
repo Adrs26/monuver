@@ -293,4 +293,13 @@
     <string name="complete_save_confirmation">Saat tabungan diselesaikan, seluruh dana akan otomatis digunakan dan tabungan akan ditutup. Tindakan ini tidak bisa dipulihkan. Tetap lanjut?</string>
     <string name="next">Lanjut</string>
     <string name="inactive_save">Tabungan selesai</string>
+    <string name="account_detail">Detail akun</string>
+    <string name="balance">Saldo</string>
+    <string name="active">Aktif</string>
+    <string name="inactive">Tidak aktif</string>
+    <string name="account_successfully_deactivated">Akun berhasil dinonaktifkan</string>
+    <string name="account_successfully_activated">Akun berhasil diaktifkan kembali</string>
+    <string name="deactivate_account_confirmation">Menonaktifkan akun akan mengunci transaksi terkait dan menonaktifkan akses. Tetap ingin melanjutkan?</string>
+    <string name="activate_account_confirmation">Mengaktifkan kembali akun akan memulihkan akses dan transaksi terkait. Tetap ingin melanjutkan?</string>
+    <string name="total_active_balance">Total saldo aktif</string>
 </resources>

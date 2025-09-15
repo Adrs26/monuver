@@ -16,5 +16,7 @@ data class Transaction(
     val destinationId: Int? = null,
     val destinationName: String? = null,
     val saveId: Long? = null,
-    val isLocked: Boolean
+    val billId: Long? = null,
+    val isLocked: Boolean,
+    val isSpecialCase: Boolean
 )

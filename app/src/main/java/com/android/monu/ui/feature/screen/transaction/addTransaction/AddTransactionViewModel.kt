@@ -2,7 +2,7 @@ package com.android.monu.ui.feature.screen.transaction.addTransaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
+import com.android.monu.domain.usecase.account.GetActiveAccountsUseCase
 import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateIncomeTransactionUseCase
 import com.android.monu.ui.feature.screen.transaction.addTransaction.components.AddTransactionContentState
@@ -16,12 +16,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class AddTransactionViewModel(
-    getAllAccountsUseCase: GetAllAccountsUseCase,
+    getActiveAccountsUseCase: GetActiveAccountsUseCase,
     private val createIncomeTransactionUseCase: CreateIncomeTransactionUseCase,
     private val createExpenseTransactionUseCase: CreateExpenseTransactionUseCase
 ) : ViewModel() {
 
-    val accounts = getAllAccountsUseCase()
+    val accounts = getActiveAccountsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _transactionCategory = MutableStateFlow(Pair(0, 0))

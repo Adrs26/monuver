@@ -17,24 +17,30 @@ import com.android.monu.ui.feature.screen.account.components.AccountContent
 fun AccountScreen(
     accounts: List<Account>,
     totalBalance: Long,
-    onNavigateBack: () -> Unit,
-    onNavigateToAddAccount: () -> Unit
+    accountActions: AccountActions
 ) {
     Scaffold(
         topBar = {
             CommonAppBar(
                 title = stringResource(R.string.my_account),
-                onNavigateBack = onNavigateBack
+                onNavigateBack = accountActions::onNavigateBack
             )
         },
         floatingActionButton = {
-            CommonFloatingActionButton { onNavigateToAddAccount() }
+            CommonFloatingActionButton { accountActions.onNavigateToAddAccount() }
         }
     ) { innerPadding ->
         AccountContent(
             accounts = accounts,
             totalBalance = totalBalance,
+            onNavigateToAccountDetail = accountActions::onNavigateToAccountDetail,
             modifier = Modifier.padding(innerPadding)
         )
     }
+}
+
+interface AccountActions {
+    fun onNavigateBack()
+    fun onNavigateToAccountDetail(accountId: Int)
+    fun onNavigateToAddAccount()
 }

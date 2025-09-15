@@ -1,5 +1,8 @@
 package com.android.monu.di
 
+import com.android.monu.domain.usecase.account.GetAccountByIdUseCase
+import com.android.monu.domain.usecase.account.GetActiveAccountBalanceUseCase
+import com.android.monu.domain.usecase.account.GetActiveAccountsUseCase
 import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
 import com.android.monu.domain.usecase.account.GetTotalAccountBalanceUseCase
 import com.android.monu.domain.usecase.bill.CreateBillUseCase
@@ -28,6 +31,7 @@ import com.android.monu.domain.usecase.finance.DeleteExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteIncomeTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteSavingUseCase
 import com.android.monu.domain.usecase.finance.PayBillUseCase
+import com.android.monu.domain.usecase.finance.UpdateAccountStatusUseCase
 import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.UpdateIncomeTransactionUseCase
 import com.android.monu.domain.usecase.finance.UpdateSavingUseCase
@@ -50,6 +54,9 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val domainModule = module {
+    factoryOf(::GetAccountByIdUseCase)
+    factoryOf(::GetActiveAccountBalanceUseCase)
+    factoryOf(::GetActiveAccountsUseCase)
     factoryOf(::GetAllAccountsUseCase)
     factoryOf(::GetTotalAccountBalanceUseCase)
 
@@ -74,6 +81,7 @@ val domainModule = module {
     factoryOf(::DeleteExpenseTransactionUseCase)
     factoryOf(::DeleteSavingUseCase)
     factoryOf(::PayBillUseCase)
+    factoryOf(::UpdateAccountStatusUseCase)
     factoryOf(::UpdateIncomeTransactionUseCase)
     factoryOf(::UpdateExpenseTransactionUseCase)
 

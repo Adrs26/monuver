@@ -25,7 +25,8 @@ class CreateAccountUseCase(
         val account = Account(
             name = accountState.name,
             type = accountState.type,
-            balance = accountState.balance
+            balance = accountState.balance,
+            isActive = true
         )
 
         val currentDate = LocalDate.now()
@@ -44,7 +45,8 @@ class CreateAccountUseCase(
             amount = accountState.balance,
             sourceId = 0,
             sourceName = accountState.name,
-            isLocked = true
+            isLocked = true,
+            isSpecialCase = true
         )
 
         repository.createAccount(account = account, transaction = transaction)

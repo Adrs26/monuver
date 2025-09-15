@@ -42,6 +42,13 @@ class FinanceRepositoryImpl(
         }
     }
 
+    override suspend fun updateAccountStatus(accountId: Int, isActive: Boolean) {
+        return database.withTransaction {
+            accountDao.updateAccountStatus(accountId, isActive)
+            transactionDao.updateTransactionLockStatusByAccountId(accountId, !isActive)
+        }
+    }
+
     override suspend fun createIncomeTransaction(transaction: Transaction): Long {
         return database.withTransaction {
             val transactionId = transactionDao.createNewTransaction(

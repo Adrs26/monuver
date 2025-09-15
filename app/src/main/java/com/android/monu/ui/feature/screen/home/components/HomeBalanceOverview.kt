@@ -36,7 +36,7 @@ fun HomeBalanceOverview(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = stringResource(R.string.total_account_balance),
+                text = stringResource(R.string.total_active_balance),
                 style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
             )
             Text(

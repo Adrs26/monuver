@@ -42,7 +42,8 @@ class CreateWithdrawTransactionUseCase(
             destinationId = withdrawState.accountId,
             destinationName = withdrawState.accountName,
             saveId = withdrawState.savingId,
-            isLocked = true
+            isLocked = true,
+            isSpecialCase = true
         )
 
         financeRepository.createWithdrawTransaction(withdrawState.savingId, transaction)

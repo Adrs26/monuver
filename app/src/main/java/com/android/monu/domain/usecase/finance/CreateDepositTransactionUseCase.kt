@@ -42,7 +42,8 @@ class CreateDepositTransactionUseCase(
             destinationId = depositState.savingId.toInt(),
             destinationName = depositState.savingName,
             saveId = depositState.savingId,
-            isLocked = true
+            isLocked = true,
+            isSpecialCase = true
         )
 
         financeRepository.createDepositTransaction(depositState.savingId, transaction)

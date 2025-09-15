@@ -31,7 +31,8 @@ class CreateIncomeTransactionUseCase(
             amount = transactionState.amount,
             sourceId = transactionState.sourceId,
             sourceName = transactionState.sourceName,
-            isLocked = false
+            isLocked = false,
+            isSpecialCase = false
         )
 
         repository.createIncomeTransaction(transaction)

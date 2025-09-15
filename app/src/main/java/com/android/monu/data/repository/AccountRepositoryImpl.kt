@@ -19,8 +19,28 @@ class AccountRepositoryImpl(
         }
     }
 
+    override fun getActiveAccounts(): Flow<List<Account>> {
+        return accountDao.getActiveAccounts().map { accounts ->
+            accounts.map { account ->
+                AccountMapper.accountEntityToDomain(account)
+            }
+        }
+    }
+
     override fun getTotalAccountBalance(): Flow<Long?> {
         return accountDao.getTotalAccountBalance()
+    }
+
+    override fun getActiveAccountBalance(): Flow<Long?> {
+        return accountDao.getActiveAccountBalance()
+    }
+
+    override fun getAccountById(accountId: Int): Flow<Account?> {
+        return accountDao.getAccountById(accountId).map { account ->
+            account?.let { account ->
+                AccountMapper.accountEntityToDomain(account)
+            }
+        }
     }
 
     override suspend fun getAccountBalance(accountId: Int): Long? {

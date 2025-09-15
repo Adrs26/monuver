@@ -17,11 +17,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.account.Account
+import com.android.monu.ui.feature.components.CommonLottieAnimation
 
 @Composable
 fun AccountContent(
     accounts: List<Account>,
     totalBalance: Long,
+    onNavigateToAccountDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when  {
@@ -37,6 +39,7 @@ fun AccountContent(
             AccountListContent(
                 accounts = accounts,
                 totalBalance = totalBalance,
+                onNavigateToAccountDetail = onNavigateToAccountDetail,
                 modifier = modifier.padding(top = 8.dp)
             )
         }
@@ -47,6 +50,7 @@ fun AccountContent(
 fun AccountListContent(
     accounts: List<Account>,
     totalBalance: Long,
+    onNavigateToAccountDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -74,7 +78,7 @@ fun AccountListContent(
             AccountListItem(
                 account = accounts[index],
                 modifier = Modifier
-                    .clickable {}
+                    .clickable { onNavigateToAccountDetail(accounts[index].id) }
                     .padding(horizontal = 16.dp, vertical = 2.dp)
             )
         }
@@ -104,12 +108,7 @@ fun AccountEmptyListContent(
                 .background(MaterialTheme.colorScheme.background),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "Kamu belum memiliki akun",
-                style = MaterialTheme.typography.labelMedium.copy(
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            )
+            CommonLottieAnimation(lottieAnimation = R.raw.wallet)
         }
     }
 }

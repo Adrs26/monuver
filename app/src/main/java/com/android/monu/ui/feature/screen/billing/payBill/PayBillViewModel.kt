@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.android.monu.domain.model.bill.Bill
-import com.android.monu.domain.usecase.account.GetAllAccountsUseCase
+import com.android.monu.domain.usecase.account.GetActiveAccountsUseCase
 import com.android.monu.domain.usecase.bill.GetBillByIdUseCase
 import com.android.monu.domain.usecase.finance.PayBillUseCase
 import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContentState
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class PayBillViewModel(
     savedStateHandle: SavedStateHandle,
     getBillByIdUseCase: GetBillByIdUseCase,
-    getAllAccountsUseCase: GetAllAccountsUseCase,
+    getActiveAccountsUseCase: GetActiveAccountsUseCase,
     private val payBillUseCase: PayBillUseCase
 ) : ViewModel() {
 
@@ -29,7 +29,7 @@ class PayBillViewModel(
         savedStateHandle.toRoute<PayBill.Main>().billId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    val accounts = getAllAccountsUseCase()
+    val accounts = getActiveAccountsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     private val _transactionCategory = MutableStateFlow(Pair(0, 0))
