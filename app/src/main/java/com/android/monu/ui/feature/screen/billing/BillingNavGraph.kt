@@ -97,6 +97,7 @@ fun NavGraphBuilder.billingNavGraph(
                 parameters = { parametersOf(it.savedStateHandle) }
             )
             val bill by viewModel.bill.collectAsStateWithLifecycle()
+            val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
 
             bill?.let { bill ->
                 val billDetailActions = object : BillDetailActions {
@@ -115,10 +116,15 @@ fun NavGraphBuilder.billingNavGraph(
                     override fun onNavigateToPayBill(billId: Long) {
                         navController.navigate(PayBill.Main(billId))
                     }
+
+                    override fun onCancelBillPayment(billId: Long) {
+                        viewModel.cancelBillPayment(billId)
+                    }
                 }
 
                 BillDetailScreen(
                     bill = bill,
+                    editResult = editResult,
                     billDetailActions = billDetailActions
                 )
             }
@@ -139,14 +145,17 @@ fun NavGraphBuilder.billingNavGraph(
             bill?.let { bill ->
                 val editBillState = EditBillState(
                     id = bill.id,
+                    parentId = bill.parentId,
                     title = bill.title,
                     date = bill.dueDate,
                     amount = bill.amount,
+                    timeStamp = bill.timeStamp,
                     isRecurring = bill.isRecurring,
                     cycle = bill.cycle ?: Cycle.YEARLY,
                     period = bill.period ?: 1,
                     fixPeriod = (bill.fixPeriod ?: "").toString(),
                     nowPaidPeriod = bill.nowPaidPeriod,
+                    isPaidBefore = bill.isPaidBefore,
                     editResult = updateResult
                 )
 

@@ -50,13 +50,15 @@ interface FinanceRepository {
         budgetStatus: BudgetStatus
     ): Int
 
-    suspend fun payBill(
+    suspend fun processBillPayment(
         billId: Long,
         billPaidDate: String,
         transaction: Transaction,
         isRecurring: Boolean,
         bill: Bill
     )
+
+    suspend fun cancelBillPayment(billId: Long)
 
     suspend fun updateSaving(saving: Saving)
 

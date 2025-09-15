@@ -18,7 +18,7 @@ interface BudgetDao {
     @Query("SELECT * FROM budget WHERE isActive = 0 ORDER BY endDate DESC")
     fun getAllInactiveBudgets(): PagingSource<Int, BudgetEntity>
 
-    @Query("SELECT * FROM budget WHERE id = :budgetId")
+    @Query("SELECT * FROM budget WHERE id = :budgetId LIMIT 1")
     fun getBudgetById(budgetId: Long): Flow<BudgetEntity?>
 
     @Query("""

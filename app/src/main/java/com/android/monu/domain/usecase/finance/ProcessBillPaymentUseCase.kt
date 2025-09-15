@@ -13,7 +13,7 @@ import com.android.monu.ui.feature.utils.TransactionType
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
-class PayBillUseCase(
+class ProcessBillPaymentUseCase(
     private val financeRepository: FinanceRepository,
     private val accountRepository: AccountRepository,
     private val budgetRepository: BudgetRepository
@@ -57,13 +57,15 @@ class PayBillUseCase(
             amount = payBillState.amount,
             sourceId = payBillState.sourceId,
             sourceName = payBillState.sourceName,
+            billId = bill.id,
             isLocked = true,
             isSpecialCase = true
         )
 
-        val isRecurring = (bill.period == 1) || (bill.nowPaidPeriod < (bill.fixPeriod ?: 0))
+        val isRecurring = !bill.isPaidBefore && ((bill.period == 1) || (bill.nowPaidPeriod < (bill.fixPeriod ?: 0)))
 
         val newBill = Bill(
+            parentId = bill.parentId,
             title = bill.title,
             dueDate = getNewDueDate(bill.cycle, bill.dueDate),
             paidDate = null,
@@ -74,10 +76,11 @@ class PayBillUseCase(
             period = bill.period,
             fixPeriod = bill.fixPeriod,
             isPaid = false,
-            nowPaidPeriod = bill.nowPaidPeriod + 1
+            nowPaidPeriod = bill.nowPaidPeriod + 1,
+            isPaidBefore = false
         )
 
-        financeRepository.payBill(
+        financeRepository.processBillPayment(
             billId = bill.id,
             billPaidDate = payBillState.date,
             transaction = transaction,

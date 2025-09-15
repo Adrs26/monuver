@@ -21,11 +21,13 @@ class DeleteSavingUseCase(
 
         try {
             for (transaction in transactions) {
-                val accountId = if (transaction.childCategory == TransactionChildCategory.SAVINGS_IN)
-                    transaction.sourceId else transaction.destinationId
+                val accountId =
+                    if (transaction.childCategory == TransactionChildCategory.SAVINGS_IN)
+                        transaction.sourceId else transaction.destinationId
 
-                val relatedSavingId = if (transaction.childCategory == TransactionChildCategory.SAVINGS_IN)
-                    transaction.destinationId else transaction.sourceId
+                val relatedSavingId =
+                    if (transaction.childCategory == TransactionChildCategory.SAVINGS_IN)
+                        transaction.destinationId else transaction.sourceId
 
                 financeRepository.deleteSavingTransaction(
                     transactionId = transaction.id,

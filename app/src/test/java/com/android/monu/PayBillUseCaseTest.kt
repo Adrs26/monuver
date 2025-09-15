@@ -6,7 +6,7 @@ import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.domain.usecase.finance.PayBillUseCase
+import com.android.monu.domain.usecase.finance.ProcessBillPaymentUseCase
 import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContentState
 import com.android.monu.ui.feature.utils.Cycle
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
@@ -26,14 +26,14 @@ class PayBillUseCaseTest {
     private lateinit var financeRepository: FinanceRepository
     private lateinit var accountRepository: AccountRepository
     private lateinit var budgetRepository: BudgetRepository
-    private lateinit var useCase: PayBillUseCase
+    private lateinit var useCase: ProcessBillPaymentUseCase
 
     @Before
     fun setup() {
         financeRepository = mock()
         accountRepository = mock()
         budgetRepository = mock()
-        useCase = PayBillUseCase(financeRepository, accountRepository, budgetRepository)
+        useCase = ProcessBillPaymentUseCase(financeRepository, accountRepository, budgetRepository)
     }
 
     @Test

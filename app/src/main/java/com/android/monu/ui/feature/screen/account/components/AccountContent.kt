@@ -1,7 +1,6 @@
 package com.android.monu.ui.feature.screen.account.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.account.Account
 import com.android.monu.ui.feature.components.CommonLottieAnimation
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun AccountContent(
@@ -78,7 +78,7 @@ fun AccountListContent(
             AccountListItem(
                 account = accounts[index],
                 modifier = Modifier
-                    .clickable { onNavigateToAccountDetail(accounts[index].id) }
+                    .debouncedClickable { onNavigateToAccountDetail(accounts[index].id) }
                     .padding(horizontal = 16.dp, vertical = 2.dp)
             )
         }

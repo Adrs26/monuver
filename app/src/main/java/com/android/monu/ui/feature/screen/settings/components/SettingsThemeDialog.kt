@@ -1,6 +1,7 @@
 package com.android.monu.ui.feature.screen.settings.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,7 +53,7 @@ fun SettingsThemeDialog(
                 modifier = modifier.padding(16.dp)
             ) {
                 Text(
-                    text = "Pilih tema",
+                    text = stringResource(R.string.choose_theme),
                     style = MaterialTheme.typography.titleMedium.copy(fontSize = 16.sp)
                 )
                 HorizontalDivider(
@@ -117,7 +118,9 @@ fun ThemeRadioButton(
     modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .clickable { onClick() }
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(

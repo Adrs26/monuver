@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class BillEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
+    val parentId: Long = 0L,
     val title: String,
     val dueDate: String,
     val paidDate: String?,
@@ -17,5 +18,6 @@ data class BillEntity(
     val period: Int?,
     val fixPeriod: Int?,
     val isPaid: Boolean,
-    val nowPaidPeriod: Int
+    val nowPaidPeriod: Int,
+    val isPaidBefore: Boolean,
 )

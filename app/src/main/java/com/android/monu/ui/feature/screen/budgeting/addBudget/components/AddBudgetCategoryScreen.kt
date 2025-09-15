@@ -1,7 +1,6 @@
 package com.android.monu.ui.feature.screen.budgeting.addBudget.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,6 +27,7 @@ import com.android.monu.R
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.utils.DataProvider
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun AddBudgetCategoryScreen(
@@ -52,7 +52,7 @@ fun AddBudgetCategoryScreen(
                 BudgetCategoryListItem(
                     category = category,
                     modifier = Modifier
-                        .clickable {
+                        .debouncedClickable {
                             onCategorySelect(category)
                             onNavigateBack()
                         }

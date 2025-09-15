@@ -38,6 +38,7 @@ sealed class DatabaseResultMessage(val message: Int) {
     object InvalidBillFixPeriod : DatabaseResultMessage(R.string.invalid_bill_fix_period)
     object CreateBillSuccess : DatabaseResultMessage(R.string.bill_successfully_added)
     object PayBillSuccess : DatabaseResultMessage(R.string.bill_successfully_paid)
+    object CancelBillSuccess : DatabaseResultMessage(R.string.bill_successfully_cancelled)
     object UpdateBillSuccess : DatabaseResultMessage(R.string.bill_successfully_saved)
 
     object EmptySavingTitle : DatabaseResultMessage(R.string.empty_save_title)

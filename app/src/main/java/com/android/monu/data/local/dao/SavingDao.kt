@@ -20,7 +20,7 @@ interface SavingDao {
     @Query("SELECT SUM(currentAmount) FROM saving WHERE isActive = 1")
     fun getTotalSavingCurrentAmount(): Flow<Long?>
 
-    @Query("SELECT * FROM saving WHERE id = :savingId")
+    @Query("SELECT * FROM saving WHERE id = :savingId LIMIT 1")
     fun getSavingById(savingId: Long): Flow<SavingEntity?>
 
     @Query("SELECT currentAmount FROM saving WHERE id = :savingId")

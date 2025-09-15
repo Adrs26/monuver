@@ -302,4 +302,7 @@
     <string name="deactivate_account_confirmation">Menonaktifkan akun akan mengunci transaksi terkait dan menonaktifkan akses. Tetap ingin melanjutkan?</string>
     <string name="activate_account_confirmation">Mengaktifkan kembali akun akan memulihkan akses dan transaksi terkait. Tetap ingin melanjutkan?</string>
     <string name="total_active_balance">Total saldo aktif</string>
+    <string name="bill_successfully_cancelled">Pembayaran tagihan berhasil dibatalkan</string>
+    <string name="cancel_bill_payment">Batalkan pembayaran</string>
+    <string name="choose_theme">Pilih tema</string>
 </resources>

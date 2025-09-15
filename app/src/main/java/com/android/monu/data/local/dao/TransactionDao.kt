@@ -38,7 +38,7 @@ interface TransactionDao {
         year: Int?
     ): PagingSource<Int, TransactionEntity>
 
-    @Query("SELECT * FROM `transaction` WHERE id = :transactionId")
+    @Query("SELECT * FROM `transaction` WHERE id = :transactionId LIMIT 1")
     fun getTransactionById(transactionId: Long): Flow<TransactionEntity?>
 
     @Query("""
@@ -172,4 +172,7 @@ interface TransactionDao {
         WHERE (type = 1001 OR type = 1002) AND isSpecialCase = 0 AND sourceId = :accountId
     """)
     suspend fun updateTransactionLockStatusByAccountId(accountId: Int, isLocked: Boolean)
+
+    @Query("SELECT * FROM `transaction` WHERE billId = :billId LIMIT 1")
+    suspend fun getTransactionIdByBillId(billId: Long): TransactionEntity?
 }

@@ -1,10 +1,5 @@
 package com.android.monu.ui.feature.screen.billing.editBill.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -23,13 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.ui.feature.components.CycleFilterField
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
-import com.android.monu.ui.feature.components.TextWithSwitch
 import com.android.monu.ui.feature.screen.billing.components.BillPeriodRadioGroupField
-import com.android.monu.ui.feature.utils.Cycle
 import com.android.monu.ui.feature.utils.DateHelper
 
 @Composable
@@ -69,35 +61,14 @@ fun EditBillContent(
             onValueChange = billActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
-        TextWithSwitch(
-            text = stringResource(R.string.recurring_bill),
-            checked = billState.isRecurring,
-            onCheckedChange = billActions::onRecurringChange,
-            isEnable = true,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-        AnimatedVisibility(
-            visible = billState.isRecurring,
-            enter = slideInVertically(initialOffsetY = { -it / 3 }) + fadeIn(),
-            exit = slideOutVertically(targetOffsetY = { -it / 3 }) + fadeOut()
-        ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                CycleFilterField(
-                    cycles = listOf(Cycle.YEARLY, Cycle.MONTHLY, Cycle.WEEKLY),
-                    selectedCycle = billState.cycle,
-                    onCycleChange = billActions::onCycleChange,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                BillPeriodRadioGroupField(
-                    selectedPeriod = billState.period,
-                    onPeriodSelect = billActions::onPeriodChange,
-                    fixPeriod = billState.fixPeriod,
-                    onFixPeriodChange = billActions::onFixPeriodChange,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-            }
+        if (billState.isRecurring && !billState.isPaidBefore) {
+            BillPeriodRadioGroupField(
+                selectedPeriod = billState.period,
+                onPeriodSelect = billActions::onPeriodChange,
+                fixPeriod = billState.fixPeriod,
+                onFixPeriodChange = billActions::onFixPeriodChange,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
         }
         Spacer(modifier = Modifier.weight(1f))
         Button(
@@ -117,23 +88,24 @@ fun EditBillContent(
 
 data class EditBillContentState(
     val id: Long,
+    val parentId: Long,
     val title: String,
     val date: String,
     val amount: Long,
     val amountFormat: TextFieldValue,
+    val timeStamp: Long,
     val isRecurring: Boolean,
     val cycle: Int,
     val period: Int,
     val fixPeriod: String,
-    val nowPaidPeriod: Int
+    val nowPaidPeriod: Int,
+    val isPaidBefore: Boolean
 )
 
 interface EditBillContentActions {
     fun onTitleChange(title: String)
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
-    fun onRecurringChange(isRecurring: Boolean)
-    fun onCycleChange(cycle: Int)
     fun onPeriodChange(period: Int)
     fun onFixPeriodChange(fixPeriod: String)
     fun onEditBill(billState: EditBillContentState)

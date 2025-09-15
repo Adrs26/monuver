@@ -1,7 +1,6 @@
 package com.android.monu.ui.feature.screen.transaction.components
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
@@ -31,6 +30,7 @@ import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.utils.DataProvider
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun TransactionCategoryScreen(
@@ -116,7 +116,7 @@ fun CategorySection(
                     Column(
                         modifier = Modifier
                             .weight(1f)
-                            .clickable {
+                            .debouncedClickable {
                                 if (transactionType == TransactionType.INCOME) {
                                     onCategorySelect(childCategory, childCategory)
                                 } else {

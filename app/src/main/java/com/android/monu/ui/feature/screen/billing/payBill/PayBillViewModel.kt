@@ -7,7 +7,7 @@ import androidx.navigation.toRoute
 import com.android.monu.domain.model.bill.Bill
 import com.android.monu.domain.usecase.account.GetActiveAccountsUseCase
 import com.android.monu.domain.usecase.bill.GetBillByIdUseCase
-import com.android.monu.domain.usecase.finance.PayBillUseCase
+import com.android.monu.domain.usecase.finance.ProcessBillPaymentUseCase
 import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContentState
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.navigation.PayBill
@@ -22,7 +22,7 @@ class PayBillViewModel(
     savedStateHandle: SavedStateHandle,
     getBillByIdUseCase: GetBillByIdUseCase,
     getActiveAccountsUseCase: GetActiveAccountsUseCase,
-    private val payBillUseCase: PayBillUseCase
+    private val processBillPaymentUseCase: ProcessBillPaymentUseCase
 ) : ViewModel() {
 
     val bill = getBillByIdUseCase(
@@ -51,7 +51,7 @@ class PayBillViewModel(
 
     fun payBill(bill: Bill, billState: PayBillContentState) {
         viewModelScope.launch {
-            _payResult.value = payBillUseCase(bill, billState)
+            _payResult.value = processBillPaymentUseCase(bill, billState)
             delay(500)
             _payResult.value = null
         }

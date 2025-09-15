@@ -28,10 +28,12 @@ class CreateBillUseCase(
             period = if (billState.isRecurring) billState.period else null,
             fixPeriod = if (billState.isRecurring && billState.period == 2) billState.fixPeriod.toInt() else null,
             isPaid = false,
-            nowPaidPeriod = 1
+            nowPaidPeriod = 1,
+            isPaidBefore = false
         )
 
-        repository.createNewBill(bill)
+        val billId = repository.createNewBill(bill)
+        repository.updateParentId(billId, billId)
         return DatabaseResultMessage.CreateBillSuccess
     }
 }

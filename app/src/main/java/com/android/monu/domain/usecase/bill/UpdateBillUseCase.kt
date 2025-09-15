@@ -21,20 +21,23 @@ class UpdateBillUseCase(
 
         val bill = Bill(
             id = billState.id,
+            parentId = billState.parentId,
             title = billState.title,
             dueDate = billState.date,
             paidDate = null,
             amount = billState.amount,
-            timeStamp = System.currentTimeMillis(),
+            timeStamp = billState.timeStamp,
             isRecurring = billState.isRecurring,
             cycle = if (billState.isRecurring) billState.cycle else null,
             period = if (billState.isRecurring) billState.period else null,
             fixPeriod = if (billState.isRecurring && billState.period == 2) billState.fixPeriod.toInt() else null,
             isPaid = false,
-            nowPaidPeriod = billState.nowPaidPeriod
+            nowPaidPeriod = billState.nowPaidPeriod,
+            isPaidBefore = billState.isPaidBefore
         )
 
         repository.updateBill(bill)
+        repository.updateBillPeriodByParentId(bill.period, bill.fixPeriod, bill.parentId)
         return DatabaseResultMessage.UpdateBillSuccess
     }
 }

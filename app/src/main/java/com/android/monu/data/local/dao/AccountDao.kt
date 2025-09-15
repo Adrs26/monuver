@@ -23,7 +23,7 @@ interface AccountDao {
     @Query("SELECT SUM(balance) FROM account WHERE isActive = 1")
     fun getActiveAccountBalance(): Flow<Long?>
 
-    @Query("SELECT * FROM account WHERE id = :accountId")
+    @Query("SELECT * FROM account WHERE id = :accountId LIMIT 1")
     fun getAccountById(accountId: Int): Flow<AccountEntity?>
 
     @Query("SELECT balance FROM account WHERE id = :accountId")

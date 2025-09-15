@@ -56,8 +56,12 @@ class BillRepositoryImpl(
         }
     }
 
-    override suspend fun createNewBill(bill: Bill) {
-        billDao.createNewBill(BillMapper.billDomainToEntity(bill))
+    override suspend fun createNewBill(bill: Bill): Long {
+        return billDao.createNewBill(BillMapper.billDomainToEntity(bill))
+    }
+
+    override suspend fun updateParentId(id: Long, parentId: Long) {
+        billDao.updateParentId(id, parentId)
     }
 
     override suspend fun deleteBillById(billId: Long) {
@@ -66,5 +70,13 @@ class BillRepositoryImpl(
 
     override suspend fun updateBill(bill: Bill) {
         billDao.updateBill(BillMapper.billDomainToEntityForUpdate(bill))
+    }
+
+    override suspend fun updateBillPeriodByParentId(
+        period: Int?,
+        fixPeriod: Int?,
+        parentId: Long
+    ) {
+        billDao.updateBillPeriodByParentId(period, fixPeriod, parentId)
     }
 }

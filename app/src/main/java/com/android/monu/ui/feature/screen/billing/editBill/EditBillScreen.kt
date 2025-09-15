@@ -43,8 +43,6 @@ fun EditBillScreen(
     var billAmountFormat by remember {
         mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(billAmount)))
     }
-    var isBillRecurring by rememberSaveable { mutableStateOf(billState.isRecurring) }
-    var billCycle by rememberSaveable { mutableIntStateOf(billState.cycle) }
     var billPeriod by rememberSaveable { mutableIntStateOf(billState.period) }
     var billFixPeriod by rememberSaveable { mutableStateOf(billState.fixPeriod) }
 
@@ -53,15 +51,18 @@ fun EditBillScreen(
 
     val editBillContentState = EditBillContentState(
         id = billState.id,
+        parentId = billState.parentId,
         title = billTitle,
         date = billDate,
         amount = billAmount,
         amountFormat = billAmountFormat,
-        isRecurring = isBillRecurring,
-        cycle = billCycle,
+        timeStamp = billState.timeStamp,
+        isRecurring = billState.isRecurring,
+        cycle = billState.cycle,
         period = billPeriod,
         fixPeriod = billFixPeriod,
-        nowPaidPeriod = billState.nowPaidPeriod
+        nowPaidPeriod = billState.nowPaidPeriod,
+        isPaidBefore = billState.isPaidBefore
     )
 
     val editBillContentActions = object : EditBillContentActions {
@@ -86,14 +87,6 @@ fun EditBillScreen(
                 text = formattedText,
                 selection = TextRange(newCursorPosition)
             )
-        }
-
-        override fun onRecurringChange(isRecurring: Boolean) {
-            isBillRecurring = isRecurring
-        }
-
-        override fun onCycleChange(cycle: Int) {
-            billCycle = cycle
         }
 
         override fun onPeriodChange(period: Int) {
@@ -147,13 +140,16 @@ fun EditBillScreen(
 
 data class EditBillState(
     val id: Long,
+    val parentId: Long,
     val title: String,
     val date: String,
     val amount: Long,
+    val timeStamp: Long,
     val isRecurring: Boolean,
     val cycle: Int,
     val period: Int,
     val fixPeriod: String,
     val nowPaidPeriod: Int,
+    val isPaidBefore: Boolean,
     val editResult: DatabaseResultMessage?
 )

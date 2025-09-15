@@ -233,7 +233,7 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun payBill(
+    override suspend fun processBillPayment(
         billId: Long,
         billPaidDate: String,
         transaction: Transaction,
@@ -241,13 +241,29 @@ class FinanceRepositoryImpl(
         bill: Bill
     ) {
         database.withTransaction {
-            billDao.payBillById(billId, billPaidDate)
+            billDao.updateBillPaidStatusById(billId, billPaidDate, true)
             transactionDao.createNewTransaction(TransactionMapper.transactionDomainToEntity(transaction))
             accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
             budgetDao.increaseBudgetUsedAmount(transaction.parentCategory, transaction.date, transaction.amount)
 
             if (isRecurring) {
                 billDao.createNewBill(BillMapper.billDomainToEntity(bill))
+            }
+        }
+    }
+
+    override suspend fun cancelBillPayment(billId: Long) {
+        database.withTransaction {
+            billDao.updateBillPaidStatusById(billId, null, false)
+            val transaction = transactionDao.getTransactionIdByBillId(billId)
+            transaction?.let {
+                deleteExpenseTransaction(
+                    transaction.id,
+                    transaction.parentCategory,
+                    transaction.date,
+                    transaction.sourceId,
+                    transaction.amount
+                )
             }
         }
     }

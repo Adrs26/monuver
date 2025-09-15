@@ -1,5 +1,6 @@
 package com.android.monu.ui.feature.screen.billing.billDetail.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +31,7 @@ import org.threeten.bp.format.DateTimeFormatter
 fun BillDetailContent(
     bill: Bill,
     onNavigateToPayBill: (Long) -> Unit,
+    onCancelBillPayment: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -85,16 +88,30 @@ fun BillDetailContent(
                 content = DateHelper.formatDateToReadable(bill.paidDate ?: "2025-08-21")
             )
         }
+        Spacer(modifier = Modifier.weight(1f))
         if (!bill.isPaid) {
-            Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = { onNavigateToPayBill(bill.id) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+                    .padding(horizontal = 8.dp)
             ) {
                 Text(
                     text = stringResource(R.string.pay_bill),
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+        } else {
+            OutlinedButton(
+                onClick = { onCancelBillPayment(bill.id) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant)
+            ) {
+                Text(
+                    text = stringResource(R.string.cancel_bill_payment),
                     modifier = Modifier.padding(vertical = 8.dp),
                     style = MaterialTheme.typography.labelMedium
                 )

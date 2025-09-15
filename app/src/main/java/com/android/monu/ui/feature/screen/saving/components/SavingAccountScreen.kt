@@ -1,7 +1,6 @@
 package com.android.monu.ui.feature.screen.saving.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,6 +18,7 @@ import com.android.monu.domain.model.account.Account
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.account.components.AccountListItem
 import com.android.monu.ui.feature.utils.TransactionChildCategory
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun SavingAccountScreen(
@@ -51,7 +51,7 @@ fun SavingAccountScreen(
                     AccountListItem(
                         account = accounts[index],
                         modifier = Modifier
-                            .clickable {
+                            .debouncedClickable {
                                 onAccountSelect(accounts[index].id, accounts[index].name)
                                 onNavigateBack()
                             }

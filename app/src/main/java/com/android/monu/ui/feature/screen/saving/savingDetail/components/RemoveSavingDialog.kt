@@ -106,9 +106,7 @@ fun RemoveProgressDialog(
         onDismissRequest = onDismissRequest
     ) {
         Card(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
             elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)

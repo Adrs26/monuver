@@ -9,6 +9,7 @@ object BillMapper {
     ): Bill {
         return Bill(
             id = billEntity.id,
+            parentId = billEntity.parentId,
             title = billEntity.title,
             dueDate = billEntity.dueDate,
             paidDate = billEntity.paidDate,
@@ -19,7 +20,8 @@ object BillMapper {
             period = billEntity.period,
             fixPeriod = billEntity.fixPeriod,
             isPaid = billEntity.isPaid,
-            nowPaidPeriod = billEntity.nowPaidPeriod
+            nowPaidPeriod = billEntity.nowPaidPeriod,
+            isPaidBefore = billEntity.isPaidBefore
         )
     }
 
@@ -27,6 +29,7 @@ object BillMapper {
         bill: Bill
     ): BillEntity {
         return BillEntity(
+            parentId = bill.parentId,
             title = bill.title,
             dueDate = bill.dueDate,
             paidDate = bill.paidDate,
@@ -37,7 +40,8 @@ object BillMapper {
             period = bill.period,
             fixPeriod = bill.fixPeriod,
             isPaid = bill.isPaid,
-            nowPaidPeriod = bill.nowPaidPeriod
+            nowPaidPeriod = bill.nowPaidPeriod,
+            isPaidBefore = bill.isPaidBefore
         )
     }
 
@@ -46,6 +50,7 @@ object BillMapper {
     ): BillEntity {
         return BillEntity(
             id = bill.id,
+            parentId = bill.parentId,
             title = bill.title,
             dueDate = bill.dueDate,
             paidDate = bill.paidDate,
@@ -56,7 +61,8 @@ object BillMapper {
             period = bill.period,
             fixPeriod = bill.fixPeriod,
             isPaid = bill.isPaid,
-            nowPaidPeriod = bill.nowPaidPeriod
+            nowPaidPeriod = bill.nowPaidPeriod,
+            isPaidBefore = bill.isPaidBefore
         )
     }
 }

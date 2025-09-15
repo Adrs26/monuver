@@ -1,6 +1,5 @@
 package com.android.monu.ui.feature.screen.billing.components
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +14,7 @@ import androidx.paging.compose.LazyPagingItems
 import com.android.monu.R
 import com.android.monu.domain.model.bill.Bill
 import com.android.monu.ui.feature.components.CommonLottieAnimation
+import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun PaidBillScreen(
@@ -47,9 +47,7 @@ fun PaidBillScreen(
                     BillListItem(
                         billState = billState,
                         modifier = Modifier
-                            .clickable {
-                                onNavigateToBillDetail(billState.id)
-                            }
+                            .debouncedClickable { onNavigateToBillDetail(billState.id) }
                             .padding(horizontal = 16.dp, vertical = 12.dp)
                     )
                 }

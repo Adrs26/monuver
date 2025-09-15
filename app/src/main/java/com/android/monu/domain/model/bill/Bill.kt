@@ -2,6 +2,7 @@ package com.android.monu.domain.model.bill
 
 data class Bill(
     val id: Long = 0L,
+    val parentId: Long = 0L,
     val title: String,
     val dueDate: String,
     val paidDate: String?,
@@ -12,5 +13,6 @@ data class Bill(
     val period: Int?,
     val fixPeriod: Int?,
     val isPaid: Boolean,
-    val nowPaidPeriod: Int
+    val nowPaidPeriod: Int,
+    val isPaidBefore: Boolean
 )

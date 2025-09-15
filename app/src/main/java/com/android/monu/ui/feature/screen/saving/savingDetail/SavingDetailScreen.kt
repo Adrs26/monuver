@@ -86,6 +86,10 @@ fun SavingDetailScreen(
             onRemoveSaving = {
                 showRemoveConfirmationDialog = false
                 savingActions.onRemoveSaving(savingState.saving.id)
+                if (savingState.transactions.isEmpty()) {
+                    savingActions.onNavigateBack()
+                    context.getString(R.string.save_successfully_deleted).showMessageWithToast(context)
+                }
             }
         )
     }

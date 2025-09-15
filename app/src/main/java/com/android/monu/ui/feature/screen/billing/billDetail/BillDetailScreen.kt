@@ -1,8 +1,10 @@
 package com.android.monu.ui.feature.screen.billing.billDetail
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,16 +17,24 @@ import com.android.monu.domain.model.bill.Bill
 import com.android.monu.ui.feature.screen.billing.billDetail.components.BillDetailAppBar
 import com.android.monu.ui.feature.screen.billing.billDetail.components.BillDetailContent
 import com.android.monu.ui.feature.screen.billing.billDetail.components.RemoveBillDialog
+import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.showMessageWithToast
 
 @Composable
 fun BillDetailScreen(
     bill: Bill,
+    editResult: DatabaseResultMessage?,
     billDetailActions: BillDetailActions
 ) {
     var showRemoveDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
+    LaunchedEffect(editResult) {
+        editResult?.let { result ->
+            context.getString(result.message).showMessageWithToast(context)
+        }
+    }
+    Log.d("BillDetailScreen", "Bill: $bill")
     Scaffold(
         topBar = {
             BillDetailAppBar(
@@ -38,6 +48,7 @@ fun BillDetailScreen(
         BillDetailContent(
             bill = bill,
             onNavigateToPayBill = billDetailActions::onNavigateToPayBill,
+            onCancelBillPayment = billDetailActions::onCancelBillPayment,
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 24.dp),
@@ -62,4 +73,5 @@ interface BillDetailActions {
     fun onNavigateToEditBill(billId: Long)
     fun onRemoveBill(billId: Long)
     fun onNavigateToPayBill(billId: Long)
+    fun onCancelBillPayment(billId: Long)
 }

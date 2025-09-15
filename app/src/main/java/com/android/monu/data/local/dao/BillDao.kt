@@ -21,18 +21,24 @@ interface BillDao {
     @Query("SELECT * FROM bill WHERE isPaid = 1 ORDER BY paidDate DESC, timeStamp DESC")
     fun getPaidBills(): PagingSource<Int, BillEntity>
 
-    @Query("SELECT * FROM bill WHERE id = :billId")
+    @Query("SELECT * FROM bill WHERE id = :billId LIMIT 1")
     fun getBillById(billId: Long): Flow<BillEntity?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun createNewBill(bill: BillEntity)
+    suspend fun createNewBill(bill: BillEntity): Long
 
-    @Query("UPDATE bill SET isPaid = 1, paidDate = :paidDate WHERE id = :billId")
-    suspend fun payBillById(billId: Long, paidDate: String)
+    @Query("UPDATE bill SET parentId = :parentId WHERE id = :id")
+    suspend fun updateParentId(id: Long, parentId: Long)
+
+    @Query("UPDATE bill SET isPaid = :isPaid, paidDate = :paidDate, isPaidBefore = 1 WHERE id = :billId")
+    suspend fun updateBillPaidStatusById(billId: Long, paidDate: String?, isPaid: Boolean)
 
     @Query("DELETE FROM bill WHERE id = :billId")
     suspend fun deleteBillById(billId: Long)
 
     @Update
     suspend fun updateBill(bill: BillEntity)
+
+    @Query("UPDATE bill set period = :period, fixPeriod = :fixPeriod WHERE parentId = :parentId")
+    suspend fun updateBillPeriodByParentId(period: Int?, fixPeriod: Int?, parentId: Long)
 }
