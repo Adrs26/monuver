@@ -49,7 +49,7 @@ class CreateAccountUseCase(
             isSpecialCase = true
         )
 
-        repository.createAccount(account = account, transaction = transaction)
+        repository.createAccount(account, transaction)
         return DatabaseResultMessage.CreateAccountSuccess
     }
 }

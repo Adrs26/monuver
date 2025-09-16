@@ -26,4 +26,16 @@ object AccountMapper {
             isActive = account.isActive
         )
     }
+
+    fun accountDomainToEntityForUpdate(
+        account: Account
+    ): AccountEntity {
+        return AccountEntity(
+            id = account.id,
+            name = account.name,
+            type = account.type,
+            balance = account.balance,
+            isActive = account.isActive
+        )
+    }
 }

@@ -8,6 +8,7 @@ sealed class DatabaseResultMessage(val message: Int) {
     object EmptyAccountBalance : DatabaseResultMessage(R.string.empty_account_balance)
     object InsufficientAccountBalance : DatabaseResultMessage(R.string.insufficient_account_balance)
     object CreateAccountSuccess : DatabaseResultMessage(R.string.your_account_successfully_created)
+    object UpdateAccountSuccess : DatabaseResultMessage(R.string.account_successfully_saved)
     object DeactivateAccountSuccess : DatabaseResultMessage(R.string.account_successfully_deactivated)
     object ActivateAccountSuccess : DatabaseResultMessage(R.string.account_successfully_activated)
 

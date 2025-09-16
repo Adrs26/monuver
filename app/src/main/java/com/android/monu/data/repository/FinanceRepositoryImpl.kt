@@ -49,6 +49,16 @@ class FinanceRepositoryImpl(
         }
     }
 
+    override suspend fun updateAccount(account: Account) {
+        return database.withTransaction {
+            accountDao.updateAccount(AccountMapper.accountDomainToEntityForUpdate(account))
+            transactionDao.updateAccountNameOnCommonTransaction(account.id, account.name)
+            transactionDao.updateAccountNameOnTransferTransaction(account.id, account.name)
+            transactionDao.updateAccountNameOnDepositTransaction(account.id, account.name)
+            transactionDao.updateAccountNameOnWithdrawTransaction(account.id, account.name)
+        }
+    }
+
     override suspend fun createIncomeTransaction(transaction: Transaction): Long {
         return database.withTransaction {
             val transactionId = transactionDao.createNewTransaction(

@@ -33,6 +33,7 @@ import com.android.monu.domain.usecase.finance.DeleteIncomeTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteSavingUseCase
 import com.android.monu.domain.usecase.finance.ProcessBillPaymentUseCase
 import com.android.monu.domain.usecase.finance.UpdateAccountStatusUseCase
+import com.android.monu.domain.usecase.finance.UpdateAccountUseCase
 import com.android.monu.domain.usecase.finance.UpdateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.UpdateIncomeTransactionUseCase
 import com.android.monu.domain.usecase.finance.UpdateSavingUseCase
@@ -73,6 +74,7 @@ val domainModule = module {
     factoryOf(::GetTransactionSummaryUseCase)
 
     factoryOf(::CancelBillPaymentUseCase)
+    factoryOf(::CompleteSavingUseCase)
     factoryOf(::CreateAccountUseCase)
     factoryOf(::CreateIncomeTransactionUseCase)
     factoryOf(::CreateExpenseTransactionUseCase)
@@ -84,8 +86,10 @@ val domainModule = module {
     factoryOf(::DeleteSavingUseCase)
     factoryOf(::ProcessBillPaymentUseCase)
     factoryOf(::UpdateAccountStatusUseCase)
+    factoryOf(::UpdateAccountUseCase)
     factoryOf(::UpdateIncomeTransactionUseCase)
     factoryOf(::UpdateExpenseTransactionUseCase)
+    factoryOf(::UpdateSavingUseCase)
 
     factoryOf(::CreateBudgetUseCase)
     factoryOf(::DeleteBudgetUseCase)
@@ -109,6 +113,4 @@ val domainModule = module {
     factoryOf(::GetAllInactiveSavingsUseCase)
     factoryOf(::GetSavingByIdUseCase)
     factoryOf(::GetTotalSavingCurrentAmountUseCase)
-    factoryOf(::UpdateSavingUseCase)
-    factoryOf(::CompleteSavingUseCase)
 }

@@ -4,6 +4,7 @@ import com.android.monu.ui.feature.screen.MainViewModel
 import com.android.monu.ui.feature.screen.account.AccountViewModel
 import com.android.monu.ui.feature.screen.account.accountDetail.AccountDetailViewModel
 import com.android.monu.ui.feature.screen.account.addAccount.AddAccountViewModel
+import com.android.monu.ui.feature.screen.account.editAccount.EditAccountViewModel
 import com.android.monu.ui.feature.screen.analytics.AnalyticsViewModel
 import com.android.monu.ui.feature.screen.analytics.analyticsCategoryTransaction.AnalyticsCategoryTransactionViewModel
 import com.android.monu.ui.feature.screen.billing.BillingViewModel
@@ -44,6 +45,7 @@ val viewModelModule = module {
     viewModelOf(::AccountViewModel)
     viewModelOf(::AddAccountViewModel)
     viewModelOf(::AccountDetailViewModel)
+    viewModelOf(::EditAccountViewModel)
 
     viewModelOf(::AddTransactionViewModel)
     viewModelOf(::TransferViewModel)

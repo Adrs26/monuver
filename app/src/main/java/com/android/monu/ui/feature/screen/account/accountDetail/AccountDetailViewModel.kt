@@ -7,7 +7,7 @@ import androidx.navigation.toRoute
 import com.android.monu.domain.usecase.account.GetAccountByIdUseCase
 import com.android.monu.domain.usecase.finance.UpdateAccountStatusUseCase
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.navigation.Account
+import com.android.monu.ui.navigation.AccountDetail
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,7 +22,7 @@ class AccountDetailViewModel(
 ) : ViewModel() {
 
     val account = getAccountByIdUseCase(
-        savedStateHandle.toRoute<Account.Detail>().accountId
+        savedStateHandle.toRoute<AccountDetail.Main>().accountId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val _updateResult = MutableStateFlow<DatabaseResultMessage?>(null)

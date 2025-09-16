@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.screen.account.addAccount.components
+package com.android.monu.ui.feature.screen.account.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +27,7 @@ import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
-fun AddAccountTypeScreen(
+fun AccountTypeScreen(
     onNavigateBack: () -> Unit,
     onTypeSelect: (Int) -> Unit
 ) {

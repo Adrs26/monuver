@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.android.monu.data.datastore.ThemeSetting
+import com.android.monu.ui.feature.screen.account.accountDetailNavGraph
 import com.android.monu.ui.feature.screen.account.accountNavGraph
 import com.android.monu.ui.feature.screen.analytics.analyticsCategoryTransactionNavGraph
 import com.android.monu.ui.feature.screen.billing.billingNavGraph
@@ -53,6 +54,7 @@ fun MonuApp(
         settingsNavGraph(rootNavController)
 
         accountNavGraph(rootNavController)
+        accountDetailNavGraph(rootNavController)
 
         transactionDetailNavGraph(rootNavController)
         addTransactionNavGraph(rootNavController)

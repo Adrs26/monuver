@@ -305,4 +305,6 @@
     <string name="bill_successfully_cancelled">Pembayaran tagihan berhasil dibatalkan</string>
     <string name="cancel_bill_payment">Batalkan pembayaran</string>
     <string name="choose_theme">Pilih tema</string>
+    <string name="account_successfully_saved">Akun berhasil diperbarui</string>
+    <string name="edit_account">Ubah data akun</string>
 </resources>

@@ -15,7 +15,6 @@ import com.android.monu.ui.navigation.TransactionDetail
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -37,7 +36,7 @@ class EditTransactionViewModel(
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private val _initialTransaction = MutableStateFlow<Transaction?>(null)
-    val initialTransaction: StateFlow<Transaction?> = _initialTransaction
+    val initialTransaction = _initialTransaction.asStateFlow()
 
     private val _updateResult = MutableStateFlow<DatabaseResultMessage?>(null)
     val updateResult = _updateResult.asStateFlow()

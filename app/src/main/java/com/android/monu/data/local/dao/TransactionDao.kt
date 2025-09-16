@@ -146,6 +146,36 @@ interface TransactionDao {
 
     @Query("""
         UPDATE `transaction`
+        SET sourceName = :accountName
+        WHERE sourceId = :accountId AND (type = 1001 OR type = 1002)
+    """)
+    suspend fun updateAccountNameOnCommonTransaction(accountId: Int, accountName: String)
+
+    @Query("""
+        UPDATE `transaction`
+        SET 
+            sourceName = CASE WHEN sourceId = :accountId THEN :accountName ELSE sourceName END,
+            destinationName = CASE WHEN destinationId = :accountId THEN :accountName ELSE destinationName END
+        WHERE (sourceId = :accountId OR destinationId = :accountId) AND type = 1003 AND childCategory = 1003
+    """)
+    suspend fun updateAccountNameOnTransferTransaction(accountId: Int, accountName: String)
+
+    @Query("""
+        UPDATE `transaction`
+        SET sourceName = :accountName
+        WHERE sourceId = :accountId AND type = 1003 AND childCategory = 1004
+    """)
+    suspend fun updateAccountNameOnDepositTransaction(accountId: Int, accountName: String)
+
+    @Query("""
+        UPDATE `transaction`
+        SET destinationName = :accountName
+        WHERE destinationId = :accountId AND type = 1003 AND childCategory = 1005
+    """)
+    suspend fun updateAccountNameOnWithdrawTransaction(accountId: Int, accountName: String)
+
+    @Query("""
+        UPDATE `transaction`
         SET destinationName = :saveTitle
         WHERE saveId = :savingId AND type = 1003 AND childCategory = 1004
     """)
