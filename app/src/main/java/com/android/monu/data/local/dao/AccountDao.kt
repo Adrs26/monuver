@@ -43,4 +43,7 @@ interface AccountDao {
 
     @Query("UPDATE account SET isActive = :isActive WHERE id = :accountId")
     suspend fun updateAccountStatus(accountId: Int, isActive: Boolean)
+
+    @Query("DELETE FROM account")
+    suspend fun deleteAllAccounts()
 }

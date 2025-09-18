@@ -66,9 +66,9 @@
     <string name="choose_expense_category">Pilih kategori pengeluaran</string>
     <string name="my_account">Akun</string>
     <string name="add">Tambah</string>
-    <string name="delete_this_transaction">Transaksi yang telah dihapus tidak dapat dipulihkan. Tetap ingin menghapus?</string>
-    <string name="delete_this_budgeting">Budget yang telah dihapus tidak dapat dipulihkan. Tetap ingin menghapus?</string>
-    <string name="delete_this_bill">Tagihan yang telah dihapus tidak dapat dipulihkan. Tetap ingin menghapus?</string>
+    <string name="delete_this_transaction">Transaksi yang telah dihapus tidak dapat dipulihkan. Yakin lanjut?</string>
+    <string name="delete_this_budgeting">Budget yang telah dihapus tidak dapat dipulihkan. Yakin lanjut?</string>
+    <string name="delete_this_bill">Tagihan yang telah dihapus tidak dapat dipulihkan. Yakin lanjut?</string>
     <string name="transaction_type">Jenis transaksi</string>
     <string name="transaction_year">Tahun transaksi</string>
     <string name="transaction_month">Bulan transaksi</string>
@@ -168,6 +168,7 @@
     <string name="weekly">Mingguan</string>
     <string name="custom">Kustom</string>
     <string name="insufficient_account_balance">Saldo akun tidak mencukupi</string>
+    <string name="insufficient_saving_balance">Saldo tabungan tidak mencukupi</string>
     <string name="active_budgeting_with_category_already_exists">Budget aktif dengan kategori ini sudah tersedia</string>"
     <string name="current_budget_amount_exceeds_maximum_limit">Jumlah budget saat ini melebihi batas maksimum</string>
     <string name="empty_transaction_title">Judul transaksi tidak boleh kosong</string>
@@ -284,13 +285,13 @@
     <string name="current_amount">Saldo saat ini</string>
     <string name="save_successfully_saved">Tabungan berhasil diperbarui</string>
     <string name="edit_save">Ubah data tabungan</string>
-    <string name="delete_save_confirmation">Menghapus tabungan juga akan menghapus transaksi terkait dan tindakan ini tidak dapat dipulihkan. Tetap ingin menghapus?</string>
+    <string name="delete_save_confirmation">Menghapus tabungan juga akan menghapus transaksi terkait dan tindakan ini tidak dapat dipulihkan. Yakin lanjut?</string>
     <string name="save_successfully_deleted">Tabungan berhasil dihapus</string>
     <string name="data_delete_in_progress">Data sedang dihapus. Tetap di halaman ini hingga proses selesai, ya.</string>
     <string name="laundry">Laundry</string>
     <string name="savings_complete">Tabungan selesai</string>
     <string name="save_successfully_completed">Tabungan berhasil diselesaikan</string>
-    <string name="complete_save_confirmation">Saat tabungan diselesaikan, seluruh dana akan otomatis digunakan dan tabungan akan ditutup. Tindakan ini tidak bisa dipulihkan. Tetap lanjut?</string>
+    <string name="complete_save_confirmation">Saat tabungan diselesaikan, seluruh dana akan otomatis digunakan dan tabungan akan ditutup. Yakin lanjut?</string>
     <string name="next">Lanjut</string>
     <string name="inactive_save">Tabungan selesai</string>
     <string name="account_detail">Detail akun</string>
@@ -299,12 +300,14 @@
     <string name="inactive">Tidak aktif</string>
     <string name="account_successfully_deactivated">Akun berhasil dinonaktifkan</string>
     <string name="account_successfully_activated">Akun berhasil diaktifkan kembali</string>
-    <string name="deactivate_account_confirmation">Menonaktifkan akun akan mengunci transaksi terkait dan menonaktifkan akses. Tetap ingin melanjutkan?</string>
-    <string name="activate_account_confirmation">Mengaktifkan kembali akun akan memulihkan akses dan transaksi terkait. Tetap ingin melanjutkan?</string>
+    <string name="deactivate_account_confirmation">Menonaktifkan akun akan menonaktifkan akses dan mengunci transaksi terkait. Yakin lanjut?</string>
+    <string name="activate_account_confirmation">Mengaktifkan kembali akun akan memulihkan akses dan transaksi terkait. Yakin lanjut?</string>
     <string name="total_active_balance">Total saldo aktif</string>
     <string name="bill_successfully_cancelled">Pembayaran tagihan berhasil dibatalkan</string>
     <string name="cancel_bill_payment">Batalkan pembayaran</string>
     <string name="choose_theme">Pilih tema</string>
     <string name="account_successfully_saved">Akun berhasil diperbarui</string>
     <string name="edit_account">Ubah data akun</string>
+    <string name="all_data_successfully_deleted">Semua data aplikasi berhasil dihapus</string>
+    <string name="delete_all_application_data_confirmation">Semua data aplikasi akan dihapus secara permanen. Yakin lanjut?</string>
 </resources>

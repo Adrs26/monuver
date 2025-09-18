@@ -54,13 +54,13 @@ interface BudgetDao {
     """)
     suspend fun getBudgetForDate(category: Int, date: String): BudgetEntity?
 
-    @Query("SELECT (CAST(usedAmount AS FLOAT) / CAST(maxAmount AS FLOAT)) * 100 FROM budget WHERE category = :category")
+    @Query("SELECT (CAST(usedAmount AS FLOAT) / CAST(maxAmount AS FLOAT)) * 100 FROM budget WHERE category = :category AND isActive = 1")
     suspend fun getBudgetUsagePercentage(category: Int): Float
 
     @Query("""
         UPDATE budget
         SET usedAmount = usedAmount + :delta 
-        WHERE category = :category AND isActive = 1
+        WHERE category = :category
         AND :date BETWEEN startDate AND endDate
     """)
     suspend fun increaseBudgetUsedAmount(category: Int, date: String, delta: Long)
@@ -68,7 +68,7 @@ interface BudgetDao {
     @Query("""
         UPDATE budget 
         SET usedAmount = usedAmount - :delta 
-        WHERE category = :category AND isActive = 1
+        WHERE category = :category
         AND :date BETWEEN startDate AND endDate
     """)
     suspend fun decreaseBudgetUsedAmount(category: Int, date: String, delta: Long)
@@ -81,4 +81,7 @@ interface BudgetDao {
 
     @Update
     suspend fun updateBudget(budget: BudgetEntity)
+
+    @Query("DELETE FROM budget")
+    suspend fun deleteAllBudgets()
 }

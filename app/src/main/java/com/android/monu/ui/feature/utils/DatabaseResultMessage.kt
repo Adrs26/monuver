@@ -56,4 +56,6 @@ sealed class DatabaseResultMessage(val message: Int) {
     object EmptyWithdrawAmount : DatabaseResultMessage(R.string.empty_deposit_withdraw_amount)
     object EmptyWithdrawAccount : DatabaseResultMessage(R.string.empty_deposit_withdraw_account)
     object CreateWithdrawTransactionSuccess : DatabaseResultMessage(R.string.withdraw_save_amount_successfully)
+
+    object DeleteAllDataSuccess : DatabaseResultMessage(R.string.all_data_successfully_deleted)
 }

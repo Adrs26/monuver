@@ -28,6 +28,7 @@ import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateIncomeTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateTransferTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateWithdrawTransactionUseCase
+import com.android.monu.domain.usecase.finance.DeleteAllDataUseCase
 import com.android.monu.domain.usecase.finance.DeleteExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteIncomeTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteSavingUseCase
@@ -81,6 +82,7 @@ val domainModule = module {
     factoryOf(::CreateTransferTransactionUseCase)
     factoryOf(::CreateDepositTransactionUseCase)
     factoryOf(::CreateWithdrawTransactionUseCase)
+    factoryOf(::DeleteAllDataUseCase)
     factoryOf(::DeleteIncomeTransactionUseCase)
     factoryOf(::DeleteExpenseTransactionUseCase)
     factoryOf(::DeleteSavingUseCase)

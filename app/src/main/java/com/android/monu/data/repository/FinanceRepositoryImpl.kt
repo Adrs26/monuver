@@ -292,4 +292,14 @@ class FinanceRepositoryImpl(
             savingDao.updateSavingStatusToInactiveById(savingId)
         }
     }
+
+    override suspend fun deleteAllData() {
+        database.withTransaction {
+            accountDao.deleteAllAccounts()
+            transactionDao.deleteAllTransactions()
+            budgetDao.deleteAllBudgets()
+            billDao.deleteAllBills()
+            savingDao.deleteAllSavings()
+        }
+    }
 }

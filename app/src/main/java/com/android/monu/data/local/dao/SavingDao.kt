@@ -51,4 +51,8 @@ interface SavingDao {
 
     @Query("DELETE FROM saving WHERE id = :savingId")
     suspend fun deleteSavingById(savingId: Long)
+
+    @Query("DELETE FROM saving")
+    suspend fun deleteAllSavings()
+
 }

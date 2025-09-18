@@ -26,7 +26,8 @@ fun NavGraphBuilder.settingsNavGraph(
             SettingsScreen(
                 themeSetting = themeSetting,
                 onThemeChange = viewModel::changeTheme,
-                onNavigateBack = navController::navigateUp
+                onNavigateBack = navController::navigateUp,
+                onRemoveAllData = viewModel::deleteAllData
             )
         }
     }

@@ -41,4 +41,7 @@ interface BillDao {
 
     @Query("UPDATE bill set period = :period, fixPeriod = :fixPeriod WHERE parentId = :parentId")
     suspend fun updateBillPeriodByParentId(period: Int?, fixPeriod: Int?, parentId: Long)
+
+    @Query("DELETE FROM bill")
+    suspend fun deleteAllBills()
 }

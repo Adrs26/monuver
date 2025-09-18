@@ -205,4 +205,8 @@ interface TransactionDao {
 
     @Query("SELECT * FROM `transaction` WHERE billId = :billId LIMIT 1")
     suspend fun getTransactionIdByBillId(billId: Long): TransactionEntity?
+
+    @Query("DELETE FROM `transaction`")
+    suspend fun deleteAllTransactions()
+
 }

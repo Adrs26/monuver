@@ -11,24 +11,32 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.ui.feature.components.CommonAppBar
+import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.settings.components.SettingsApplicationData
 import com.android.monu.ui.feature.screen.settings.components.SettingsPreference
 import com.android.monu.ui.feature.screen.settings.components.SettingsSecurity
 import com.android.monu.ui.feature.screen.settings.components.SettingsThemeDialog
+import com.android.monu.ui.feature.utils.DatabaseResultMessage
+import com.android.monu.ui.feature.utils.showMessageWithToast
 
 @Composable
 fun SettingsScreen(
     themeSetting: ThemeSetting,
     onNavigateBack: () -> Unit,
-    onThemeChange: (ThemeSetting) -> Unit
+    onThemeChange: (ThemeSetting) -> Unit,
+    onRemoveAllData: () -> Unit
 ) {
     var checked by remember { mutableStateOf(true) }
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
 
     Scaffold(
         topBar = {
@@ -56,7 +64,7 @@ fun SettingsScreen(
                 onExportDataClicked = {  },
                 onBackupDataClicked = {  },
                 onRestoreDataClicked = {  },
-                onDeleteDataClicked = {  }
+                onDeleteDataClicked = { showDeleteDialog = true }
             )
             SettingsSecurity(
                 onPinAuthenticationClicked = {  },
@@ -70,6 +78,20 @@ fun SettingsScreen(
             themeSetting = themeSetting,
             onThemeChange = onThemeChange,
             onDismissRequest = { showThemeDialog = false }
+        )
+    }
+
+    if (showDeleteDialog) {
+        ConfirmationDialog(
+            text = stringResource(R.string.delete_all_application_data_confirmation),
+            onDismissRequest = { showDeleteDialog = false },
+            onConfirmRequest = {
+                showDeleteDialog = false
+                onRemoveAllData()
+                context.getString(
+                    DatabaseResultMessage.DeleteAllDataSuccess.message
+                ).showMessageWithToast(context)
+            }
         )
     }
 }

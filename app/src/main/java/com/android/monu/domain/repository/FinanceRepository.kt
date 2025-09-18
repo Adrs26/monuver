@@ -65,4 +65,6 @@ interface FinanceRepository {
     suspend fun updateSaving(saving: Saving)
 
     suspend fun completeSaving(transaction: Transaction, savingId: Long)
+
+    suspend fun deleteAllData()
 }
