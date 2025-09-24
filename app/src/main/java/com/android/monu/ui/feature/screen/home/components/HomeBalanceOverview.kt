@@ -37,7 +37,7 @@ fun HomeBalanceOverview(
         ) {
             Text(
                 text = stringResource(R.string.total_active_balance),
-                style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
+                style = MaterialTheme.typography.labelSmall
             )
             Text(
                 text = NumberFormatHelper.formatToRupiah(totalBalance),

@@ -1,5 +1,10 @@
 package com.android.monu.data.repository
 
+import android.content.ContentValues
+import android.content.Context
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.room.withTransaction
 import com.android.monu.data.local.MonuDatabase
 import com.android.monu.data.local.dao.AccountDao
@@ -18,6 +23,8 @@ import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.domain.usecase.finance.BudgetStatus
 import com.android.monu.ui.feature.utils.TransactionChildCategory
+import java.io.File
+import java.io.IOException
 import kotlin.math.absoluteValue
 
 class FinanceRepositoryImpl(
@@ -26,7 +33,8 @@ class FinanceRepositoryImpl(
     private val transactionDao: TransactionDao,
     private val budgetDao: BudgetDao,
     private val billDao: BillDao,
-    private val savingDao: SavingDao
+    private val savingDao: SavingDao,
+    private val context: Context
 ) : FinanceRepository {
 
     override suspend fun createAccount(account: Account, transaction: Transaction): Long {
@@ -290,6 +298,25 @@ class FinanceRepositoryImpl(
         database.withTransaction {
             transactionDao.createNewTransaction(TransactionMapper.transactionDomainToEntity(transaction))
             savingDao.updateSavingStatusToInactiveById(savingId)
+        }
+    }
+
+    override suspend fun backupAllData(fileName: String, backupJson: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val values = ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+                put(MediaStore.Downloads.MIME_TYPE, "application/json")
+            }
+
+            val resolver = context.contentResolver
+            val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
+                ?: throw IOException("Failed insert to MediaStore")
+
+            resolver.openOutputStream(uri)?.use { it.write(backupJson.toByteArray()) }
+        } else {
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val file = File(downloadsDir, fileName)
+            file.writeText(backupJson)
         }
     }
 

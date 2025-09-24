@@ -22,11 +22,14 @@ fun NavGraphBuilder.settingsNavGraph(
         ) {
             val viewModel = koinViewModel<SettingsViewModel>()
             val themeSetting by viewModel.themeSetting.collectAsStateWithLifecycle()
+            val backupResult by viewModel.backupResult.collectAsStateWithLifecycle()
 
             SettingsScreen(
                 themeSetting = themeSetting,
+                backupResult = backupResult,
                 onThemeChange = viewModel::changeTheme,
                 onNavigateBack = navController::navigateUp,
+                onBackupData = viewModel::backupData,
                 onRemoveAllData = viewModel::deleteAllData
             )
         }

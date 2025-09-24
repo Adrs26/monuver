@@ -1,9 +1,6 @@
 package com.android.monu.ui.feature.screen.transaction
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -48,8 +45,7 @@ fun TransactionScreen(
                 query = transactionState.queryFilter,
                 onQueryChange = transactionActions::onQueryChange,
                 modifier = Modifier
-                    .padding(start = 16.dp, end = 12.dp, top = 16.dp, bottom = 12.dp)
-                    .padding(WindowInsets.safeDrawing.asPaddingValues()),
+                    .padding(start = 16.dp, end = 12.dp, top = 48.dp, bottom = 12.dp),
                 onFilterButtonClick = { showFilterDialog = true }
             )
         }

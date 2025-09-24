@@ -37,7 +37,7 @@ fun SavingOverview(
         ) {
             Text(
                 text = stringResource(R.string.save_total_balance),
-                style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
+                style = MaterialTheme.typography.labelSmall
             )
             Text(
                 text = NumberFormatHelper.formatToRupiah(totalCurrentAmount),

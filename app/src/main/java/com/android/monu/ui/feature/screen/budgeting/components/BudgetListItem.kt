@@ -70,7 +70,7 @@ fun BudgetListItem(
                 )
             )
             Row(
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.Bottom
             ) {

@@ -23,7 +23,7 @@ class CreateWithdrawTransactionUseCase(
 
         val savingBalance = savingRepository.getSavingBalance(withdrawState.savingId)
         if (savingBalance == null || savingBalance < withdrawState.amount) {
-            return DatabaseResultMessage.InsufficientAccountBalance
+            return DatabaseResultMessage.InsufficientSavingBalance
         }
 
         val (month, year) = DateHelper.getMonthAndYear(withdrawState.date)

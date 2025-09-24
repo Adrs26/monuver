@@ -108,7 +108,8 @@ fun HomeBudgetOverview(
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(totalMaxAmount - totalUsedAmount),
+                    text = if (totalUsedAmount >= totalMaxAmount) NumberFormatHelper.formatToRupiah(0) else
+                        NumberFormatHelper.formatToRupiah(totalMaxAmount - totalUsedAmount),
                     modifier = Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.labelMedium
                 )

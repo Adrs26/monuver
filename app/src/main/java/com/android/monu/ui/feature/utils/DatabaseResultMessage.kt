@@ -45,6 +45,7 @@ sealed class DatabaseResultMessage(val message: Int) {
     object EmptySavingTitle : DatabaseResultMessage(R.string.empty_save_title)
     object EmptySavingTargetAmount : DatabaseResultMessage(R.string.empty_save_target_amount)
     object EmptySavingTargetDate : DatabaseResultMessage(R.string.empty_save_target_date)
+    object InsufficientSavingBalance : DatabaseResultMessage(R.string.insufficient_saving_balance)
     object CreateSavingSuccess : DatabaseResultMessage(R.string.save_successfully_added)
     object UpdateSavingSuccess : DatabaseResultMessage(R.string.save_successfully_saved)
     object CompleteSavingSuccess : DatabaseResultMessage(R.string.save_successfully_completed)
@@ -57,5 +58,8 @@ sealed class DatabaseResultMessage(val message: Int) {
     object EmptyWithdrawAccount : DatabaseResultMessage(R.string.empty_deposit_withdraw_account)
     object CreateWithdrawTransactionSuccess : DatabaseResultMessage(R.string.withdraw_save_amount_successfully)
 
+    object BackupDataSuccess : DatabaseResultMessage(R.string.all_data_successfully_backed_up)
+    object BackupDataFailed : DatabaseResultMessage(R.string.backup_data_failed)
     object DeleteAllDataSuccess : DatabaseResultMessage(R.string.all_data_successfully_deleted)
+
 }

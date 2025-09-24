@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.calendar)
     implementation(libs.threetenabp)
     implementation(libs.lottie.compose)
+    implementation(libs.accompanist.permissions)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
@@ -82,6 +83,7 @@ dependencies {
     implementation(libs.koin.androidx.navigation)
 
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.gson)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockito.core)

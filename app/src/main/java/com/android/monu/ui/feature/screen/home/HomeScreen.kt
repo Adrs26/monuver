@@ -57,7 +57,7 @@ fun HomeScreen(
                 onNavigateToTransfer = homeActions::onNavigateToTransfer,
                 onNavigateToAddBudget = homeActions::onNavigateToAddBudget,
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 12.dp)
                     .padding(top = 24.dp)
             )
             HorizontalDivider(

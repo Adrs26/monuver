@@ -150,4 +150,16 @@ class TransactionRepositoryImpl(
             TransactionMapper.transactionEntityToDomain(transaction)
         }
     }
+
+    override suspend fun getAllTransactionsSuspend(): List<Transaction> {
+        return transactionDao.getAllTransactionsSuspend().map { transaction ->
+            TransactionMapper.transactionEntityToDomain(transaction)
+        }
+    }
+
+    override suspend fun insertAllTransactions(transactions: List<Transaction>) {
+        return transactionDao.insertAllTransactions(transactions.map { transaction ->
+            TransactionMapper.transactionDomainToEntity(transaction)
+        })
+    }
 }

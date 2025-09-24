@@ -50,7 +50,7 @@ fun BudgetOverview(
         ) {
             Text(
                 text = stringResource(R.string.your_budgeting_this_period),
-                style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
+                style = MaterialTheme.typography.labelSmall
             )
             Text(
                 text = NumberFormatHelper.formatToRupiah(totalMaxAmount),

@@ -46,4 +46,10 @@ interface AccountDao {
 
     @Query("DELETE FROM account")
     suspend fun deleteAllAccounts()
+
+    @Query("SELECT * FROM account")
+    suspend fun getAllAccountsSuspend(): List<AccountEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllAccounts(accounts: List<AccountEntity>)
 }

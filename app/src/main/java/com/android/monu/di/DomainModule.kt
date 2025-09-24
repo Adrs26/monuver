@@ -20,6 +20,7 @@ import com.android.monu.domain.usecase.budget.GetBudgetByIdUseCase
 import com.android.monu.domain.usecase.budget.GetBudgetSummaryUseCase
 import com.android.monu.domain.usecase.budget.HandleExpiredBudgetUseCase
 import com.android.monu.domain.usecase.budget.UpdateBudgetUseCase
+import com.android.monu.domain.usecase.finance.BackupDataUseCase
 import com.android.monu.domain.usecase.finance.CancelBillPaymentUseCase
 import com.android.monu.domain.usecase.finance.CompleteSavingUseCase
 import com.android.monu.domain.usecase.finance.CreateAccountUseCase
@@ -74,6 +75,7 @@ val domainModule = module {
     factoryOf(::GetTransactionCategorySummaryUseCase)
     factoryOf(::GetTransactionSummaryUseCase)
 
+    factoryOf(::BackupDataUseCase)
     factoryOf(::CancelBillPaymentUseCase)
     factoryOf(::CompleteSavingUseCase)
     factoryOf(::CreateAccountUseCase)

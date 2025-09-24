@@ -48,4 +48,16 @@ class SavingRepositoryImpl(
     override suspend fun deleteSavingById(savingId: Long) {
         savingDao.deleteSavingById(savingId)
     }
+
+    override suspend fun getAllSavingsSuspend(): List<Saving> {
+        return savingDao.getAllSavingsSuspend().map { saving ->
+            SavingMapper.savingEntityToDomain(saving)
+        }
+    }
+
+    override suspend fun insertAllSavings(savings: List<Saving>) {
+        savingDao.insertAllSavings(savings.map { saving ->
+            SavingMapper.savingDomainToEntity(saving)
+        })
+    }
 }

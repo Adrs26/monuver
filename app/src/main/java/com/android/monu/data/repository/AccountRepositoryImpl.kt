@@ -46,4 +46,16 @@ class AccountRepositoryImpl(
     override suspend fun getAccountBalance(accountId: Int): Long? {
         return accountDao.getAccountBalance(accountId)
     }
+
+    override suspend fun getAllAccountsSuspend(): List<Account> {
+        return accountDao.getAllAccountsSuspend().map { account ->
+            AccountMapper.accountEntityToDomain(account)
+        }
+    }
+
+    override suspend fun insertAllAccounts(accounts: List<Account>) {
+        accountDao.insertAllAccounts(accounts.map { account ->
+            AccountMapper.accountDomainToEntity(account)
+        })
+    }
 }

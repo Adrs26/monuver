@@ -37,7 +37,7 @@ fun AccountOverview(
         ) {
             Text(
                 text = stringResource(R.string.total_account_balance),
-                style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
+                style = MaterialTheme.typography.labelSmall
             )
             Text(
                 text = NumberFormatHelper.formatToRupiah(totalBalance),

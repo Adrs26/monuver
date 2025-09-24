@@ -178,7 +178,7 @@ fun AnalyticsPieChartDetailData(
     ) {
         Box(
             modifier = Modifier
-                .width(36.dp)
+                .width(40.dp)
                 .height(24.dp)
                 .clip(RoundedCornerShape(8.dp))
                 .background(DatabaseCodeMapper.toParentCategoryIconBackground(category)),

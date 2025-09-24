@@ -1,11 +1,14 @@
 package com.android.monu.ui.feature.screen.settings
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,12 +27,18 @@ import com.android.monu.ui.feature.screen.settings.components.SettingsSecurity
 import com.android.monu.ui.feature.screen.settings.components.SettingsThemeDialog
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsScreen(
     themeSetting: ThemeSetting,
+    backupResult: DatabaseResultMessage?,
     onNavigateBack: () -> Unit,
     onThemeChange: (ThemeSetting) -> Unit,
+    onBackupData: () -> Unit,
     onRemoveAllData: () -> Unit
 ) {
     var checked by remember { mutableStateOf(true) }
@@ -37,6 +46,16 @@ fun SettingsScreen(
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+
+    val storagePermissionState = rememberPermissionState(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
+    LaunchedEffect(backupResult) {
+        backupResult?.let { result ->
+            context.getString(result.message).showMessageWithToast(context)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -56,13 +75,20 @@ fun SettingsScreen(
             SettingsPreference(
                 isNotificationEnabled = checked,
                 themeSetting = themeSetting,
-                onNotificationClicked = {  },
+                onNotificationClicked = { },
                 onThemeClicked = { showThemeDialog = true },
                 modifier = Modifier.padding(top = 8.dp)
             )
             SettingsApplicationData(
                 onExportDataClicked = {  },
-                onBackupDataClicked = {  },
+                onBackupDataClicked = {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+                        !storagePermissionState.status.isGranted) {
+                        storagePermissionState.launchPermissionRequest()
+                    } else {
+                        onBackupData()
+                    }
+                },
                 onRestoreDataClicked = {  },
                 onDeleteDataClicked = { showDeleteDialog = true }
             )

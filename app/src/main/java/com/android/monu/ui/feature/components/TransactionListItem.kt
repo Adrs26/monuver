@@ -65,7 +65,7 @@ fun TransactionListItem(
                 text = "${transactionState.sourceName} · ${DateHelper.formatDateToReadable(transactionState.date)}",
                 modifier = Modifier.padding(top = 4.dp),
                 style = MaterialTheme.typography.labelSmall.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             )
         }

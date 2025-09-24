@@ -24,4 +24,8 @@ interface BillRepository {
     suspend fun updateBill(bill: Bill)
 
     suspend fun updateBillPeriodByParentId(period: Int?, fixPeriod: Int?, parentId: Long)
+
+    suspend fun getAllBillsSuspend(): List<Bill>
+
+    suspend fun insertAllBills(bills: List<Bill>)
 }

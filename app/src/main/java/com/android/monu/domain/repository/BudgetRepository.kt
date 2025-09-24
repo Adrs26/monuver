@@ -30,4 +30,8 @@ interface BudgetRepository {
     suspend fun deleteBudgetById(budgetId: Long)
 
     suspend fun updateBudget(budget: Budget)
+
+    suspend fun getAllBudgetsSuspend(): List<Budget>
+
+    suspend fun insertAllBudgets(budgets: List<Budget>)
 }

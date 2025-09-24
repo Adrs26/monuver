@@ -56,4 +56,8 @@ interface TransactionRepository {
     ): Long
 
     suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<Transaction>
+
+    suspend fun getAllTransactionsSuspend(): List<Transaction>
+
+    suspend fun insertAllTransactions(transactions: List<Transaction>)
 }

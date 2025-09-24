@@ -209,4 +209,10 @@ interface TransactionDao {
     @Query("DELETE FROM `transaction`")
     suspend fun deleteAllTransactions()
 
+    @Query("SELECT * FROM `transaction`")
+    suspend fun getAllTransactionsSuspend(): List<TransactionEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllTransactions(transactions: List<TransactionEntity>)
+
 }
