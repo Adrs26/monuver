@@ -37,7 +37,7 @@ fun InactiveSavingScreen(
                 .padding(innerPadding)
         ) {
             if (savings.isEmpty()) {
-                CommonLottieAnimation(lottieAnimation = R.raw.empty)
+                CommonLottieAnimation(lottieAnimation = R.raw.empty_box)
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),

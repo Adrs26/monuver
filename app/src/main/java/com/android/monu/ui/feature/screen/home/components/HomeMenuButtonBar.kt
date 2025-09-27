@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.feature.utils.debouncedClickable
 import com.android.monu.ui.theme.Blue800
@@ -112,7 +113,7 @@ fun HomeMenuButton(
             text = title,
             modifier = Modifier.padding(top = 8.dp),
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp)
         )
     }
 }

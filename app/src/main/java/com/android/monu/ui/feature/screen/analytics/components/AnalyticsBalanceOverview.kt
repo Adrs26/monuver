@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.domain.model.transaction.TransactionBalanceSummary
@@ -77,7 +78,7 @@ fun BalanceData(
             Text(
                 text = NumberFormatHelper.formatToRupiah(totalAmount),
                 modifier = Modifier.padding(top = 2.dp),
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
             )
             Text(
                 text = stringResource(R.string.average_per_day),
@@ -87,7 +88,7 @@ fun BalanceData(
             Text(
                 text = NumberFormatHelper.formatToRupiah(averageAmount.toLong()),
                 modifier = Modifier.padding(top = 2.dp),
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
             )
         }
     }

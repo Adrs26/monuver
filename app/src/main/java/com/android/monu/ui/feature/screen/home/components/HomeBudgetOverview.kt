@@ -90,7 +90,7 @@ fun HomeBudgetOverview(
                 Text(
                     text = NumberFormatHelper.formatToRupiah(totalMaxAmount),
                     modifier = Modifier.padding(top = 4.dp),
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
                 Text(
                     text = stringResource(R.string.used_amount),
@@ -100,7 +100,7 @@ fun HomeBudgetOverview(
                 Text(
                     text = NumberFormatHelper.formatToRupiah(totalUsedAmount),
                     modifier = Modifier.padding(top = 4.dp),
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
                 Text(
                     text = stringResource(R.string.remained_amount),
@@ -111,7 +111,7 @@ fun HomeBudgetOverview(
                     text = if (totalUsedAmount >= totalMaxAmount) NumberFormatHelper.formatToRupiah(0) else
                         NumberFormatHelper.formatToRupiah(totalMaxAmount - totalUsedAmount),
                     modifier = Modifier.padding(top = 4.dp),
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
             }
         }

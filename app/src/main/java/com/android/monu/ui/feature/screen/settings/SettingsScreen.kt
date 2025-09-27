@@ -1,7 +1,10 @@
 package com.android.monu.ui.feature.screen.settings
 
 import android.Manifest
+import android.net.Uri
 import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +24,7 @@ import com.android.monu.R
 import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.components.ConfirmationDialog
+import com.android.monu.ui.feature.screen.settings.components.FirstBackupRestoreConfirmation
 import com.android.monu.ui.feature.screen.settings.components.SettingsApplicationData
 import com.android.monu.ui.feature.screen.settings.components.SettingsPreference
 import com.android.monu.ui.feature.screen.settings.components.SettingsSecurity
@@ -35,14 +39,21 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun SettingsScreen(
     themeSetting: ThemeSetting,
-    backupResult: DatabaseResultMessage?,
+    isFirstBackup: Boolean,
+    isFirstRestore: Boolean,
+    processResult: DatabaseResultMessage?,
     onNavigateBack: () -> Unit,
     onThemeChange: (ThemeSetting) -> Unit,
     onBackupData: () -> Unit,
+    onSetFirstBackupToFalse: () -> Unit,
+    onRestoreData: (Uri) -> Unit,
+    onSetFirstRestoreToFalse: () -> Unit,
     onRemoveAllData: () -> Unit
 ) {
     var checked by remember { mutableStateOf(true) }
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showFirstBackupDialog by remember { mutableStateOf(false) }
+    var showFirstRestoreDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
@@ -50,9 +61,14 @@ fun SettingsScreen(
     val storagePermissionState = rememberPermissionState(
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
+    val pickJsonFileLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        uri?.let { onRestoreData(it) }
+    }
 
-    LaunchedEffect(backupResult) {
-        backupResult?.let { result ->
+    LaunchedEffect(processResult) {
+        processResult?.let { result ->
             context.getString(result.message).showMessageWithToast(context)
         }
     }
@@ -82,14 +98,24 @@ fun SettingsScreen(
             SettingsApplicationData(
                 onExportDataClicked = {  },
                 onBackupDataClicked = {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
-                        !storagePermissionState.status.isGranted) {
-                        storagePermissionState.launchPermissionRequest()
+                    if (isFirstBackup) {
+                        showFirstBackupDialog = true
                     } else {
-                        onBackupData()
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+                            !storagePermissionState.status.isGranted) {
+                            storagePermissionState.launchPermissionRequest()
+                        } else {
+                            onBackupData()
+                        }
                     }
                 },
-                onRestoreDataClicked = {  },
+                onRestoreDataClicked = {
+                    if (isFirstRestore) {
+                        showFirstRestoreDialog = true
+                    } else {
+                        pickJsonFileLauncher.launch(arrayOf("application/json"))
+                    }
+                },
                 onDeleteDataClicked = { showDeleteDialog = true }
             )
             SettingsSecurity(
@@ -104,6 +130,35 @@ fun SettingsScreen(
             themeSetting = themeSetting,
             onThemeChange = onThemeChange,
             onDismissRequest = { showThemeDialog = false }
+        )
+    }
+
+    if (showFirstBackupDialog) {
+        FirstBackupRestoreConfirmation(
+            text = stringResource(R.string.first_backup_confirmation),
+            onDismissRequest = { showFirstBackupDialog = false },
+            onConfirmRequest = {
+                showFirstBackupDialog = false
+                onSetFirstBackupToFalse()
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+                    !storagePermissionState.status.isGranted) {
+                    storagePermissionState.launchPermissionRequest()
+                } else {
+                    onBackupData()
+                }
+            }
+        )
+    }
+
+    if (showFirstRestoreDialog) {
+        FirstBackupRestoreConfirmation(
+            text = stringResource(R.string.first_restore_confirmation),
+            onDismissRequest = { showFirstRestoreDialog = false },
+            onConfirmRequest = {
+                showFirstRestoreDialog = false
+                onSetFirstRestoreToFalse()
+                pickJsonFileLauncher.launch(arrayOf("application/json"))
+            }
         )
     }
 

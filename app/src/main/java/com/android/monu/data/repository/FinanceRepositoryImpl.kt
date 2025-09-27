@@ -2,6 +2,7 @@ package com.android.monu.data.repository
 
 import android.content.ContentValues
 import android.content.Context
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
@@ -14,6 +15,7 @@ import com.android.monu.data.local.dao.SavingDao
 import com.android.monu.data.local.dao.TransactionDao
 import com.android.monu.data.mapper.AccountMapper
 import com.android.monu.data.mapper.BillMapper
+import com.android.monu.data.mapper.BudgetMapper
 import com.android.monu.data.mapper.SavingMapper
 import com.android.monu.data.mapper.TransactionMapper
 import com.android.monu.domain.model.account.Account
@@ -21,8 +23,10 @@ import com.android.monu.domain.model.bill.Bill
 import com.android.monu.domain.model.saving.Saving
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.repository.FinanceRepository
+import com.android.monu.domain.usecase.finance.BackupData
 import com.android.monu.domain.usecase.finance.BudgetStatus
 import com.android.monu.ui.feature.utils.TransactionChildCategory
+import com.google.gson.Gson
 import java.io.File
 import java.io.IOException
 import kotlin.math.absoluteValue
@@ -301,7 +305,18 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun backupAllData(fileName: String, backupJson: String) {
+    override suspend fun backupAllData(fileName: String) {
+        val backupData = BackupData(
+            accounts = accountDao.getAllAccountsSuspend().map { AccountMapper.accountEntityToDomain(it) },
+            bills = billDao.getAllBillsSuspend().map { BillMapper.billEntityToDomain(it) },
+            budgets = budgetDao.getAllBudgetsSuspend().map { BudgetMapper.budgetEntityToDomain(it) },
+            savings = savingDao.getAllSavingsSuspend().map { SavingMapper.savingEntityToDomain(it) },
+            transactions = transactionDao.getAllTransactionsSuspend().map {
+                TransactionMapper.transactionEntityToDomain(it)
+            }
+        )
+        val backupDataJson = Gson().toJson(backupData)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val values = ContentValues().apply {
                 put(MediaStore.Downloads.DISPLAY_NAME, fileName)
@@ -312,11 +327,39 @@ class FinanceRepositoryImpl(
             val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
                 ?: throw IOException("Failed insert to MediaStore")
 
-            resolver.openOutputStream(uri)?.use { it.write(backupJson.toByteArray()) }
+            resolver.openOutputStream(uri)?.use { it.write(backupDataJson.toByteArray()) }
         } else {
             val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             val file = File(downloadsDir, fileName)
-            file.writeText(backupJson)
+            file.writeText(backupDataJson)
+        }
+    }
+
+    override suspend fun restoreAllData(uri: Uri) {
+        val backupDataJson = context.contentResolver.openInputStream(uri)?.bufferedReader().use { it?.readText() }
+        val backupData = Gson().fromJson(backupDataJson, BackupData::class.java)
+
+        database.withTransaction {
+            accountDao.deleteAllAccounts()
+            transactionDao.deleteAllTransactions()
+            budgetDao.deleteAllBudgets()
+            billDao.deleteAllBills()
+            savingDao.deleteAllSavings()
+            accountDao.insertAllAccounts(
+                backupData.accounts.map { AccountMapper.accountDomainToEntityForUpdate(it) }
+            )
+            billDao.insertAllBills(
+                backupData.bills.map { BillMapper.billDomainToEntityForUpdate(it) }
+            )
+            budgetDao.insertAllBudgets(
+                backupData.budgets.map { BudgetMapper.budgetDomainToEntityForUpdate(it) }
+            )
+            savingDao.insertAllSavings(
+                backupData.savings.map { SavingMapper.savingDomainToEntityForUpdate(it) }
+            )
+            transactionDao.insertAllTransactions(
+                backupData.transactions.map { TransactionMapper.transactionDomainToEntityForUpdate(it) }
+            )
         }
     }
 

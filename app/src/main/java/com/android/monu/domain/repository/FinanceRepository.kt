@@ -1,5 +1,6 @@
 package com.android.monu.domain.repository
 
+import android.net.Uri
 import com.android.monu.domain.model.account.Account
 import com.android.monu.domain.model.bill.Bill
 import com.android.monu.domain.model.saving.Saving
@@ -66,7 +67,9 @@ interface FinanceRepository {
 
     suspend fun completeSaving(transaction: Transaction, savingId: Long)
 
-    suspend fun backupAllData(fileName: String, backupJson: String)
+    suspend fun backupAllData(fileName: String)
+
+    suspend fun restoreAllData(uri: Uri)
 
     suspend fun deleteAllData()
 }

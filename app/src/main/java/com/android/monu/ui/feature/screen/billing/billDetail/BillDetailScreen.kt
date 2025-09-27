@@ -14,9 +14,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.bill.Bill
+import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.billing.billDetail.components.BillDetailAppBar
 import com.android.monu.ui.feature.screen.billing.billDetail.components.BillDetailContent
-import com.android.monu.ui.feature.screen.billing.billDetail.components.RemoveBillDialog
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.showMessageWithToast
 
@@ -56,9 +56,10 @@ fun BillDetailScreen(
     }
 
     if (showRemoveDialog) {
-        RemoveBillDialog(
+        ConfirmationDialog(
+            text = context.getString(R.string.delete_this_bill),
             onDismissRequest = { showRemoveDialog = false },
-            onRemoveBill = {
+            onConfirmRequest = {
                 showRemoveDialog = false
                 billDetailActions.onRemoveBill(bill.id)
                 context.getString(R.string.bill_successfully_deleted).showMessageWithToast(context)

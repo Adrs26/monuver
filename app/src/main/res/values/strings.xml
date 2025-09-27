@@ -59,7 +59,6 @@
     <string name="transaction_successfully_deleted">Transaksi berhasil dihapus</string>
     <string name="cancel">Batal</string>
     <string name="apply">Terapkan</string>
-    <string name="delete">Hapus</string>
     <string name="no_transactions_yet">Belum ada transaksi nih</string>
     <string name="percentage_value">%1$d%%</string>
     <string name="choose_income_category">Pilih kategori pemasukan</string>
@@ -196,7 +195,7 @@
     <string name="choose_budgeting_start_date">Pilih tanggal budget dimulai</string>
     <string name="choose_budgeting_end_date">Pilih tanggal budget selesai</string>
     <string name="budgeting_overflow_allowed">Izinkan budget melebihi batas maksimum</string>
-    <string name="bugdeting_auto_update">Otomatis perbarui budget setelah selesai</string>
+    <string name="budgeting_auto_update">Otomatis perbarui budget setelah selesai</string>
     <string name="budgeting_time_period">Jangka waktu</string>
     <string name="transaction_history">Riwayat transaksi</string>
     <string name="budgeting_detail">Detail budget</string>
@@ -299,7 +298,7 @@
     <string name="inactive">Tidak aktif</string>
     <string name="account_successfully_deactivated">Akun berhasil dinonaktifkan</string>
     <string name="account_successfully_activated">Akun berhasil diaktifkan kembali</string>
-    <string name="deactivate_account_confirmation">Menonaktifkan akun akan menonaktifkan akses dan mengunci transaksi terkait. Yakin lanjut?</string>
+    <string name="deactivate_account_confirmation">Menonaktifkan akun akan mengunci akses dan transaksi terkait. Yakin lanjut?</string>
     <string name="activate_account_confirmation">Mengaktifkan kembali akun akan memulihkan akses dan transaksi terkait. Yakin lanjut?</string>
     <string name="total_active_balance">Total saldo aktif</string>
     <string name="bill_successfully_cancelled">Pembayaran tagihan berhasil dibatalkan</string>
@@ -312,4 +311,9 @@
     <string name="all_data_successfully_backed_up">"Semua data telah berhasil dicadangkan"</string>
     <string name="backup_data_failed">Data gagal dicadangkan</string>
     <string name="insufficient_saving_balance">Saldo tabungan tidak mencukupi</string>
+    <string name="first_backup_confirmation"><![CDATA[Hasil file backup akan otomatis tersimpan sebagai monu_backup_<timestamp>.json dan berlokasi di folder download]]></string>
+    <string name="first_restore_confirmation"><![CDATA[Pilih file backup monu_backup_<timestamp>.json untuk memulihkan data. Proses ini akan menimpa data yang ada di aplikasi]]></string>
+    <string name="all_data_successfully_restored">Semua data telah berhasil dipulihkan</string>
+    <string name="restore_data_failed">Data gagal dipulihkan</string>
+    <string name="empty_save_amount">Tabungan dengan saldo nol tidak bisa diselesaikan</string>
 </resources>

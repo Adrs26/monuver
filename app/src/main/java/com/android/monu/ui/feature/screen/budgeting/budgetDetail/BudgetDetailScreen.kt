@@ -9,11 +9,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.android.monu.R
 import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.budgeting.budgetDetail.components.BudgetDetailAppBar
 import com.android.monu.ui.feature.screen.budgeting.budgetDetail.components.BudgetDetailContent
-import com.android.monu.ui.feature.screen.budgeting.budgetDetail.components.RemoveBudgetDialog
 import com.android.monu.ui.feature.utils.showMessageWithToast
 
 @Composable
@@ -44,9 +45,10 @@ fun BudgetDetailScreen(
     }
 
     if (showRemoveDialog) {
-        RemoveBudgetDialog(
+        ConfirmationDialog(
+            text = stringResource(R.string.delete_this_budgeting),
             onDismissRequest = { showRemoveDialog = false },
-            onRemoveBudget = {
+            onConfirmRequest = {
                 showRemoveDialog = false
                 budgetActions.onRemoveBudget(budgetState.id)
                 context.getString(R.string.budgeting_successfully_deleted).showMessageWithToast(context)

@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.account.Account
-import com.android.monu.ui.feature.screen.account.accountDetail.components.AccountConfirmationDialog
+import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.account.accountDetail.components.AccountDetailAppBar
 import com.android.monu.ui.feature.screen.account.accountDetail.components.AccountDetailContent
 import com.android.monu.ui.feature.utils.DatabaseResultMessage
@@ -57,7 +57,7 @@ fun AccountDetailScreen(
     }
 
     if (showDeactivateConfirmationDialog) {
-        AccountConfirmationDialog(
+        ConfirmationDialog(
             text = stringResource(R.string.deactivate_account_confirmation),
             onDismissRequest = { showDeactivateConfirmationDialog = false },
             onConfirmRequest = {
@@ -68,7 +68,7 @@ fun AccountDetailScreen(
     }
 
     if (showActivateConfirmationDialog) {
-        AccountConfirmationDialog(
+        ConfirmationDialog(
             text = stringResource(R.string.activate_account_confirmation),
             onDismissRequest = { showActivateConfirmationDialog = false },
             onConfirmRequest = {

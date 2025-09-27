@@ -183,7 +183,7 @@ fun BarChartLegend(
         Text(
             text = legendLabel,
             modifier = Modifier.padding(start = 4.dp),
-            style = MaterialTheme.typography.labelSmall
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp)
         )
     }
 }
@@ -211,7 +211,7 @@ fun BarChartYAxis(
             ) {
                 Text(
                     text = NumberFormatHelper.formatToShortRupiah(it.amount),
-                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 8.sp)
+                    style = MaterialTheme.typography.labelMedium.copy(fontSize = 8.sp)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(it.fraction))
             }
@@ -335,7 +335,7 @@ fun BarChartGraphInformation(
             Text(
                 text = DateHelper.formatDateToReadable(dailySummaries[index].date),
                 modifier = Modifier.padding(top = 8.dp),
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp)
             )
         }
     }
@@ -354,7 +354,7 @@ fun BarChartXAxis(
             Text(
                 text = DateHelper.formatToBarChartDate(it.date),
                 modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.labelSmall.copy(
+                style = MaterialTheme.typography.labelMedium.copy(
                     fontSize = 8.sp,
                     textAlign = TextAlign.Center
                 )

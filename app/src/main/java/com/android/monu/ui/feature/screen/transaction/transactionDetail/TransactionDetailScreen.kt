@@ -9,10 +9,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.ui.feature.screen.transaction.transactionDetail.components.RemoveTransactionDialog
+import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.transaction.transactionDetail.components.TransactionDetailAppBar
 import com.android.monu.ui.feature.screen.transaction.transactionDetail.components.TransactionDetailContent
 import com.android.monu.ui.feature.utils.showMessageWithToast
@@ -50,9 +51,10 @@ fun DetailTransactionScreen(
     }
 
     if (showRemoveDialog) {
-        RemoveTransactionDialog(
+        ConfirmationDialog(
+            text = stringResource(R.string.delete_this_transaction),
             onDismissRequest = { showRemoveDialog = false },
-            onRemoveTransaction = {
+            onConfirmRequest = {
                 showRemoveDialog = false
                 transactionActions.onRemoveTransaction(transaction)
                 context.getString(R.string.transaction_successfully_deleted).showMessageWithToast(context)

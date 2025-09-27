@@ -204,7 +204,7 @@ fun AnalyticsPieChartDetailData(
         Text(
             text = NumberFormatHelper.formatToRupiah(amount),
             modifier = Modifier.padding(start = 16.dp),
-            style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
+            style = MaterialTheme.typography.labelLarge.copy(fontSize = 12.sp)
         )
         Icon(
             painter = painterResource(R.drawable.ic_arrow_forward),

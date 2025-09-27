@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
@@ -68,28 +67,24 @@ fun SavingDetailAmountOverview(
                         NumberFormatHelper.formatToPercentageValue(currentAmount, targetAmount)
                     ),
                     modifier = Modifier.padding(start = 16.dp),
-                    style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 12.sp)
                 )
             }
             Row(
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = stringResource(R.string.saved),
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 12.sp
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = stringResource(R.string.target),
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontSize = 12.sp
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 )
             }
@@ -99,12 +94,12 @@ fun SavingDetailAmountOverview(
             ) {
                 Text(
                     text = NumberFormatHelper.formatToRupiah(currentAmount),
-                    style = MaterialTheme.typography.labelMedium.copy(fontSize = 13.sp)
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = NumberFormatHelper.formatToRupiah(targetAmount),
-                    style = MaterialTheme.typography.labelMedium.copy(fontSize = 13.sp)
+                    style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
             }
         }

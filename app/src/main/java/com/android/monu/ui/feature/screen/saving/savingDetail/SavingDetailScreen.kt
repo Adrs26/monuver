@@ -15,9 +15,8 @@ import com.android.monu.R
 import com.android.monu.domain.model.saving.Saving
 import com.android.monu.domain.model.transaction.Transaction
 import com.android.monu.domain.usecase.finance.DeleteSavingState
-import com.android.monu.ui.feature.screen.saving.savingDetail.components.CompleteSavingDialog
+import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.saving.savingDetail.components.RemoveProgressDialog
-import com.android.monu.ui.feature.screen.saving.savingDetail.components.RemoveSavingDialog
 import com.android.monu.ui.feature.screen.saving.savingDetail.components.SavingDetailAppBar
 import com.android.monu.ui.feature.screen.saving.savingDetail.components.SavingDetailBottomBar
 import com.android.monu.ui.feature.screen.saving.savingDetail.components.SavingDetailContent
@@ -81,11 +80,13 @@ fun SavingDetailScreen(
     }
 
     if (showRemoveConfirmationDialog) {
-        RemoveSavingDialog(
+        ConfirmationDialog(
+            text = stringResource(R.string.delete_save_confirmation),
             onDismissRequest = { showRemoveConfirmationDialog = false },
-            onRemoveSaving = {
+            onConfirmRequest = {
                 showRemoveConfirmationDialog = false
                 savingActions.onRemoveSaving(savingState.saving.id)
+                context.getString(R.string.save_successfully_deleted).showMessageWithToast(context)
                 if (savingState.transactions.isEmpty()) {
                     savingActions.onNavigateBack()
                     context.getString(R.string.save_successfully_deleted).showMessageWithToast(context)
@@ -101,9 +102,10 @@ fun SavingDetailScreen(
     }
 
     if (showCompleteConfirmationDialog) {
-        CompleteSavingDialog(
+        ConfirmationDialog(
+            text = stringResource(R.string.complete_save_confirmation),
             onDismissRequest = { showCompleteConfirmationDialog = false },
-            onCompleteSaving = {
+            onConfirmRequest = {
                 showCompleteConfirmationDialog = false
                 savingActions.onCompleteSaving(savingState.saving)
             }

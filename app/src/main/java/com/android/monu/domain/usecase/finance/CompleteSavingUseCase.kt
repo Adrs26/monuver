@@ -14,6 +14,8 @@ class CompleteSavingUseCase(
     private val financeRepository: FinanceRepository
 ) {
     suspend operator fun invoke(savingId: Long, savingName: String, savingAmount: Long): DatabaseResultMessage {
+        if (savingAmount == 0L) return DatabaseResultMessage.EmptySavingAmount
+
         val currentDate = LocalDate.now()
         val isoDate = currentDate.format(DateTimeFormatter.ISO_DATE)
         val (month, year) = DateHelper.getMonthAndYear(isoDate)

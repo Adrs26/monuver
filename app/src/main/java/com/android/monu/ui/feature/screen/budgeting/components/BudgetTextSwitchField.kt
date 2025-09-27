@@ -27,7 +27,7 @@ fun BudgetTextSwitchField(
             isEnable = true
         )
         TextWithSwitch(
-            text = stringResource(R.string.bugdeting_auto_update),
+            text = stringResource(R.string.budgeting_auto_update),
             checked = isAutoUpdate,
             onCheckedChange = onAutoUpdateChange,
             isEnable = budgetCycle != Cycle.CUSTOM

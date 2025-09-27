@@ -18,8 +18,4 @@ interface SavingRepository {
     suspend fun createNewSaving(saving: Saving)
 
     suspend fun deleteSavingById(savingId: Long)
-
-    suspend fun getAllSavingsSuspend(): List<Saving>
-
-    suspend fun insertAllSavings(savings: List<Saving>)
 }

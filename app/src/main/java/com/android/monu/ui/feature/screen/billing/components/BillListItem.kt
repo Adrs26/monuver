@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.feature.utils.DateHelper
 import com.android.monu.ui.feature.utils.NumberFormatHelper
@@ -49,7 +50,8 @@ fun BillListItem(
                 modifier = Modifier.padding(top = 4.dp),
                 maxLines = 1,
                 style = MaterialTheme.typography.labelSmall.copy(
-                    color = getBillDateInformationColor(billState.status)
+                    color = getBillDateInformationColor(billState.status),
+                    fontSize = 11.sp
                 )
             )
             if (billState.isRecurring) {
@@ -57,7 +59,8 @@ fun BillListItem(
                     text = "Pembayaran ke-${billState.nowPaidPeriod}",
                     maxLines = 1,
                     style = MaterialTheme.typography.labelSmall.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 11.sp
                     )
                 )
             }

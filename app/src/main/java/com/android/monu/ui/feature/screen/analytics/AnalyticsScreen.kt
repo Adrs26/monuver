@@ -67,7 +67,7 @@ fun AnalyticsScreen(
                     .padding(top = 8.dp)
             )
             HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
             AnalyticsBarChart(
@@ -76,7 +76,7 @@ fun AnalyticsScreen(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
             HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 24.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 32.dp),
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
             AnalyticsPieChart(

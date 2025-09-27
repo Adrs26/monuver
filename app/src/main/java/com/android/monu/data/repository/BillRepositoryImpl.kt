@@ -79,16 +79,4 @@ class BillRepositoryImpl(
     ) {
         billDao.updateBillPeriodByParentId(period, fixPeriod, parentId)
     }
-
-    override suspend fun getAllBillsSuspend(): List<Bill> {
-        return billDao.getAllBillsSuspend().map { bill ->
-            BillMapper.billEntityToDomain(bill)
-        }
-    }
-
-    override suspend fun insertAllBills(bills: List<Bill>) {
-        billDao.insertAllBills(bills.map { bill ->
-            BillMapper.billDomainToEntity(bill)
-        })
-    }
 }

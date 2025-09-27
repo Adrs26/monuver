@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 import com.android.monu.ui.feature.utils.DateHelper
 import com.android.monu.ui.feature.utils.NumberFormatHelper
@@ -64,8 +65,10 @@ fun TransactionListItem(
             Text(
                 text = "${transactionState.sourceName} · ${DateHelper.formatDateToReadable(transactionState.date)}",
                 modifier = Modifier.padding(top = 4.dp),
+                maxLines = 2,
                 style = MaterialTheme.typography.labelSmall.copy(
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = 11.sp
                 )
             )
         }
