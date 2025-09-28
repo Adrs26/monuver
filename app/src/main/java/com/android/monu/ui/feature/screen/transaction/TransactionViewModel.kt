@@ -26,7 +26,7 @@ class TransactionViewModel(
     val transactions = _filterState
         .flatMapLatest { filters ->
             getAllTransactionsUseCase(
-                filters.query, filters.type, filters.year, filters.month, viewModelScope
+                filters.query, filters.type, filters.month, filters.year, viewModelScope
             )
         }
 
