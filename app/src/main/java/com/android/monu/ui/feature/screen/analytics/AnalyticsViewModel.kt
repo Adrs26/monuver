@@ -87,6 +87,6 @@ class AnalyticsViewModel(
 data class AnalyticsFilterState(
     val month: Int = LocalDate.now().monthValue,
     val year: Int = LocalDate.now().year,
-    val type: Int = TransactionType.INCOME,
+    val type: Int = TransactionType.EXPENSE,
     val week: Int = DateHelper.getCurrentCustomWeekNumber(LocalDate.now().dayOfMonth)
 )
