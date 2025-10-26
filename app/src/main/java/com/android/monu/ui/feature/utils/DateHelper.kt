@@ -111,4 +111,11 @@ object DateHelper {
         val formatter = DateTimeFormatter.ofPattern("d MMM yyyy", localeIndonesia)
         return parsedDate.format(formatter)
     }
+
+    fun getTodayDate(): String {
+        val today = LocalDate.now()
+        val localeIndonesia = Locale.forLanguageTag("id-ID")
+        val formatter = DateTimeFormatter.ofPattern("d MMMM yyyy", localeIndonesia)
+        return today.format(formatter)
+    }
 }

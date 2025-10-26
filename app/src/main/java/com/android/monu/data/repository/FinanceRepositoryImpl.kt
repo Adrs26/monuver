@@ -1,11 +1,5 @@
 package com.android.monu.data.repository
 
-import android.content.ContentValues
-import android.content.Context
-import android.net.Uri
-import android.os.Build
-import android.os.Environment
-import android.provider.MediaStore
 import androidx.room.withTransaction
 import com.android.monu.data.local.MonuDatabase
 import com.android.monu.data.local.dao.AccountDao
@@ -26,9 +20,6 @@ import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.domain.usecase.finance.BackupData
 import com.android.monu.domain.usecase.finance.BudgetStatus
 import com.android.monu.ui.feature.utils.TransactionChildCategory
-import com.google.gson.Gson
-import java.io.File
-import java.io.IOException
 import kotlin.math.absoluteValue
 
 class FinanceRepositoryImpl(
@@ -37,8 +28,7 @@ class FinanceRepositoryImpl(
     private val transactionDao: TransactionDao,
     private val budgetDao: BudgetDao,
     private val billDao: BillDao,
-    private val savingDao: SavingDao,
-    private val context: Context
+    private val savingDao: SavingDao
 ) : FinanceRepository {
 
     override suspend fun createAccount(account: Account, transaction: Transaction): Long {
@@ -305,40 +295,7 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun backupAllData(fileName: String) {
-        val backupData = BackupData(
-            accounts = accountDao.getAllAccountsSuspend().map { AccountMapper.accountEntityToDomain(it) },
-            bills = billDao.getAllBillsSuspend().map { BillMapper.billEntityToDomain(it) },
-            budgets = budgetDao.getAllBudgetsSuspend().map { BudgetMapper.budgetEntityToDomain(it) },
-            savings = savingDao.getAllSavingsSuspend().map { SavingMapper.savingEntityToDomain(it) },
-            transactions = transactionDao.getAllTransactionsSuspend().map {
-                TransactionMapper.transactionEntityToDomain(it)
-            }
-        )
-        val backupDataJson = Gson().toJson(backupData)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val values = ContentValues().apply {
-                put(MediaStore.Downloads.DISPLAY_NAME, fileName)
-                put(MediaStore.Downloads.MIME_TYPE, "application/json")
-            }
-
-            val resolver = context.contentResolver
-            val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-                ?: throw IOException("Failed insert to MediaStore")
-
-            resolver.openOutputStream(uri)?.use { it.write(backupDataJson.toByteArray()) }
-        } else {
-            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            val file = File(downloadsDir, fileName)
-            file.writeText(backupDataJson)
-        }
-    }
-
-    override suspend fun restoreAllData(uri: Uri) {
-        val backupDataJson = context.contentResolver.openInputStream(uri)?.bufferedReader().use { it?.readText() }
-        val backupData = Gson().fromJson(backupDataJson, BackupData::class.java)
-
+    override suspend fun restoreAllData(backupData: BackupData) {
         database.withTransaction {
             accountDao.deleteAllAccounts()
             transactionDao.deleteAllTransactions()

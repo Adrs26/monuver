@@ -88,4 +88,10 @@ class BudgetRepositoryImpl(
     override suspend fun updateBudget(budget: Budget) {
         budgetDao.updateBudget(BudgetMapper.budgetDomainToEntityForUpdate(budget))
     }
+
+    override suspend fun getAllBudgets(): List<Budget> {
+        return budgetDao.getAllBudgets().map { budget ->
+            BudgetMapper.budgetEntityToDomain(budget)
+        }
+    }
 }

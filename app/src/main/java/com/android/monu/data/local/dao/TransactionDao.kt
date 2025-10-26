@@ -210,9 +210,56 @@ interface TransactionDao {
     suspend fun deleteAllTransactions()
 
     @Query("SELECT * FROM `transaction`")
-    suspend fun getAllTransactionsSuspend(): List<TransactionEntity>
+    suspend fun getAllTransactions(): List<TransactionEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllTransactions(transactions: List<TransactionEntity>)
 
+    @Query("""
+        SELECT * 
+        FROM `transaction`
+        WHERE date BETWEEN :startDate AND :endDate
+        ORDER BY date ASC
+    """)
+    suspend fun getTransactionsInRangeByDateAsc(startDate: String, endDate: String): List<TransactionEntity>
+
+    @Query("""
+        SELECT * 
+        FROM `transaction`
+        WHERE date BETWEEN :startDate AND :endDate
+        ORDER BY date DESC
+    """)
+    suspend fun getTransactionsInRangeByDateDesc(startDate: String, endDate: String): List<TransactionEntity>
+
+    @Query("""
+        SELECT * 
+        FROM `transaction`
+        WHERE date BETWEEN :startDate AND :endDate
+        ORDER BY type ASC, date ASC
+    """)
+    suspend fun getTransactionsInRangeByDateAscWithType(startDate: String, endDate: String): List<TransactionEntity>
+
+    @Query("""
+        SELECT * 
+        FROM `transaction`
+        WHERE date BETWEEN :startDate AND :endDate
+        ORDER BY type ASC, date DESC
+    """)
+    suspend fun getTransactionsInRangeByDateDescWithType(startDate: String, endDate: String): List<TransactionEntity>
+
+    @Query("""
+        SELECT SUM(amount) 
+        FROM `transaction`
+        WHERE date BETWEEN :startDate AND :endDate
+        AND type = 1001
+    """)
+    suspend fun getTotalIncomeTransactionsInRange(startDate: String, endDate: String): Long?
+
+    @Query("""
+        SELECT SUM(amount) 
+        FROM `transaction`
+        WHERE date BETWEEN :startDate AND :endDate
+        AND type = 1002
+    """)
+    suspend fun getTotalExpenseTransactionsInRange(startDate: String, endDate: String): Long?
 }

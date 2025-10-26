@@ -86,7 +86,6 @@ fun SavingDetailScreen(
             onConfirmRequest = {
                 showRemoveConfirmationDialog = false
                 savingActions.onRemoveSaving(savingState.saving.id)
-                context.getString(R.string.save_successfully_deleted).showMessageWithToast(context)
                 if (savingState.transactions.isEmpty()) {
                     savingActions.onNavigateBack()
                     context.getString(R.string.save_successfully_deleted).showMessageWithToast(context)

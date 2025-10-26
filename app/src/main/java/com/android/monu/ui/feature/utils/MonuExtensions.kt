@@ -15,30 +15,6 @@ import androidx.navigation.NavController
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.ParametersHolder
 
-fun Long.toHighestRangeValue(): Long {
-    return when (this) {
-        in 0L..50_000L -> 50_000L
-        in 50_000L..100_000L -> 100_000L
-        in 100_000L..200_000L -> 200_000L
-        in 200_000L..300_000L -> 300_000L
-        in 300_000L..500_000L -> 500_000L
-        in 500_000L..700_000L -> 700_000L
-        in 700_000L..1_000_000L -> 1_000_000L
-        in 1_000_000L..3_000_000L -> 3_000_000L
-        in 3_000_000L..5_000_000L -> 5_000_000L
-        in 5_000_000L..7_000_000L -> 7_000_000L
-        in 7_000_000L..10_000_000L -> 10_000_000L
-        in 10_000_000L..15_000_000L -> 15_000_000L
-        in 15_000_000L..20_000_000L -> 20_000_000L
-        in 20_000_000L..30_000_000L -> 30_000_000L
-        in 30_000_000L..50_000_000L -> 50_000_000L
-        in 50_000_000L..100_000_000L -> 100_000_000L
-        in 100_000_000L..200_000_000L -> 200_000_000L
-        in 200_000_000L..500_000_000L -> 500_000_000L
-        else -> 1_000_000_000L
-    }
-}
-
 fun String.showMessageWithToast(context: Context) {
     Toast.makeText(context, this, Toast.LENGTH_SHORT).show()
 }

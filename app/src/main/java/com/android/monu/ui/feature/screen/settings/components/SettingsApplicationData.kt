@@ -1,5 +1,6 @@
 package com.android.monu.ui.feature.screen.settings.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -10,12 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -156,7 +157,7 @@ fun SettingsApplicationData(
 }
 
 @Composable
-fun FirstBackupRestoreConfirmation(
+fun FirstActionConfirmation(
     text: String,
     onDismissRequest: () -> Unit,
     onConfirmRequest: () -> Unit,
@@ -189,9 +190,10 @@ fun FirstBackupRestoreConfirmation(
                         )
                     )
                 }
-                Button(
+                OutlinedButton(
                     onClick = onConfirmRequest,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant)
                 ) {
                     Text(
                         text = stringResource(R.string.yes_i_am_understand),

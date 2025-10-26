@@ -54,8 +54,8 @@ fun AddBudgetScreen(
     }
     var isBudgetOverflowAllowed by rememberSaveable { mutableStateOf(false) }
     var isBudgetAutoUpdate by rememberSaveable { mutableStateOf(false) }
-
     var activeField by rememberSaveable { mutableStateOf<CalendarField?>(null) }
+
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 

@@ -93,7 +93,6 @@ fun MainScreen(
         bottomBar = {
             Column {
                 HorizontalDivider(
-                    modifier = Modifier.padding(bottom = 4.dp),
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     thickness = 1.dp
                 )

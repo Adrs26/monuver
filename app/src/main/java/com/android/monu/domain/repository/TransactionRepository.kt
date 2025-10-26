@@ -56,4 +56,18 @@ interface TransactionRepository {
     ): Long
 
     suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<Transaction>
+
+    suspend fun getAllTransactions(): List<Transaction>
+
+    suspend fun getTransactionsInRangeByDateAsc(startDate: String, endDate: String): List<Transaction>
+
+    suspend fun getTransactionsInRangeByDateDesc(startDate: String, endDate: String): List<Transaction>
+
+    suspend fun getTransactionsInRangeByDateAscWithType(startDate: String, endDate: String): List<Transaction>
+
+    suspend fun getTransactionsInRangeByDateDescWithType(startDate: String, endDate: String): List<Transaction>
+
+    suspend fun getTotalIncomeTransactionInRange(startDate: String, endDate: String): Long?
+
+    suspend fun getTotalExpenseTransactionInRange(startDate: String, endDate: String): Long?
 }

@@ -1,12 +1,14 @@
 package com.android.monu.di
 
 import com.android.monu.data.datastore.UserPreference
+import com.android.monu.data.manager.DataManagerImpl
 import com.android.monu.data.repository.AccountRepositoryImpl
 import com.android.monu.data.repository.BillRepositoryImpl
 import com.android.monu.data.repository.BudgetRepositoryImpl
 import com.android.monu.data.repository.FinanceRepositoryImpl
 import com.android.monu.data.repository.SavingRepositoryImpl
 import com.android.monu.data.repository.TransactionRepositoryImpl
+import com.android.monu.domain.manager.DataManager
 import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.BillRepository
 import com.android.monu.domain.repository.BudgetRepository
@@ -24,6 +26,7 @@ val dataModule = module {
     singleOf(::BudgetRepositoryImpl){ bind<BudgetRepository>()}
     singleOf(::BillRepositoryImpl){ bind<BillRepository>()}
     singleOf(::SavingRepositoryImpl){ bind<SavingRepository>() }
+    singleOf(::DataManagerImpl){ bind<DataManager>() }
 
     singleOf(::UserPreference)
 }

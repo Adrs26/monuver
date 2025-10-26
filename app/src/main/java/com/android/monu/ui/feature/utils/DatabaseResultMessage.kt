@@ -65,4 +65,10 @@ sealed class DatabaseResultMessage(val message: Int) {
     object RestoreDataFailed : DatabaseResultMessage(R.string.restore_data_failed)
     object DeleteAllDataSuccess : DatabaseResultMessage(R.string.all_data_successfully_deleted)
 
+    object EmptyReportTitle : DatabaseResultMessage(R.string.empty_report_title)
+    object EmptyReportUsername : DatabaseResultMessage(R.string.empty_report_username)
+    object EmptyReportStartDate : DatabaseResultMessage(R.string.empty_report_start_date)
+    object EmptyReportEndDate : DatabaseResultMessage(R.string.empty_report_end_date)
+    object ExportDataFailed : DatabaseResultMessage(R.string.export_data_failed)
+    object ExportDataSuccess : DatabaseResultMessage(R.string.data_successfully_exported)
 }

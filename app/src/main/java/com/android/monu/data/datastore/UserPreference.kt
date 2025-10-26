@@ -14,6 +14,7 @@ class UserPreference(private val context: Context) {
 
     companion object {
         private val THEME_KEY = stringPreferencesKey("theme_setting")
+        private val FIRST_EXPORT_KEY = booleanPreferencesKey("first_export")
         private val FIRST_BACKUP_KEY = booleanPreferencesKey("first_backup")
         private val FIRST_RESTORE_KEY = booleanPreferencesKey("first_restore")
     }
@@ -25,6 +26,11 @@ class UserPreference(private val context: Context) {
                 ThemeSetting.DARK.name -> ThemeSetting.DARK
                 else -> ThemeSetting.SYSTEM
             }
+        }
+
+    val isFirstExport: Flow<Boolean> = context.dataStore.data
+        .map { preferences ->
+            preferences[FIRST_EXPORT_KEY] ?: true
         }
 
     val isFirstBackup: Flow<Boolean> = context.dataStore.data
@@ -40,6 +46,12 @@ class UserPreference(private val context: Context) {
     suspend fun saveThemeSetting(themeSetting: ThemeSetting) {
         context.dataStore.edit { preferences ->
             preferences[THEME_KEY] = themeSetting.name
+        }
+    }
+
+    suspend fun setIsFirstExportToFalse() {
+        context.dataStore.edit { preferences ->
+            preferences[FIRST_EXPORT_KEY] = false
         }
     }
 

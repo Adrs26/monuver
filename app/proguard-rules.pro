@@ -37,8 +37,6 @@
 -keep @kotlinx.serialization.Serializable class ** { *; }
 
 # Keep the generated serializers
--keep class kotlinx.serialization.internal.** { *; }
--keep class kotlinx.serialization.json.** { *; }
 -keepnames class kotlinx.serialization.** { *; }
 
 # Prevent obfuscation of enum values
@@ -54,3 +52,4 @@
 -keep class kotlinx.serialization.** { *; }
 
 -dontwarn javax.annotation.Nullable
+

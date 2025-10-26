@@ -285,7 +285,7 @@
     <string name="edit_save">Ubah data tabungan</string>
     <string name="delete_save_confirmation">Menghapus tabungan juga akan menghapus transaksi terkait dan tindakan ini tidak dapat dipulihkan. Yakin lanjut?</string>
     <string name="save_successfully_deleted">Tabungan berhasil dihapus</string>
-    <string name="data_delete_in_progress">Data sedang dihapus. Tetap di halaman ini hingga proses selesai, ya.</string>
+    <string name="data_delete_in_progress">Data sedang dihapus. Tetap di halaman ini hingga proses selesai, ya</string>
     <string name="laundry">Laundry</string>
     <string name="savings_complete">Tabungan selesai</string>
     <string name="save_successfully_completed">Tabungan berhasil diselesaikan</string>
@@ -311,9 +311,17 @@
     <string name="all_data_successfully_backed_up">"Semua data telah berhasil dicadangkan"</string>
     <string name="backup_data_failed">Data gagal dicadangkan</string>
     <string name="insufficient_saving_balance">Saldo tabungan tidak mencukupi</string>
-    <string name="first_backup_confirmation"><![CDATA[Hasil file backup akan otomatis tersimpan sebagai monu_backup_<timestamp>.json dan berlokasi di folder download]]></string>
-    <string name="first_restore_confirmation"><![CDATA[Pilih file backup monu_backup_<timestamp>.json untuk memulihkan data. Proses ini akan menimpa data yang ada di aplikasi]]></string>
+    <string name="first_backup_confirmation"><![CDATA[Hasil file backup akan otomatis tersimpan di folder download]]></string>
+    <string name="first_restore_confirmation"><![CDATA[Pilih file backup dengan ekstensi json untuk memulihkan data. Proses ini akan menimpa data yang ada di aplikasi]]></string>
     <string name="all_data_successfully_restored">Semua data telah berhasil dipulihkan</string>
     <string name="restore_data_failed">Data gagal dipulihkan</string>
     <string name="empty_save_amount">Tabungan dengan saldo nol tidak bisa diselesaikan</string>
+    <string name="select_start_date_first">Periode mulai laporan harus dipilih terlebih dahulu</string>
+    <string name="empty_report_title">Judul laporan tidak boleh kosong</string>
+    <string name="empty_report_username">Nama pengguna tidak boleh kosong</string>
+    <string name="empty_report_start_date">Periode mulai laporan tidak boleh kosong</string>
+    <string name="empty_report_end_date">Periode akhir laporan tidak boleh kosong</string>
+    <string name="export_data_failed">Data gagal diekspor</string>
+    <string name="data_successfully_exported">Data berhasil diekspor</string>
+    <string name="first_export_confirmation">Hasil laporan akan otomatis disimpan di folder download</string>
 </resources>

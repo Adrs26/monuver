@@ -24,7 +24,7 @@ import com.android.monu.R
 import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.components.ConfirmationDialog
-import com.android.monu.ui.feature.screen.settings.components.FirstBackupRestoreConfirmation
+import com.android.monu.ui.feature.screen.settings.components.FirstActionConfirmation
 import com.android.monu.ui.feature.screen.settings.components.SettingsApplicationData
 import com.android.monu.ui.feature.screen.settings.components.SettingsPreference
 import com.android.monu.ui.feature.screen.settings.components.SettingsSecurity
@@ -44,6 +44,7 @@ fun SettingsScreen(
     processResult: DatabaseResultMessage?,
     onNavigateBack: () -> Unit,
     onThemeChange: (ThemeSetting) -> Unit,
+    onNavigateToExport: () -> Unit,
     onBackupData: () -> Unit,
     onSetFirstBackupToFalse: () -> Unit,
     onRestoreData: (Uri) -> Unit,
@@ -59,7 +60,14 @@ fun SettingsScreen(
     val context = LocalContext.current
 
     val storagePermissionState = rememberPermissionState(
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+        permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        onPermissionResult = { isGranted ->
+            if (isGranted) {
+                onBackupData()
+            } else {
+                "Izin akses penyimpanan diperlukan untuk melakukan backup data".showMessageWithToast(context)
+            }
+        }
     )
     val pickJsonFileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
@@ -96,7 +104,7 @@ fun SettingsScreen(
                 modifier = Modifier.padding(top = 8.dp)
             )
             SettingsApplicationData(
-                onExportDataClicked = {  },
+                onExportDataClicked = onNavigateToExport,
                 onBackupDataClicked = {
                     if (isFirstBackup) {
                         showFirstBackupDialog = true
@@ -134,9 +142,12 @@ fun SettingsScreen(
     }
 
     if (showFirstBackupDialog) {
-        FirstBackupRestoreConfirmation(
+        FirstActionConfirmation(
             text = stringResource(R.string.first_backup_confirmation),
-            onDismissRequest = { showFirstBackupDialog = false },
+            onDismissRequest = {
+                showFirstBackupDialog = false
+                onSetFirstBackupToFalse()
+            },
             onConfirmRequest = {
                 showFirstBackupDialog = false
                 onSetFirstBackupToFalse()
@@ -151,9 +162,12 @@ fun SettingsScreen(
     }
 
     if (showFirstRestoreDialog) {
-        FirstBackupRestoreConfirmation(
+        FirstActionConfirmation(
             text = stringResource(R.string.first_restore_confirmation),
-            onDismissRequest = { showFirstRestoreDialog = false },
+            onDismissRequest = {
+                showFirstRestoreDialog = false
+                onSetFirstRestoreToFalse()
+            },
             onConfirmRequest = {
                 showFirstRestoreDialog = false
                 onSetFirstRestoreToFalse()

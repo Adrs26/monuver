@@ -1,8 +1,6 @@
 package com.android.monu.ui.feature.screen.main.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -16,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.android.monu.R
@@ -29,10 +27,7 @@ fun BottomNavigationBar(
     modifier: Modifier = Modifier
 ) {
     NavigationBar(
-        modifier = modifier
-            .height(60.dp)
-            .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 8.dp),
+        modifier = modifier.background(MaterialTheme.colorScheme.background),
         containerColor = MaterialTheme.colorScheme.background
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -92,7 +87,8 @@ fun BottomNavigationBar(
                         text = item.title,
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = if (selected) MaterialTheme.colorScheme.primary else
-                                MaterialTheme.colorScheme.onSurface
+                                MaterialTheme.colorScheme.onSurface,
+                            fontSize = 12.sp
                         )
                     )
                 },

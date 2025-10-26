@@ -4,6 +4,7 @@ agp = "8.13.0"
 datastorePreferences = "1.1.7"
 gson = "2.13.2"
 core = "1.3.0"
+itextg = "5.5.10"
 koinAndroid = "4.1.1"
 kotlin = "2.2.20"
 coreKtx = "1.17.0"
@@ -15,12 +16,13 @@ kotlinxSerializationJson = "1.9.0"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2025.09.00"
-lottieCompose = "6.6.9"
+lottieCompose = "6.6.10"
 mockitoCore = "5.20.0"
-mockitoKotlin = "6.0.0"
+mockitoKotlin = "6.1.0"
 navigationCompose = "2.9.5"
+openpdf = "2.2.2"
 pagingRuntime = "3.3.6"
-roomRuntime = "2.8.1"
+roomRuntime = "2.8.3"
 threetenabp = "1.4.9"
 ksp = "2.2.20-2.0.3"
 serialization = "2.2.20"
@@ -39,6 +41,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 calendar = { module = "com.maxkeppeler.sheets-compose-dialogs:calendar", version.ref = "core" }
 core = { module = "com.maxkeppeler.sheets-compose-dialogs:core", version.ref = "core" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+itextg = { module = "com.itextpdf:itextg", version.ref = "itextg" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -60,6 +63,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
+openpdf = { module = "com.github.librepdf:openpdf", version.ref = "openpdf" }
 threetenabp = { module = "com.jakewharton.threetenabp:threetenabp", version.ref = "threetenabp" }
 
 [plugins]

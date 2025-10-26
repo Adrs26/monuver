@@ -56,7 +56,7 @@ interface SavingDao {
     suspend fun deleteAllSavings()
 
     @Query("SELECT * FROM saving")
-    suspend fun getAllSavingsSuspend(): List<SavingEntity>
+    suspend fun getAllSavings(): List<SavingEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllSavings(savings: List<SavingEntity>)

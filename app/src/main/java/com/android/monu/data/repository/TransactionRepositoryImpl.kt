@@ -150,4 +150,60 @@ class TransactionRepositoryImpl(
             TransactionMapper.transactionEntityToDomain(transaction)
         }
     }
+
+    override suspend fun getAllTransactions(): List<Transaction> {
+        return transactionDao.getAllTransactions().map { transaction ->
+            TransactionMapper.transactionEntityToDomain(transaction)
+        }
+    }
+
+    override suspend fun getTransactionsInRangeByDateAsc(
+        startDate: String,
+        endDate: String
+    ): List<Transaction> {
+        return transactionDao.getTransactionsInRangeByDateAsc(startDate, endDate).map { transaction ->
+            TransactionMapper.transactionEntityToDomain(transaction)
+        }
+    }
+
+    override suspend fun getTransactionsInRangeByDateDesc(
+        startDate: String,
+        endDate: String
+    ): List<Transaction> {
+        return transactionDao.getTransactionsInRangeByDateDesc(startDate, endDate).map { transaction ->
+            TransactionMapper.transactionEntityToDomain(transaction)
+        }
+    }
+
+    override suspend fun getTransactionsInRangeByDateAscWithType(
+        startDate: String,
+        endDate: String
+    ): List<Transaction> {
+        return transactionDao.getTransactionsInRangeByDateAscWithType(startDate, endDate).map { transaction ->
+            TransactionMapper.transactionEntityToDomain(transaction)
+        }
+    }
+
+    override suspend fun getTransactionsInRangeByDateDescWithType(
+        startDate: String,
+        endDate: String
+    ): List<Transaction> {
+        return transactionDao.getTransactionsInRangeByDateDescWithType(startDate, endDate).map { transaction ->
+            TransactionMapper.transactionEntityToDomain(transaction)
+        }
+    }
+
+    override suspend fun getTotalIncomeTransactionInRange(
+        startDate: String,
+        endDate: String
+    ): Long? {
+        return transactionDao.getTotalIncomeTransactionsInRange(startDate, endDate)
+    }
+
+    override suspend fun getTotalExpenseTransactionInRange(
+        startDate: String,
+        endDate: String
+    ): Long? {
+        return transactionDao.getTotalExpenseTransactionsInRange(startDate, endDate)
+    }
 }

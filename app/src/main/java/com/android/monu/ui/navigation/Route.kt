@@ -18,6 +18,7 @@ class Main {
 @Serializable
 class Settings {
     @Serializable object Main
+    @Serializable object Export
 }
 
 @Serializable

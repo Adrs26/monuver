@@ -63,7 +63,7 @@ fun BillPeriodRadioGroupField(
                 )
                 Text(
                     text = stringResource(R.string.unlimited),
-                    style = MaterialTheme.typography.labelSmall.copy(
+                    style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 13.sp
                     )
@@ -121,7 +121,7 @@ fun BillPeriodRadioGroupField(
                 Text(
                     text = stringResource(R.string.times),
                     modifier = Modifier.padding(start = 8.dp),
-                    style = MaterialTheme.typography.labelSmall.copy(
+                    style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 13.sp
                     )
