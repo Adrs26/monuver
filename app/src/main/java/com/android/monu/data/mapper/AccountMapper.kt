@@ -1,9 +1,18 @@
 package com.android.monu.data.mapper
 
+import com.android.monu.data.local.entity.projection.Account
 import com.android.monu.data.local.entity.room.AccountEntity
 import com.android.monu.domain.model.AccountState
 
 fun AccountEntity.toDomain() = AccountState(
+    id = id,
+    name = name,
+    type = type,
+    balance = balance,
+    isActive = isActive
+)
+
+fun Account.toDomain() = AccountState(
     id = id,
     name = name,
     type = type,
@@ -19,6 +28,14 @@ fun AccountState.toEntity() = AccountEntity(
 )
 
 fun AccountState.toEntityForUpdate() = AccountEntity(
+    id = id,
+    name = name,
+    type = type,
+    balance = balance,
+    isActive = isActive
+)
+
+fun AccountState.toEntityProjection() = Account(
     id = id,
     name = name,
     type = type,

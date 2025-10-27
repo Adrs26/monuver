@@ -1,7 +1,9 @@
 package com.android.monu.data.local.entity.projection
 
+import androidx.room.ColumnInfo
+
 data class TransactionSummaryEntity(
-    val type: Int,
-    val date: String,
-    val amount: Long
+    @ColumnInfo(name = "type") val type: Int,
+    @ColumnInfo(name = "date") val date: String,
+    @ColumnInfo(name = "amount") val amount: Long
 )

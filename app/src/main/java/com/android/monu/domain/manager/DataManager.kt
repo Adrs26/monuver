@@ -4,7 +4,7 @@ import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.usecase.finance.BackupData
 
 interface DataManager {
-    fun backupData(backupData: BackupData)
+    fun backupData(data: BackupData)
 
     fun restoreData(stringUri: String): BackupData
 

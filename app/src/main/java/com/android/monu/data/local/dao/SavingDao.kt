@@ -11,19 +11,19 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SavingDao {
 
-    @Query("SELECT * FROM saving WHERE isActive = 1 ORDER BY targetDate ASC")
+    @Query("SELECT * FROM saving WHERE is_active = 1 ORDER BY target_date ASC")
     fun getAllActiveSavings(): Flow<List<SavingEntity>>
 
-    @Query("SELECT * FROM saving WHERE isActive = 0 ORDER BY targetDate DESC")
+    @Query("SELECT * FROM saving WHERE is_active = 0 ORDER BY target_date DESC")
     fun getAllInactiveSavings(): Flow<List<SavingEntity>>
 
-    @Query("SELECT SUM(currentAmount) FROM saving WHERE isActive = 1")
+    @Query("SELECT SUM(current_amount) FROM saving WHERE is_active = 1")
     fun getTotalSavingCurrentAmount(): Flow<Long?>
 
     @Query("SELECT * FROM saving WHERE id = :savingId LIMIT 1")
     fun getSavingById(savingId: Long): Flow<SavingEntity?>
 
-    @Query("SELECT currentAmount FROM saving WHERE id = :savingId")
+    @Query("SELECT current_amount FROM saving WHERE id = :savingId")
     suspend fun getSavingBalance(savingId: Long): Long?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -31,14 +31,14 @@ interface SavingDao {
 
     @Query("""
         UPDATE saving
-        SET currentAmount = currentAmount + :delta 
+        SET current_amount = current_amount + :delta 
         WHERE id = :savingId
     """)
     suspend fun increaseSavingCurrentAmount(savingId: Long, delta: Long)
 
     @Query("""
         UPDATE saving
-        SET currentAmount = currentAmount - :delta 
+        SET current_amount = current_amount - :delta 
         WHERE id = :saveId
     """)
     suspend fun decreaseSavingCurrentAmount(saveId: Long, delta: Long)
@@ -46,7 +46,7 @@ interface SavingDao {
     @Update
     suspend fun updateSaving(savingEntity: SavingEntity)
 
-    @Query("UPDATE saving SET isActive = 0 WHERE id = :savingId")
+    @Query("UPDATE saving SET is_active = 0 WHERE id = :savingId")
     suspend fun updateSavingStatusToInactiveById(savingId: Long)
 
     @Query("DELETE FROM saving WHERE id = :savingId")

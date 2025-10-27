@@ -7,9 +7,12 @@ import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.net.toUri
 import com.android.monu.R
+import com.android.monu.data.local.entity.projection.BackupData
+import com.android.monu.data.mapper.toDomain
+import com.android.monu.data.mapper.toEntityProjection
 import com.android.monu.domain.manager.DataManager
 import com.android.monu.domain.model.TransactionState
-import com.android.monu.domain.usecase.finance.BackupData
+import com.android.monu.domain.usecase.finance.BackupData as BackupDataDomain
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 import com.android.monu.utils.DateHelper
 import com.android.monu.utils.NumberHelper
@@ -35,8 +38,15 @@ import java.io.OutputStream
 class DataManagerImpl(
     val context: Context
 ) : DataManager {
-    override fun backupData(backupData: BackupData) {
+    override fun backupData(data: BackupDataDomain) {
         val fileName = "monu_backup_${System.currentTimeMillis()}.json"
+        val backupData = BackupData(
+            accounts = data.accounts.map { it.toEntityProjection() },
+            bills = data.bills.map { it.toEntityProjection() },
+            budgets = data.budgets.map { it.toEntityProjection() },
+            savings = data.savings.map { it.toEntityProjection() },
+            transactions = data.transactions.map { it.toEntityProjection() }
+        )
         val backupDataJson = Gson().toJson(backupData)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -58,11 +68,18 @@ class DataManagerImpl(
         }
     }
 
-    override fun restoreData(stringUri: String): BackupData {
+    override fun restoreData(stringUri: String): BackupDataDomain {
         val backupDataJson = context.contentResolver.openInputStream(stringUri.toUri())
             ?.bufferedReader().use { it?.readText() }
         val backupData = Gson().fromJson(backupDataJson, BackupData::class.java)
-        return backupData
+        val backupDataDomain = BackupDataDomain(
+            accounts = backupData.accounts.map { it.toDomain() },
+            bills = backupData.bills.map { it.toDomain() },
+            budgets = backupData.budgets.map { it.toDomain() },
+            savings = backupData.savings.map { it.toDomain() },
+            transactions = backupData.transactions.map { it.toDomain() }
+        )
+        return backupDataDomain
     }
 
     override fun exportDataToPdf(

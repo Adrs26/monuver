@@ -1,23 +1,24 @@
 package com.android.monu.data.local.entity.room
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "bill")
 data class BillEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
-    val parentId: Long = 0L,
-    val title: String,
-    val dueDate: String,
-    val paidDate: String?,
-    val timeStamp: Long,
-    val amount: Long,
-    val isRecurring: Boolean,
-    val cycle: Int?,
-    val period: Int?,
-    val fixPeriod: Int?,
-    val isPaid: Boolean,
-    val nowPaidPeriod: Int,
-    val isPaidBefore: Boolean,
+    @ColumnInfo(name = "id") val id: Long = 0L,
+    @ColumnInfo(name = "parent_id") val parentId: Long = 0L,
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "due_date") val dueDate: String,
+    @ColumnInfo(name = "paid_date") val paidDate: String?,
+    @ColumnInfo(name = "time_stamp") val timeStamp: Long,
+    @ColumnInfo(name = "amount") val amount: Long,
+    @ColumnInfo(name = "is_recurring")val isRecurring: Boolean,
+    @ColumnInfo(name = "cycle") val cycle: Int?,
+    @ColumnInfo(name = "period") val period: Int?,
+    @ColumnInfo(name = "fix_period") val fixPeriod: Int?,
+    @ColumnInfo(name = "is_paid") val isPaid: Boolean,
+    @ColumnInfo(name = "paid_period") val nowPaidPeriod: Int,
+    @ColumnInfo(name = "is_paid_before") val isPaidBefore: Boolean,
 )

@@ -11,16 +11,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AccountDao {
 
-    @Query("SELECT * FROM account ORDER BY isActive DESC, balance DESC")
+    @Query("SELECT * FROM account ORDER BY is_active DESC, balance DESC")
     fun getAllAccounts(): Flow<List<AccountEntity>>
 
-    @Query("SELECT * FROM account WHERE isActive = 1 ORDER BY balance DESC")
+    @Query("SELECT * FROM account WHERE is_active = 1 ORDER BY balance DESC")
     fun getActiveAccounts(): Flow<List<AccountEntity>>
 
     @Query("SELECT SUM(balance) FROM account")
     fun getTotalAccountBalance(): Flow<Long?>
 
-    @Query("SELECT SUM(balance) FROM account WHERE isActive = 1")
+    @Query("SELECT SUM(balance) FROM account WHERE is_active = 1")
     fun getActiveAccountBalance(): Flow<Long?>
 
     @Query("SELECT * FROM account WHERE id = :accountId LIMIT 1")
@@ -41,7 +41,7 @@ interface AccountDao {
     @Update
     suspend fun updateAccount(account: AccountEntity)
 
-    @Query("UPDATE account SET isActive = :isActive WHERE id = :accountId")
+    @Query("UPDATE account SET is_active = :isActive WHERE id = :accountId")
     suspend fun updateAccountStatus(accountId: Int, isActive: Boolean)
 
     @Query("DELETE FROM account")

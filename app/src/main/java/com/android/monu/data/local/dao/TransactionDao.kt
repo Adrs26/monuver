@@ -44,7 +44,7 @@ interface TransactionDao {
     @Query("""
         SELECT * 
         FROM `transaction` 
-        WHERE saveId = :savingId
+        WHERE save_id = :savingId
         ORDER BY date DESC, timeStamp DESC
     """)
     fun getTransactionsBySavingId(savingId: Long): Flow<List<TransactionEntity>>
@@ -52,7 +52,7 @@ interface TransactionDao {
     @Query("""
         SELECT * 
         FROM `transaction`
-        WHERE parentCategory = :category AND date BETWEEN :startDate AND :endDate
+        WHERE parent_category = :category AND date BETWEEN :startDate AND :endDate
         ORDER BY date DESC, timeStamp DESC
     """)
     fun getTransactionsByParentCategoryAndDateRange(
@@ -64,7 +64,7 @@ interface TransactionDao {
     @Query("""
         SELECT * 
         FROM `transaction`
-        WHERE parentCategory = :category AND month = :month AND year = :year
+        WHERE parent_category = :category AND month = :month AND year = :year
         ORDER BY date DESC, timeStamp DESC
     """)
     fun getTransactionsByParentCategoryAndMonthAndYear(
@@ -106,11 +106,11 @@ interface TransactionDao {
     fun getAverageDailyTransactionAmountInMonth(type: Int, month: Int, year: Int): Flow<Double?>
 
     @Query("""
-        SELECT parentCategory, SUM(amount) AS totalAmount
+        SELECT parent_category, SUM(amount) AS total_amount
         FROM `transaction`
         WHERE type = :type AND month = :month AND year = :year
-        GROUP BY parentCategory
-        ORDER BY totalAmount DESC
+        GROUP BY parent_category
+        ORDER BY total_amount DESC
     """)
     fun getGroupedMonthlyTransactionAmountByParentCategory(
         type: Int,
@@ -136,7 +136,7 @@ interface TransactionDao {
     @Query("""
         SELECT IFNULL(SUM(amount), 0) 
         FROM `transaction`
-        WHERE parentCategory = :category AND date BETWEEN :startDate AND :endDate
+        WHERE parent_category = :category AND date BETWEEN :startDate AND :endDate
     """)
     suspend fun getTotalTransactionAmountInDateRange(
         category: Int,
@@ -146,64 +146,64 @@ interface TransactionDao {
 
     @Query("""
         UPDATE `transaction`
-        SET sourceName = :accountName
-        WHERE sourceId = :accountId AND (type = 1001 OR type = 1002)
+        SET source_name = :accountName
+        WHERE source_id = :accountId AND (type = 1001 OR type = 1002)
     """)
     suspend fun updateAccountNameOnCommonTransaction(accountId: Int, accountName: String)
 
     @Query("""
         UPDATE `transaction`
         SET 
-            sourceName = CASE WHEN sourceId = :accountId THEN :accountName ELSE sourceName END,
-            destinationName = CASE WHEN destinationId = :accountId THEN :accountName ELSE destinationName END
-        WHERE (sourceId = :accountId OR destinationId = :accountId) AND type = 1003 AND childCategory = 1003
+            source_name = CASE WHEN source_id = :accountId THEN :accountName ELSE source_name END,
+            destination_name = CASE WHEN destination_id = :accountId THEN :accountName ELSE destination_name END
+        WHERE (source_id = :accountId OR destination_id = :accountId) AND type = 1003 AND child_category = 1003
     """)
     suspend fun updateAccountNameOnTransferTransaction(accountId: Int, accountName: String)
 
     @Query("""
         UPDATE `transaction`
-        SET sourceName = :accountName
-        WHERE sourceId = :accountId AND type = 1003 AND childCategory = 1004
+        SET source_name = :accountName
+        WHERE source_id = :accountId AND type = 1003 AND child_category = 1004
     """)
     suspend fun updateAccountNameOnDepositTransaction(accountId: Int, accountName: String)
 
     @Query("""
         UPDATE `transaction`
-        SET destinationName = :accountName
-        WHERE destinationId = :accountId AND type = 1003 AND childCategory = 1005
+        SET destination_name = :accountName
+        WHERE destination_id = :accountId AND type = 1003 AND child_category = 1005
     """)
     suspend fun updateAccountNameOnWithdrawTransaction(accountId: Int, accountName: String)
 
     @Query("""
         UPDATE `transaction`
-        SET destinationName = :saveTitle
-        WHERE saveId = :savingId AND type = 1003 AND childCategory = 1004
+        SET destination_name = :saveTitle
+        WHERE save_id = :savingId AND type = 1003 AND child_category = 1004
     """)
     suspend fun updateSavingTitleOnDepositTransaction(savingId: Long, saveTitle: String)
 
     @Query("""
         UPDATE `transaction`
-        SET sourceName = :saveTitle
-        WHERE saveId = :savingId AND type = 1003 AND childCategory = 1005
+        SET source_name = :saveTitle
+        WHERE save_id = :savingId AND type = 1003 AND child_category = 1005
     """)
     suspend fun updateSavingTitleOnWithdrawTransaction(savingId: Long, saveTitle: String)
 
     @Query("""
         SELECT * 
         FROM `transaction` 
-        WHERE saveId = :savingId
+        WHERE save_id = :savingId
         ORDER BY date DESC, timeStamp DESC
     """)
     suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<TransactionEntity>
 
     @Query("""
         UPDATE `transaction`
-        SET isLocked = :isLocked
-        WHERE (type = 1001 OR type = 1002) AND isSpecialCase = 0 AND sourceId = :accountId
+        SET is_locked = :isLocked
+        WHERE (type = 1001 OR type = 1002) AND is_special_case = 0 AND source_id = :accountId
     """)
     suspend fun updateTransactionLockStatusByAccountId(accountId: Int, isLocked: Boolean)
 
-    @Query("SELECT * FROM `transaction` WHERE billId = :billId LIMIT 1")
+    @Query("SELECT * FROM `transaction` WHERE bill_id = :billId LIMIT 1")
     suspend fun getTransactionIdByBillId(billId: Long): TransactionEntity?
 
     @Query("DELETE FROM `transaction`")
