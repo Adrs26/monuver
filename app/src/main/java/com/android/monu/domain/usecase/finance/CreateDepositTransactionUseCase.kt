@@ -1,33 +1,33 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.DepositWithdrawState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.TransactionChildCategory
-import com.android.monu.ui.feature.utils.TransactionParentCategory
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.TransactionChildCategory
+import com.android.monu.utils.TransactionParentCategory
+import com.android.monu.utils.TransactionType
 
 class CreateDepositTransactionUseCase(
     private val financeRepository: FinanceRepository,
     private val accountRepository: AccountRepository
 ) {
-    suspend operator fun invoke(depositState: DepositContentState): DatabaseResultMessage {
+    suspend operator fun invoke(depositState: DepositWithdrawState): DatabaseResultState {
         when {
-            depositState.date.isEmpty() -> return DatabaseResultMessage.EmptyDepositDate
-            depositState.amount == 0L -> return DatabaseResultMessage.EmptyDepositAmount
-            depositState.accountId == 0 -> return DatabaseResultMessage.EmptyDepositAccount
+            depositState.date.isEmpty() -> return DatabaseResultState.EmptyDepositDate
+            depositState.amount == 0L -> return DatabaseResultState.EmptyDepositAmount
+            depositState.accountId == 0 -> return DatabaseResultState.EmptyDepositAccount
         }
 
         val accountBalance = accountRepository.getAccountBalance(depositState.accountId)
         if (accountBalance == null || accountBalance < depositState.amount) {
-            return DatabaseResultMessage.InsufficientAccountBalance
+            return DatabaseResultState.InsufficientAccountBalance
         }
 
         val (month, year) = DateHelper.getMonthAndYear(depositState.date)
-        val transaction = Transaction(
+        val transactionState = TransactionState(
             title = "Setoran Tabungan",
             type = TransactionType.TRANSFER,
             parentCategory = TransactionParentCategory.TRANSFER,
@@ -46,7 +46,7 @@ class CreateDepositTransactionUseCase(
             isSpecialCase = true
         )
 
-        financeRepository.createDepositTransaction(depositState.savingId, transaction)
-        return DatabaseResultMessage.CreateDepositTransactionSuccess
+        financeRepository.createDepositTransaction(depositState.savingId, transactionState)
+        return DatabaseResultState.CreateDepositTransactionSuccess
     }
 }

@@ -18,15 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.DepositWithdrawState
 import com.android.monu.ui.feature.components.StaticTextInputField
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun DepositContent(
-    depositState: DepositContentState,
+    depositState: DepositWithdrawState,
+    depositAmountFormat: TextFieldValue,
     depositActions: DepositContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -55,7 +57,7 @@ fun DepositContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
-            value = depositState.amountFormat,
+            value = depositAmountFormat,
             onValueChange = depositActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -89,19 +91,9 @@ fun DepositContent(
     }
 }
 
-data class DepositContentState(
-    val date: String,
-    val amount: Long,
-    val amountFormat: TextFieldValue,
-    val accountId: Int,
-    val accountName: String,
-    val savingId: Long,
-    val savingName: String
-)
-
 interface DepositContentActions {
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
     fun onNavigateToAccount()
-    fun onAddNewDeposit(depositState: DepositContentState)
+    fun onAddNewDeposit(depositState: DepositWithdrawState)
 }

@@ -18,17 +18,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.EditBudgetState
 import com.android.monu.ui.feature.components.StaticTextInputField
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.screen.budgeting.components.BudgetTextSwitchField
-import com.android.monu.ui.feature.utils.Cycle
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.Cycle
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun EditBudgetingContent(
-    budgetState: EditBudgetContentState,
+    budgetState: EditBudgetState,
+    budgetMaxAmountFormat: TextFieldValue,
     budgetActions: EditBudgetContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -43,7 +45,7 @@ fun EditBudgetingContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.maximum_amount),
-            value = budgetState.maxAmountFormat,
+            value = budgetMaxAmountFormat,
             onValueChange = budgetActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -107,23 +109,11 @@ fun EditBudgetingContent(
     }
 }
 
-data class EditBudgetContentState(
-    val id: Long,
-    val category: Int,
-    val maxAmount: Long,
-    val maxAmountFormat: TextFieldValue,
-    val cycle: Int,
-    val startDate: String,
-    val endDate: String,
-    val isOverflowAllowed: Boolean,
-    val isAutoUpdate: Boolean
-)
-
 interface EditBudgetContentActions {
     fun onAmountChange(maxAmountFormat: TextFieldValue)
     fun onStartDateClick()
     fun onEndDateClick()
     fun onOverflowAllowedChange(isOverflowAllowed: Boolean)
     fun onAutoUpdateChange(isAutoUpdate: Boolean)
-    fun onEditBudget(budgetState: EditBudgetContentState)
+    fun onEditBudget(budgetState: EditBudgetState)
 }

@@ -12,16 +12,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.android.monu.R
-import com.android.monu.domain.model.saving.Saving
-import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.usecase.finance.DeleteSavingState
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.common.DeleteSavingStatusState
+import com.android.monu.domain.model.SavingState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.saving.savingDetail.components.RemoveProgressDialog
 import com.android.monu.ui.feature.screen.saving.savingDetail.components.SavingDetailAppBar
 import com.android.monu.ui.feature.screen.saving.savingDetail.components.SavingDetailBottomBar
 import com.android.monu.ui.feature.screen.saving.savingDetail.components.SavingDetailContent
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
+import com.android.monu.ui.feature.utils.isCompleteSavingSuccess
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
 
 @Composable
 fun SavingDetailScreen(
@@ -34,7 +36,7 @@ fun SavingDetailScreen(
     val context = LocalContext.current
 
     LaunchedEffect(savingState.removeProgress) {
-        if (savingState.removeProgress is DeleteSavingState.Progress) {
+        if (savingState.removeProgress is DeleteSavingStatusState.Progress) {
             showRemoveProgressDialog = true
 
             if (savingState.removeProgress.current == savingState.removeProgress.total) {
@@ -46,31 +48,28 @@ fun SavingDetailScreen(
 
     LaunchedEffect(savingState.completeResult) {
         savingState.completeResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CompleteSavingSuccess) {
-                savingActions.onNavigateBack()
-            }
+            result.showToast(context)
+            if (result.isCompleteSavingSuccess()) savingActions.onNavigateBack()
         }
     }
 
     Scaffold(
         topBar = {
             SavingDetailAppBar(
-                title = stringResource(R.string.save_detail),
-                isActive = savingState.saving.isActive,
+                isActive = savingState.savingState.isActive,
                 onNavigateBack = savingActions::onNavigateBack,
-                onNavigateToEditSaving = { savingActions.onNavigateToEditSaving(savingState.saving.id) },
+                onNavigateToEditSaving = { savingActions.onNavigateToEditSaving(savingState.savingState.id) },
                 onRemoveSaving = { showRemoveConfirmationDialog = true }
             )
         },
         bottomBar = {
-            if (savingState.saving.isActive) {
+            if (savingState.savingState.isActive) {
                 SavingDetailBottomBar { showCompleteConfirmationDialog = true }
             }
         }
     ) { innerPadding ->
         SavingDetailContent(
-            savingState = savingState.saving,
+            savingState = savingState.savingState,
             transactions = savingState.transactions,
             onNavigateToDeposit = savingActions::onNavigateToDeposit,
             onNavigateToWithdraw = savingActions::onNavigateToWithdraw,
@@ -85,7 +84,7 @@ fun SavingDetailScreen(
             onDismissRequest = { showRemoveConfirmationDialog = false },
             onConfirmRequest = {
                 showRemoveConfirmationDialog = false
-                savingActions.onRemoveSaving(savingState.saving.id)
+                savingActions.onRemoveSaving(savingState.savingState.id)
                 if (savingState.transactions.isEmpty()) {
                     savingActions.onNavigateBack()
                     context.getString(R.string.save_successfully_deleted).showMessageWithToast(context)
@@ -106,17 +105,17 @@ fun SavingDetailScreen(
             onDismissRequest = { showCompleteConfirmationDialog = false },
             onConfirmRequest = {
                 showCompleteConfirmationDialog = false
-                savingActions.onCompleteSaving(savingState.saving)
+                savingActions.onCompleteSaving(savingState.savingState)
             }
         )
     }
 }
 
 data class SavingDetailState(
-    val saving: Saving,
-    val transactions: List<Transaction>,
-    val removeProgress: DeleteSavingState,
-    val completeResult: DatabaseResultMessage?
+    val savingState: SavingState,
+    val transactions: List<TransactionState>,
+    val removeProgress: DeleteSavingStatusState,
+    val completeResult: DatabaseResultState?
 )
 
 interface SavingDetailActions {
@@ -127,5 +126,5 @@ interface SavingDetailActions {
     fun onNavigateToDeposit()
     fun onNavigateToWithdraw()
     fun onNavigateToTransactionDetail(transactionId: Long)
-    fun onCompleteSaving(saving: Saving)
+    fun onCompleteSaving(savingState: SavingState)
 }

@@ -10,13 +10,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.android.monu.R
 import com.android.monu.ui.feature.components.DebouncedIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavingDetailAppBar(
-    title: String,
     isActive: Boolean,
     onNavigateBack: () -> Unit,
     onNavigateToEditSaving: () -> Unit,
@@ -25,7 +25,7 @@ fun SavingDetailAppBar(
     TopAppBar(
         title = {
             Text(
-                text = title,
+                text = stringResource(R.string.save_detail),
                 style = MaterialTheme.typography.titleLarge.copy(
                     color = MaterialTheme.colorScheme.onBackground
                 )

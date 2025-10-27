@@ -1,103 +1,81 @@
 package com.android.monu.data.mapper
 
-import com.android.monu.data.local.entity.room.TransactionEntity
 import com.android.monu.data.local.entity.projection.TransactionCategorySummaryEntity
 import com.android.monu.data.local.entity.projection.TransactionSummaryEntity
-import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.model.transaction.TransactionCategorySummary
-import com.android.monu.domain.model.transaction.TransactionSummary
+import com.android.monu.data.local.entity.room.TransactionEntity
+import com.android.monu.domain.model.TransactionCategorySummaryState
+import com.android.monu.domain.model.TransactionState
+import com.android.monu.domain.model.TransactionSummaryState
 
-object TransactionMapper {
-    fun transactionEntityToDomain(
-        transactionEntity: TransactionEntity
-    ): Transaction {
-        return Transaction(
-            id = transactionEntity.id,
-            title = transactionEntity.title,
-            type = transactionEntity.type,
-            parentCategory = transactionEntity.parentCategory,
-            childCategory = transactionEntity.childCategory,
-            date = transactionEntity.date,
-            month = transactionEntity.month,
-            year = transactionEntity.year,
-            timeStamp = transactionEntity.timeStamp,
-            amount = transactionEntity.amount,
-            sourceId = transactionEntity.sourceId,
-            sourceName = transactionEntity.sourceName,
-            destinationId = transactionEntity.destinationId,
-            destinationName = transactionEntity.destinationName,
-            saveId = transactionEntity.saveId,
-            billId = transactionEntity.billId,
-            isLocked = transactionEntity.isLocked,
-            isSpecialCase = transactionEntity.isSpecialCase
-        )
-    }
+fun TransactionEntity.toDomain() = TransactionState(
+    id = id,
+    title = title,
+    type = type,
+    parentCategory = parentCategory,
+    childCategory = childCategory,
+    date = date,
+    month = month,
+    year = year,
+    timeStamp = timeStamp,
+    amount = amount,
+    sourceId = sourceId,
+    sourceName = sourceName,
+    destinationId = destinationId,
+    destinationName = destinationName,
+    saveId = saveId,
+    billId = billId,
+    isLocked = isLocked,
+    isSpecialCase = isSpecialCase
+)
 
-    fun transactionDomainToEntity(
-        transaction: Transaction
-    ): TransactionEntity {
-        return TransactionEntity(
-            title = transaction.title,
-            type = transaction.type,
-            parentCategory = transaction.parentCategory,
-            childCategory = transaction.childCategory,
-            date = transaction.date,
-            month = transaction.month,
-            year = transaction.year,
-            timeStamp = transaction.timeStamp,
-            amount = transaction.amount,
-            sourceId = transaction.sourceId,
-            sourceName = transaction.sourceName,
-            destinationId = transaction.destinationId,
-            destinationName = transaction.destinationName,
-            saveId = transaction.saveId,
-            billId = transaction.billId,
-            isLocked = transaction.isLocked,
-            isSpecialCase = transaction.isSpecialCase
-        )
-    }
+fun TransactionState.toEntity() = TransactionEntity(
+    title = title,
+    type = type,
+    parentCategory = parentCategory,
+    childCategory = childCategory,
+    date = date,
+    month = month,
+    year = year,
+    timeStamp = timeStamp,
+    amount = amount,
+    sourceId = sourceId,
+    sourceName = sourceName,
+    destinationId = destinationId,
+    destinationName = destinationName,
+    saveId = saveId,
+    billId = billId,
+    isLocked = isLocked,
+    isSpecialCase = isSpecialCase
+)
 
-    fun transactionDomainToEntityForUpdate(
-        transaction: Transaction
-    ): TransactionEntity {
-        return TransactionEntity(
-            id = transaction.id,
-            title = transaction.title,
-            type = transaction.type,
-            parentCategory = transaction.parentCategory,
-            childCategory = transaction.childCategory,
-            date = transaction.date,
-            month = transaction.month,
-            year = transaction.year,
-            timeStamp = transaction.timeStamp,
-            amount = transaction.amount,
-            sourceId = transaction.sourceId,
-            sourceName = transaction.sourceName,
-            destinationId = transaction.destinationId,
-            destinationName = transaction.destinationName,
-            saveId = transaction.saveId,
-            billId = transaction.billId,
-            isLocked = transaction.isLocked,
-            isSpecialCase = transaction.isSpecialCase
-        )
-    }
+fun TransactionState.toEntityForUpdate() = TransactionEntity(
+    id = id,
+    title = title,
+    type = type,
+    parentCategory = parentCategory,
+    childCategory = childCategory,
+    date = date,
+    month = month,
+    year = year,
+    timeStamp = timeStamp,
+    amount = amount,
+    sourceId = sourceId,
+    sourceName = sourceName,
+    destinationId = destinationId,
+    destinationName = destinationName,
+    saveId = saveId,
+    billId = billId,
+    isLocked = isLocked,
+    isSpecialCase = isSpecialCase
+)
 
-    fun transactionSummaryEntityToDomain(
-        transactionSummaryEntity: TransactionSummaryEntity
-    ): TransactionSummary {
-        return TransactionSummary(
-            type = transactionSummaryEntity.type,
-            date = transactionSummaryEntity.date,
-            amount = transactionSummaryEntity.amount
-        )
-    }
+fun TransactionSummaryEntity.toDomain() = TransactionSummaryState(
+    type = type,
+    date = date,
+    amount = amount
+)
 
-    fun transactionCategorySummaryEntityToDomain(
-        transactionCategorySummaryEntity: TransactionCategorySummaryEntity
-    ): TransactionCategorySummary {
-        return TransactionCategorySummary(
-            parentCategory = transactionCategorySummaryEntity.parentCategory,
-            totalAmount = transactionCategorySummaryEntity.totalAmount
-        )
-    }
-}
+fun TransactionCategorySummaryEntity.toDomain() = TransactionCategorySummaryState(
+    parentCategory = parentCategory,
+    totalAmount = totalAmount
+)

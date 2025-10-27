@@ -14,16 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.model.AccountState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.account.components.AccountListItem
-import com.android.monu.ui.feature.utils.SelectAccountType
+import com.android.monu.utils.SelectAccountType
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun TransferAccountScreen(
     selectAccountType: Int,
-    accounts: List<Account>,
+    accounts: List<AccountState>,
     selectedAccounts: List<Int>,
     onNavigateBack: () -> Unit,
     onAccountSelect: (Int, String) -> Unit
@@ -52,7 +52,7 @@ fun TransferAccountScreen(
                     val isAccountSelected = accounts[index].id in selectedAccounts
 
                     AccountListItem(
-                        account = accounts[index],
+                        accountState = accounts[index],
                         modifier = if (!isAccountSelected) {
                             Modifier
                                 .debouncedClickable {

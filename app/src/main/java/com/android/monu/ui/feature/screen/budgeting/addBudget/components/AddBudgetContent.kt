@@ -18,18 +18,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.AddBudgetState
 import com.android.monu.ui.feature.components.CycleFilterField
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.screen.budgeting.components.BudgetTextSwitchField
-import com.android.monu.ui.feature.utils.Cycle
+import com.android.monu.utils.Cycle
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun AddBudgetContent(
-    budgetState: AddBudgetContentState,
+    budgetState: AddBudgetState,
+    budgetMaxAmountFormat: TextFieldValue,
     budgetActions: AddBudgetContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -54,7 +56,7 @@ fun AddBudgetContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.maximum_amount),
-            value = budgetState.maxAmountFormat,
+            value = budgetMaxAmountFormat,
             onValueChange = budgetActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -124,17 +126,6 @@ fun AddBudgetContent(
     }
 }
 
-data class AddBudgetContentState(
-    val category: Int,
-    val maxAmount: Long,
-    val maxAmountFormat: TextFieldValue,
-    val cycle: Int,
-    val startDate: String,
-    val endDate: String,
-    val isOverflowAllowed: Boolean,
-    val isAutoUpdate: Boolean
-)
-
 interface AddBudgetContentActions {
     fun onNavigateToCategory()
     fun onAmountChange(maxAmountFormat: TextFieldValue)
@@ -143,5 +134,5 @@ interface AddBudgetContentActions {
     fun onEndDateClick()
     fun onOverflowAllowedChange(isOverflowAllowed: Boolean)
     fun onAutoUpdateChange(isAutoUpdate: Boolean)
-    fun onAddNewBudget(budgetState: AddBudgetContentState)
+    fun onAddNewBudget(budgetState: AddBudgetState)
 }

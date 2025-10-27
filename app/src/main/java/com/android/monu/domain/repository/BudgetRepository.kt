@@ -1,17 +1,17 @@
 package com.android.monu.domain.repository
 
 import androidx.paging.PagingData
-import com.android.monu.domain.model.budget.Budget
+import com.android.monu.domain.model.BudgetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface BudgetRepository {
 
-    fun getAllActiveBudgets(): Flow<List<Budget>>
+    fun getAllActiveBudgets(): Flow<List<BudgetState>>
 
-    fun getAllInactiveBudgets(scope: CoroutineScope): Flow<PagingData<Budget>>
+    fun getAllInactiveBudgets(scope: CoroutineScope): Flow<PagingData<BudgetState>>
 
-    fun getBudgetById(budgetId: Long): Flow<Budget?>
+    fun getBudgetById(budgetId: Long): Flow<BudgetState?>
 
     fun getTotalBudgetMaxAmount(): Flow<Long>
 
@@ -19,9 +19,9 @@ interface BudgetRepository {
 
     suspend fun isBudgetExists(category: Int): Boolean
 
-    suspend fun createNewBudget(budget: Budget): Long
+    suspend fun createNewBudget(budgetState: BudgetState): Long
 
-    suspend fun getBudgetForDate(category: Int, date: String): Budget?
+    suspend fun getBudgetForDate(category: Int, date: String): BudgetState?
 
     suspend fun getBudgetUsagePercentage(category: Int): Float
 
@@ -29,7 +29,7 @@ interface BudgetRepository {
 
     suspend fun deleteBudgetById(budgetId: Long)
 
-    suspend fun updateBudget(budget: Budget)
+    suspend fun updateBudget(budgetState: BudgetState)
 
-    suspend fun getAllBudgets(): List<Budget>
+    suspend fun getAllBudgets(): List<BudgetState>
 }

@@ -1,17 +1,17 @@
 package com.android.monu.domain.usecase.finance
 
+import com.android.monu.domain.common.DatabaseResultState
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class UpdateAccountStatusUseCase(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(accountId: Int, isActive: Boolean): DatabaseResultMessage {
+    suspend operator fun invoke(accountId: Int, isActive: Boolean): DatabaseResultState {
         repository.updateAccountStatus(accountId, isActive)
         return if (isActive) {
-            DatabaseResultMessage.ActivateAccountSuccess
+            DatabaseResultState.ActivateAccountSuccess
         } else {
-            DatabaseResultMessage.DeactivateAccountSuccess
+            DatabaseResultState.DeactivateAccountSuccess
         }
     }
 }

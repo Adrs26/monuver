@@ -12,29 +12,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.android.monu.R
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AccountState
+import com.android.monu.domain.model.EditAccountState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.account.editAccount.components.EditAccountContent
 import com.android.monu.ui.feature.screen.account.editAccount.components.EditAccountContentActions
-import com.android.monu.ui.feature.screen.account.editAccount.components.EditAccountContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.isUpdateAccountSuccess
+import com.android.monu.ui.feature.utils.showToast
 
 @Composable
 fun EditAccountScreen(
-    account: Account,
-    editResult: DatabaseResultMessage?,
-    accountActions: EditAccountActions
+    accountState: AccountState,
+    accountActions: EditAccountActions,
+    editResult: DatabaseResultState?,
 ) {
-    var accountName by rememberSaveable { mutableStateOf(account.name) }
+    var accountName by rememberSaveable { mutableStateOf(accountState.name) }
 
     val context = LocalContext.current
 
-    val editAccountContentState = EditAccountContentState(
-        id = account.id,
+    val editAccountState = EditAccountState(
+        id = accountState.id,
         name = accountName,
-        type = account.type,
-        balance = account.balance
+        type = accountState.type,
+        balance = accountState.balance
     )
 
     val editAccountContentActions = object : EditAccountContentActions {
@@ -46,17 +47,15 @@ fun EditAccountScreen(
             accountActions.onNavigateToType()
         }
 
-        override fun onEditAccount(accountState: EditAccountContentState) {
+        override fun onEditAccount(accountState: EditAccountState) {
             accountActions.onEditAccount(accountState)
         }
     }
 
     LaunchedEffect(editResult) {
         editResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.UpdateAccountSuccess) {
-                accountActions.onNavigateBack()
-            }
+            result.showToast(context)
+            if (result.isUpdateAccountSuccess()) accountActions.onNavigateBack()
         }
     }
 
@@ -69,7 +68,7 @@ fun EditAccountScreen(
         }
     ) { innerPadding ->
         EditAccountContent(
-            accountState = editAccountContentState,
+            accountState = editAccountState,
             accountActions = editAccountContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -79,5 +78,5 @@ fun EditAccountScreen(
 interface EditAccountActions {
     fun onNavigateBack()
     fun onNavigateToType()
-    fun onEditAccount(accountState: EditAccountContentState)
+    fun onEditAccount(accountState: EditAccountState)
 }

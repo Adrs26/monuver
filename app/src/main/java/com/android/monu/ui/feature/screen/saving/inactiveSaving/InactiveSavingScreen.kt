@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.saving.Saving
+import com.android.monu.domain.model.SavingState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.screen.saving.components.SavingListItem
@@ -19,7 +19,7 @@ import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun InactiveSavingScreen(
-    savings: List<Saving>,
+    savings: List<SavingState>,
     onNavigateBack: () -> Unit,
     onNavigateToSavingDetail: (Long) -> Unit
 ) {
@@ -50,7 +50,7 @@ fun InactiveSavingScreen(
                         val saveState = savings[index]
 
                         SavingListItem(
-                            saving = saveState,
+                            savingState = saveState,
                             modifier = Modifier.debouncedClickable { onNavigateToSavingDetail(saveState.id) }
                         )
                     }

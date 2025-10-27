@@ -38,7 +38,7 @@ import com.android.monu.R
 import com.android.monu.ui.feature.components.CommonFloatingActionButton
 import com.android.monu.ui.feature.screen.main.components.BottomNavigationBar
 import com.android.monu.ui.feature.screen.main.components.BudgetWarningDialog
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.TransactionType
 import com.android.monu.ui.navigation.AddBudget
 import com.android.monu.ui.navigation.AddTransaction
 import com.android.monu.ui.navigation.Main

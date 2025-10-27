@@ -2,12 +2,12 @@ package com.android.monu.ui.feature.screen.transaction.addTransaction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AddTransactionState
 import com.android.monu.domain.usecase.account.GetActiveAccountsUseCase
 import com.android.monu.domain.usecase.finance.CreateExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.CreateIncomeTransactionUseCase
-import com.android.monu.ui.feature.screen.transaction.addTransaction.components.AddTransactionContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.TransactionType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,7 +30,7 @@ class AddTransactionViewModel(
     private val _transactionSource = MutableStateFlow(Pair(0, ""))
     val transactionSource = _transactionSource.asStateFlow()
 
-    private val _createResult = MutableStateFlow<DatabaseResultMessage?>(null)
+    private val _createResult = MutableStateFlow<DatabaseResultState?>(null)
     val createResult = _createResult.asStateFlow()
 
     fun changeTransactionCategory(parentCategory: Int, childCategory: Int) {
@@ -41,7 +41,7 @@ class AddTransactionViewModel(
         _transactionSource.value = Pair(sourceId, sourceName)
     }
 
-    fun createNewTransaction(addTransactionState: AddTransactionContentState) {
+    fun createNewTransaction(addTransactionState: AddTransactionState) {
         viewModelScope.launch {
             val result = when (addTransactionState.type) {
                 TransactionType.INCOME -> createIncomeTransactionUseCase(addTransactionState)

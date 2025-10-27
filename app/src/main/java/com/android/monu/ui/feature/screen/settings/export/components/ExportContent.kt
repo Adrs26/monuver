@@ -17,17 +17,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.monu.R
+import com.android.monu.domain.model.ExportState
 import com.android.monu.ui.feature.components.StaticTextInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.components.TextWithSwitch
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun ExportContent(
-    exportState: ExportContentState,
+    exportState: ExportState,
     exportActions: ExportContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -36,24 +39,24 @@ fun ExportContent(
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         TextInputField(
-            title = "Judul laporan",
+            title = stringResource(R.string.report_title),
             value = exportState.title,
             onValueChange = exportActions::onTitleChange,
-            placeholderText = "Masukkan judul laporan",
+            placeholderText = stringResource(R.string.enter_report_title),
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
         )
         TextInputField(
-            title = "Nama pengguna",
+            title = stringResource(R.string.report_username),
             value = exportState.username,
             onValueChange = exportActions::onUserNameChange,
-            placeholderText = "Masukkan nama pengguna",
+            placeholderText = stringResource(R.string.enter_report_username),
             modifier = Modifier.padding(start = 16.dp, end = 16.dp)
         )
         TextDateInputField(
-            title = "Periode mulai laporan",
+            title = stringResource(R.string.report_start_period),
             value = DateHelper.formatDateToReadable(exportState.startDate),
             onValueChange = { },
-            placeholderText = "Pilih periode mulai laporan",
+            placeholderText = stringResource(R.string.choose_report_start_period),
             isEnable = true,
             modifier = Modifier
                 .clickable(
@@ -64,10 +67,10 @@ fun ExportContent(
                 .padding(horizontal = 16.dp)
         )
         TextDateInputField(
-            title = "Periode akhir laporan",
+            title = stringResource(R.string.report_end_period),
             value = DateHelper.formatDateToReadable(exportState.endDate),
             onValueChange = { },
-            placeholderText = "Pilih periode akhir laporan",
+            placeholderText = stringResource(R.string.choose_report_end_period),
             isEnable = true,
             modifier = Modifier
                 .clickable(
@@ -78,7 +81,7 @@ fun ExportContent(
                 .padding(horizontal = 16.dp)
         )
         StaticTextInputField(
-            title = "Format laporan",
+            title = stringResource(R.string.report_format),
             value = "PDF",
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -91,13 +94,13 @@ fun ExportContent(
             modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
         ) {
             TextWithSwitch(
-                text = "Kelompokkan pemasukan dan pengeluaran",
-                checked = exportState.isSeparate,
-                onCheckedChange = exportActions::onSeparateChange,
+                text = stringResource(R.string.group_income_expense),
+                checked = exportState.isIncomeExpenseGrouped,
+                onCheckedChange = exportActions::onIncomeExpenseGroupedChange,
                 isEnable = true
             )
             TextWithSwitch(
-                text = "Sertakan transaksi transfer",
+                text = stringResource(R.string.include_transfer_transaction),
                 checked = exportState.isTransferIncluded,
                 onCheckedChange = exportActions::onTransferIncludedChange,
                 isEnable = true
@@ -116,7 +119,7 @@ fun SortDateTypeRadioGroupField(
         modifier = modifier
     ) {
         Text(
-            text = "Urutkan mulai dari",
+            text = stringResource(R.string.sort_by),
             modifier = Modifier.padding(bottom = 12.dp),
             style = MaterialTheme.typography.labelSmall.copy(fontSize = 12.sp)
         )
@@ -138,7 +141,7 @@ fun SortDateTypeRadioGroupField(
                     )
                 )
                 Text(
-                    text = "Tanggal terlama",
+                    text = stringResource(R.string.oldest_date),
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 13.sp
@@ -159,7 +162,7 @@ fun SortDateTypeRadioGroupField(
                     )
                 )
                 Text(
-                    text = "Tanggal terbaru",
+                    text = stringResource(R.string.newest_date),
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 13.sp
@@ -170,22 +173,12 @@ fun SortDateTypeRadioGroupField(
     }
 }
 
-data class ExportContentState(
-    val title: String,
-    val username: String,
-    val startDate: String,
-    val endDate: String,
-    val sortType: Int,
-    val isSeparate: Boolean,
-    val isTransferIncluded: Boolean
-)
-
 interface ExportContentActions {
     fun onTitleChange(title: String)
     fun onUserNameChange(username: String)
     fun onStartDateClick()
     fun onEndDateClick()
     fun onSortTypeChange(sortType: Int)
-    fun onSeparateChange(isSeparate: Boolean)
+    fun onIncomeExpenseGroupedChange(isIncomeExpenseGrouped: Boolean)
     fun onTransferIncludedChange(isTransferIncluded: Boolean)
 }

@@ -20,14 +20,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.model.AccountState
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.NumberHelper
 import com.android.monu.ui.theme.SoftWhite
 
 @Composable
 fun AccountListItem(
-    account: Account,
+    accountState: AccountState,
     modifier: Modifier = Modifier,
     containerColor: Color = MaterialTheme.colorScheme.background
 ) {
@@ -39,9 +39,9 @@ fun AccountListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AccountTypeIcon(
-            icon = DatabaseCodeMapper.toAccountTypeIcon(account.type),
-            backgroundColor = DatabaseCodeMapper.toAccountTypeColor(account.type),
-            isActive = account.isActive,
+            icon = DatabaseCodeMapper.toAccountTypeIcon(accountState.type),
+            backgroundColor = DatabaseCodeMapper.toAccountTypeColor(accountState.type),
+            isActive = accountState.isActive,
             modifier = Modifier.size(40.dp)
         )
         Column(
@@ -50,7 +50,7 @@ fun AccountListItem(
                 .weight(1f)
         ) {
             Text(
-                text = account.name,
+                text = accountState.name,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 style = MaterialTheme.typography.labelMedium.copy(
@@ -58,7 +58,7 @@ fun AccountListItem(
                 )
             )
             Text(
-                text = stringResource(DatabaseCodeMapper.toAccountType(account.type)),
+                text = stringResource(DatabaseCodeMapper.toAccountType(accountState.type)),
                 modifier = Modifier.padding(top = 4.dp),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -68,7 +68,7 @@ fun AccountListItem(
             )
         }
         Text(
-            text = NumberFormatHelper.formatToRupiah(account.balance),
+            text = NumberHelper.formatToRupiah(accountState.balance),
             style = MaterialTheme.typography.labelMedium.copy(
                 color = MaterialTheme.colorScheme.onBackground
             )

@@ -16,15 +16,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
+import com.android.monu.utils.TransactionType
 
 @Composable
 fun TransactionDetailContent(
-    transaction: Transaction,
+    transactionState: TransactionState,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -33,44 +33,44 @@ fun TransactionDetailContent(
     ) {
         TransactionDetailData(
             title = stringResource(R.string.title),
-            content = transaction.title
+            content = transactionState.title
         )
         DataDivider()
         TransactionDetailData(
             title = stringResource(R.string.type),
-            content = stringResource(DatabaseCodeMapper.toTransactionType(transaction.type))
+            content = stringResource(DatabaseCodeMapper.toTransactionType(transactionState.type))
         )
         DataDivider()
         TransactionDetailData(
             title = stringResource(R.string.category),
-            content = stringResource(DatabaseCodeMapper.toParentCategoryTitle(transaction.parentCategory))
+            content = stringResource(DatabaseCodeMapper.toParentCategoryTitle(transactionState.parentCategory))
         )
         DataDivider()
         TransactionDetailData(
             title = stringResource(R.string.sub_category),
-            content = stringResource(DatabaseCodeMapper.toChildCategoryTitle(transaction.childCategory))
+            content = stringResource(DatabaseCodeMapper.toChildCategoryTitle(transactionState.childCategory))
         )
         DataDivider()
         TransactionDetailData(
             title = stringResource(R.string.date),
-            content = DateHelper.formatDateToReadable(transaction.date)
+            content = DateHelper.formatDateToReadable(transactionState.date)
         )
         DataDivider()
         TransactionDetailData(
             title = stringResource(R.string.amount),
-            content = NumberFormatHelper.formatToRupiah(transaction.amount)
+            content = NumberHelper.formatToRupiah(transactionState.amount)
         )
         DataDivider()
         TransactionDetailData(
             title = stringResource(R.string.source),
-            content = transaction.sourceName
+            content = transactionState.sourceName
         )
 
-        if (transaction.type == TransactionType.TRANSFER) {
+        if (transactionState.type == TransactionType.TRANSFER) {
             DataDivider()
             TransactionDetailData(
                 title = stringResource(R.string.destination),
-                content = transaction.destinationName.toString()
+                content = transactionState.destinationName.toString()
             )
         }
     }

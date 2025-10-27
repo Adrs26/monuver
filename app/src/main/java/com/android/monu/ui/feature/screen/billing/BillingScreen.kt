@@ -6,14 +6,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.model.BillState
 import com.android.monu.ui.feature.components.CommonFloatingActionButton
 import com.android.monu.ui.feature.screen.billing.components.BillAppBar
 import com.android.monu.ui.feature.screen.billing.components.BillTabRowWithPager
 
 @Composable
 fun BillingScreen(
-    billState: BillState,
+    billUiState: BillUiState,
     billActions: BillActions
 ) {
     Scaffold(
@@ -29,7 +29,7 @@ fun BillingScreen(
         }
     ) { innerPadding ->
         BillTabRowWithPager(
-            billState = billState,
+            billUiState = billUiState,
             onNavigateToBillDetail = billActions::onNavigateToBillDetail,
             modifier = Modifier
                 .fillMaxSize()
@@ -38,10 +38,10 @@ fun BillingScreen(
     }
 }
 
-data class BillState(
-    val pendingBills: List<Bill>,
-    val dueBills: List<Bill>,
-    val paidBills: LazyPagingItems<Bill>
+data class BillUiState(
+    val pendingBills: List<BillState>,
+    val dueBills: List<BillState>,
+    val paidBills: LazyPagingItems<BillState>
 )
 
 interface BillActions {

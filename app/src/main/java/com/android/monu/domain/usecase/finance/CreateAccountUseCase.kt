@@ -1,28 +1,28 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.account.Account
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AccountState
+import com.android.monu.domain.model.AddAccountState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.screen.account.addAccount.components.AddAccountContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.TransactionChildCategory
-import com.android.monu.ui.feature.utils.TransactionParentCategory
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.TransactionChildCategory
+import com.android.monu.utils.TransactionParentCategory
+import com.android.monu.utils.TransactionType
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
 class CreateAccountUseCase(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(accountState: AddAccountContentState): DatabaseResultMessage {
+    suspend operator fun invoke(accountState: AddAccountState): DatabaseResultState {
         when {
-            accountState.name.isEmpty() -> return DatabaseResultMessage.EmptyAccountName
-            accountState.type == 0 -> return DatabaseResultMessage.EmptyAccountType
-            accountState.balance == 0L -> return DatabaseResultMessage.EmptyAccountBalance
+            accountState.name.isEmpty() -> return DatabaseResultState.EmptyAccountName
+            accountState.type == 0 -> return DatabaseResultState.EmptyAccountType
+            accountState.balance == 0L -> return DatabaseResultState.EmptyAccountBalance
         }
 
-        val account = Account(
+        val account = AccountState(
             name = accountState.name,
             type = accountState.type,
             balance = accountState.balance,
@@ -33,7 +33,7 @@ class CreateAccountUseCase(
         val isoDate = currentDate.format(DateTimeFormatter.ISO_DATE)
         val (month, year) = DateHelper.getMonthAndYear(isoDate)
 
-        val transaction = Transaction(
+        val transactionState = TransactionState(
             title = "Penambahan Akun",
             type = TransactionType.INCOME,
             parentCategory = TransactionParentCategory.OTHER_INCOME,
@@ -49,7 +49,7 @@ class CreateAccountUseCase(
             isSpecialCase = true
         )
 
-        repository.createAccount(account, transaction)
-        return DatabaseResultMessage.CreateAccountSuccess
+        repository.createAccount(account, transactionState)
+        return DatabaseResultState.CreateAccountSuccess
     }
 }

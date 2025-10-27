@@ -7,17 +7,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.android.monu.domain.model.saving.Saving
+import com.android.monu.domain.model.DepositWithdrawState
+import com.android.monu.domain.model.SavingState
 import com.android.monu.ui.feature.screen.saving.addSaving.AddSavingScreen
 import com.android.monu.ui.feature.screen.saving.addSaving.AddSavingViewModel
 import com.android.monu.ui.feature.screen.saving.components.SavingAccountScreen
 import com.android.monu.ui.feature.screen.saving.deposit.DepositActions
 import com.android.monu.ui.feature.screen.saving.deposit.DepositScreen
-import com.android.monu.ui.feature.screen.saving.deposit.DepositState
+import com.android.monu.ui.feature.screen.saving.deposit.DepositUiState
 import com.android.monu.ui.feature.screen.saving.deposit.DepositViewModel
-import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentState
 import com.android.monu.ui.feature.screen.saving.editSaving.EditSavingScreen
-import com.android.monu.ui.feature.screen.saving.editSaving.EditSavingState
+import com.android.monu.ui.feature.screen.saving.editSaving.EditSavingUiState
 import com.android.monu.ui.feature.screen.saving.editSaving.EditSavingViewModel
 import com.android.monu.ui.feature.screen.saving.inactiveSaving.InactiveSavingScreen
 import com.android.monu.ui.feature.screen.saving.inactiveSaving.InactiveSavingViewModel
@@ -27,15 +27,14 @@ import com.android.monu.ui.feature.screen.saving.savingDetail.SavingDetailState
 import com.android.monu.ui.feature.screen.saving.savingDetail.SavingDetailViewModel
 import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawActions
 import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawScreen
-import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawState
+import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawUiState
 import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawViewModel
-import com.android.monu.ui.feature.screen.saving.withdraw.components.WithdrawContentState
 import com.android.monu.ui.feature.utils.NavigationAnimation
-import com.android.monu.ui.feature.utils.TransactionChildCategory
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.Deposit
 import com.android.monu.ui.navigation.TransactionDetail
 import com.android.monu.ui.navigation.Withdraw
+import com.android.monu.utils.TransactionChildCategory
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import com.android.monu.ui.navigation.Saving as SavingRoute
@@ -110,7 +109,7 @@ fun NavGraphBuilder.savingNavGraph(
 
             saving?.let { saving ->
                 val savingDetailState = SavingDetailState(
-                    saving = saving,
+                    savingState = saving,
                     transactions = transactions,
                     removeProgress = removeProgress,
                     completeResult = completeResult
@@ -141,8 +140,8 @@ fun NavGraphBuilder.savingNavGraph(
                         navController.navigate(TransactionDetail.Main(transactionId))
                     }
 
-                    override fun onCompleteSaving(saving: Saving) {
-                        viewModel.completeSaving(saving)
+                    override fun onCompleteSaving(savingState: SavingState) {
+                        viewModel.completeSaving(savingState)
                     }
                 }
 
@@ -162,21 +161,21 @@ fun NavGraphBuilder.savingNavGraph(
                 viewModelStoreOwner = it,
                 parameters = { parametersOf(it.savedStateHandle) }
             )
-            val saving by viewModel.saving.collectAsStateWithLifecycle()
+            val savingState by viewModel.savingState.collectAsStateWithLifecycle()
             val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
 
-            saving?.let { saving ->
-                val editSavingState = EditSavingState(
-                    id = saving.id,
-                    title = saving.title,
-                    targetDate = saving.targetDate,
-                    currentAmount = saving.currentAmount,
-                    targetAmount = saving.targetAmount,
+            savingState?.let { savingState ->
+                val editSavingUiState = EditSavingUiState(
+                    id = savingState.id,
+                    title = savingState.title,
+                    targetDate = savingState.targetDate,
+                    currentAmount = savingState.currentAmount,
+                    targetAmount = savingState.targetAmount,
                     editResult = editResult
                 )
 
                 EditSavingScreen(
-                    savingState = editSavingState,
+                    savingUiState = editSavingUiState,
                     onNavigateBack = navController::navigateUp,
                     onEditSaving = viewModel::updateSaving
                 )
@@ -218,7 +217,7 @@ fun NavGraphBuilder.depositNavGraph(
             val addResult by viewModel.createResult.collectAsStateWithLifecycle()
             val saving = Pair(args.savingId ?: 0, args.savingName ?: "")
 
-            val depositState = DepositState(
+            val depositUiState = DepositUiState(
                 account = account,
                 saving = saving,
                 addResult = addResult
@@ -233,13 +232,13 @@ fun NavGraphBuilder.depositNavGraph(
                     navController.navigate(Deposit.Account)
                 }
 
-                override fun onAddNewDeposit(depositState: DepositContentState) {
+                override fun onAddNewDeposit(depositState: DepositWithdrawState) {
                     viewModel.createNewTransaction(depositState)
                 }
             }
 
             DepositScreen(
-                depositState = depositState,
+                depositUiState = depositUiState,
                 depositActions = depositActions
             )
         }
@@ -278,7 +277,7 @@ fun NavGraphBuilder.withdrawNavGraph(
             val addResult by viewModel.createResult.collectAsStateWithLifecycle()
             val saving = Pair(args.savingId ?: 0, args.savingName ?: "")
 
-            val withdrawState = WithdrawState(
+            val withdrawUiState = WithdrawUiState(
                 account = account,
                 saving = saving,
                 addResult = addResult
@@ -293,13 +292,13 @@ fun NavGraphBuilder.withdrawNavGraph(
                     navController.navigate(Withdraw.Account)
                 }
 
-                override fun onAddNewWithdraw(withdrawState: WithdrawContentState) {
+                override fun onAddNewWithdraw(withdrawState: DepositWithdrawState) {
                     viewModel.createNewTransaction(withdrawState)
                 }
             }
 
             WithdrawScreen(
-                withdrawState = withdrawState,
+                withdrawUiState = withdrawUiState,
                 withdrawActions = withdrawActions
             )
         }

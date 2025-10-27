@@ -1,6 +1,6 @@
 package com.android.monu.domain.manager
 
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.usecase.finance.BackupData
 
 interface DataManager {
@@ -13,8 +13,8 @@ interface DataManager {
         username: String,
         startDate: String,
         endDate: String,
-        commonTransactions: List<Transaction>,
-        transferTransactions: List<Transaction>,
+        commonTransactions: List<TransactionState>,
+        transferTransactions: List<TransactionState>,
         totalIncome: Long,
         totalExpense: Long
     )

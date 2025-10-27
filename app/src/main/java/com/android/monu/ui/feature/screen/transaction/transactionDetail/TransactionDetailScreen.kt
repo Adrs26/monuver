@@ -12,7 +12,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.transaction.transactionDetail.components.TransactionDetailAppBar
 import com.android.monu.ui.feature.screen.transaction.transactionDetail.components.TransactionDetailContent
@@ -20,7 +20,7 @@ import com.android.monu.ui.feature.utils.showMessageWithToast
 
 @Composable
 fun DetailTransactionScreen(
-    transaction: Transaction,
+    transactionState: TransactionState,
     transactionActions: TransactionDetailActions
 ) {
     var showRemoveDialog by remember { mutableStateOf(false) }
@@ -29,13 +29,13 @@ fun DetailTransactionScreen(
     Scaffold(
         topBar = {
             TransactionDetailAppBar(
-                isTransactionLocked = transaction.isLocked,
+                isTransactionLocked = transactionState.isLocked,
                 onNavigateBack = transactionActions::onNavigateBack,
                 onNavigateToEditTransaction = {
                     transactionActions.onNavigateToEditTransaction(
-                        transactionId = transaction.id,
-                        transactionType = transaction.type,
-                        transactionCategory = transaction.childCategory
+                        transactionId = transactionState.id,
+                        transactionType = transactionState.type,
+                        transactionCategory = transactionState.childCategory
                     )
                 },
                 onRemoveTransaction = { showRemoveDialog = true }
@@ -43,7 +43,7 @@ fun DetailTransactionScreen(
         }
     ) { innerPadding ->
         TransactionDetailContent(
-            transaction = transaction,
+            transactionState = transactionState,
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp, vertical = 32.dp)
@@ -56,7 +56,7 @@ fun DetailTransactionScreen(
             onDismissRequest = { showRemoveDialog = false },
             onConfirmRequest = {
                 showRemoveDialog = false
-                transactionActions.onRemoveTransaction(transaction)
+                transactionActions.onRemoveTransaction(transactionState)
                 context.getString(R.string.transaction_successfully_deleted).showMessageWithToast(context)
                 transactionActions.onNavigateBack()
             }
@@ -67,5 +67,5 @@ fun DetailTransactionScreen(
 interface TransactionDetailActions {
     fun onNavigateBack()
     fun onNavigateToEditTransaction(transactionId: Long, transactionType: Int, transactionCategory: Int)
-    fun onRemoveTransaction(transaction: Transaction)
+    fun onRemoveTransaction(transactionState: TransactionState)
 }

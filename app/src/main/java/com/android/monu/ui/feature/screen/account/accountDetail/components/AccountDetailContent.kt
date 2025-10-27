@@ -15,14 +15,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.model.AccountState
 import com.android.monu.ui.feature.screen.transaction.transactionDetail.components.DataDivider
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.NumberHelper
 
 @Composable
 fun AccountDetailContent(
-    account: Account,
+    accountState: AccountState,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -31,22 +31,22 @@ fun AccountDetailContent(
     ) {
         AccountDetailData(
             title = stringResource(R.string.name),
-            content = account.name
+            content = accountState.name
         )
         DataDivider()
         AccountDetailData(
             title = stringResource(R.string.type),
-            content = stringResource(DatabaseCodeMapper.toAccountType(account.type))
+            content = stringResource(DatabaseCodeMapper.toAccountType(accountState.type))
         )
         DataDivider()
         AccountDetailData(
             title = stringResource(R.string.balance),
-            content = NumberFormatHelper.formatToRupiah(account.balance)
+            content = NumberHelper.formatToRupiah(accountState.balance)
         )
         DataDivider()
         AccountDetailData(
             title = stringResource(R.string.status),
-            content = if (account.isActive) stringResource(R.string.active) else stringResource(R.string.inactive)
+            content = if (accountState.isActive) stringResource(R.string.active) else stringResource(R.string.inactive)
         )
     }
 }

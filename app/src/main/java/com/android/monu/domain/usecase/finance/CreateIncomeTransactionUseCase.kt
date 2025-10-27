@@ -1,25 +1,25 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AddTransactionState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.screen.transaction.addTransaction.components.AddTransactionContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 class CreateIncomeTransactionUseCase(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(transactionState: AddTransactionContentState): DatabaseResultMessage {
+    suspend operator fun invoke(transactionState: AddTransactionState): DatabaseResultState {
         when {
-            transactionState.title.isEmpty() -> return DatabaseResultMessage.EmptyTransactionTitle
-            transactionState.childCategory == 0 -> return DatabaseResultMessage.EmptyTransactionCategory
-            transactionState.date.isEmpty() -> return DatabaseResultMessage.EmptyTransactionDate
-            transactionState.amount == 0L -> return DatabaseResultMessage.EmptyTransactionAmount
-            transactionState.sourceId == 0 -> return DatabaseResultMessage.EmptyTransactionSource
+            transactionState.title.isEmpty() -> return DatabaseResultState.EmptyTransactionTitle
+            transactionState.childCategory == 0 -> return DatabaseResultState.EmptyTransactionCategory
+            transactionState.date.isEmpty() -> return DatabaseResultState.EmptyTransactionDate
+            transactionState.amount == 0L -> return DatabaseResultState.EmptyTransactionAmount
+            transactionState.sourceId == 0 -> return DatabaseResultState.EmptyTransactionSource
         }
 
         val (month, year) = DateHelper.getMonthAndYear(transactionState.date)
-        val transaction = Transaction(
+        val transaction = TransactionState(
             title = transactionState.title,
             type = transactionState.type,
             parentCategory = transactionState.parentCategory,
@@ -36,6 +36,6 @@ class CreateIncomeTransactionUseCase(
         )
 
         repository.createIncomeTransaction(transaction)
-        return DatabaseResultMessage.CreateTransactionSuccess
+        return DatabaseResultState.CreateTransactionSuccess
     }
 }

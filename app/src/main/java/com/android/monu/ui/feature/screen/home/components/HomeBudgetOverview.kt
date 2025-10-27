@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.feature.screen.budgeting.components.calculateProgressBar
 import com.android.monu.ui.feature.screen.budgeting.components.changeProgressBarColor
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.NumberHelper
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
@@ -71,7 +71,7 @@ fun HomeBudgetOverview(
                 Text(
                     text = stringResource(
                         R.string.percentage_value,
-                        NumberFormatHelper.formatToPercentageValue(totalUsedAmount, totalMaxAmount)
+                        NumberHelper.formatToPercentageValue(totalUsedAmount, totalMaxAmount)
                     ),
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = changeProgressBarColor(totalUsedAmount, totalMaxAmount),
@@ -88,7 +88,7 @@ fun HomeBudgetOverview(
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(totalMaxAmount),
+                    text = NumberHelper.formatToRupiah(totalMaxAmount),
                     modifier = Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
@@ -98,7 +98,7 @@ fun HomeBudgetOverview(
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(totalUsedAmount),
+                    text = NumberHelper.formatToRupiah(totalUsedAmount),
                     modifier = Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
@@ -108,8 +108,8 @@ fun HomeBudgetOverview(
                     style = MaterialTheme.typography.labelSmall
                 )
                 Text(
-                    text = if (totalUsedAmount >= totalMaxAmount) NumberFormatHelper.formatToRupiah(0) else
-                        NumberFormatHelper.formatToRupiah(totalMaxAmount - totalUsedAmount),
+                    text = if (totalUsedAmount >= totalMaxAmount) NumberHelper.formatToRupiah(0) else
+                        NumberHelper.formatToRupiah(totalMaxAmount - totalUsedAmount),
                     modifier = Modifier.padding(top = 4.dp),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )

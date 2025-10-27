@@ -13,13 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
-import com.android.monu.domain.model.transaction.TransactionCategorySummary
+import com.android.monu.domain.model.TransactionCategorySummaryState
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 import kotlinx.coroutines.launch
 
 @Composable
 fun PieChart(
-    values: List<TransactionCategorySummary>,
+    values: List<TransactionCategorySummaryState>,
     modifier: Modifier = Modifier
 ) {
     val numberOfGaps = values.size

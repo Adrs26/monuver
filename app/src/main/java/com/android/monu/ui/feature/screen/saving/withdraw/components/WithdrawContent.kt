@@ -18,15 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.DepositWithdrawState
 import com.android.monu.ui.feature.components.StaticTextInputField
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun WithdrawContent(
-    withdrawState: WithdrawContentState,
+    withdrawState: DepositWithdrawState,
+    withdrawAmountFormat: TextFieldValue,
     withdrawActions: WithdrawContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -55,7 +57,7 @@ fun WithdrawContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
-            value = withdrawState.amountFormat,
+            value = withdrawAmountFormat,
             onValueChange = withdrawActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -89,19 +91,9 @@ fun WithdrawContent(
     }
 }
 
-data class WithdrawContentState(
-    val date: String,
-    val amount: Long,
-    val amountFormat: TextFieldValue,
-    val accountId: Int,
-    val accountName: String,
-    val savingId: Long,
-    val savingName: String
-)
-
 interface WithdrawContentActions {
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
     fun onNavigateToAccount()
-    fun onAddNewWithdraw(withdrawState: WithdrawContentState)
+    fun onAddNewWithdraw(withdrawState: DepositWithdrawState)
 }

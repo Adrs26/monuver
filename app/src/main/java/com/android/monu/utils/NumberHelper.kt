@@ -1,11 +1,11 @@
-package com.android.monu.ui.feature.utils
+package com.android.monu.utils
 
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Locale
 import kotlin.math.roundToLong
 
-object NumberFormatHelper {
+object NumberHelper {
     fun formatToShortRupiah(amount: Long): String {
         val decimalFormat = DecimalFormat("#.##")
 
@@ -18,7 +18,7 @@ object NumberFormatHelper {
     }
 
     fun formatToRupiah(amount: Long): String {
-        val localeID = Locale("in", "ID")
+        val localeID = Locale.forLanguageTag("id-ID")
         val formatter = NumberFormat.getCurrencyInstance(localeID)
         formatter.maximumFractionDigits = 0
         return formatter.format(amount)

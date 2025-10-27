@@ -11,7 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.BudgetState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.budgeting.budgetDetail.components.BudgetDetailAppBar
 import com.android.monu.ui.feature.screen.budgeting.budgetDetail.components.BudgetDetailContent
@@ -19,8 +20,8 @@ import com.android.monu.ui.feature.utils.showMessageWithToast
 
 @Composable
 fun BudgetDetailScreen(
-    budgetState: BudgetDetailState,
-    transactions: List<Transaction>,
+    budgetState: BudgetState,
+    transactions: List<TransactionState>,
     budgetActions: BudgetDetailActions,
 ) {
     var showRemoveDialog by remember { mutableStateOf(false) }
@@ -57,17 +58,6 @@ fun BudgetDetailScreen(
         )
     }
 }
-
-data class BudgetDetailState(
-    val id: Long,
-    val category: Int,
-    val cycle: Int,
-    val startDate: String,
-    val endDate: String,
-    val maxAmount: Long,
-    val usedAmount: Long,
-    val isActive: Boolean
-)
 
 interface BudgetDetailActions {
     fun onNavigateBack()

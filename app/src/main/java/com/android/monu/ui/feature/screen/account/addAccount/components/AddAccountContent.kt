@@ -18,15 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.AddAccountState
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 
 @Composable
 fun AddAccountContent(
-    accountState: AddAccountContentState,
+    accountState: AddAccountState,
+    accountBalanceFormat: TextFieldValue,
     accountActions: AddAccountContentActions,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier.fillMaxSize(),
@@ -56,7 +58,7 @@ fun AddAccountContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.start_balance),
-            value = accountState.balanceFormat,
+            value = accountBalanceFormat,
             onValueChange = accountActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -76,16 +78,9 @@ fun AddAccountContent(
     }
 }
 
-data class AddAccountContentState(
-    val name: String,
-    val type: Int,
-    val balance: Long,
-    val balanceFormat: TextFieldValue
-)
-
 interface AddAccountContentActions {
     fun onNameChange(name: String)
     fun onNavigateToType()
     fun onAmountChange(balanceFormat: TextFieldValue)
-    fun onAddNewAccount(accountState: AddAccountContentState)
+    fun onAddNewAccount(accountState: AddAccountState)
 }

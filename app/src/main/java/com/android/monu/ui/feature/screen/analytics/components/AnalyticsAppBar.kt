@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.ui.feature.utils.DataProvider
+import com.android.monu.utils.DataProvider
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 
 @OptIn(ExperimentalMaterial3Api::class)

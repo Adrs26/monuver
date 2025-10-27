@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -57,7 +58,7 @@ fun ExportProgressDialog(
                     modifier = Modifier.size(250.dp)
                 )
                 Text(
-                    text = "Laporan kamu sedang dibuat. Tetap di halaman ini hingga proses selesai, ya",
+                    text = stringResource(R.string.create_report_on_progress),
                     modifier = Modifier.padding(24.dp),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.labelMedium

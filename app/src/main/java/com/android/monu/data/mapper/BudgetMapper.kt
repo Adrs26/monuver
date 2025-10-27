@@ -1,56 +1,42 @@
 package com.android.monu.data.mapper
 
 import com.android.monu.data.local.entity.room.BudgetEntity
-import com.android.monu.domain.model.budget.Budget
+import com.android.monu.domain.model.BudgetState
 
-object BudgetMapper {
-    fun budgetEntityToDomain(
-        budgetEntity: BudgetEntity
-    ): Budget {
-        return Budget(
-            id = budgetEntity.id,
-            category = budgetEntity.category,
-            cycle = budgetEntity.cycle,
-            startDate = budgetEntity.startDate,
-            endDate = budgetEntity.endDate,
-            maxAmount = budgetEntity.maxAmount,
-            usedAmount = budgetEntity.usedAmount,
-            isActive = budgetEntity.isActive,
-            isOverflowAllowed = budgetEntity.isOverflowAllowed,
-            isAutoUpdate = budgetEntity.isAutoUpdate
-        )
-    }
+fun BudgetEntity.toDomain() = BudgetState(
+    id = id,
+    category = category,
+    cycle = cycle,
+    startDate = startDate,
+    endDate = endDate,
+    maxAmount = maxAmount,
+    usedAmount = usedAmount,
+    isActive = isActive,
+    isOverflowAllowed = isOverflowAllowed,
+    isAutoUpdate = isAutoUpdate
+)
 
-    fun budgetDomainToEntity(
-        budget: Budget
-    ): BudgetEntity {
-        return BudgetEntity(
-            category = budget.category,
-            cycle = budget.cycle,
-            startDate = budget.startDate,
-            endDate = budget.endDate,
-            maxAmount = budget.maxAmount,
-            usedAmount = budget.usedAmount,
-            isActive = budget.isActive,
-            isOverflowAllowed = budget.isOverflowAllowed,
-            isAutoUpdate = budget.isAutoUpdate
-        )
-    }
+fun BudgetState.toEntity() = BudgetEntity(
+    category = category,
+    cycle = cycle,
+    startDate = startDate,
+    endDate = endDate,
+    maxAmount = maxAmount,
+    usedAmount = usedAmount,
+    isActive = isActive,
+    isOverflowAllowed = isOverflowAllowed,
+    isAutoUpdate = isAutoUpdate
+)
 
-    fun budgetDomainToEntityForUpdate(
-        budget: Budget
-    ): BudgetEntity {
-        return BudgetEntity(
-            id = budget.id,
-            category = budget.category,
-            cycle = budget.cycle,
-            startDate = budget.startDate,
-            endDate = budget.endDate,
-            maxAmount = budget.maxAmount,
-            usedAmount = budget.usedAmount,
-            isActive = budget.isActive,
-            isOverflowAllowed = budget.isOverflowAllowed,
-            isAutoUpdate = budget.isAutoUpdate
-        )
-    }
-}
+fun BudgetState.toEntityForUpdate() = BudgetEntity(
+    id = id,
+    category = category,
+    cycle = cycle,
+    startDate = startDate,
+    endDate = endDate,
+    maxAmount = maxAmount,
+    usedAmount = usedAmount,
+    isActive = isActive,
+    isOverflowAllowed = isOverflowAllowed,
+    isAutoUpdate = isAutoUpdate
+)

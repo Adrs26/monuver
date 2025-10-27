@@ -1,13 +1,13 @@
 package com.android.monu.domain.usecase.finance
 
+import com.android.monu.domain.common.DatabaseResultState
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class CancelBillPaymentUseCase(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(billId: Long): DatabaseResultMessage {
+    suspend operator fun invoke(billId: Long): DatabaseResultState {
         repository.cancelBillPayment(billId)
-        return DatabaseResultMessage.CancelBillSuccess
+        return DatabaseResultState.CancelBillSuccess
     }
 }

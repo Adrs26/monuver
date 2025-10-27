@@ -18,14 +18,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.AddSavingState
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun AddSavingContent(
-    savingState: AddSavingContentState,
+    savingState: AddSavingState,
+    savingTargetAmountFormat: TextFieldValue,
     savingActions: AddSavingContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -56,7 +58,7 @@ fun AddSavingContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.target_amount),
-            value = savingState.targetAmountFormat,
+            value = savingTargetAmountFormat,
             onValueChange = savingActions::onTargetAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -76,16 +78,9 @@ fun AddSavingContent(
     }
 }
 
-data class AddSavingContentState(
-    val title: String,
-    val targetDate: String,
-    val targetAmount: Long,
-    val targetAmountFormat: TextFieldValue
-)
-
 interface AddSavingContentActions {
     fun onTitleChange(title: String)
     fun onDateClick()
     fun onTargetAmountChange(targetAmountFormat: TextFieldValue)
-    fun onAddNewSaving(savingState: AddSavingContentState)
+    fun onAddNewSaving(savingState: AddSavingState)
 }

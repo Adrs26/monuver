@@ -24,7 +24,7 @@ class HomeViewModel(
     val recentTransactions = getRecentTransactionsUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val budgetSummary = getBudgetSummaryUseCase()
+    val budgetSummaryState = getBudgetSummaryUseCase()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     private var isExpiredBudgetHandled = false

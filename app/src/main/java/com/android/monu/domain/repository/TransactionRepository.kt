@@ -1,15 +1,15 @@
 package com.android.monu.domain.repository
 
 import androidx.paging.PagingData
-import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.model.transaction.TransactionCategorySummary
-import com.android.monu.domain.model.transaction.TransactionSummary
+import com.android.monu.domain.model.TransactionCategorySummaryState
+import com.android.monu.domain.model.TransactionState
+import com.android.monu.domain.model.TransactionSummaryState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository {
 
-    fun getRecentTransactions(): Flow<List<Transaction>>
+    fun getRecentTransactions(): Flow<List<TransactionState>>
 
     fun getAllTransactions(
         query: String,
@@ -17,23 +17,23 @@ interface TransactionRepository {
         month: Int?,
         year: Int?,
         scope: CoroutineScope
-    ): Flow<PagingData<Transaction>>
+    ): Flow<PagingData<TransactionState>>
 
-    fun getTransactionById(transactionId: Long): Flow<Transaction?>
+    fun getTransactionById(transactionId: Long): Flow<TransactionState?>
 
-    fun getTransactionsBySavingId(savingId: Long): Flow<List<Transaction>>
+    fun getTransactionsBySavingId(savingId: Long): Flow<List<TransactionState>>
 
     fun getTransactionsByParentCategoryAndDateRange(
         category: Int,
         startDate: String,
         endDate: String
-    ): Flow<List<Transaction>>
+    ): Flow<List<TransactionState>>
 
     fun getTransactionsByParentCategoryAndMonthAndYear(
         category: Int,
         month: Int,
         year: Int
-    ): Flow<List<Transaction>>
+    ): Flow<List<TransactionState>>
 
     fun getDistinctTransactionYears(): Flow<List<Int>>
 
@@ -45,9 +45,9 @@ interface TransactionRepository {
         type: Int,
         month: Int,
         year: Int
-    ): Flow<List<TransactionCategorySummary>>
+    ): Flow<List<TransactionCategorySummaryState>>
 
-    fun getTransactionsInRange(startDate: String, endDate: String): Flow<List<TransactionSummary>>
+    fun getTransactionsInRange(startDate: String, endDate: String): Flow<List<TransactionSummaryState>>
 
     suspend fun getTotalTransactionAmountInDateRange(
         category: Int,
@@ -55,17 +55,17 @@ interface TransactionRepository {
         endDate: String
     ): Long
 
-    suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<Transaction>
+    suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<TransactionState>
 
-    suspend fun getAllTransactions(): List<Transaction>
+    suspend fun getAllTransactions(): List<TransactionState>
 
-    suspend fun getTransactionsInRangeByDateAsc(startDate: String, endDate: String): List<Transaction>
+    suspend fun getTransactionsInRangeByDateAsc(startDate: String, endDate: String): List<TransactionState>
 
-    suspend fun getTransactionsInRangeByDateDesc(startDate: String, endDate: String): List<Transaction>
+    suspend fun getTransactionsInRangeByDateDesc(startDate: String, endDate: String): List<TransactionState>
 
-    suspend fun getTransactionsInRangeByDateAscWithType(startDate: String, endDate: String): List<Transaction>
+    suspend fun getTransactionsInRangeByDateAscWithType(startDate: String, endDate: String): List<TransactionState>
 
-    suspend fun getTransactionsInRangeByDateDescWithType(startDate: String, endDate: String): List<Transaction>
+    suspend fun getTransactionsInRangeByDateDescWithType(startDate: String, endDate: String): List<TransactionState>
 
     suspend fun getTotalIncomeTransactionInRange(startDate: String, endDate: String): Long?
 

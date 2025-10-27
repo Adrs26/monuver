@@ -33,11 +33,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.TransactionCategorySummary
+import com.android.monu.domain.model.TransactionCategorySummaryState
 import com.android.monu.ui.feature.components.PieChart
-import com.android.monu.ui.feature.utils.DataProvider
+import com.android.monu.utils.DataProvider
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.NumberHelper
 import com.android.monu.ui.feature.utils.debouncedClickable
 import com.android.monu.ui.theme.SoftWhite
 
@@ -141,7 +141,7 @@ fun TypeFilterDropdown(
 fun AnalyticsPieChartDetail(
     monthValue: Int,
     yearValue: Int,
-    categorySummaries: List<TransactionCategorySummary>,
+    categorySummaries: List<TransactionCategorySummaryState>,
     onNavigateToAnalyticsCategoryTransaction: (Int, Int, Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -187,7 +187,7 @@ fun AnalyticsPieChartDetailData(
             Text(
                 text = stringResource(
                     R.string.percentage_value,
-                    NumberFormatHelper.formatToPercentageValue(value = amount, total = total)
+                    NumberHelper.formatToPercentageValue(value = amount, total = total)
                 ),
                 style = MaterialTheme.typography.labelSmall.copy(color = SoftWhite)
             )
@@ -202,7 +202,7 @@ fun AnalyticsPieChartDetailData(
             style = MaterialTheme.typography.labelSmall
         )
         Text(
-            text = NumberFormatHelper.formatToRupiah(amount),
+            text = NumberHelper.formatToRupiah(amount),
             modifier = Modifier.padding(start = 16.dp),
             style = MaterialTheme.typography.labelLarge.copy(fontSize = 12.sp)
         )
@@ -219,5 +219,5 @@ data class AnalyticsPieChartState(
     val typeFilter: Int,
     val monthFilter: Int,
     val yearFilter: Int,
-    val categorySummaries: List<TransactionCategorySummary>,
+    val categorySummaries: List<TransactionCategorySummaryState>,
 )

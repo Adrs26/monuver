@@ -6,8 +6,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.android.monu.data.local.dao.BudgetDao
-import com.android.monu.data.mapper.BudgetMapper
-import com.android.monu.domain.model.budget.Budget
+import com.android.monu.data.mapper.toDomain
+import com.android.monu.data.mapper.toEntity
+import com.android.monu.data.mapper.toEntityForUpdate
+import com.android.monu.domain.model.BudgetState
 import com.android.monu.domain.repository.BudgetRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -17,15 +19,13 @@ class BudgetRepositoryImpl(
     private val budgetDao: BudgetDao
 ) : BudgetRepository {
 
-    override fun getAllActiveBudgets(): Flow<List<Budget>> {
+    override fun getAllActiveBudgets(): Flow<List<BudgetState>> {
         return budgetDao.getAllActiveBudgets().map { budgets ->
-            budgets.map { budget ->
-                BudgetMapper.budgetEntityToDomain(budget)
-            }
+            budgets.map { it.toDomain() }
         }
     }
 
-    override fun getAllInactiveBudgets(scope: CoroutineScope): Flow<PagingData<Budget>> {
+    override fun getAllInactiveBudgets(scope: CoroutineScope): Flow<PagingData<BudgetState>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -36,16 +36,12 @@ class BudgetRepositoryImpl(
             }
         ).flow
             .map { pagingData ->
-                pagingData.map { budget ->
-                    BudgetMapper.budgetEntityToDomain(budget)
-                }
+                pagingData.map { it.toDomain() }
             }.cachedIn(scope)
     }
 
-    override fun getBudgetById(budgetId: Long): Flow<Budget?> {
-        return budgetDao.getBudgetById(budgetId).map { budget ->
-            budget?.let { BudgetMapper.budgetEntityToDomain(it) }
-        }
+    override fun getBudgetById(budgetId: Long): Flow<BudgetState?> {
+        return budgetDao.getBudgetById(budgetId).map { it?.toDomain() }
     }
 
     override fun getTotalBudgetMaxAmount(): Flow<Long> {
@@ -60,17 +56,15 @@ class BudgetRepositoryImpl(
         return budgetDao.isBudgetExists(category)
     }
 
-    override suspend fun createNewBudget(budget: Budget): Long {
-        return budgetDao.createNewBudget(BudgetMapper.budgetDomainToEntity(budget))
+    override suspend fun createNewBudget(budgetState: BudgetState): Long {
+        return budgetDao.createNewBudget(budgetState.toEntity())
     }
 
     override suspend fun getBudgetForDate(
         category: Int,
         date: String
-    ): Budget? {
-        return budgetDao.getBudgetForDate(category, date)?.let { budget ->
-            BudgetMapper.budgetEntityToDomain(budget)
-        }
+    ): BudgetState? {
+        return budgetDao.getBudgetForDate(category, date)?.toDomain()
     }
 
     override suspend fun getBudgetUsagePercentage(category: Int): Float {
@@ -85,13 +79,11 @@ class BudgetRepositoryImpl(
         budgetDao.deleteBudgetById(budgetId)
     }
 
-    override suspend fun updateBudget(budget: Budget) {
-        budgetDao.updateBudget(BudgetMapper.budgetDomainToEntityForUpdate(budget))
+    override suspend fun updateBudget(budgetState: BudgetState) {
+        budgetDao.updateBudget(budgetState.toEntityForUpdate())
     }
 
-    override suspend fun getAllBudgets(): List<Budget> {
-        return budgetDao.getAllBudgets().map { budget ->
-            BudgetMapper.budgetEntityToDomain(budget)
-        }
+    override suspend fun getAllBudgets(): List<BudgetState> {
+        return budgetDao.getAllBudgets().map { it.toDomain() }
     }
 }

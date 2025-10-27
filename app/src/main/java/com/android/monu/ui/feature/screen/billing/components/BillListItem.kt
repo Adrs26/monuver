@@ -15,8 +15,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
 import com.android.monu.ui.theme.Red600
 
 @Composable
@@ -66,7 +66,7 @@ fun BillListItem(
             }
         }
         Text(
-            text = NumberFormatHelper.formatToRupiah(billState.amount),
+            text = NumberHelper.formatToRupiah(billState.amount),
             style = MaterialTheme.typography.labelMedium.copy(
                 color = MaterialTheme.colorScheme.onBackground
             )

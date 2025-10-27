@@ -42,9 +42,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.TransactionDailySummary
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.domain.model.TransactionDailySummaryState
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
 import com.android.monu.ui.theme.Green600
 import com.android.monu.ui.theme.Red600
 
@@ -189,7 +189,7 @@ fun BarChartLegend(
 
 @Composable
 fun BarChartYAxis(
-    dailySummaries: List<TransactionDailySummary>,
+    dailySummaries: List<TransactionDailySummaryState>,
     modifier: Modifier = Modifier
 ) {
     val maxIncome = dailySummaries.maxOfOrNull { it.totalIncome } ?: 0
@@ -209,7 +209,7 @@ fun BarChartYAxis(
                 verticalArrangement = Arrangement.Bottom
             ) {
                 Text(
-                    text = NumberFormatHelper.formatToShortRupiah(it.amount),
+                    text = NumberHelper.formatToShortRupiah(it.amount),
                     style = MaterialTheme.typography.labelMedium.copy(fontSize = 8.sp)
                 )
                 Spacer(modifier = Modifier.fillMaxHeight(it.fraction))
@@ -220,7 +220,7 @@ fun BarChartYAxis(
 
 @Composable
 fun BarChartGraph(
-    dailySummaries: List<TransactionDailySummary>,
+    dailySummaries: List<TransactionDailySummaryState>,
     modifier: Modifier = Modifier
 ) {
     var selectedIndex by remember { mutableIntStateOf(-1) }
@@ -296,7 +296,7 @@ fun BarChartGraph(
 
 @Composable
 fun BarChartGraphInformation(
-    dailySummaries: List<TransactionDailySummary>,
+    dailySummaries: List<TransactionDailySummaryState>,
     selectedIndex: Int,
     index: Int,
     onSelectedIndexReset: () -> Unit
@@ -314,7 +314,7 @@ fun BarChartGraphInformation(
             Text(
                 text = stringResource(
                     R.string.bar_chart_income_information,
-                    NumberFormatHelper.formatToRupiah(dailySummaries[index].totalIncome)
+                    NumberHelper.formatToRupiah(dailySummaries[index].totalIncome)
                 ),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
@@ -324,7 +324,7 @@ fun BarChartGraphInformation(
             Text(
                 text = stringResource(
                     R.string.bar_chart_expense_information,
-                    NumberFormatHelper.formatToRupiah(dailySummaries[index].totalExpense)
+                    NumberHelper.formatToRupiah(dailySummaries[index].totalExpense)
                 ),
                 style = MaterialTheme.typography.labelMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
@@ -342,7 +342,7 @@ fun BarChartGraphInformation(
 
 @Composable
 fun BarChartXAxis(
-    dailySummaries: List<TransactionDailySummary>,
+    dailySummaries: List<TransactionDailySummaryState>,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -415,7 +415,7 @@ data class AnalyticsBarChartState(
     val monthFilter: Int,
     val yearFilter: Int,
     val weekFilter: Int,
-    val dailySummaries: List<TransactionDailySummary>
+    val dailySummaries: List<TransactionDailySummaryState>
 )
 
 data class BarChartScaleLabel(

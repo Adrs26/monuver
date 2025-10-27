@@ -19,17 +19,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.model.BillState
 import com.android.monu.ui.feature.screen.transaction.transactionDetail.components.DataDivider
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
 @Composable
 fun BillDetailContent(
-    bill: Bill,
+    billState: BillState,
     onNavigateToPayBill: (Long) -> Unit,
     onCancelBillPayment: (Long) -> Unit,
     modifier: Modifier = Modifier
@@ -40,58 +40,58 @@ fun BillDetailContent(
     ) {
         BillDetailData(
             title = stringResource(R.string.title),
-            content = bill.title
+            content = billState.title
         )
         DataDivider()
         BillDetailData(
             title = stringResource(R.string.due_date),
-            content = DateHelper.formatDateToReadable(bill.dueDate)
+            content = DateHelper.formatDateToReadable(billState.dueDate)
         )
         DataDivider()
         BillDetailData(
             title = stringResource(R.string.amount),
-            content = NumberFormatHelper.formatToRupiah(bill.amount)
+            content = NumberHelper.formatToRupiah(billState.amount)
         )
         DataDivider()
         BillDetailData(
             title = stringResource(R.string.type),
-            content = if (bill.isRecurring) stringResource(R.string.recurring_bill) else
+            content = if (billState.isRecurring) stringResource(R.string.recurring_bill) else
                 stringResource(R.string.one_time_bill)
         )
-        if (bill.isRecurring) {
+        if (billState.isRecurring) {
             DataDivider()
             BillDetailData(
                 title = stringResource(R.string.cycle),
-                content = stringResource(DatabaseCodeMapper.toCycle(bill.cycle ?: 0))
+                content = stringResource(DatabaseCodeMapper.toCycle(billState.cycle ?: 0))
             )
             DataDivider()
             BillDetailData(
                 title = stringResource(R.string.bill_period),
-                content = if (bill.period == 1) stringResource(R.string.unlimited) else
-                    stringResource(R.string.fix_period_times, bill.fixPeriod ?: 0)
+                content = if (billState.period == 1) stringResource(R.string.unlimited) else
+                    stringResource(R.string.fix_period_times, billState.fixPeriod ?: 0)
             )
             DataDivider()
             BillDetailData(
                 title = stringResource(R.string.payment_number),
-                content = bill.nowPaidPeriod.toString()
+                content = billState.nowPaidPeriod.toString()
             )
         }
         DataDivider()
         BillDetailData(
             title = stringResource(R.string.status),
-            content = getStatusInformationText(bill.dueDate, bill.isPaid)
+            content = getStatusInformationText(billState.dueDate, billState.isPaid)
         )
-        if (bill.isPaid) {
+        if (billState.isPaid) {
             DataDivider()
             BillDetailData(
                 title = stringResource(R.string.paid_on),
-                content = DateHelper.formatDateToReadable(bill.paidDate ?: "2025-08-21")
+                content = DateHelper.formatDateToReadable(billState.paidDate ?: "2025-08-21")
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        if (!bill.isPaid) {
+        if (!billState.isPaid) {
             Button(
-                onClick = { onNavigateToPayBill(bill.id) },
+                onClick = { onNavigateToPayBill(billState.id) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp)
@@ -104,7 +104,7 @@ fun BillDetailContent(
             }
         } else {
             OutlinedButton(
-                onClick = { onCancelBillPayment(bill.id) },
+                onClick = { onCancelBillPayment(billState.id) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp),

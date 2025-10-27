@@ -18,15 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.EditBillState
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.screen.billing.components.BillPeriodRadioGroupField
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun EditBillContent(
-    billState: EditBillContentState,
+    billState: EditBillState,
+    billAmountFormat: TextFieldValue,
     billActions: EditBillContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -57,7 +59,7 @@ fun EditBillContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
-            value = billState.amountFormat,
+            value = billAmountFormat,
             onValueChange = billActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -86,27 +88,11 @@ fun EditBillContent(
     }
 }
 
-data class EditBillContentState(
-    val id: Long,
-    val parentId: Long,
-    val title: String,
-    val date: String,
-    val amount: Long,
-    val amountFormat: TextFieldValue,
-    val timeStamp: Long,
-    val isRecurring: Boolean,
-    val cycle: Int,
-    val period: Int,
-    val fixPeriod: String,
-    val nowPaidPeriod: Int,
-    val isPaidBefore: Boolean
-)
-
 interface EditBillContentActions {
     fun onTitleChange(title: String)
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
     fun onPeriodChange(period: Int)
     fun onFixPeriodChange(fixPeriod: String)
-    fun onEditBill(billState: EditBillContentState)
+    fun onEditBill(billState: EditBillState)
 }

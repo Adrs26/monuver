@@ -18,15 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.EditTransactionState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.transaction.editTransaction.components.EditTransactionContent
 import com.android.monu.ui.feature.screen.transaction.editTransaction.components.EditTransactionContentActions
-import com.android.monu.ui.feature.screen.transaction.editTransaction.components.EditTransactionContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.ui.feature.utils.isUpdateTransactionSuccess
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.NumberHelper
+import com.android.monu.utils.TransactionType
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -37,35 +39,34 @@ import org.threeten.bp.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditTransactionScreen(
-    transactionState: EditTransactionState,
+    transactionUiState: EditTransactionUiState,
     transactionActions: EditTransactionActions,
-    initialTransaction: Transaction
+    initialTransactionState: TransactionState
 ) {
-    var transactionTitle by rememberSaveable { mutableStateOf(transactionState.title) }
-    var transactionDate by rememberSaveable { mutableStateOf(transactionState.date) }
-    var transactionAmount by rememberSaveable { mutableLongStateOf(transactionState.amount) }
+    var transactionTitle by rememberSaveable { mutableStateOf(transactionUiState.title) }
+    var transactionDate by rememberSaveable { mutableStateOf(transactionUiState.date) }
+    var transactionAmount by rememberSaveable { mutableLongStateOf(transactionUiState.amount) }
     var transactionAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(transactionAmount)))
+        mutableStateOf(TextFieldValue(NumberHelper.formatToRupiah(transactionAmount)))
     }
 
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val editTransactionContentState = EditTransactionContentState(
-        id = transactionState.id,
+    val editTransactionContentState = EditTransactionState(
+        id = transactionUiState.id,
         title = transactionTitle,
-        type = transactionState.type,
-        parentCategory = transactionState.parentCategory,
-        childCategory = transactionState.childCategory,
-        initialParentCategory = initialTransaction.parentCategory,
+        type = transactionUiState.type,
+        parentCategory = transactionUiState.parentCategory,
+        childCategory = transactionUiState.childCategory,
+        initialParentCategory = initialTransactionState.parentCategory,
         date = transactionDate,
-        initialDate = initialTransaction.date,
+        initialDate = initialTransactionState.date,
         amount = transactionAmount,
-        amountFormat = transactionAmountFormat,
-        initialAmount = initialTransaction.amount,
-        sourceId = transactionState.sourceId,
-        sourceName = transactionState.sourceName,
-        isLocked = transactionState.isLocked
+        initialAmount = initialTransactionState.amount,
+        sourceId = transactionUiState.sourceId,
+        sourceName = transactionUiState.sourceName,
+        isLocked = transactionUiState.isLocked
     )
 
     val editTransactionContentActions = object : EditTransactionContentActions {
@@ -90,7 +91,7 @@ fun EditTransactionScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(transactionAmount)
+            val formattedText = NumberHelper.formatToRupiah(transactionAmount)
             val newCursorPosition = formattedText.length
 
             transactionAmountFormat = TextFieldValue(
@@ -99,17 +100,15 @@ fun EditTransactionScreen(
             )
         }
 
-        override fun onEditTransaction(transactionState: EditTransactionContentState) {
+        override fun onEditTransaction(transactionState: EditTransactionState) {
             transactionActions.onEditTransaction(transactionState)
         }
     }
 
-    LaunchedEffect(transactionState.editResult) {
-        transactionState.editResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.UpdateTransactionSuccess) {
-                transactionActions.onNavigateBack()
-            }
+    LaunchedEffect(transactionUiState.editResult) {
+        transactionUiState.editResult?.let { result ->
+            result.showToast(context)
+            if (result.isUpdateTransactionSuccess()) transactionActions.onNavigateBack()
         }
     }
 
@@ -125,6 +124,7 @@ fun EditTransactionScreen(
     ) { innerPadding ->
         EditTransactionContent(
             transactionState = editTransactionContentState,
+            transactionAmountFormat = transactionAmountFormat,
             transactionActions = editTransactionContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -149,7 +149,7 @@ fun EditTransactionScreen(
     )
 }
 
-data class EditTransactionState(
+data class EditTransactionUiState(
     val id: Long,
     val title: String,
     val type: Int,
@@ -160,11 +160,11 @@ data class EditTransactionState(
     val sourceId: Int,
     val sourceName: String,
     val isLocked: Boolean,
-    val editResult: DatabaseResultMessage?
+    val editResult: DatabaseResultState?
 )
 
 interface EditTransactionActions {
     fun onNavigateBack()
     fun onNavigateToCategory(transactionType: Int)
-    fun onEditTransaction(transactionState: EditTransactionContentState)
+    fun onEditTransaction(transactionState: EditTransactionState)
 }

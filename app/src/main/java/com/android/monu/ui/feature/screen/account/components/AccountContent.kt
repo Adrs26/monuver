@@ -15,13 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.model.AccountState
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun AccountContent(
-    accounts: List<Account>,
+    accounts: List<AccountState>,
     totalBalance: Long,
     onNavigateToAccountDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
@@ -48,7 +48,7 @@ fun AccountContent(
 
 @Composable
 fun AccountListContent(
-    accounts: List<Account>,
+    accounts: List<AccountState>,
     totalBalance: Long,
     onNavigateToAccountDetail: (Int) -> Unit,
     modifier: Modifier = Modifier
@@ -76,7 +76,7 @@ fun AccountListContent(
             key = { index -> accounts[index].id }
         ) { index ->
             AccountListItem(
-                account = accounts[index],
+                accountState = accounts[index],
                 modifier = Modifier
                     .debouncedClickable { onNavigateToAccountDetail(accounts[index].id) }
                     .padding(horizontal = 16.dp, vertical = 2.dp)

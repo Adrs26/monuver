@@ -17,14 +17,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.EditBudgetState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.budgeting.addBudget.CalendarField
 import com.android.monu.ui.feature.screen.budgeting.editBudget.components.EditBudgetContentActions
-import com.android.monu.ui.feature.screen.budgeting.editBudget.components.EditBudgetContentState
 import com.android.monu.ui.feature.screen.budgeting.editBudget.components.EditBudgetingContent
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.ui.feature.utils.isUpdateBudgetSuccess
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.NumberHelper
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -35,29 +37,28 @@ import org.threeten.bp.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditBudgetScreen(
-    budgetState: EditBudgetState,
+    budgetUiState: EditBudgetUiState,
     onNavigateBack: () -> Unit,
-    onEditBudget: (EditBudgetContentState) -> Unit
+    onEditBudget: (EditBudgetState) -> Unit
 ) {
-    var budgetMaxAmount by rememberSaveable { mutableLongStateOf(budgetState.maxAmount) }
+    var budgetMaxAmount by rememberSaveable { mutableLongStateOf(budgetUiState.maxAmount) }
     var budgetMaxAmountFormat by remember {
-        mutableStateOf(TextFieldValue(text = NumberFormatHelper.formatToRupiah(budgetMaxAmount)))
+        mutableStateOf(TextFieldValue(text = NumberHelper.formatToRupiah(budgetMaxAmount)))
     }
-    var budgetStartDate by rememberSaveable { mutableStateOf(budgetState.startDate) }
-    var budgetEndDate by rememberSaveable { mutableStateOf(budgetState.endDate) }
-    var isBudgetOverflowAllowed by rememberSaveable { mutableStateOf(budgetState.isOverflowAllowed) }
-    var isBudgetAutoUpdate by rememberSaveable { mutableStateOf(budgetState.isAutoUpdate) }
+    var budgetStartDate by rememberSaveable { mutableStateOf(budgetUiState.startDate) }
+    var budgetEndDate by rememberSaveable { mutableStateOf(budgetUiState.endDate) }
+    var isBudgetOverflowAllowed by rememberSaveable { mutableStateOf(budgetUiState.isOverflowAllowed) }
+    var isBudgetAutoUpdate by rememberSaveable { mutableStateOf(budgetUiState.isAutoUpdate) }
 
     var activeField by rememberSaveable { mutableStateOf<CalendarField?>(null) }
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val editBudgetContentState = EditBudgetContentState(
-        id = budgetState.id,
-        category = budgetState.category,
+    val editBudgetState = EditBudgetState(
+        id = budgetUiState.id,
+        category = budgetUiState.category,
         maxAmount = budgetMaxAmount,
-        maxAmountFormat = budgetMaxAmountFormat,
-        cycle = budgetState.cycle,
+        cycle = budgetUiState.cycle,
         startDate = budgetStartDate,
         endDate = budgetEndDate,
         isOverflowAllowed = isBudgetOverflowAllowed,
@@ -71,7 +72,7 @@ fun EditBudgetScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(budgetMaxAmount)
+            val formattedText = NumberHelper.formatToRupiah(budgetMaxAmount)
             val newCursorPosition = formattedText.length
 
             budgetMaxAmountFormat = TextFieldValue(
@@ -98,17 +99,15 @@ fun EditBudgetScreen(
             isBudgetAutoUpdate = isAutoUpdate
         }
 
-        override fun onEditBudget(budgetState: EditBudgetContentState) {
+        override fun onEditBudget(budgetState: EditBudgetState) {
             onEditBudget(budgetState)
         }
     }
 
-    LaunchedEffect(budgetState.editResult) {
-        budgetState.editResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.UpdateBudgetSuccess) {
-                onNavigateBack()
-            }
+    LaunchedEffect(budgetUiState.editResult) {
+        budgetUiState.editResult?.let { result ->
+            result.showToast(context)
+            if (result.isUpdateBudgetSuccess()) onNavigateBack()
         }
     }
 
@@ -121,7 +120,8 @@ fun EditBudgetScreen(
         }
     ) { innerPadding ->
         EditBudgetingContent(
-            budgetState = editBudgetContentState,
+            budgetState = editBudgetState,
+            budgetMaxAmountFormat = budgetMaxAmountFormat,
             budgetActions = editBudgetContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -136,8 +136,14 @@ fun EditBudgetScreen(
 
             when (activeField) {
                 CalendarField.START -> {
+                    val endDate = LocalDate.parse(budgetStartDate, DateTimeFormatter.ISO_LOCAL_DATE)
+                    val isAfterEndDate = inputDate.isAfter(endDate)
+
                     if (isAfterToday) {
                         context.getString(R.string.you_can_not_select_future_start_date)
+                            .showMessageWithToast(context)
+                    } else if (isAfterEndDate) {
+                        context.getString(R.string.start_date_can_not_after_end_date)
                             .showMessageWithToast(context)
                     } else {
                         budgetStartDate = selectedDate.toString()
@@ -164,7 +170,7 @@ fun EditBudgetScreen(
     )
 }
 
-data class EditBudgetState(
+data class EditBudgetUiState(
     val id: Long,
     val category: Int,
     val maxAmount: Long,
@@ -173,5 +179,5 @@ data class EditBudgetState(
     val endDate: String,
     val isOverflowAllowed: Boolean,
     val isAutoUpdate: Boolean,
-    val editResult: DatabaseResultMessage?
+    val editResult: DatabaseResultState?
 )

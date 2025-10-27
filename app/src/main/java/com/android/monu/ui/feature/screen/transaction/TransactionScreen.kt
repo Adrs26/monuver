@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.screen.transaction.components.TransactionFilterDialog
 import com.android.monu.ui.feature.screen.transaction.components.TransactionFilterState
 import com.android.monu.ui.feature.screen.transaction.components.TransactionList
@@ -21,16 +21,16 @@ import com.android.monu.ui.feature.screen.transaction.components.TransactionTopB
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionScreen(
-    transactionState: TransactionState,
+    transactionUiState: TransactionUiState,
     transactionActions: TransactionActions
 ) {
     var showFilterDialog by remember { mutableStateOf(false) }
 
     val transactionFilterState = TransactionFilterState(
-        yearFilterOptions = transactionState.yearFilterOptions,
-        typeFilter = transactionState.typeFilter,
-        yearFilter = transactionState.yearFilter,
-        monthFilter = transactionState.monthFilter
+        yearFilterOptions = transactionUiState.yearFilterOptions,
+        typeFilter = transactionUiState.typeFilter,
+        yearFilter = transactionUiState.yearFilter,
+        monthFilter = transactionUiState.monthFilter
     )
 
     LaunchedEffect(showFilterDialog) {
@@ -42,7 +42,7 @@ fun TransactionScreen(
     Scaffold(
         topBar = {
             TransactionTopBar(
-                query = transactionState.queryFilter,
+                query = transactionUiState.queryFilter,
                 onQueryChange = transactionActions::onQueryChange,
                 modifier = Modifier
                     .padding(start = 16.dp, end = 12.dp, top = 48.dp, bottom = 12.dp),
@@ -51,7 +51,7 @@ fun TransactionScreen(
         }
     ) { innerPadding ->
         TransactionList(
-            transactions = transactionState.transactions,
+            transactions = transactionUiState.transactions,
             onNavigateToTransactionDetail = { transactionId ->
                 transactionActions.onNavigateToTransactionDetail(transactionId)
             },
@@ -68,13 +68,13 @@ fun TransactionScreen(
     }
 }
 
-data class TransactionState(
+data class TransactionUiState(
     val queryFilter: String,
     val typeFilter: Int?,
     val yearFilter: Int?,
     val monthFilter: Int?,
     val yearFilterOptions: List<Int>,
-    val transactions: LazyPagingItems<Transaction>,
+    val transactions: LazyPagingItems<TransactionState>,
 )
 
 interface TransactionActions {

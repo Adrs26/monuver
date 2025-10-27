@@ -18,13 +18,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.EditBillState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.billing.editBill.components.EditBillContent
 import com.android.monu.ui.feature.screen.billing.editBill.components.EditBillContentActions
-import com.android.monu.ui.feature.screen.billing.editBill.components.EditBillContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
-import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.isUpdateBillSuccess
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.NumberHelper
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -33,36 +34,35 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditBillScreen(
-    billState: EditBillState,
+    billUiState: EditBillUiState,
     onNavigateBack: () -> Unit,
-    onEditBill: (EditBillContentState) -> Unit
+    onEditBill: (EditBillState) -> Unit
 ) {
-    var billTitle by rememberSaveable { mutableStateOf(billState.title) }
-    var billDate by rememberSaveable { mutableStateOf(billState.date) }
-    var billAmount by rememberSaveable { mutableLongStateOf(billState.amount) }
+    var billTitle by rememberSaveable { mutableStateOf(billUiState.title) }
+    var billDate by rememberSaveable { mutableStateOf(billUiState.date) }
+    var billAmount by rememberSaveable { mutableLongStateOf(billUiState.amount) }
     var billAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(billAmount)))
+        mutableStateOf(TextFieldValue(NumberHelper.formatToRupiah(billAmount)))
     }
-    var billPeriod by rememberSaveable { mutableIntStateOf(billState.period) }
-    var billFixPeriod by rememberSaveable { mutableStateOf(billState.fixPeriod) }
+    var billPeriod by rememberSaveable { mutableIntStateOf(billUiState.period) }
+    var billFixPeriod by rememberSaveable { mutableStateOf(billUiState.fixPeriod) }
 
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val editBillContentState = EditBillContentState(
-        id = billState.id,
-        parentId = billState.parentId,
+    val editBillContentState = EditBillState(
+        id = billUiState.id,
+        parentId = billUiState.parentId,
         title = billTitle,
         date = billDate,
         amount = billAmount,
-        amountFormat = billAmountFormat,
-        timeStamp = billState.timeStamp,
-        isRecurring = billState.isRecurring,
-        cycle = billState.cycle,
+        timeStamp = billUiState.timeStamp,
+        isRecurring = billUiState.isRecurring,
+        cycle = billUiState.cycle,
         period = billPeriod,
         fixPeriod = billFixPeriod,
-        nowPaidPeriod = billState.nowPaidPeriod,
-        isPaidBefore = billState.isPaidBefore
+        nowPaidPeriod = billUiState.nowPaidPeriod,
+        isPaidBefore = billUiState.isPaidBefore
     )
 
     val editBillContentActions = object : EditBillContentActions {
@@ -80,7 +80,7 @@ fun EditBillScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(billAmount)
+            val formattedText = NumberHelper.formatToRupiah(billAmount)
             val newCursorPosition = formattedText.length
 
             billAmountFormat = TextFieldValue(
@@ -97,17 +97,15 @@ fun EditBillScreen(
             billFixPeriod = fixPeriod
         }
 
-        override fun onEditBill(billState: EditBillContentState) {
+        override fun onEditBill(billState: EditBillState) {
             onEditBill(billState)
         }
     }
 
-    LaunchedEffect(billState.editResult) {
-        billState.editResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.UpdateBillSuccess) {
-                onNavigateBack()
-            }
+    LaunchedEffect(billUiState.editResult) {
+        billUiState.editResult?.let { result ->
+            result.showToast(context)
+            if (result.isUpdateBillSuccess()) onNavigateBack()
         }
     }
 
@@ -121,6 +119,7 @@ fun EditBillScreen(
     ) { innerPadding ->
         EditBillContent(
             billState = editBillContentState,
+            billAmountFormat = billAmountFormat,
             billActions = editBillContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -138,7 +137,7 @@ fun EditBillScreen(
     )
 }
 
-data class EditBillState(
+data class EditBillUiState(
     val id: Long,
     val parentId: Long,
     val title: String,
@@ -151,5 +150,5 @@ data class EditBillState(
     val fixPeriod: String,
     val nowPaidPeriod: Int,
     val isPaidBefore: Boolean,
-    val editResult: DatabaseResultMessage?
+    val editResult: DatabaseResultState?
 )

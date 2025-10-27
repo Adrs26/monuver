@@ -18,14 +18,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.TransferState
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun TransferContent(
-    transferState: TransferContentState,
+    transferState: TransferState,
+    transferAmountFormat: TextFieldValue,
     transferActions: TransferContentActions,
     modifier: Modifier
 ) {
@@ -77,7 +79,7 @@ fun TransferContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
-            value = transferState.amountFormat,
+            value = transferAmountFormat,
             onValueChange = transferActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -97,20 +99,10 @@ fun TransferContent(
     }
 }
 
-data class TransferContentState(
-    val sourceId: Int,
-    val sourceName: String,
-    val destinationId: Int,
-    val destinationName: String,
-    val date: String,
-    val amount: Long,
-    val amountFormat: TextFieldValue
-)
-
 interface TransferContentActions {
     fun onNavigateToSourceAccount()
     fun onNavigateToDestinationAccount()
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
-    fun onAddNewTransfer(transferState: TransferContentState)
+    fun onAddNewTransfer(transferState: TransferState)
 }

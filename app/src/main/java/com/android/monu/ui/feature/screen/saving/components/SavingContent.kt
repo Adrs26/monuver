@@ -16,14 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.saving.Saving
+import com.android.monu.domain.model.SavingState
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun SavingContent(
     totalCurrentAmount: Long,
-    savings: List<Saving>,
+    savings: List<SavingState>,
     onNavigateToSavingDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -50,7 +50,7 @@ fun SavingContent(
 @Composable
 fun SavingListContent(
     totalCurrentAmount: Long,
-    savings: List<Saving>,
+    savings: List<SavingState>,
     onNavigateToSavingDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -80,7 +80,7 @@ fun SavingListContent(
             val savingState = savings[index]
 
             SavingListItem(
-                saving = savingState,
+                savingState = savingState,
                 modifier = Modifier.debouncedClickable { onNavigateToSavingDetail(savingState.id) }
             )
         }

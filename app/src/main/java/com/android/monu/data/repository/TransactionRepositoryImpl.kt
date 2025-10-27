@@ -6,10 +6,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.android.monu.data.local.dao.TransactionDao
-import com.android.monu.data.mapper.TransactionMapper
-import com.android.monu.domain.model.transaction.Transaction
-import com.android.monu.domain.model.transaction.TransactionCategorySummary
-import com.android.monu.domain.model.transaction.TransactionSummary
+import com.android.monu.data.mapper.toDomain
+import com.android.monu.domain.model.TransactionCategorySummaryState
+import com.android.monu.domain.model.TransactionState
+import com.android.monu.domain.model.TransactionSummaryState
 import com.android.monu.domain.repository.TransactionRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -19,11 +19,9 @@ class TransactionRepositoryImpl(
     private val transactionDao: TransactionDao
 ) : TransactionRepository {
 
-    override fun getRecentTransactions(): Flow<List<Transaction>> {
+    override fun getRecentTransactions(): Flow<List<TransactionState>> {
         return transactionDao.getRecentTransactions().map { transactions ->
-            transactions.map { transaction ->
-                TransactionMapper.transactionEntityToDomain(transaction)
-            }
+            transactions.map { it.toDomain() }
         }
     }
 
@@ -33,7 +31,7 @@ class TransactionRepositoryImpl(
         month: Int?,
         year: Int?,
         scope: CoroutineScope
-    ): Flow<PagingData<Transaction>> {
+    ): Flow<PagingData<TransactionState>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -49,23 +47,19 @@ class TransactionRepositoryImpl(
             }
         ).flow
             .map { pagingData ->
-                pagingData.map { transaction ->
-                    TransactionMapper.transactionEntityToDomain(transaction)
-                }
+                pagingData.map { it.toDomain() }
             }.cachedIn(scope)
     }
 
-    override fun getTransactionById(transactionId: Long): Flow<Transaction?> {
+    override fun getTransactionById(transactionId: Long): Flow<TransactionState?> {
         return transactionDao.getTransactionById(transactionId).map { transaction ->
-            transaction?.let { TransactionMapper.transactionEntityToDomain(it) }
+            transaction?.toDomain()
         }
     }
 
-    override fun getTransactionsBySavingId(savingId: Long): Flow<List<Transaction>> {
+    override fun getTransactionsBySavingId(savingId: Long): Flow<List<TransactionState>> {
         return transactionDao.getTransactionsBySavingId(savingId).map { transactions ->
-            transactions.map { transaction ->
-                TransactionMapper.transactionEntityToDomain(transaction)
-            }
+            transactions.map { it.toDomain() }
         }
     }
 
@@ -73,13 +67,11 @@ class TransactionRepositoryImpl(
         category: Int,
         startDate: String,
         endDate: String
-    ): Flow<List<Transaction>> {
+    ): Flow<List<TransactionState>> {
         return transactionDao.getTransactionsByParentCategoryAndDateRange(
             category, startDate, endDate
         ).map { transactions ->
-            transactions.map { transaction ->
-                TransactionMapper.transactionEntityToDomain(transaction)
-            }
+            transactions.map { it.toDomain() }
         }
     }
 
@@ -87,13 +79,11 @@ class TransactionRepositoryImpl(
         category: Int,
         month: Int,
         year: Int
-    ): Flow<List<Transaction>> {
+    ): Flow<List<TransactionState>> {
         return transactionDao.getTransactionsByParentCategoryAndMonthAndYear(
             category, month, year
         ).map { transactions ->
-            transactions.map { transaction ->
-                TransactionMapper.transactionEntityToDomain(transaction)
-            }
+            transactions.map { it.toDomain() }
         }
     }
 
@@ -117,23 +107,19 @@ class TransactionRepositoryImpl(
         type: Int,
         month: Int,
         year: Int
-    ): Flow<List<TransactionCategorySummary>> {
+    ): Flow<List<TransactionCategorySummaryState>> {
         return transactionDao.getGroupedMonthlyTransactionAmountByParentCategory(type, month, year)
             .map { transactions ->
-                transactions.map { transaction ->
-                    TransactionMapper.transactionCategorySummaryEntityToDomain(transaction)
-                }
+                transactions.map { it.toDomain() }
             }
     }
 
     override fun getTransactionsInRange(
         startDate: String,
         endDate: String
-    ): Flow<List<TransactionSummary>> {
+    ): Flow<List<TransactionSummaryState>> {
         return transactionDao.getTransactionsInRange(startDate, endDate).map { transactions ->
-            transactions.map { transaction ->
-                TransactionMapper.transactionSummaryEntityToDomain(transaction)
-            }
+            transactions.map { it.toDomain() }
         }
     }
 
@@ -145,52 +131,40 @@ class TransactionRepositoryImpl(
         return transactionDao.getTotalTransactionAmountInDateRange(category, startDate, endDate)
     }
 
-    override suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<Transaction> {
-        return transactionDao.getTransactionsBySavingIdSuspend(savingId).map { transaction ->
-            TransactionMapper.transactionEntityToDomain(transaction)
-        }
+    override suspend fun getTransactionsBySavingIdSuspend(savingId: Long): List<TransactionState> {
+        return transactionDao.getTransactionsBySavingIdSuspend(savingId).map { it.toDomain() }
     }
 
-    override suspend fun getAllTransactions(): List<Transaction> {
-        return transactionDao.getAllTransactions().map { transaction ->
-            TransactionMapper.transactionEntityToDomain(transaction)
-        }
+    override suspend fun getAllTransactions(): List<TransactionState> {
+        return transactionDao.getAllTransactions().map { it.toDomain() }
     }
 
     override suspend fun getTransactionsInRangeByDateAsc(
         startDate: String,
         endDate: String
-    ): List<Transaction> {
-        return transactionDao.getTransactionsInRangeByDateAsc(startDate, endDate).map { transaction ->
-            TransactionMapper.transactionEntityToDomain(transaction)
-        }
+    ): List<TransactionState> {
+        return transactionDao.getTransactionsInRangeByDateAsc(startDate, endDate).map { it.toDomain() }
     }
 
     override suspend fun getTransactionsInRangeByDateDesc(
         startDate: String,
         endDate: String
-    ): List<Transaction> {
-        return transactionDao.getTransactionsInRangeByDateDesc(startDate, endDate).map { transaction ->
-            TransactionMapper.transactionEntityToDomain(transaction)
-        }
+    ): List<TransactionState> {
+        return transactionDao.getTransactionsInRangeByDateDesc(startDate, endDate).map { it.toDomain() }
     }
 
     override suspend fun getTransactionsInRangeByDateAscWithType(
         startDate: String,
         endDate: String
-    ): List<Transaction> {
-        return transactionDao.getTransactionsInRangeByDateAscWithType(startDate, endDate).map { transaction ->
-            TransactionMapper.transactionEntityToDomain(transaction)
-        }
+    ): List<TransactionState> {
+        return transactionDao.getTransactionsInRangeByDateAscWithType(startDate, endDate).map { it.toDomain() }
     }
 
     override suspend fun getTransactionsInRangeByDateDescWithType(
         startDate: String,
         endDate: String
-    ): List<Transaction> {
-        return transactionDao.getTransactionsInRangeByDateDescWithType(startDate, endDate).map { transaction ->
-            TransactionMapper.transactionEntityToDomain(transaction)
-        }
+    ): List<TransactionState> {
+        return transactionDao.getTransactionsInRangeByDateDescWithType(startDate, endDate).map { it.toDomain() }
     }
 
     override suspend fun getTotalIncomeTransactionInRange(

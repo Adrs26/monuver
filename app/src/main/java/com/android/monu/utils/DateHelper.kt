@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.utils
+package com.android.monu.utils
 
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate

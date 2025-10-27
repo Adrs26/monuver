@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.android.monu.R
 import com.android.monu.ui.feature.components.TextWithSwitch
-import com.android.monu.ui.feature.utils.Cycle
+import com.android.monu.utils.Cycle
 
 @Composable
 fun BudgetTextSwitchField(

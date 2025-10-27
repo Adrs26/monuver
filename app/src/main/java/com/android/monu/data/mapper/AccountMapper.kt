@@ -1,41 +1,27 @@
 package com.android.monu.data.mapper
 
 import com.android.monu.data.local.entity.room.AccountEntity
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.model.AccountState
 
-object AccountMapper {
-    fun accountEntityToDomain(
-        accountEntity: AccountEntity
-    ): Account {
-        return Account(
-            id = accountEntity.id,
-            name = accountEntity.name,
-            type = accountEntity.type,
-            balance = accountEntity.balance,
-            isActive = accountEntity.isActive
-        )
-    }
+fun AccountEntity.toDomain() = AccountState(
+    id = id,
+    name = name,
+    type = type,
+    balance = balance,
+    isActive = isActive
+)
 
-    fun accountDomainToEntity(
-        account: Account
-    ): AccountEntity {
-        return AccountEntity(
-            name = account.name,
-            type = account.type,
-            balance = account.balance,
-            isActive = account.isActive
-        )
-    }
+fun AccountState.toEntity() = AccountEntity(
+    name = name,
+    type = type,
+    balance = balance,
+    isActive = isActive
+)
 
-    fun accountDomainToEntityForUpdate(
-        account: Account
-    ): AccountEntity {
-        return AccountEntity(
-            id = account.id,
-            name = account.name,
-            type = account.type,
-            balance = account.balance,
-            isActive = account.isActive
-        )
-    }
-}
+fun AccountState.toEntityForUpdate() = AccountEntity(
+    id = id,
+    name = name,
+    type = type,
+    balance = balance,
+    isActive = isActive
+)

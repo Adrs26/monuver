@@ -18,15 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AddBudgetState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.budgeting.addBudget.components.AddBudgetContent
 import com.android.monu.ui.feature.screen.budgeting.addBudget.components.AddBudgetContentActions
-import com.android.monu.ui.feature.screen.budgeting.addBudget.components.AddBudgetContentState
-import com.android.monu.ui.feature.utils.Cycle
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.ui.feature.utils.isCreateBudgetSuccess
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.Cycle
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -38,12 +40,12 @@ import org.threeten.bp.format.DateTimeFormatter
 @Composable
 fun AddBudgetScreen(
     category: Int,
-    addResult: DatabaseResultMessage?,
-    budgetActions: AddBudgetActions
+    budgetActions: AddBudgetActions,
+    addResult: DatabaseResultState?
 ) {
     var budgetMaxAmount by rememberSaveable { mutableLongStateOf(0L) }
     var budgetMaxAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(budgetMaxAmount)))
+        mutableStateOf(TextFieldValue(NumberHelper.formatToRupiah(budgetMaxAmount)))
     }
     var budgetCycle by rememberSaveable { mutableIntStateOf(Cycle.MONTHLY) }
     var budgetStartDate by rememberSaveable {
@@ -59,10 +61,9 @@ fun AddBudgetScreen(
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val addBudgetContentState = AddBudgetContentState(
+    val addBudgetState = AddBudgetState(
         category = category,
         maxAmount = budgetMaxAmount,
-        maxAmountFormat = budgetMaxAmountFormat,
         cycle = budgetCycle,
         startDate = budgetStartDate,
         endDate = budgetEndDate,
@@ -81,7 +82,7 @@ fun AddBudgetScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(budgetMaxAmount)
+            val formattedText = NumberHelper.formatToRupiah(budgetMaxAmount)
             val newCursorPosition = formattedText.length
 
             budgetMaxAmountFormat = TextFieldValue(
@@ -117,17 +118,15 @@ fun AddBudgetScreen(
             isBudgetAutoUpdate = isAutoUpdate
         }
 
-        override fun onAddNewBudget(budgetState: AddBudgetContentState) {
+        override fun onAddNewBudget(budgetState: AddBudgetState) {
             budgetActions.onAddNewBudget(budgetState)
         }
     }
 
     LaunchedEffect(addResult) {
         addResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CreateBudgetSuccess) {
-                budgetActions.onNavigateBack()
-            }
+            result.showToast(context)
+            if (result.isCreateBudgetSuccess()) budgetActions.onNavigateBack()
         }
     }
 
@@ -140,7 +139,8 @@ fun AddBudgetScreen(
         }
     ) { innerPadding ->
         AddBudgetContent(
-            budgetState = addBudgetContentState,
+            budgetState = addBudgetState,
+            budgetMaxAmountFormat = budgetMaxAmountFormat,
             budgetActions = addBudgetContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -155,8 +155,14 @@ fun AddBudgetScreen(
 
             when (activeField) {
                 CalendarField.START -> {
+                    val endDate = LocalDate.parse(budgetStartDate, DateTimeFormatter.ISO_LOCAL_DATE)
+                    val isAfterEndDate = inputDate.isAfter(endDate)
+
                     if (isAfterToday) {
                         context.getString(R.string.you_can_not_select_future_start_date)
+                            .showMessageWithToast(context)
+                    } else if (isAfterEndDate) {
+                        context.getString(R.string.start_date_can_not_after_end_date)
                             .showMessageWithToast(context)
                     } else {
                         budgetStartDate = selectedDate.toString()
@@ -204,5 +210,5 @@ enum class CalendarField { START, END }
 interface AddBudgetActions {
     fun onNavigateBack()
     fun onNavigateToCategory()
-    fun onAddNewBudget(budgetState: AddBudgetContentState)
+    fun onAddNewBudget(budgetState: AddBudgetState)
 }

@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.android.monu.domain.model.saving.Saving
+import com.android.monu.domain.model.SavingState
 import com.android.monu.ui.feature.components.CommonFloatingActionButton
 import com.android.monu.ui.feature.screen.saving.components.SavingAppBar
 import com.android.monu.ui.feature.screen.saving.components.SavingContent
@@ -12,7 +12,7 @@ import com.android.monu.ui.feature.screen.saving.components.SavingContent
 @Composable
 fun SavingScreen(
     totalCurrentAmount: Long,
-    savings: List<Saving>,
+    savings: List<SavingState>,
     savingActions: SavingActions
 ) {
     Scaffold(

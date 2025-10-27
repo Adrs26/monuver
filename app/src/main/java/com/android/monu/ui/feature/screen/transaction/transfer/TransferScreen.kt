@@ -17,13 +17,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.TransferState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferContent
 import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferContentActions
-import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.ui.feature.utils.isCreateTransactionSuccess
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.NumberHelper
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -34,26 +36,25 @@ import org.threeten.bp.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferScreen(
-    transferState: TransferState,
+    transferUiState: TransferUiState,
     transferActions: TransferActions
 ) {
     var transferDate by rememberSaveable { mutableStateOf("") }
     var transferAmount by rememberSaveable { mutableLongStateOf(0L) }
     var transferAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(transferAmount)))
+        mutableStateOf(TextFieldValue(NumberHelper.formatToRupiah(transferAmount)))
     }
 
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val transferContentState = TransferContentState(
-        sourceId = transferState.source.first,
-        sourceName = transferState.source.second,
-        destinationId = transferState.destination.first,
-        destinationName = transferState.destination.second,
+    val transferContentState = TransferState(
+        sourceId = transferUiState.source.first,
+        sourceName = transferUiState.source.second,
+        destinationId = transferUiState.destination.first,
+        destinationName = transferUiState.destination.second,
         date = transferDate,
         amount = transferAmount,
-        amountFormat = transferAmountFormat
     )
 
     val transferContentActions = object : TransferContentActions {
@@ -75,7 +76,7 @@ fun TransferScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(transferAmount)
+            val formattedText = NumberHelper.formatToRupiah(transferAmount)
             val newCursorPosition = formattedText.length
 
             transferAmountFormat = TextFieldValue(
@@ -84,17 +85,15 @@ fun TransferScreen(
             )
         }
 
-        override fun onAddNewTransfer(transferState: TransferContentState) {
+        override fun onAddNewTransfer(transferState: TransferState) {
             transferActions.onAddNewTransfer(transferState)
         }
     }
 
-    LaunchedEffect(transferState.addResult) {
-        transferState.addResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CreateTransactionSuccess) {
-                transferActions.onNavigateBack()
-            }
+    LaunchedEffect(transferUiState.addResult) {
+        transferUiState.addResult?.let { result ->
+            result.showToast(context)
+            if (result.isCreateTransactionSuccess()) transferActions.onNavigateBack()
         }
     }
 
@@ -108,6 +107,7 @@ fun TransferScreen(
     ) { innerPadding ->
         TransferContent(
             transferState = transferContentState,
+            transferAmountFormat = transferAmountFormat,
             transferActions = transferContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -132,15 +132,15 @@ fun TransferScreen(
     )
 }
 
-data class TransferState(
+data class TransferUiState(
     val source: Pair<Int, String>,
     val destination: Pair<Int, String>,
-    val addResult: DatabaseResultMessage?,
+    val addResult: DatabaseResultState?,
 )
 
 interface TransferActions {
     fun onNavigateBack()
     fun onNavigateToSourceAccount()
     fun onNavigateToDestinationAccount()
-    fun onAddNewTransfer(transferState: TransferContentState)
+    fun onAddNewTransfer(transferState: TransferState)
 }

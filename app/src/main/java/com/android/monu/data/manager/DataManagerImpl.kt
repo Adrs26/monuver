@@ -6,13 +6,14 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.core.net.toUri
+import com.android.monu.R
 import com.android.monu.domain.manager.DataManager
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.usecase.finance.BackupData
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
+import com.android.monu.utils.TransactionType
 import com.google.gson.Gson
 import com.itextpdf.text.BaseColor
 import com.itextpdf.text.Chunk
@@ -69,8 +70,8 @@ class DataManagerImpl(
         username: String,
         startDate: String,
         endDate: String,
-        commonTransactions: List<Transaction>,
-        transferTransactions: List<Transaction>,
+        commonTransactions: List<TransactionState>,
+        transferTransactions: List<TransactionState>,
         totalIncome: Long,
         totalExpense: Long
     ) {
@@ -123,8 +124,8 @@ class DataManagerImpl(
         username: String,
         startDate: String,
         endDate: String,
-        commonTransactions: List<Transaction>,
-        transferTransactions: List<Transaction>,
+        commonTransactions: List<TransactionState>,
+        transferTransactions: List<TransactionState>,
         totalIncome: Long,
         totalExpense: Long
     ) {
@@ -135,14 +136,28 @@ class DataManagerImpl(
         val startPeriod = DateHelper.formatDateToReadable(startDate)
         val endPeriod = DateHelper.formatDateToReadable(endDate)
 
-        val title = Paragraph(reportName.uppercase(), customFont(size = 16f, style = Font.BOLD))
-            .align(Element.ALIGN_CENTER)
+        val title = Paragraph(
+            reportName.uppercase(),
+            customFont(size = 16f, style = Font.BOLD)
+        ).align(Element.ALIGN_CENTER)
+
         val username = Paragraph()
-            .headerAttributes(title = "Nama pengguna", content = username)
+            .headerAttributes(
+                title = context.getString(R.string.report_username),
+                content = username
+            )
+
         val generatedAt = Paragraph()
-            .headerAttributes(title = "Dibuat pada", content = DateHelper.getTodayDate())
+            .headerAttributes(
+                title = context.getString(R.string.report_generated_at),
+                content = DateHelper.getTodayDate()
+            )
+
         val period = Paragraph()
-            .headerAttributes(title = "Periode laporan", content = "$startPeriod - $endPeriod")
+            .headerAttributes(
+                title = context.getString(R.string.report_period),
+                content = "$startPeriod - $endPeriod"
+            )
 
         val commonTransactionTable = createCommonTransactionTable(
             transactions = commonTransactions,
@@ -151,8 +166,10 @@ class DataManagerImpl(
         )
         val transferTransactionTable = createTransferTransactionTable(transferTransactions)
 
-        val footer = Paragraph("Dibuat secara otomatis oleh Aplikasi Monu", customFont(style = Font.BOLD))
-            .footerAttributes()
+        val footer = Paragraph(
+            context.getString(R.string.report_footer),
+            customFont(style = Font.BOLD)
+        ).footerAttributes()
 
         document.add(title)
         document.add(Paragraph("\n"))
@@ -176,7 +193,7 @@ class DataManagerImpl(
     }
 
     private fun createCommonTransactionTable(
-        transactions: List<Transaction>,
+        transactions: List<TransactionState>,
         income: Long,
         expense: Long
     ): PdfPTable {
@@ -184,7 +201,10 @@ class DataManagerImpl(
         table.widthPercentage = 100f
         table.setWidths(floatArrayOf(1.5f, 1.8f, 1.8f, 1.2f, 1.2f, 1.2f))
 
-        val title = Phrase("TRANSAKSI ARUS KEUANGAN", customFont(size = 10f, style = Font.BOLD))
+        val title = Phrase(
+            context.getString(R.string.common_transaction_header),
+            customFont(size = 10f, style = Font.BOLD)
+        )
         val titleCell = PdfPCell(title)
             .defaultPadding()
             .alignCenterMiddle()
@@ -192,7 +212,14 @@ class DataManagerImpl(
             .colSpan(6)
         table.addCell(titleCell)
 
-        val headers = listOf("TANGGAL", "JUDUL", "KATEGORI", "SUB-KATEGORI", "SUMBER", "NOMINAL")
+        val headers = listOf(
+            context.getString(R.string.common_transaction_date),
+            context.getString(R.string.common_transaction_title),
+            context.getString(R.string.common_transaction_parent_category),
+            context.getString(R.string.common_transaction_child_category),
+            context.getString(R.string.common_transaction_source),
+            context.getString(R.string.common_transaction_amount)
+        )
         headers.forEach { header ->
             val header = Phrase(header, customFont(style = Font.BOLD))
             val headerCell = PdfPCell(header)
@@ -243,7 +270,10 @@ class DataManagerImpl(
                 .alignCenterMiddle()
                 .background(backgroundColor)
 
-            val amount = Phrase(NumberFormatHelper.formatToRupiah(transaction.amount), customFont(style = Font.BOLD))
+            val amount = Phrase(
+                NumberHelper.formatToRupiah(transaction.amount),
+                customFont(style = Font.BOLD)
+            )
             val amountCell = PdfPCell(amount)
                 .defaultPadding()
                 .alignRightMiddle()
@@ -257,40 +287,55 @@ class DataManagerImpl(
             table.addCell(amountCell)
         }
 
-        val totalIncomeText = Phrase("TOTAL PEMASUKAN", customFont(style = Font.BOLD))
+        val totalIncomeText = Phrase(
+            context.getString(R.string.common_transaction_total_income),
+            customFont(style = Font.BOLD)
+        )
         val totalIncomeTextCell = PdfPCell(totalIncomeText)
             .defaultPadding()
             .alignCenterMiddle()
             .background(BaseColor.LIGHT_GRAY)
             .colSpan(5)
 
-        val totalIncome = Phrase(NumberFormatHelper.formatToRupiah(income), customFont(style = Font.BOLD))
+        val totalIncome = Phrase(NumberHelper.formatToRupiah(income), customFont(style = Font.BOLD))
         val totalIncomeCell = PdfPCell(totalIncome)
             .defaultPadding()
             .alignRightMiddle()
             .background(BaseColor(200, 230, 201))
 
-        val totalExpenseText = Phrase("TOTAL PENGELUARAN", customFont(style = Font.BOLD))
+        val totalExpenseText = Phrase(
+            context.getString(R.string.common_transaction_total_expense),
+            customFont(style = Font.BOLD)
+        )
         val totalExpenseTextCell = PdfPCell(totalExpenseText)
             .defaultPadding()
             .alignCenterMiddle()
             .background(BaseColor.LIGHT_GRAY)
             .colSpan(5)
 
-        val totalExpense = Phrase(NumberFormatHelper.formatToRupiah(expense), customFont(style = Font.BOLD))
+        val totalExpense = Phrase(
+            NumberHelper.formatToRupiah(expense),
+            customFont(style = Font.BOLD)
+        )
         val totalExpenseCell = PdfPCell(totalExpense)
             .defaultPadding()
             .alignRightMiddle()
             .background(BaseColor(255, 205, 210))
 
-        val totalBalanceText = Phrase("TOTAL SALDO AKHIR", customFont(style = Font.BOLD))
+        val totalBalanceText = Phrase(
+            context.getString(R.string.common_transaction_total_balance),
+            customFont(style = Font.BOLD)
+        )
         val totalBalanceTextCell = PdfPCell(totalBalanceText)
             .defaultPadding()
             .alignCenterMiddle()
             .background(BaseColor.LIGHT_GRAY)
             .colSpan(5)
 
-        val totalBalance = Phrase(NumberFormatHelper.formatToRupiah(income - expense), customFont(style = Font.BOLD))
+        val totalBalance = Phrase(
+            NumberHelper.formatToRupiah(income - expense),
+            customFont(style = Font.BOLD)
+        )
         val totalBalanceCell = PdfPCell(totalBalance)
             .defaultPadding()
             .alignRightMiddle()
@@ -306,11 +351,14 @@ class DataManagerImpl(
         return table
     }
 
-    private fun createTransferTransactionTable(transactions: List<Transaction>): PdfPTable {
+    private fun createTransferTransactionTable(transactions: List<TransactionState>): PdfPTable {
         val table = PdfPTable(5)
         table.widthPercentage = 100f
 
-        val title = Phrase("TRANSAKSI TRANSFER", customFont(size = 10f, style = Font.BOLD))
+        val title = Phrase(
+            context.getString(R.string.transfer_transaction_header),
+            customFont(size = 10f, style = Font.BOLD)
+        )
         val titleCell = PdfPCell(title)
             .defaultPadding()
             .alignCenterMiddle()
@@ -318,7 +366,13 @@ class DataManagerImpl(
             .colSpan(5)
         table.addCell(titleCell)
 
-        val headers = listOf("TANGGAL", "KATEGORI", "SUMBER", "TUJUAN", "NOMINAL")
+        val headers = listOf(
+            context.getString(R.string.common_transaction_date),
+            context.getString(R.string.common_transaction_parent_category),
+            context.getString(R.string.common_transaction_source),
+            context.getString(R.string.common_transaction_destination),
+            context.getString(R.string.common_transaction_amount)
+        )
         headers.forEach { header ->
             val header = Phrase(header, customFont(style = Font.BOLD))
             val headerCell = PdfPCell(header)
@@ -357,7 +411,10 @@ class DataManagerImpl(
                 .alignCenterMiddle()
                 .background(backgroundColor)
 
-            val amount = Phrase(NumberFormatHelper.formatToRupiah(transaction.amount), customFont(style = Font.BOLD))
+            val amount = Phrase(
+                NumberHelper.formatToRupiah(transaction.amount),
+                customFont(style = Font.BOLD)
+            )
             val amountCell = PdfPCell(amount)
                 .defaultPadding()
                 .alignRightMiddle()

@@ -4,10 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.EditBillState
 import com.android.monu.domain.usecase.bill.GetBillByIdUseCase
 import com.android.monu.domain.usecase.bill.UpdateBillUseCase
-import com.android.monu.ui.feature.screen.billing.editBill.components.EditBillContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.navigation.Billing
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,14 +22,14 @@ class EditBillViewModel(
     private val updateBillUseCase: UpdateBillUseCase
 ) : ViewModel() {
 
-    val bill = getBillByIdUseCase(
+    val billState = getBillByIdUseCase(
         savedStateHandle.toRoute<Billing.Edit>().billId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    private val _updateResult = MutableStateFlow<DatabaseResultMessage?>(null)
+    private val _updateResult = MutableStateFlow<DatabaseResultState?>(null)
     val updateResult = _updateResult.asStateFlow()
 
-    fun updateBill(billState: EditBillContentState) {
+    fun updateBill(billState: EditBillState) {
         viewModelScope.launch {
             _updateResult.value = updateBillUseCase(billState)
             delay(500)

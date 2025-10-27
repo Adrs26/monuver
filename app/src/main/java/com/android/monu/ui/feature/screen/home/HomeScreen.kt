@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.android.monu.domain.model.budget.BudgetSummary
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.BudgetSummaryState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.screen.home.components.HomeAppBar
 import com.android.monu.ui.feature.screen.home.components.HomeBalanceOverview
 import com.android.monu.ui.feature.screen.home.components.HomeBudgetOverview
@@ -23,8 +23,8 @@ import com.android.monu.ui.feature.screen.home.components.HomeRecentTransactions
 @Composable
 fun HomeScreen(
     totalBalance: Long,
-    recentTransactions: List<Transaction>,
-    budgetSummary: BudgetSummary,
+    recentTransactions: List<TransactionState>,
+    budgetSummaryState: BudgetSummaryState,
     homeActions: HomeActions
 ) {
     LaunchedEffect(Unit) {
@@ -74,8 +74,8 @@ fun HomeScreen(
                 color = MaterialTheme.colorScheme.surfaceVariant
             )
             HomeBudgetOverview(
-                totalUsedAmount = budgetSummary.totalUsedAmount,
-                totalMaxAmount = budgetSummary.totalMaxAmount,
+                totalUsedAmount = budgetSummaryState.totalUsedAmount,
+                totalMaxAmount = budgetSummaryState.totalMaxAmount,
                 onNavigateToBudgeting = homeActions::onNavigateToBudgeting,
                 modifier = Modifier
                     .padding(start = 16.dp, end = 8.dp)

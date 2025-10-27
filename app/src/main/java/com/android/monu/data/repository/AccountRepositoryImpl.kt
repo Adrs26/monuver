@@ -1,8 +1,8 @@
 package com.android.monu.data.repository
 
 import com.android.monu.data.local.dao.AccountDao
-import com.android.monu.data.mapper.AccountMapper
-import com.android.monu.domain.model.account.Account
+import com.android.monu.data.mapper.toDomain
+import com.android.monu.domain.model.AccountState
 import com.android.monu.domain.repository.AccountRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -11,19 +11,15 @@ class AccountRepositoryImpl(
     private val accountDao: AccountDao
 ) : AccountRepository {
 
-    override fun getAllAccounts(): Flow<List<Account>> {
+    override fun getAllAccounts(): Flow<List<AccountState>> {
         return accountDao.getAllAccounts().map { accounts ->
-            accounts.map { account ->
-                AccountMapper.accountEntityToDomain(account)
-            }
+            accounts.map { it.toDomain() }
         }
     }
 
-    override fun getActiveAccounts(): Flow<List<Account>> {
+    override fun getActiveAccounts(): Flow<List<AccountState>> {
         return accountDao.getActiveAccounts().map { accounts ->
-            accounts.map { account ->
-                AccountMapper.accountEntityToDomain(account)
-            }
+            accounts.map { it.toDomain() }
         }
     }
 
@@ -35,21 +31,15 @@ class AccountRepositoryImpl(
         return accountDao.getActiveAccountBalance()
     }
 
-    override fun getAccountById(accountId: Int): Flow<Account?> {
-        return accountDao.getAccountById(accountId).map { account ->
-            account?.let { account ->
-                AccountMapper.accountEntityToDomain(account)
-            }
-        }
+    override fun getAccountById(accountId: Int): Flow<AccountState?> {
+        return accountDao.getAccountById(accountId).map { it?.toDomain() }
     }
 
     override suspend fun getAccountBalance(accountId: Int): Long? {
         return accountDao.getAccountBalance(accountId)
     }
 
-    override suspend fun getAllAccountsSuspend(): List<Account> {
-        return accountDao.getAllAccountsSuspend().map { account ->
-            AccountMapper.accountEntityToDomain(account)
-        }
+    override suspend fun getAllAccountsSuspend(): List<AccountState> {
+        return accountDao.getAllAccountsSuspend().map { it.toDomain() }
     }
 }

@@ -18,14 +18,15 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavHostController
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AddTransactionState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.transaction.addTransaction.components.AddTransactionContent
 import com.android.monu.ui.feature.screen.transaction.addTransaction.components.AddTransactionContentActions
-import com.android.monu.ui.feature.screen.transaction.addTransaction.components.AddTransactionContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
-import com.android.monu.ui.feature.utils.TransactionType
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.NumberHelper
+import com.android.monu.utils.TransactionType
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -36,7 +37,7 @@ import org.threeten.bp.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionScreen(
-    transactionState: AddTransactionState,
+    transactionUiState: AddTransactionUiState,
     transactionActions: AddTransactionActions,
     navController: NavHostController
 ) {
@@ -44,22 +45,21 @@ fun AddTransactionScreen(
     var transactionDate by rememberSaveable { mutableStateOf("") }
     var transactionAmount by rememberSaveable { mutableLongStateOf(0L) }
     var transactionAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(transactionAmount)))
+        mutableStateOf(TextFieldValue(NumberHelper.formatToRupiah(transactionAmount)))
     }
 
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val addTransactionContentState = AddTransactionContentState(
+    val addTransactionState = AddTransactionState(
         title = transactionTitle,
-        type = transactionState.type,
-        parentCategory = transactionState.category.first,
-        childCategory = transactionState.category.second,
+        type = transactionUiState.type,
+        parentCategory = transactionUiState.category.first,
+        childCategory = transactionUiState.category.second,
         date = transactionDate,
         amount = transactionAmount,
-        amountFormat = transactionAmountFormat,
-        sourceId = transactionState.source.first,
-        sourceName = transactionState.source.second
+        sourceId = transactionUiState.source.first,
+        sourceName = transactionUiState.source.second
     )
 
     val addTransactionContentActions = object : AddTransactionContentActions {
@@ -81,7 +81,7 @@ fun AddTransactionScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(transactionAmount)
+            val formattedText = NumberHelper.formatToRupiah(transactionAmount)
             val newCursorPosition = formattedText.length
 
             transactionAmountFormat = TextFieldValue(
@@ -94,17 +94,17 @@ fun AddTransactionScreen(
             transactionActions.onNavigateToSource()
         }
 
-        override fun onAddNewTransaction(transactionState: AddTransactionContentState) {
+        override fun onAddNewTransaction(transactionState: AddTransactionState) {
             transactionActions.onAddNewTransaction(transactionState)
         }
     }
 
-    LaunchedEffect(transactionState.addResult) {
-        transactionState.addResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
+    LaunchedEffect(transactionUiState.addResult) {
+        transactionUiState.addResult?.let { result ->
+            result.showToast(context)
 
             when (result) {
-                is DatabaseResultMessage.CreateSuccessWithWarningCondition -> {
+                is DatabaseResultState.CreateSuccessWithWarningCondition -> {
                     navController.previousBackStackEntry
                         ?.savedStateHandle
                         ?.set("warning_condition", result.warningCondition)
@@ -113,7 +113,7 @@ fun AddTransactionScreen(
                         ?.set("budget_category", result.category)
                     transactionActions.onNavigateBack()
                 }
-                is DatabaseResultMessage.CreateTransactionSuccess -> {
+                is DatabaseResultState.CreateTransactionSuccess -> {
                     transactionActions.onNavigateBack()
                 }
                 else -> {}
@@ -124,7 +124,7 @@ fun AddTransactionScreen(
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = if (transactionState.type == TransactionType.INCOME)
+                title = if (transactionUiState.type == TransactionType.INCOME)
                     stringResource(R.string.add_income) else
                         stringResource(R.string.add_expense),
                 onNavigateBack = transactionActions::onNavigateBack
@@ -132,7 +132,8 @@ fun AddTransactionScreen(
         }
     ) { innerPadding ->
         AddTransactionContent(
-            transactionState = addTransactionContentState,
+            transactionState = addTransactionState,
+            transactionAmountFormat = transactionAmountFormat,
             transactionActions = addTransactionContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -157,16 +158,16 @@ fun AddTransactionScreen(
     )
 }
 
-data class AddTransactionState(
+data class AddTransactionUiState(
     val type: Int,
     val category: Pair<Int, Int>,
     val source: Pair<Int, String>,
-    val addResult: DatabaseResultMessage?,
+    val addResult: DatabaseResultState?,
 )
 
 interface AddTransactionActions {
     fun onNavigateBack()
     fun onNavigateToCategory(transactionType: Int)
     fun onNavigateToSource()
-    fun onAddNewTransaction(transactionState: AddTransactionContentState)
+    fun onAddNewTransaction(transactionState: AddTransactionState)
 }

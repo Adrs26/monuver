@@ -17,13 +17,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.DepositWithdrawState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContent
 import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentActions
-import com.android.monu.ui.feature.screen.saving.deposit.components.DepositContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.ui.feature.utils.isCreateDepositTransactionSuccess
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.NumberHelper
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -34,26 +36,25 @@ import org.threeten.bp.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DepositScreen(
-    depositState: DepositState,
+    depositUiState: DepositUiState,
     depositActions: DepositActions
 ) {
     var depositDate by rememberSaveable { mutableStateOf("") }
     var depositAmount by rememberSaveable { mutableLongStateOf(0L) }
     var depositAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(depositAmount)))
+        mutableStateOf(TextFieldValue(NumberHelper.formatToRupiah(depositAmount)))
     }
 
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val depositContentState = DepositContentState(
+    val depositState = DepositWithdrawState(
         date = depositDate,
         amount = depositAmount,
-        amountFormat = depositAmountFormat,
-        accountId = depositState.account.first,
-        accountName = depositState.account.second,
-        savingId = depositState.saving.first,
-        savingName = depositState.saving.second
+        accountId = depositUiState.account.first,
+        accountName = depositUiState.account.second,
+        savingId = depositUiState.saving.first,
+        savingName = depositUiState.saving.second
     )
 
     val depositContentActions = object : DepositContentActions {
@@ -67,7 +68,7 @@ fun DepositScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(depositAmount)
+            val formattedText = NumberHelper.formatToRupiah(depositAmount)
             val newCursorPosition = formattedText.length
 
             depositAmountFormat = TextFieldValue(
@@ -80,17 +81,15 @@ fun DepositScreen(
             depositActions.onNavigateToAccount()
         }
 
-        override fun onAddNewDeposit(depositState: DepositContentState) {
+        override fun onAddNewDeposit(depositState: DepositWithdrawState) {
             depositActions.onAddNewDeposit(depositState)
         }
     }
 
-    LaunchedEffect(depositState.addResult) {
-        depositState.addResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CreateDepositTransactionSuccess) {
-                depositActions.onNavigateBack()
-            }
+    LaunchedEffect(depositUiState.addResult) {
+        depositUiState.addResult?.let { result ->
+            result.showToast(context)
+            if (result.isCreateDepositTransactionSuccess()) depositActions.onNavigateBack()
         }
     }
 
@@ -103,7 +102,8 @@ fun DepositScreen(
         }
     ) { innerPadding ->
         DepositContent(
-            depositState = depositContentState,
+            depositState = depositState,
+            depositAmountFormat = depositAmountFormat,
             depositActions = depositContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -128,14 +128,14 @@ fun DepositScreen(
     )
 }
 
-data class DepositState(
+data class DepositUiState(
     val account: Pair<Int, String>,
     val saving: Pair<Long, String>,
-    val addResult: DatabaseResultMessage?
+    val addResult: DatabaseResultState?
 )
 
 interface DepositActions {
     fun onNavigateBack()
     fun onNavigateToAccount()
-    fun onAddNewDeposit(depositState: DepositContentState)
+    fun onAddNewDeposit(depositState: DepositWithdrawState)
 }

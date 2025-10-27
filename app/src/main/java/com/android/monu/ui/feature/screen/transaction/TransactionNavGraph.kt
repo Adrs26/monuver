@@ -7,34 +7,34 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.AddTransactionState
+import com.android.monu.domain.model.EditTransactionState
+import com.android.monu.domain.model.TransactionState
+import com.android.monu.domain.model.TransferState
 import com.android.monu.ui.feature.screen.transaction.addTransaction.AddTransactionActions
 import com.android.monu.ui.feature.screen.transaction.addTransaction.AddTransactionScreen
-import com.android.monu.ui.feature.screen.transaction.addTransaction.AddTransactionState
+import com.android.monu.ui.feature.screen.transaction.addTransaction.AddTransactionUiState
 import com.android.monu.ui.feature.screen.transaction.addTransaction.AddTransactionViewModel
-import com.android.monu.ui.feature.screen.transaction.addTransaction.components.AddTransactionContentState
 import com.android.monu.ui.feature.screen.transaction.addTransaction.components.AddTransactionSourceScreen
 import com.android.monu.ui.feature.screen.transaction.components.TransactionCategoryScreen
 import com.android.monu.ui.feature.screen.transaction.editTransaction.EditTransactionActions
 import com.android.monu.ui.feature.screen.transaction.editTransaction.EditTransactionScreen
-import com.android.monu.ui.feature.screen.transaction.editTransaction.EditTransactionState
+import com.android.monu.ui.feature.screen.transaction.editTransaction.EditTransactionUiState
 import com.android.monu.ui.feature.screen.transaction.editTransaction.EditTransactionViewModel
-import com.android.monu.ui.feature.screen.transaction.editTransaction.components.EditTransactionContentState
 import com.android.monu.ui.feature.screen.transaction.transactionDetail.DetailTransactionScreen
 import com.android.monu.ui.feature.screen.transaction.transactionDetail.TransactionDetailActions
 import com.android.monu.ui.feature.screen.transaction.transactionDetail.TransactionDetailViewModel
 import com.android.monu.ui.feature.screen.transaction.transfer.TransferActions
 import com.android.monu.ui.feature.screen.transaction.transfer.TransferScreen
-import com.android.monu.ui.feature.screen.transaction.transfer.TransferState
+import com.android.monu.ui.feature.screen.transaction.transfer.TransferUiState
 import com.android.monu.ui.feature.screen.transaction.transfer.TransferViewModel
 import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferAccountScreen
-import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferContentState
 import com.android.monu.ui.feature.utils.NavigationAnimation
-import com.android.monu.ui.feature.utils.SelectAccountType
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.AddTransaction
 import com.android.monu.ui.navigation.TransactionDetail
 import com.android.monu.ui.navigation.Transfer
+import com.android.monu.utils.SelectAccountType
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -54,7 +54,7 @@ fun NavGraphBuilder.addTransactionNavGraph(
             val source by viewModel.transactionSource.collectAsStateWithLifecycle()
             val addResult by viewModel.createResult.collectAsStateWithLifecycle()
 
-            val addTransactionState = AddTransactionState(
+            val addTransactionUiState = AddTransactionUiState(
                 type = type,
                 category = category,
                 source = source,
@@ -77,14 +77,14 @@ fun NavGraphBuilder.addTransactionNavGraph(
                 }
 
                 override fun onAddNewTransaction(
-                    transactionState: AddTransactionContentState
+                    transactionState: AddTransactionState
                 ) {
                     viewModel.createNewTransaction(transactionState)
                 }
             }
 
             AddTransactionScreen(
-                transactionState = addTransactionState,
+                transactionUiState = addTransactionUiState,
                 transactionActions = addTransactionActions,
                 navController = navController
             )
@@ -137,7 +137,7 @@ fun NavGraphBuilder.transferNavGraph(
             val destination by viewModel.destinationAccount.collectAsStateWithLifecycle()
             val addResult by viewModel.createResult.collectAsStateWithLifecycle()
 
-            val transferState = TransferState(
+            val transferUiState = TransferUiState(
                 source = source,
                 destination = destination,
                 addResult = addResult
@@ -156,13 +156,13 @@ fun NavGraphBuilder.transferNavGraph(
                     navController.navigate(Transfer.Account(SelectAccountType.DESTINATION))
                 }
 
-                override fun onAddNewTransfer(transferState: TransferContentState) {
+                override fun onAddNewTransfer(transferState: TransferState) {
                     viewModel.createNewTransfer(transferState)
                 }
             }
 
             TransferScreen(
-                transferState = transferState,
+                transferUiState = transferUiState,
                 transferActions = transferActions
             )
         }
@@ -210,29 +210,29 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                 viewModelStoreOwner = it,
                 parameters = { parametersOf(it.savedStateHandle) }
             )
-            val transaction by viewModel.transaction.collectAsStateWithLifecycle()
+            val transactionState by viewModel.transactionState.collectAsStateWithLifecycle()
 
-            val detailTransactionActions = object : TransactionDetailActions {
-                override fun onNavigateBack() {
-                    navController.navigateUp()
+            transactionState?.let { transactionState ->
+                val detailTransactionActions = object : TransactionDetailActions {
+                    override fun onNavigateBack() {
+                        navController.navigateUp()
+                    }
+
+                    override fun onNavigateToEditTransaction(
+                        transactionId: Long,
+                        transactionType: Int,
+                        transactionCategory: Int
+                    ) {
+                        navController.navigate(TransactionDetail.Edit(transactionId))
+                    }
+
+                    override fun onRemoveTransaction(transactionState: TransactionState) {
+                        viewModel.deleteTransaction(transactionState)
+                    }
                 }
 
-                override fun onNavigateToEditTransaction(
-                    transactionId: Long,
-                    transactionType: Int,
-                    transactionCategory: Int
-                ) {
-                    navController.navigate(TransactionDetail.Edit(transactionId))
-                }
-
-                override fun onRemoveTransaction(transaction: Transaction) {
-                    viewModel.deleteTransaction(transaction)
-                }
-            }
-
-            transaction?.let { transaction ->
                 DetailTransactionScreen(
-                    transaction = transaction,
+                    transactionState = transactionState,
                     transactionActions = detailTransactionActions
                 )
             }
@@ -252,7 +252,7 @@ fun NavGraphBuilder.transactionDetailNavGraph(
 
             transaction?.let { transaction ->
                 initialTransaction?.let { initialTransaction ->
-                    val editTransactionState = EditTransactionState(
+                    val editTransactionUiState = EditTransactionUiState(
                         id = transaction.id,
                         title = transaction.title,
                         type = transaction.type,
@@ -276,15 +276,15 @@ fun NavGraphBuilder.transactionDetailNavGraph(
                             navController.navigate(TransactionDetail.Category(transactionType))
                         }
 
-                        override fun onEditTransaction(transactionState: EditTransactionContentState) {
+                        override fun onEditTransaction(transactionState: EditTransactionState) {
                             viewModel.updateTransaction(transactionState)
                         }
                     }
 
                     EditTransactionScreen(
-                        transactionState = editTransactionState,
+                        transactionUiState = editTransactionUiState,
                         transactionActions = editTransactionActions,
-                        initialTransaction = initialTransaction
+                        initialTransactionState = initialTransaction
                     )
                 }
             }

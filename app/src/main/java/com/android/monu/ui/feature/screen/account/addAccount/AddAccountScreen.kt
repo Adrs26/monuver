@@ -16,32 +16,32 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AddAccountState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.account.addAccount.components.AddAccountContent
 import com.android.monu.ui.feature.screen.account.addAccount.components.AddAccountContentActions
-import com.android.monu.ui.feature.screen.account.addAccount.components.AddAccountContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
-import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.isCreateAccountSuccess
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.NumberHelper
 
 @Composable
 fun AddAccountScreen(
     accountType: Int,
-    addResult: DatabaseResultMessage?,
     accountActions: AddAccountActions,
+    addResult: DatabaseResultState?
 ) {
     var accountName by rememberSaveable { mutableStateOf("") }
     var accountBalance by rememberSaveable { mutableLongStateOf(0L) }
     var accountBalanceFormat by remember {
-        mutableStateOf(TextFieldValue(text = NumberFormatHelper.formatToRupiah(accountBalance)))
+        mutableStateOf(TextFieldValue(text = NumberHelper.formatToRupiah(accountBalance)))
     }
     val context = LocalContext.current
 
-    val addAccountContentState = AddAccountContentState(
+    val addAccountState = AddAccountState(
         name = accountName,
         type = accountType,
-        balance = accountBalance,
-        balanceFormat = accountBalanceFormat
+        balance = accountBalance
     )
 
     val addAccountContentActions = object : AddAccountContentActions {
@@ -61,7 +61,7 @@ fun AddAccountScreen(
                 0L
             }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(accountBalance)
+            val formattedText = NumberHelper.formatToRupiah(accountBalance)
             val newCursorPosition = formattedText.length
 
             accountBalanceFormat = TextFieldValue(
@@ -70,17 +70,15 @@ fun AddAccountScreen(
             )
         }
 
-        override fun onAddNewAccount(accountState: AddAccountContentState) {
+        override fun onAddNewAccount(accountState: AddAccountState) {
             accountActions.onAddNewAccount(accountState)
         }
     }
 
     LaunchedEffect(addResult) {
         addResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CreateAccountSuccess) {
-                accountActions.onNavigateBack()
-            }
+            result.showToast(context)
+            if (result.isCreateAccountSuccess()) accountActions.onNavigateBack()
         }
     }
 
@@ -93,7 +91,8 @@ fun AddAccountScreen(
         }
     ) { innerPadding ->
         AddAccountContent(
-            accountState = addAccountContentState,
+            accountState = addAccountState,
+            accountBalanceFormat = accountBalanceFormat,
             accountActions = addAccountContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -103,5 +102,5 @@ fun AddAccountScreen(
 interface AddAccountActions {
     fun onNavigateBack()
     fun onNavigateToType()
-    fun onAddNewAccount(accountState: AddAccountContentState)
+    fun onAddNewAccount(accountState: AddAccountState)
 }

@@ -1,8 +1,8 @@
 package com.android.monu.domain.usecase.budget
 
-import com.android.monu.domain.model.budget.Budget
+import com.android.monu.domain.model.BudgetState
 import com.android.monu.domain.repository.BudgetRepository
-import com.android.monu.ui.feature.utils.Cycle
+import com.android.monu.utils.Cycle
 import kotlinx.coroutines.flow.first
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -29,7 +29,7 @@ class HandleExpiredBudgetUseCase(
                     }
 
                     if (!newEndDate.isBefore(today)) {
-                        val newBudget = Budget(
+                        val newBudgetState = BudgetState(
                             category = budget.category,
                             cycle = budget.cycle,
                             startDate = newStartDate.format(formatter),
@@ -40,7 +40,7 @@ class HandleExpiredBudgetUseCase(
                             isOverflowAllowed = budget.isOverflowAllowed,
                             isAutoUpdate = true,
                         )
-                        repository.createNewBudget(newBudget)
+                        repository.createNewBudget(newBudgetState)
                     }
                 }
             }

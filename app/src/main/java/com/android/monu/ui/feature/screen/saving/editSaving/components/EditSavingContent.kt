@@ -18,16 +18,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.EditSavingState
 import com.android.monu.ui.feature.components.StaticTextInputField
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
 
 @Composable
 fun EditSavingContent(
-    savingState: EditSavingContentState,
+    savingState: EditSavingState,
+    savingTargetAmountFormat: TextFieldValue,
     savingActions: EditSavingContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -58,12 +60,12 @@ fun EditSavingContent(
         )
         StaticTextInputField(
             title = stringResource(R.string.current_amount),
-            value = NumberFormatHelper.formatToRupiah(savingState.currentAmount),
+            value = NumberHelper.formatToRupiah(savingState.currentAmount),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextAmountInputField(
             title = stringResource(R.string.target_amount),
-            value = savingState.targetAmountFormat,
+            value = savingTargetAmountFormat,
             onValueChange = savingActions::onTargetAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -83,18 +85,9 @@ fun EditSavingContent(
     }
 }
 
-data class EditSavingContentState(
-    val id: Long,
-    val title: String,
-    val targetDate: String,
-    val currentAmount: Long,
-    val targetAmount: Long,
-    val targetAmountFormat: TextFieldValue
-)
-
 interface EditSavingContentActions {
     fun onTitleChange(title: String)
     fun onDateClick()
     fun onTargetAmountChange(targetAmountFormat: TextFieldValue)
-    fun onEditSaving(savingState: EditSavingContentState)
+    fun onEditSaving(savingState: EditSavingState)
 }

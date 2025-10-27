@@ -1,10 +1,11 @@
 package com.android.monu.domain.usecase.finance
 
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.common.ExportStatusState
 import com.android.monu.domain.manager.DataManager
+import com.android.monu.domain.model.ExportState
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.ui.feature.screen.settings.export.components.ExportContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.TransactionType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,25 +15,25 @@ class ExportDataToPdfUseCase(
     private val dataManager: DataManager,
     private val transactionRepository: TransactionRepository
 ) {
-    operator fun invoke(exportState: ExportContentState): Flow<ExportDataState>  {
-        if (exportState.title.isEmpty()) return flowOf(ExportDataState.Error(DatabaseResultMessage.EmptyReportTitle))
-        if (exportState.username.isEmpty()) return flowOf(ExportDataState.Error(DatabaseResultMessage.EmptyReportUsername))
-        if (exportState.startDate.isEmpty()) return flowOf(ExportDataState.Error(DatabaseResultMessage.EmptyReportStartDate))
-        if (exportState.endDate.isEmpty()) return flowOf(ExportDataState.Error(DatabaseResultMessage.EmptyReportEndDate))
+    operator fun invoke(exportState: ExportState): Flow<ExportStatusState>  {
+        if (exportState.title.isEmpty()) return flowOf(ExportStatusState.Error(DatabaseResultState.EmptyReportTitle))
+        if (exportState.username.isEmpty()) return flowOf(ExportStatusState.Error(DatabaseResultState.EmptyReportUsername))
+        if (exportState.startDate.isEmpty()) return flowOf(ExportStatusState.Error(DatabaseResultState.EmptyReportStartDate))
+        if (exportState.endDate.isEmpty()) return flowOf(ExportStatusState.Error(DatabaseResultState.EmptyReportEndDate))
 
         return flow {
-            emit(ExportDataState.Loading)
+            emit(ExportStatusState.Progress)
 
             delay(3000)
 
             val transactions = when {
-                exportState.sortType == 1 && exportState.isSeparate -> {
+                exportState.sortType == 1 && exportState.isIncomeExpenseGrouped -> {
                     transactionRepository.getTransactionsInRangeByDateAscWithType(
                         startDate = exportState.startDate,
                         endDate = exportState.endDate
                     )
                 }
-                exportState.sortType == 1 && !exportState.isSeparate -> {
+                exportState.sortType == 1 && !exportState.isIncomeExpenseGrouped -> {
                     transactionRepository.getTransactionsInRangeByDateAsc(
                         startDate = exportState.startDate,
                         endDate = exportState.endDate
@@ -83,17 +84,10 @@ class ExportDataToPdfUseCase(
                     totalExpense = totalExpense ?: 0
                 )
 
-                emit(ExportDataState.Success)
+                emit(ExportStatusState.Success)
             } catch (_: Exception) {
-                emit(ExportDataState.Error(DatabaseResultMessage.ExportDataFailed))
+                emit(ExportStatusState.Error(DatabaseResultState.ExportDataFailed))
             }
         }
     }
-}
-
-sealed class ExportDataState {
-    object Idle : ExportDataState()
-    object Loading : ExportDataState()
-    object Success : ExportDataState()
-    data class Error(val error: DatabaseResultMessage) : ExportDataState()
 }

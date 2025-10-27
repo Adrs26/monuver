@@ -17,14 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.EditAccountState
 import com.android.monu.ui.feature.components.StaticTextInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.NumberHelper
 
 @Composable
 fun EditAccountContent(
-    accountState: EditAccountContentState,
+    accountState: EditAccountState,
     accountActions: EditAccountContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -56,7 +57,7 @@ fun EditAccountContent(
         )
         StaticTextInputField(
             title = stringResource(R.string.balance),
-            value = NumberFormatHelper.formatToRupiah(accountState.balance),
+            value = NumberHelper.formatToRupiah(accountState.balance),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -75,15 +76,8 @@ fun EditAccountContent(
     }
 }
 
-data class EditAccountContentState(
-    val id: Int,
-    val name: String,
-    val type: Int,
-    val balance: Long
-)
-
 interface EditAccountContentActions {
     fun onNameChange(name: String)
     fun onNavigateToType()
-    fun onEditAccount(accountState: EditAccountContentState)
+    fun onEditAccount(accountState: EditAccountState)
 }

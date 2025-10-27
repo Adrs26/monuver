@@ -1,19 +1,17 @@
 package com.android.monu.domain.usecase.finance
 
+import com.android.monu.domain.common.DatabaseResultState
 import com.android.monu.domain.manager.DataManager
-import com.android.monu.domain.model.account.Account
-import com.android.monu.domain.model.bill.Bill
-import com.android.monu.domain.model.budget.Budget
-import com.android.monu.domain.model.saving.Saving
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.AccountState
+import com.android.monu.domain.model.BillState
+import com.android.monu.domain.model.BudgetState
+import com.android.monu.domain.model.SavingState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.BillRepository
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.SavingRepository
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 class BackupDataUseCase(
     private val dataManager: DataManager,
@@ -23,8 +21,8 @@ class BackupDataUseCase(
     private val savingRepository: SavingRepository,
     private val transactionRepository: TransactionRepository,
 ) {
-    suspend operator fun invoke(): DatabaseResultMessage = withContext(Dispatchers.IO) {
-        try {
+    suspend operator fun invoke(): DatabaseResultState {
+        return try {
             val accounts = accountRepository.getAllAccountsSuspend()
             val bills = billRepository.getAllBills()
             val budgets = budgetRepository.getAllBudgets()
@@ -40,17 +38,17 @@ class BackupDataUseCase(
             )
 
             dataManager.backupData(backupData)
-            DatabaseResultMessage.BackupDataSuccess
+            DatabaseResultState.BackupDataSuccess
         } catch (_: Exception) {
-            DatabaseResultMessage.BackupDataFailed
+            DatabaseResultState.BackupDataFailed
         }
     }
 }
 
 data class BackupData(
-    val accounts: List<Account>,
-    val bills: List<Bill>,
-    val budgets: List<Budget>,
-    val savings: List<Saving>,
-    val transactions: List<Transaction>
+    val accounts: List<AccountState>,
+    val bills: List<BillState>,
+    val budgets: List<BudgetState>,
+    val savings: List<SavingState>,
+    val transactions: List<TransactionState>
 )

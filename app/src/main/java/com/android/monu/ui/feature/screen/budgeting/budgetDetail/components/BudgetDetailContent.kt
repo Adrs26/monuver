@@ -15,17 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.BudgetState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.components.TransactionListItem
 import com.android.monu.ui.feature.components.TransactionListItemState
-import com.android.monu.ui.feature.screen.budgeting.budgetDetail.BudgetDetailState
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun BudgetDetailContent(
-    budgetState: BudgetDetailState,
-    transactions: List<Transaction>,
+    budgetState: BudgetState,
+    transactions: List<TransactionState>,
     onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -51,8 +51,8 @@ fun BudgetDetailContent(
 
 @Composable
 fun BudgetDetailListContent(
-    budgetState: BudgetDetailState,
-    transactions: List<Transaction>,
+    budgetState: BudgetState,
+    transactions: List<TransactionState>,
     onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -108,7 +108,7 @@ fun BudgetDetailListContent(
 
 @Composable
 fun BudgetDetailEmptyListContent(
-    budgetState: BudgetDetailState,
+    budgetState: BudgetState,
     modifier: Modifier = Modifier
 ) {
     Column(

@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
 import com.android.monu.data.datastore.ThemeSetting
+import com.android.monu.domain.common.DatabaseResultState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.settings.components.FirstActionConfirmation
@@ -29,8 +30,8 @@ import com.android.monu.ui.feature.screen.settings.components.SettingsApplicatio
 import com.android.monu.ui.feature.screen.settings.components.SettingsPreference
 import com.android.monu.ui.feature.screen.settings.components.SettingsSecurity
 import com.android.monu.ui.feature.screen.settings.components.SettingsThemeDialog
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -41,7 +42,7 @@ fun SettingsScreen(
     themeSetting: ThemeSetting,
     isFirstBackup: Boolean,
     isFirstRestore: Boolean,
-    processResult: DatabaseResultMessage?,
+    processResult: DatabaseResultState?,
     onNavigateBack: () -> Unit,
     onThemeChange: (ThemeSetting) -> Unit,
     onNavigateToExport: () -> Unit,
@@ -65,7 +66,8 @@ fun SettingsScreen(
             if (isGranted) {
                 onBackupData()
             } else {
-                "Izin akses penyimpanan diperlukan untuk melakukan backup data".showMessageWithToast(context)
+                context.getString(R.string.write_permission_storage_is_required_to_backup_data)
+                    .showMessageWithToast(context)
             }
         }
     )
@@ -76,9 +78,7 @@ fun SettingsScreen(
     }
 
     LaunchedEffect(processResult) {
-        processResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-        }
+        processResult?.showToast(context)
     }
 
     Scaffold(
@@ -183,9 +183,7 @@ fun SettingsScreen(
             onConfirmRequest = {
                 showDeleteDialog = false
                 onRemoveAllData()
-                context.getString(
-                    DatabaseResultMessage.DeleteAllDataSuccess.message
-                ).showMessageWithToast(context)
+                context.getString(R.string.all_data_successfully_deleted).showMessageWithToast(context)
             }
         )
     }

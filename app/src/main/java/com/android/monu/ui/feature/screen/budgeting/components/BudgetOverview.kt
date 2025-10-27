@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.NumberHelper
 import com.android.monu.ui.theme.Green600
 import com.android.monu.ui.theme.Orange600
 import com.android.monu.ui.theme.Red600
@@ -53,7 +53,7 @@ fun BudgetOverview(
                 style = MaterialTheme.typography.labelSmall
             )
             Text(
-                text = NumberFormatHelper.formatToRupiah(totalMaxAmount),
+                text = NumberHelper.formatToRupiah(totalMaxAmount),
                 modifier = Modifier.padding(top = 4.dp),
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 24.sp)
             )
@@ -62,7 +62,7 @@ fun BudgetOverview(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(totalUsedAmount),
+                    text = NumberHelper.formatToRupiah(totalUsedAmount),
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
@@ -89,7 +89,7 @@ fun BudgetOverview(
                 Text(
                     text = stringResource(
                         R.string.percentage_value,
-                        NumberFormatHelper.formatToPercentageValue(totalUsedAmount, totalMaxAmount)
+                        NumberHelper.formatToPercentageValue(totalUsedAmount, totalMaxAmount)
                     ),
                     modifier = Modifier.padding(start = 16.dp),
                     style = MaterialTheme.typography.labelSmall.copy(

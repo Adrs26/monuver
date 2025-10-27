@@ -1,20 +1,20 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AccountState
+import com.android.monu.domain.model.EditAccountState
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.screen.account.editAccount.components.EditAccountContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class UpdateAccountUseCase(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(accountState: EditAccountContentState): DatabaseResultMessage {
+    suspend operator fun invoke(accountState: EditAccountState): DatabaseResultState {
         when {
-            accountState.name.isEmpty() -> return DatabaseResultMessage.EmptyAccountName
-            accountState.type == 0 -> return DatabaseResultMessage.EmptyAccountType
+            accountState.name.isEmpty() -> return DatabaseResultState.EmptyAccountName
+            accountState.type == 0 -> return DatabaseResultState.EmptyAccountType
         }
 
-        val account = Account(
+        val account = AccountState(
             id = accountState.id,
             name = accountState.name,
             type = accountState.type,
@@ -23,6 +23,6 @@ class UpdateAccountUseCase(
         )
 
         repository.updateAccount(account)
-        return DatabaseResultMessage.UpdateAccountSuccess
+        return DatabaseResultState.UpdateAccountSuccess
     }
 }

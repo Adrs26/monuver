@@ -1,9 +1,10 @@
 package com.android.monu.domain.usecase.finance
 
+import com.android.monu.domain.common.DeleteSavingStatusState
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.domain.repository.SavingRepository
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.ui.feature.utils.TransactionChildCategory
+import com.android.monu.utils.TransactionChildCategory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -12,8 +13,8 @@ class DeleteSavingUseCase(
     private val transactionRepository: TransactionRepository,
     private val savingRepository: SavingRepository
 ) {
-    operator fun invoke(savingId: Long): Flow<DeleteSavingState> = flow {
-        emit(DeleteSavingState.Loading)
+    operator fun invoke(savingId: Long): Flow<DeleteSavingStatusState> = flow {
+        emit(DeleteSavingStatusState.Idle)
 
         val transactions = transactionRepository.getTransactionsBySavingIdSuspend(savingId)
         val total = transactions.size
@@ -37,20 +38,13 @@ class DeleteSavingUseCase(
                     amount = transaction.amount
                 )
                 deletedCount++
-                emit(DeleteSavingState.Progress(deletedCount, total))
+                emit(DeleteSavingStatusState.Progress(deletedCount, total))
             }
 
             savingRepository.deleteSavingById(savingId)
-            emit(DeleteSavingState.Success)
+            emit(DeleteSavingStatusState.Success)
         } catch (e: Exception) {
-            emit(DeleteSavingState.Error(e))
+            emit(DeleteSavingStatusState.Error(e))
         }
     }
-}
-
-sealed class DeleteSavingState {
-    object Loading : DeleteSavingState()
-    data class Progress(val current: Int, val total: Int) : DeleteSavingState()
-    object Success : DeleteSavingState()
-    data class Error(val throwable: Throwable) : DeleteSavingState()
 }

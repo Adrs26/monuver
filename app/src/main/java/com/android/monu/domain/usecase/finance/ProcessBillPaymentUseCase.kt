@@ -1,15 +1,15 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.bill.Bill
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.BillState
+import com.android.monu.domain.model.PayBillState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContentState
-import com.android.monu.ui.feature.utils.Cycle
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.Cycle
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.TransactionType
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -18,18 +18,21 @@ class ProcessBillPaymentUseCase(
     private val accountRepository: AccountRepository,
     private val budgetRepository: BudgetRepository
 ) {
-    suspend operator fun invoke(bill: Bill, payBillState: PayBillContentState): DatabaseResultMessage {
+    suspend operator fun invoke(
+        billState: BillState,
+        payBillState: PayBillState
+    ): DatabaseResultState {
         when {
-            payBillState.title.isEmpty() -> return DatabaseResultMessage.EmptyTransactionTitle
-            payBillState.childCategory == 0 -> return DatabaseResultMessage.EmptyTransactionCategory
-            payBillState.amount == 0L -> return DatabaseResultMessage.EmptyTransactionAmount
-            payBillState.date.isEmpty() -> return DatabaseResultMessage.EmptyTransactionDate
-            payBillState.sourceId == 0 -> return DatabaseResultMessage.EmptyTransactionSource
+            payBillState.title.isEmpty() -> return DatabaseResultState.EmptyTransactionTitle
+            payBillState.childCategory == 0 -> return DatabaseResultState.EmptyTransactionCategory
+            payBillState.amount == 0L -> return DatabaseResultState.EmptyTransactionAmount
+            payBillState.date.isEmpty() -> return DatabaseResultState.EmptyTransactionDate
+            payBillState.sourceId == 0 -> return DatabaseResultState.EmptyTransactionSource
         }
 
         val accountBalance = accountRepository.getAccountBalance(payBillState.sourceId)
         if (accountBalance == null || accountBalance < payBillState.amount) {
-            return DatabaseResultMessage.InsufficientAccountBalance
+            return DatabaseResultState.InsufficientAccountBalance
         }
 
         val budget = budgetRepository.getBudgetForDate(
@@ -41,11 +44,11 @@ class ProcessBillPaymentUseCase(
             budget.usedAmount + payBillState.amount > budget.maxAmount &&
             !budget.isOverflowAllowed
         ) {
-            return DatabaseResultMessage.CurrentBudgetAmountExceedsMaximumLimit
+            return DatabaseResultState.CurrentBudgetAmountExceedsMaximumLimit
         }
 
         val (month, year) = DateHelper.getMonthAndYear(payBillState.date)
-        val transaction = Transaction(
+        val transactionState = TransactionState(
             title = payBillState.title,
             type = TransactionType.EXPENSE,
             parentCategory = payBillState.parentCategory,
@@ -57,37 +60,37 @@ class ProcessBillPaymentUseCase(
             amount = payBillState.amount,
             sourceId = payBillState.sourceId,
             sourceName = payBillState.sourceName,
-            billId = bill.id,
+            billId = billState.id,
             isLocked = true,
             isSpecialCase = true
         )
 
-        val isRecurring = !bill.isPaidBefore && ((bill.period == 1) || (bill.nowPaidPeriod < (bill.fixPeriod ?: 0)))
+        val isRecurring = !billState.isPaidBefore && ((billState.period == 1) || (billState.nowPaidPeriod < (billState.fixPeriod ?: 0)))
 
-        val newBill = Bill(
-            parentId = bill.parentId,
-            title = bill.title,
-            dueDate = getNewDueDate(bill.cycle, bill.dueDate),
+        val newBillState = BillState(
+            parentId = billState.parentId,
+            title = billState.title,
+            dueDate = getNewDueDate(billState.cycle, billState.dueDate),
             paidDate = null,
             timeStamp = System.currentTimeMillis(),
-            amount = bill.amount,
-            isRecurring = bill.isRecurring,
-            cycle = bill.cycle,
-            period = bill.period,
-            fixPeriod = bill.fixPeriod,
+            amount = billState.amount,
+            isRecurring = billState.isRecurring,
+            cycle = billState.cycle,
+            period = billState.period,
+            fixPeriod = billState.fixPeriod,
             isPaid = false,
-            nowPaidPeriod = bill.nowPaidPeriod + 1,
+            nowPaidPeriod = billState.nowPaidPeriod + 1,
             isPaidBefore = false
         )
 
         financeRepository.processBillPayment(
-            billId = bill.id,
+            billId = billState.id,
             billPaidDate = payBillState.date,
-            transaction = transaction,
+            transactionState = transactionState,
             isRecurring = isRecurring,
-            bill = newBill
+            billState = newBillState
         )
-        return DatabaseResultMessage.PayBillSuccess
+        return DatabaseResultState.PayBillSuccess
     }
 
     private fun getNewDueDate(cycle: Int?, dueDate: String): String {

@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.data.datastore.UserPreference
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.common.ExportStatusState
+import com.android.monu.domain.model.ExportState
 import com.android.monu.domain.usecase.finance.BackupDataUseCase
 import com.android.monu.domain.usecase.finance.DeleteAllDataUseCase
-import com.android.monu.domain.usecase.finance.ExportDataState
 import com.android.monu.domain.usecase.finance.ExportDataToPdfUseCase
 import com.android.monu.domain.usecase.finance.RestoreDataUseCase
-import com.android.monu.ui.feature.screen.settings.export.components.ExportContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,10 +40,10 @@ class SettingsViewModel(
     val isFirstRestore = preference.isFirstRestore
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
 
-    private val _exportProgress = MutableStateFlow<ExportDataState>(ExportDataState.Idle)
+    private val _exportProgress = MutableStateFlow<ExportStatusState>(ExportStatusState.Idle)
     val exportProgress = _exportProgress.asStateFlow()
 
-    private val _processResult = MutableStateFlow<DatabaseResultMessage?>(null)
+    private val _processResult = MutableStateFlow<DatabaseResultState?>(null)
     val processResult = _processResult.asStateFlow()
 
     fun changeTheme(themeSetting: ThemeSetting) {
@@ -58,7 +58,7 @@ class SettingsViewModel(
         }
     }
 
-    fun exportDataToPdf(exportContentState: ExportContentState) {
+    fun exportDataToPdf(exportContentState: ExportState) {
         viewModelScope.launch(Dispatchers.IO) {
             exportDataToPdfUseCase(exportContentState).collect { progress ->
                 _exportProgress.value = progress
@@ -73,7 +73,7 @@ class SettingsViewModel(
     }
 
     fun backupData() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _processResult.value = backupDataUseCase()
             delay(500)
             _processResult.value = null
@@ -87,7 +87,7 @@ class SettingsViewModel(
     }
 
     fun restoreData(uri: Uri) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _processResult.value = restoreDataUseCase(uri.toString())
             delay(500)
             _processResult.value = null

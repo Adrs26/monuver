@@ -1,16 +1,16 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.FinanceRepository
 
 class DeleteIncomeTransactionUseCase(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(transaction: Transaction) {
+    suspend operator fun invoke(transactionState: TransactionState) {
         repository.deleteIncomeTransaction(
-            transactionId = transaction.id,
-            sourceId = transaction.sourceId,
-            amount = transaction.amount
+            transactionId = transactionState.id,
+            sourceId = transactionState.sourceId,
+            amount = transactionState.amount
         )
     }
 }

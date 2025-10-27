@@ -19,15 +19,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.android.monu.R
-import com.android.monu.domain.usecase.finance.ExportDataState
+import com.android.monu.domain.common.ExportStatusState
+import com.android.monu.domain.model.ExportState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.settings.components.FirstActionConfirmation
 import com.android.monu.ui.feature.screen.settings.export.components.ExportBottomBar
 import com.android.monu.ui.feature.screen.settings.export.components.ExportContent
 import com.android.monu.ui.feature.screen.settings.export.components.ExportContentActions
-import com.android.monu.ui.feature.screen.settings.export.components.ExportContentState
 import com.android.monu.ui.feature.screen.settings.export.components.ExportProgressDialog
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -41,18 +42,18 @@ import org.threeten.bp.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun ExportScreen(
-    exportProgress: ExportDataState,
+    exportProgress: ExportStatusState,
     isFirstExport: Boolean,
     onSetFirstExportToFalse: () -> Unit,
     onNavigateBack: () -> Unit,
-    onExportData: (ExportContentState) -> Unit
+    onExportData: (ExportState) -> Unit
 ) {
     var reportTitle by remember { mutableStateOf("") }
     var reportUsername by remember { mutableStateOf("") }
     var reportStartDate by remember { mutableStateOf("") }
     var reportEndDate by remember { mutableStateOf("") }
     var transactionSortType by remember { mutableIntStateOf(1) }
-    var isTransactionSeparate by remember { mutableStateOf(false) }
+    var isIncomeExpenseTransactionGrouped by remember { mutableStateOf(false) }
     var isTransferTransactionIncluded by remember { mutableStateOf(false) }
     var activeField by rememberSaveable { mutableStateOf<CalendarField?>(null) }
 
@@ -62,28 +63,13 @@ fun ExportScreen(
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    LaunchedEffect(exportProgress) {
-        when (exportProgress) {
-            is ExportDataState.Idle -> {}
-            is ExportDataState.Loading -> showExportProgressDialog = true
-            is ExportDataState.Success -> {
-                showExportProgressDialog = false
-                onNavigateBack()
-                context.getString(R.string.data_successfully_exported).showMessageWithToast(context)
-            }
-            is ExportDataState.Error -> {
-                context.getString(exportProgress.error.message).showMessageWithToast(context)
-            }
-        }
-    }
-
-    val exportContentState = ExportContentState(
+    val exportState = ExportState(
         title = reportTitle,
         username = reportUsername,
         startDate = reportStartDate,
         endDate = reportEndDate,
         sortType = transactionSortType,
-        isSeparate = isTransactionSeparate,
+        isIncomeExpenseGrouped = isIncomeExpenseTransactionGrouped,
         isTransferIncluded = isTransferTransactionIncluded
     )
 
@@ -116,8 +102,8 @@ fun ExportScreen(
             transactionSortType = sortType
         }
 
-        override fun onSeparateChange(isSeparate: Boolean) {
-            isTransactionSeparate = isSeparate
+        override fun onIncomeExpenseGroupedChange(isIncomeExpenseGrouped: Boolean) {
+            isIncomeExpenseTransactionGrouped = isIncomeExpenseGrouped
         }
 
         override fun onTransferIncludedChange(isTransferIncluded: Boolean) {
@@ -129,17 +115,31 @@ fun ExportScreen(
         permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
         onPermissionResult = { isGranted ->
             if (isGranted) {
-                onExportData(exportContentState)
+                onExportData(exportState)
             } else {
-                "Izin akses penyimpanan diperlukan untuk melakukan backup data".showMessageWithToast(context)
+                context.getString(R.string.write_permission_storage_is_required_to_export_data)
+                    .showMessageWithToast(context)
             }
         }
     )
 
+    LaunchedEffect(exportProgress) {
+        when (exportProgress) {
+            is ExportStatusState.Idle -> {}
+            is ExportStatusState.Progress -> showExportProgressDialog = true
+            is ExportStatusState.Success -> {
+                showExportProgressDialog = false
+                onNavigateBack()
+                context.getString(R.string.data_successfully_exported).showMessageWithToast(context)
+            }
+            is ExportStatusState.Error -> exportProgress.error.showToast(context)
+        }
+    }
+
     Scaffold(
         topBar = {
             CommonAppBar(
-                title = "Ekspor data",
+                title = stringResource(R.string.export_data),
                 onNavigateBack = onNavigateBack
             )
         },
@@ -152,14 +152,14 @@ fun ExportScreen(
                         !storagePermissionState.status.isGranted) {
                         storagePermissionState.launchPermissionRequest()
                     } else {
-                        onExportData(exportContentState)
+                        onExportData(exportState)
                     }
                 }
             }
         }
     ) { innerPadding ->
         ExportContent(
-            exportState = exportContentState,
+            exportState = exportState,
             exportActions = exportContentActions,
             modifier = Modifier
                 .padding(innerPadding)
@@ -176,8 +176,17 @@ fun ExportScreen(
 
             when (activeField) {
                 CalendarField.START -> {
+                    var isAfterEndDate = false
+                    if (reportStartDate.isNotEmpty()) {
+                        val endDate = LocalDate.parse(reportStartDate, DateTimeFormatter.ISO_LOCAL_DATE)
+                        isAfterEndDate = inputDate.isAfter(endDate)
+                    }
+
                     if (isAfterToday) {
-                        context.getString(R.string.you_can_not_select_future_start_date)
+                        context.getString(R.string.you_can_not_select_future_start_period)
+                            .showMessageWithToast(context)
+                    } else if (isAfterEndDate) {
+                        context.getString(R.string.start_period_can_not_after_end_period)
                             .showMessageWithToast(context)
                     } else {
                         reportStartDate = selectedDate.toString()
@@ -188,7 +197,7 @@ fun ExportScreen(
                     val isBeforeStartDate = inputDate.isBefore(startDate)
 
                     if (isBeforeStartDate) {
-                        context.getString(R.string.end_date_must_be_same_or_after_start_date)
+                        context.getString(R.string.end_period_must_be_same_or_after_start_period)
                             .showMessageWithToast(context)
                     } else {
                         reportEndDate = selectedDate.toString()
@@ -217,7 +226,7 @@ fun ExportScreen(
                     !storagePermissionState.status.isGranted) {
                     storagePermissionState.launchPermissionRequest()
                 } else {
-                    onExportData(exportContentState)
+                    onExportData(exportState)
                 }
             }
         )

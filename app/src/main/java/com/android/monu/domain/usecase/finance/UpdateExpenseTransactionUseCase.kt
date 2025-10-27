@@ -1,27 +1,28 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.budget.Budget
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.common.BudgetStatusState
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.BudgetState
+import com.android.monu.domain.model.EditTransactionState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.AccountRepository
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.screen.transaction.editTransaction.components.EditTransactionContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 class UpdateExpenseTransactionUseCase(
     private val financeRepository: FinanceRepository,
     private val accountRepository: AccountRepository,
     private val budgetRepository: BudgetRepository
 ) {
-    suspend operator fun invoke(transactionState: EditTransactionContentState): DatabaseResultMessage {
+    suspend operator fun invoke(transactionState: EditTransactionState): DatabaseResultState {
         when {
-            transactionState.title.isEmpty() -> return DatabaseResultMessage.EmptyTransactionTitle
-            transactionState.amount == 0L -> return DatabaseResultMessage.EmptyTransactionAmount
+            transactionState.title.isEmpty() -> return DatabaseResultState.EmptyTransactionTitle
+            transactionState.amount == 0L -> return DatabaseResultState.EmptyTransactionAmount
         }
 
         val (month, year) = DateHelper.getMonthAndYear(transactionState.date)
-        val transaction = Transaction(
+        val transaction = TransactionState(
             id = transactionState.id,
             title = transactionState.title,
             type = transactionState.type,
@@ -42,7 +43,7 @@ class UpdateExpenseTransactionUseCase(
         val difference = transaction.amount - transactionState.initialAmount
 
         if (accountBalance == null || accountBalance < difference) {
-            return DatabaseResultMessage.InsufficientAccountBalance
+            return DatabaseResultState.InsufficientAccountBalance
         }
 
         val oldBudget = budgetRepository.getBudgetForDate(
@@ -59,42 +60,34 @@ class UpdateExpenseTransactionUseCase(
         newBudget?.let { budget ->
             if (!budget.isOverflowAllowed) {
                 val amountToAdd = when (budgetStatus) {
-                    BudgetStatus.SameBudget -> difference
-                    BudgetStatus.DifferentBudget, BudgetStatus.NoOldBudget -> transaction.amount
+                    BudgetStatusState.SameBudget -> difference
+                    BudgetStatusState.DifferentBudget, BudgetStatusState.NoOldBudget -> transaction.amount
                     else -> 0L
                 }
 
                 if (amountToAdd > 0 && budget.usedAmount + amountToAdd > budget.maxAmount) {
-                    return DatabaseResultMessage.CurrentBudgetAmountExceedsMaximumLimit
+                    return DatabaseResultState.CurrentBudgetAmountExceedsMaximumLimit
                 }
             }
         }
 
         financeRepository.updateExpenseTransaction(
-            transaction = transaction,
+            transactionState = transaction,
             initialParentCategory = transactionState.initialParentCategory,
             initialDate = transactionState.initialDate,
             initialAmount = transactionState.initialAmount,
             budgetStatus = budgetStatus
         )
-        return DatabaseResultMessage.UpdateTransactionSuccess
+        return DatabaseResultState.UpdateTransactionSuccess
     }
 
-    private fun getBudgetStatus(oldBudget: Budget?, newBudget: Budget?): BudgetStatus {
+    private fun getBudgetStatus(oldBudgetState: BudgetState?, newBudgetState: BudgetState?): BudgetStatusState {
         return when {
-            oldBudget == null && newBudget != null -> BudgetStatus.NoOldBudget
-            oldBudget != null && newBudget == null -> BudgetStatus.NoNewBudget
-            oldBudget == null && newBudget == null -> BudgetStatus.NoBudget
-            oldBudget?.category == newBudget?.category -> BudgetStatus.SameBudget
-            else -> BudgetStatus.DifferentBudget
+            oldBudgetState == null && newBudgetState != null -> BudgetStatusState.NoOldBudget
+            oldBudgetState != null && newBudgetState == null -> BudgetStatusState.NoNewBudget
+            oldBudgetState == null && newBudgetState == null -> BudgetStatusState.NoBudget
+            oldBudgetState?.category == newBudgetState?.category -> BudgetStatusState.SameBudget
+            else -> BudgetStatusState.DifferentBudget
         }
     }
-}
-
-sealed class BudgetStatus {
-    object NoOldBudget : BudgetStatus()
-    object NoNewBudget : BudgetStatus()
-    object NoBudget : BudgetStatus()
-    object SameBudget : BudgetStatus()
-    object DifferentBudget : BudgetStatus()
 }

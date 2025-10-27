@@ -27,7 +27,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.android.monu.R
-import com.android.monu.ui.feature.utils.BudgetWarningCondition
+import com.android.monu.utils.BudgetWarningCondition
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 
 @Composable

@@ -12,13 +12,13 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.android.monu.R
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.model.BillState
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun PaidBillScreen(
-    bills: LazyPagingItems<Bill>,
+    bills: LazyPagingItems<BillState>,
     onNavigateToBillDetail: (Long) -> Unit
 ) {
     if (bills.itemCount == 0 && bills.loadState.refresh is LoadState.NotLoading) {

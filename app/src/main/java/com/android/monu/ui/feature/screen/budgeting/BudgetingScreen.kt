@@ -5,13 +5,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import com.android.monu.domain.model.budget.Budget
+import com.android.monu.domain.model.BudgetState
 import com.android.monu.ui.feature.screen.budgeting.components.BudgetAppBar
 import com.android.monu.ui.feature.screen.budgeting.components.BudgetingContent
 
 @Composable
 fun BudgetingScreen(
-    budgetState: BudgetState,
+    budgetUiState: BudgetUiState,
     budgetActions: BudgetActions
 ) {
     LaunchedEffect(Unit) {
@@ -26,19 +26,19 @@ fun BudgetingScreen(
         }
     ) { innerPadding ->
         BudgetingContent(
-            totalMaxAmount = budgetState.totalMaxAmount,
-            totalUsedAmount = budgetState.totalUsedAmount,
-            budgets = budgetState.budgets,
+            totalMaxAmount = budgetUiState.totalMaxAmount,
+            totalUsedAmount = budgetUiState.totalUsedAmount,
+            budgets = budgetUiState.budgets,
             onNavigateToBudgetDetail = budgetActions::onNavigateToBudgetDetail,
             modifier = Modifier.padding(innerPadding)
         )
     }
 }
 
-data class BudgetState(
+data class BudgetUiState(
     val totalMaxAmount: Long,
     val totalUsedAmount: Long,
-    val budgets: List<Budget>,
+    val budgets: List<BudgetState>,
 )
 
 interface BudgetActions {

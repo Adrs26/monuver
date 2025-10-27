@@ -14,13 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.android.monu.R
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.PayBillState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContent
 import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContentActions
-import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
+import com.android.monu.ui.feature.utils.isPayBillSuccess
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -31,27 +32,27 @@ import org.threeten.bp.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PayBillScreen(
-    bill: Bill,
-    payBillState: PayBillState,
+    billAmount: Long,
+    payBillUiState: PayBillUiState,
     payBillActions: PayBillActions
 ) {
     var billTitle by rememberSaveable { mutableStateOf("Pembayaran Tagihan") }
     var billDate by rememberSaveable {
         mutableStateOf(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
     }
-    var billAmount by rememberSaveable { mutableLongStateOf(bill.amount) }
+    var billAmount by rememberSaveable { mutableLongStateOf(billAmount) }
 
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val payBillContentState = PayBillContentState(
+    val payBillContentState = PayBillState(
         title = billTitle,
-        parentCategory = payBillState.category.first,
-        childCategory = payBillState.category.second,
+        parentCategory = payBillUiState.category.first,
+        childCategory = payBillUiState.category.second,
         date = billDate,
         amount = billAmount,
-        sourceId = payBillState.source.first,
-        sourceName = payBillState.source.second
+        sourceId = payBillUiState.source.first,
+        sourceName = payBillUiState.source.second
     )
 
     val payBillContentActions = object : PayBillContentActions {
@@ -71,17 +72,15 @@ fun PayBillScreen(
             payBillActions.onNavigateToSource()
         }
 
-        override fun onPayBill(billState: PayBillContentState) {
+        override fun onPayBill(billState: PayBillState) {
             payBillActions.onPayBill(billState)
         }
     }
 
-    LaunchedEffect(payBillState.payResult) {
-        payBillState.payResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.PayBillSuccess) {
-                payBillActions.onNavigateBack()
-            }
+    LaunchedEffect(payBillUiState.payResult) {
+        payBillUiState.payResult?.let { result ->
+            result.showToast(context)
+            if (result.isPayBillSuccess()) payBillActions.onNavigateBack()
         }
     }
 
@@ -119,15 +118,15 @@ fun PayBillScreen(
     )
 }
 
-data class PayBillState(
+data class PayBillUiState(
     val category: Pair<Int, Int>,
     val source: Pair<Int, String>,
-    val payResult: DatabaseResultMessage?,
+    val payResult: DatabaseResultState?,
 )
 
 interface PayBillActions {
     fun onNavigateBack()
     fun onNavigateToCategory()
     fun onNavigateToSource()
-    fun onPayBill(billState: PayBillContentState)
+    fun onPayBill(billState: PayBillState)
 }

@@ -1,4 +1,4 @@
-package com.android.monu.ui.feature.utils
+package com.android.monu.utils
 
 object DataProvider {
     fun getAccountTypes(): List<Int> {

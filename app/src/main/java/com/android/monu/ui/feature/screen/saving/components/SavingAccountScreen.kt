@@ -14,16 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.model.AccountState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.account.components.AccountListItem
-import com.android.monu.ui.feature.utils.TransactionChildCategory
+import com.android.monu.utils.TransactionChildCategory
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun SavingAccountScreen(
     category: Int,
-    accounts: List<Account>,
+    accounts: List<AccountState>,
     onNavigateBack: () -> Unit,
     onAccountSelect: (Int, String) -> Unit
 ) {
@@ -49,7 +49,7 @@ fun SavingAccountScreen(
                     key = { index -> accounts[index].id }
                 ) { index ->
                     AccountListItem(
-                        account = accounts[index],
+                        accountState = accounts[index],
                         modifier = Modifier
                             .debouncedClickable {
                                 onAccountSelect(accounts[index].id, accounts[index].name)

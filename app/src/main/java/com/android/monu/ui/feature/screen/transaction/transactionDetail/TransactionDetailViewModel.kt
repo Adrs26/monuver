@@ -4,11 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.usecase.finance.DeleteExpenseTransactionUseCase
 import com.android.monu.domain.usecase.finance.DeleteIncomeTransactionUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionByIdUseCase
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.TransactionType
 import com.android.monu.ui.navigation.TransactionDetail
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -21,18 +21,18 @@ class TransactionDetailViewModel(
     private val deleteExpenseTransactionUseCase: DeleteExpenseTransactionUseCase
 ) : ViewModel() {
 
-    val transaction = getTransactionByIdUseCase(
+    val transactionState = getTransactionByIdUseCase(
         savedStateHandle.toRoute<TransactionDetail.Main>().transactionId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    fun deleteTransaction(transaction: Transaction) {
+    fun deleteTransaction(transactionState: TransactionState) {
         viewModelScope.launch {
-            when (transaction.type) {
+            when (transactionState.type) {
                 TransactionType.INCOME -> {
-                    deleteIncomeTransactionUseCase(transaction)
+                    deleteIncomeTransactionUseCase(transactionState)
                 }
                 TransactionType.EXPENSE -> {
-                    deleteExpenseTransactionUseCase(transaction)
+                    deleteExpenseTransactionUseCase(transactionState)
                 }
                 else -> null
             }

@@ -1,29 +1,29 @@
 package com.android.monu.domain.repository
 
-import com.android.monu.domain.model.account.Account
-import com.android.monu.domain.model.bill.Bill
-import com.android.monu.domain.model.saving.Saving
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.common.BudgetStatusState
+import com.android.monu.domain.model.AccountState
+import com.android.monu.domain.model.BillState
+import com.android.monu.domain.model.SavingState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.usecase.finance.BackupData
-import com.android.monu.domain.usecase.finance.BudgetStatus
 
 interface FinanceRepository {
 
-    suspend fun createAccount(account: Account, transaction: Transaction): Long
+    suspend fun createAccount(account: AccountState, transactionState: TransactionState): Long
 
     suspend fun updateAccountStatus(accountId: Int, isActive: Boolean)
 
-    suspend fun updateAccount(account: Account)
+    suspend fun updateAccount(account: AccountState)
 
-    suspend fun createIncomeTransaction(transaction: Transaction): Long
+    suspend fun createIncomeTransaction(transactionState: TransactionState): Long
 
-    suspend fun createExpenseTransaction(transaction: Transaction): Long
+    suspend fun createExpenseTransaction(transactionState: TransactionState): Long
 
-    suspend fun createTransferTransaction(transaction: Transaction): Long
+    suspend fun createTransferTransaction(transactionState: TransactionState): Long
 
-    suspend fun createDepositTransaction(savingId: Long, transaction: Transaction)
+    suspend fun createDepositTransaction(savingId: Long, transactionState: TransactionState)
 
-    suspend fun createWithdrawTransaction(savingId: Long, transaction: Transaction)
+    suspend fun createWithdrawTransaction(savingId: Long, transactionState: TransactionState)
 
     suspend fun deleteIncomeTransaction(transactionId: Long, sourceId: Int, amount: Long): Int
 
@@ -43,29 +43,29 @@ interface FinanceRepository {
         amount: Long
     )
 
-    suspend fun updateIncomeTransaction(transaction: Transaction, initialAmount: Long): Int
+    suspend fun updateIncomeTransaction(transactionState: TransactionState, initialAmount: Long): Int
 
     suspend fun updateExpenseTransaction(
-        transaction: Transaction,
+        transactionState: TransactionState,
         initialParentCategory: Int,
         initialDate: String,
         initialAmount: Long,
-        budgetStatus: BudgetStatus
+        budgetStatus: BudgetStatusState
     ): Int
 
     suspend fun processBillPayment(
         billId: Long,
         billPaidDate: String,
-        transaction: Transaction,
+        transactionState: TransactionState,
         isRecurring: Boolean,
-        bill: Bill
+        billState: BillState
     )
 
     suspend fun cancelBillPayment(billId: Long)
 
-    suspend fun updateSaving(saving: Saving)
+    suspend fun updateSaving(savingState: SavingState)
 
-    suspend fun completeSaving(transaction: Transaction, savingId: Long)
+    suspend fun completeSaving(transactionState: TransactionState, savingId: Long)
 
     suspend fun restoreAllData(backupData: BackupData)
 

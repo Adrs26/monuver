@@ -13,18 +13,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AccountState
 import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.account.accountDetail.components.AccountDetailAppBar
 import com.android.monu.ui.feature.screen.account.accountDetail.components.AccountDetailContent
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
 
 @Composable
 fun AccountDetailScreen(
-    account: Account,
-    editResult: DatabaseResultMessage?,
-    accountActions: AccountDetailActions
+    accountState: AccountState,
+    accountActions: AccountDetailActions,
+    editResult: DatabaseResultState?,
 ) {
     var showDeactivateConfirmationDialog by remember { mutableStateOf(false) }
     var showActivateConfirmationDialog by remember { mutableStateOf(false) }
@@ -32,24 +32,22 @@ fun AccountDetailScreen(
     val context = LocalContext.current
 
     LaunchedEffect(editResult) {
-        editResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-        }
+        editResult?.showToast(context)
     }
 
     Scaffold(
         topBar = {
             AccountDetailAppBar(
-                isAccountActive = account.isActive,
+                isAccountActive = accountState.isActive,
                 onNavigateBack = accountActions::onNavigateBack,
-                onNavigateToEditAccount = { accountActions.onNavigateToEditAccount(account.id) },
+                onNavigateToEditAccount = { accountActions.onNavigateToEditAccount(accountState.id) },
                 onDeactivateAccount = { showDeactivateConfirmationDialog = true },
                 onActivateAccount = { showActivateConfirmationDialog = true }
             )
         }
     ) { innerPadding ->
         AccountDetailContent(
-            account = account,
+            accountState = accountState,
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp, vertical = 32.dp)
@@ -61,7 +59,7 @@ fun AccountDetailScreen(
             text = stringResource(R.string.deactivate_account_confirmation),
             onDismissRequest = { showDeactivateConfirmationDialog = false },
             onConfirmRequest = {
-                accountActions.onDeactivateAccount(account.id)
+                accountActions.onDeactivateAccount(accountState.id)
                 showDeactivateConfirmationDialog = false
             }
         )
@@ -72,7 +70,7 @@ fun AccountDetailScreen(
             text = stringResource(R.string.activate_account_confirmation),
             onDismissRequest = { showActivateConfirmationDialog = false },
             onConfirmRequest = {
-                accountActions.onActivateAccount(account.id)
+                accountActions.onActivateAccount(accountState.id)
                 showActivateConfirmationDialog = false
             }
         )

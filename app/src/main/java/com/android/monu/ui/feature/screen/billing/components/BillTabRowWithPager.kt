@@ -17,12 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.feature.screen.billing.BillState
+import com.android.monu.ui.feature.screen.billing.BillUiState
 import kotlinx.coroutines.launch
 
 @Composable
 fun BillTabRowWithPager(
-    billState: BillState,
+    billUiState: BillUiState,
     onNavigateToBillDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -72,15 +72,15 @@ fun BillTabRowWithPager(
         ) { page ->
             when (page) {
                 0 -> PendingBillScreen(
-                    bills = billState.pendingBills,
+                    bills = billUiState.pendingBills,
                     onNavigateToBillDetail = onNavigateToBillDetail
                 )
                 1 -> DueBillScreen(
-                    bills = billState.dueBills,
+                    bills = billUiState.dueBills,
                     onNavigateToBillDetail = onNavigateToBillDetail
                 )
                 2 -> PaidBillScreen(
-                    bills = billState.paidBills,
+                    bills = billUiState.paidBills,
                     onNavigateToBillDetail = onNavigateToBillDetail
                 )
             }

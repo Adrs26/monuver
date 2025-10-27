@@ -7,19 +7,16 @@ import com.android.monu.data.local.dao.BillDao
 import com.android.monu.data.local.dao.BudgetDao
 import com.android.monu.data.local.dao.SavingDao
 import com.android.monu.data.local.dao.TransactionDao
-import com.android.monu.data.mapper.AccountMapper
-import com.android.monu.data.mapper.BillMapper
-import com.android.monu.data.mapper.BudgetMapper
-import com.android.monu.data.mapper.SavingMapper
-import com.android.monu.data.mapper.TransactionMapper
-import com.android.monu.domain.model.account.Account
-import com.android.monu.domain.model.bill.Bill
-import com.android.monu.domain.model.saving.Saving
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.data.mapper.toEntity
+import com.android.monu.data.mapper.toEntityForUpdate
+import com.android.monu.domain.common.BudgetStatusState
+import com.android.monu.domain.model.AccountState
+import com.android.monu.domain.model.BillState
+import com.android.monu.domain.model.SavingState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.FinanceRepository
 import com.android.monu.domain.usecase.finance.BackupData
-import com.android.monu.domain.usecase.finance.BudgetStatus
-import com.android.monu.ui.feature.utils.TransactionChildCategory
+import com.android.monu.utils.TransactionChildCategory
 import kotlin.math.absoluteValue
 
 class FinanceRepositoryImpl(
@@ -31,15 +28,11 @@ class FinanceRepositoryImpl(
     private val savingDao: SavingDao
 ) : FinanceRepository {
 
-    override suspend fun createAccount(account: Account, transaction: Transaction): Long {
+    override suspend fun createAccount(account: AccountState, transactionState: TransactionState): Long {
         return database.withTransaction {
-            val accountId = accountDao.createNewAccount(
-                AccountMapper.accountDomainToEntity(account)
-            )
-            val transactionWithAccountId = transaction.copy(sourceId = accountId.toInt())
-            transactionDao.createNewTransaction(
-                TransactionMapper.transactionDomainToEntity(transactionWithAccountId)
-            )
+            val accountId = accountDao.createNewAccount(account.toEntity())
+            val transactionWithAccountId = transactionState.copy(sourceId = accountId.toInt())
+            transactionDao.createNewTransaction(transactionWithAccountId.toEntity())
             accountId
         }
     }
@@ -51,9 +44,9 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun updateAccount(account: Account) {
+    override suspend fun updateAccount(account: AccountState) {
         return database.withTransaction {
-            accountDao.updateAccount(AccountMapper.accountDomainToEntityForUpdate(account))
+            accountDao.updateAccount(account.toEntityForUpdate())
             transactionDao.updateAccountNameOnCommonTransaction(account.id, account.name)
             transactionDao.updateAccountNameOnTransferTransaction(account.id, account.name)
             transactionDao.updateAccountNameOnDepositTransaction(account.id, account.name)
@@ -61,58 +54,48 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun createIncomeTransaction(transaction: Transaction): Long {
+    override suspend fun createIncomeTransaction(transactionState: TransactionState): Long {
         return database.withTransaction {
-            val transactionId = transactionDao.createNewTransaction(
-                TransactionMapper.transactionDomainToEntity(transaction)
-            )
-            accountDao.increaseAccountBalance(transaction.sourceId, transaction.amount)
+            val transactionId = transactionDao.createNewTransaction(transactionState.toEntity())
+            accountDao.increaseAccountBalance(transactionState.sourceId, transactionState.amount)
             transactionId
         }
     }
 
-    override suspend fun createExpenseTransaction(transaction: Transaction): Long {
+    override suspend fun createExpenseTransaction(transactionState: TransactionState): Long {
         return database.withTransaction {
-            val transactionId = transactionDao.createNewTransaction(
-                TransactionMapper.transactionDomainToEntity(transaction)
-            )
-            accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
-            budgetDao.increaseBudgetUsedAmount(transaction.parentCategory, transaction.date, transaction.amount)
+            val transactionId = transactionDao.createNewTransaction(transactionState.toEntity())
+            accountDao.decreaseAccountBalance(transactionState.sourceId, transactionState.amount)
+            budgetDao.increaseBudgetUsedAmount(transactionState.parentCategory, transactionState.date, transactionState.amount)
             transactionId
         }
     }
 
-    override suspend fun createTransferTransaction(transaction: Transaction): Long {
+    override suspend fun createTransferTransaction(transactionState: TransactionState): Long {
         return database.withTransaction {
-            val transactionId = transactionDao.createNewTransaction(
-                TransactionMapper.transactionDomainToEntity(transaction)
-            )
-            accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
-            accountDao.increaseAccountBalance(transaction.destinationId ?: 0, transaction.amount)
+            val transactionId = transactionDao.createNewTransaction(transactionState.toEntity())
+            accountDao.decreaseAccountBalance(transactionState.sourceId, transactionState.amount)
+            accountDao.increaseAccountBalance(transactionState.destinationId ?: 0, transactionState.amount)
             transactionId
         }
     }
 
-    override suspend fun createDepositTransaction(savingId: Long, transaction: Transaction) {
+    override suspend fun createDepositTransaction(savingId: Long, transactionState: TransactionState) {
         return database.withTransaction {
-            savingDao.increaseSavingCurrentAmount(savingId, transaction.amount)
-            accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
-            transactionDao.createNewTransaction(
-                TransactionMapper.transactionDomainToEntity(transaction)
-            )
+            savingDao.increaseSavingCurrentAmount(savingId, transactionState.amount)
+            accountDao.decreaseAccountBalance(transactionState.sourceId, transactionState.amount)
+            transactionDao.createNewTransaction(transactionState.toEntity())
         }
     }
 
     override suspend fun createWithdrawTransaction(
         savingId: Long,
-        transaction: Transaction
+        transactionState: TransactionState
     ) {
         return database.withTransaction {
-            savingDao.decreaseSavingCurrentAmount(savingId, transaction.amount)
-            accountDao.increaseAccountBalance(transaction.destinationId ?: 0, transaction.amount)
-            transactionDao.createNewTransaction(
-                TransactionMapper.transactionDomainToEntity(transaction)
-            )
+            savingDao.decreaseSavingCurrentAmount(savingId, transactionState.amount)
+            accountDao.increaseAccountBalance(transactionState.destinationId ?: 0, transactionState.amount)
+            transactionDao.createNewTransaction(transactionState.toEntity())
         }
     }
 
@@ -159,19 +142,17 @@ class FinanceRepositoryImpl(
     }
 
     override suspend fun updateIncomeTransaction(
-        transaction: Transaction,
+        transactionState: TransactionState,
         initialAmount: Long
     ): Int {
         return database.withTransaction {
-            val rowUpdated = transactionDao.updateTransaction(
-                TransactionMapper.transactionDomainToEntityForUpdate(transaction)
-            )
-            val difference = transaction.amount - initialAmount
+            val rowUpdated = transactionDao.updateTransaction(transactionState.toEntityForUpdate())
+            val difference = transactionState.amount - initialAmount
             if (difference != 0L) {
                 if (difference > 0) {
-                    accountDao.increaseAccountBalance(transaction.sourceId, difference)
+                    accountDao.increaseAccountBalance(transactionState.sourceId, difference)
                 } else {
-                    accountDao.decreaseAccountBalance(transaction.sourceId, difference.absoluteValue)
+                    accountDao.decreaseAccountBalance(transactionState.sourceId, difference.absoluteValue)
                 }
             }
             rowUpdated
@@ -179,64 +160,62 @@ class FinanceRepositoryImpl(
     }
 
     override suspend fun updateExpenseTransaction(
-        transaction: Transaction,
+        transactionState: TransactionState,
         initialParentCategory: Int,
         initialDate: String,
         initialAmount: Long,
-        budgetStatus: BudgetStatus
+        budgetStatus: BudgetStatusState
     ): Int {
         return database.withTransaction {
-            val rowUpdated = transactionDao.updateTransaction(
-                TransactionMapper.transactionDomainToEntityForUpdate(transaction)
-            )
-            val difference = transaction.amount - initialAmount
+            val rowUpdated = transactionDao.updateTransaction(transactionState.toEntityForUpdate())
+            val difference = transactionState.amount - initialAmount
             if (difference != 0L) {
                 if (difference > 0) {
-                    accountDao.decreaseAccountBalance(transaction.sourceId, difference)
+                    accountDao.decreaseAccountBalance(transactionState.sourceId, difference)
                 } else {
-                    accountDao.increaseAccountBalance(transaction.sourceId, difference.absoluteValue)
+                    accountDao.increaseAccountBalance(transactionState.sourceId, difference.absoluteValue)
                 }
             }
 
             when(budgetStatus) {
-                BudgetStatus.NoOldBudget -> budgetDao.increaseBudgetUsedAmount(
-                    transaction.parentCategory,
-                    transaction.date,
-                    transaction.amount
+                BudgetStatusState.NoOldBudget -> budgetDao.increaseBudgetUsedAmount(
+                    transactionState.parentCategory,
+                    transactionState.date,
+                    transactionState.amount
                 )
-                BudgetStatus.NoNewBudget -> budgetDao.decreaseBudgetUsedAmount(
+                BudgetStatusState.NoNewBudget -> budgetDao.decreaseBudgetUsedAmount(
                     initialParentCategory,
                     initialDate,
                     initialAmount
                 )
-                BudgetStatus.NoBudget -> {}
-                BudgetStatus.SameBudget -> {
+                BudgetStatusState.NoBudget -> {}
+                BudgetStatusState.SameBudget -> {
                     if (difference != 0L) {
                         if (difference > 0) {
                             budgetDao.increaseBudgetUsedAmount(
-                                transaction.parentCategory,
-                                transaction.date,
+                                transactionState.parentCategory,
+                                transactionState.date,
                                 difference
                             )
                         } else {
                             budgetDao.decreaseBudgetUsedAmount(
-                                transaction.parentCategory,
-                                transaction.date,
+                                transactionState.parentCategory,
+                                transactionState.date,
                                 difference.absoluteValue
                             )
                         }
                     }
                 }
-                BudgetStatus.DifferentBudget -> {
+                BudgetStatusState.DifferentBudget -> {
                     budgetDao.decreaseBudgetUsedAmount(
                         initialParentCategory,
                         initialDate,
                         initialAmount
                     )
                     budgetDao.increaseBudgetUsedAmount(
-                        transaction.parentCategory,
-                        transaction.date,
-                        transaction.amount
+                        transactionState.parentCategory,
+                        transactionState.date,
+                        transactionState.amount
                     )
                 }
             }
@@ -248,18 +227,18 @@ class FinanceRepositoryImpl(
     override suspend fun processBillPayment(
         billId: Long,
         billPaidDate: String,
-        transaction: Transaction,
+        transactionState: TransactionState,
         isRecurring: Boolean,
-        bill: Bill
+        billState: BillState
     ) {
         database.withTransaction {
             billDao.updateBillPaidStatusById(billId, billPaidDate, true)
-            transactionDao.createNewTransaction(TransactionMapper.transactionDomainToEntity(transaction))
-            accountDao.decreaseAccountBalance(transaction.sourceId, transaction.amount)
-            budgetDao.increaseBudgetUsedAmount(transaction.parentCategory, transaction.date, transaction.amount)
+            transactionDao.createNewTransaction(transactionState.toEntity())
+            accountDao.decreaseAccountBalance(transactionState.sourceId, transactionState.amount)
+            budgetDao.increaseBudgetUsedAmount(transactionState.parentCategory, transactionState.date, transactionState.amount)
 
             if (isRecurring) {
-                billDao.createNewBill(BillMapper.billDomainToEntity(bill))
+                billDao.createNewBill(billState.toEntity())
             }
         }
     }
@@ -280,17 +259,17 @@ class FinanceRepositoryImpl(
         }
     }
 
-    override suspend fun updateSaving(saving: Saving) {
+    override suspend fun updateSaving(savingState: SavingState) {
         database.withTransaction {
-            savingDao.updateSaving(SavingMapper.savingDomainToEntityForUpdate(saving))
-            transactionDao.updateSavingTitleOnDepositTransaction(saving.id, saving.title)
-            transactionDao.updateSavingTitleOnWithdrawTransaction(saving.id, saving.title)
+            savingDao.updateSaving(savingState.toEntityForUpdate())
+            transactionDao.updateSavingTitleOnDepositTransaction(savingState.id, savingState.title)
+            transactionDao.updateSavingTitleOnWithdrawTransaction(savingState.id, savingState.title)
         }
     }
 
-    override suspend fun completeSaving(transaction: Transaction, savingId: Long) {
+    override suspend fun completeSaving(transactionState: TransactionState, savingId: Long) {
         database.withTransaction {
-            transactionDao.createNewTransaction(TransactionMapper.transactionDomainToEntity(transaction))
+            transactionDao.createNewTransaction(transactionState.toEntity())
             savingDao.updateSavingStatusToInactiveById(savingId)
         }
     }
@@ -302,21 +281,11 @@ class FinanceRepositoryImpl(
             budgetDao.deleteAllBudgets()
             billDao.deleteAllBills()
             savingDao.deleteAllSavings()
-            accountDao.insertAllAccounts(
-                backupData.accounts.map { AccountMapper.accountDomainToEntityForUpdate(it) }
-            )
-            billDao.insertAllBills(
-                backupData.bills.map { BillMapper.billDomainToEntityForUpdate(it) }
-            )
-            budgetDao.insertAllBudgets(
-                backupData.budgets.map { BudgetMapper.budgetDomainToEntityForUpdate(it) }
-            )
-            savingDao.insertAllSavings(
-                backupData.savings.map { SavingMapper.savingDomainToEntityForUpdate(it) }
-            )
-            transactionDao.insertAllTransactions(
-                backupData.transactions.map { TransactionMapper.transactionDomainToEntityForUpdate(it) }
-            )
+            accountDao.insertAllAccounts(backupData.accounts.map { it.toEntityForUpdate() })
+            billDao.insertAllBills(backupData.bills.map { it.toEntityForUpdate() })
+            budgetDao.insertAllBudgets(backupData.budgets.map { it.toEntityForUpdate() })
+            savingDao.insertAllSavings(backupData.savings.map { it.toEntityForUpdate() })
+            transactionDao.insertAllTransactions(backupData.transactions.map { it.toEntityForUpdate() })
         }
     }
 

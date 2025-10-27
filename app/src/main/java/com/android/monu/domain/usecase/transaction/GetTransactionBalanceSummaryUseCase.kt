@@ -1,15 +1,15 @@
 package com.android.monu.domain.usecase.transaction
 
-import com.android.monu.domain.model.transaction.TransactionBalanceSummary
+import com.android.monu.domain.model.TransactionBalanceSummaryState
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.TransactionType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 
 class GetTransactionBalanceSummaryUseCase(
     private val repository: TransactionRepository
 ) {
-    operator fun invoke(month: Int, year: Int): Flow<TransactionBalanceSummary> {
+    operator fun invoke(month: Int, year: Int): Flow<TransactionBalanceSummaryState> {
         val totalIncome = repository.getTotalMonthlyTransactionAmount(
             TransactionType.INCOME, month, year
         )
@@ -26,7 +26,7 @@ class GetTransactionBalanceSummaryUseCase(
         return combine(
             totalIncome, totalExpense, averageIncome, averageExpense
         ) { totalIncome, totalExpense, averageIncome, averageExpense ->
-            TransactionBalanceSummary(
+            TransactionBalanceSummaryState(
                 totalIncomeAmount = totalIncome ?: 0L,
                 totalExpenseAmount = totalExpense ?: 0L,
                 averageIncomeAmount = averageIncome ?: 0.0,

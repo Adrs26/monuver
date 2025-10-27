@@ -1,6 +1,5 @@
 package com.android.monu.ui.feature.screen.billing.billDetail
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -13,40 +12,39 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.BillState
 import com.android.monu.ui.feature.components.ConfirmationDialog
 import com.android.monu.ui.feature.screen.billing.billDetail.components.BillDetailAppBar
 import com.android.monu.ui.feature.screen.billing.billDetail.components.BillDetailContent
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
 
 @Composable
 fun BillDetailScreen(
-    bill: Bill,
-    editResult: DatabaseResultMessage?,
-    billDetailActions: BillDetailActions
+    billState: BillState,
+    billDetailActions: BillDetailActions,
+    editResult: DatabaseResultState?,
 ) {
     var showRemoveDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     LaunchedEffect(editResult) {
-        editResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-        }
+        editResult?.showToast(context)
     }
-    Log.d("BillDetailScreen", "Bill: $bill")
+
     Scaffold(
         topBar = {
             BillDetailAppBar(
-                isPaid = bill.isPaid,
+                isPaid = billState.isPaid,
                 onNavigateBack = billDetailActions::onNavigateBack,
-                onNavigateToEditBill = { billDetailActions.onNavigateToEditBill(bill.id) },
+                onNavigateToEditBill = { billDetailActions.onNavigateToEditBill(billState.id) },
                 onRemoveBill = { showRemoveDialog = true }
             )
         }
     ) { innerPadding ->
         BillDetailContent(
-            bill = bill,
+            billState = billState,
             onNavigateToPayBill = billDetailActions::onNavigateToPayBill,
             onCancelBillPayment = billDetailActions::onCancelBillPayment,
             modifier = Modifier
@@ -61,7 +59,7 @@ fun BillDetailScreen(
             onDismissRequest = { showRemoveDialog = false },
             onConfirmRequest = {
                 showRemoveDialog = false
-                billDetailActions.onRemoveBill(bill.id)
+                billDetailActions.onRemoveBill(billState.id)
                 context.getString(R.string.bill_successfully_deleted).showMessageWithToast(context)
                 billDetailActions.onNavigateBack()
             }

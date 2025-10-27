@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.android.monu.R
-import com.android.monu.domain.model.budget.Budget
+import com.android.monu.domain.model.BudgetState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.screen.budgeting.components.BudgetListItem
@@ -24,7 +24,7 @@ import com.android.monu.ui.feature.screen.budgeting.components.BudgetListItemSta
 
 @Composable
 fun InactiveBudgetScreen(
-    budgets: LazyPagingItems<Budget>,
+    budgets: LazyPagingItems<BudgetState>,
     onNavigateBack: () -> Unit,
     onNavigateToBudgetDetail: (Long) -> Unit,
 ) {

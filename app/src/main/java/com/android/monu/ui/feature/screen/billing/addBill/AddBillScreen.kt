@@ -18,14 +18,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AddBillState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.billing.addBill.components.AddBillContent
 import com.android.monu.ui.feature.screen.billing.addBill.components.AddBillContentActions
-import com.android.monu.ui.feature.screen.billing.addBill.components.AddBillContentState
-import com.android.monu.ui.feature.utils.Cycle
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
-import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.isCreateBillSuccess
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.Cycle
+import com.android.monu.utils.NumberHelper
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -34,15 +35,15 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBillScreen(
-    addResult: DatabaseResultMessage?,
+    addResult: DatabaseResultState?,
     onNavigateBack: () -> Unit,
-    onAddNewBill: (AddBillContentState) -> Unit
+    onAddNewBill: (AddBillState) -> Unit
 ) {
     var billTitle by rememberSaveable { mutableStateOf("") }
     var billDate by rememberSaveable { mutableStateOf("") }
     var billAmount by rememberSaveable { mutableLongStateOf(0L) }
     var billAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(billAmount)))
+        mutableStateOf(TextFieldValue(NumberHelper.formatToRupiah(billAmount)))
     }
     var isBillRecurring by rememberSaveable { mutableStateOf(false) }
     var billCycle by rememberSaveable { mutableIntStateOf(Cycle.YEARLY) }
@@ -52,18 +53,17 @@ fun AddBillScreen(
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val billState = AddBillContentState(
+    val addBillState = AddBillState(
         title = billTitle,
         date = billDate,
         amount = billAmount,
-        amountFormat = billAmountFormat,
         isRecurring = isBillRecurring,
         cycle = billCycle,
         period = billPeriod,
         fixPeriod = billFixPeriod
     )
 
-    val billActions = object : AddBillContentActions {
+    val addBillContentActions = object : AddBillContentActions {
         override fun onTitleChange(title: String) {
             billTitle = title
         }
@@ -78,7 +78,7 @@ fun AddBillScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(billAmount)
+            val formattedText = NumberHelper.formatToRupiah(billAmount)
             val newCursorPosition = formattedText.length
 
             billAmountFormat = TextFieldValue(
@@ -108,17 +108,15 @@ fun AddBillScreen(
             }
         }
 
-        override fun onAddNewBill(billState: AddBillContentState) {
+        override fun onAddNewBill(billState: AddBillState) {
             onAddNewBill(billState)
         }
     }
 
     LaunchedEffect(addResult) {
         addResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CreateBillSuccess) {
-                onNavigateBack()
-            }
+            result.showToast(context)
+            if (result.isCreateBillSuccess()) onNavigateBack()
         }
     }
 
@@ -131,8 +129,9 @@ fun AddBillScreen(
         }
     ) { innerPadding ->
         AddBillContent(
-            billState = billState,
-            billActions = billActions,
+            billState = addBillState,
+            billAmountFormat = billAmountFormat,
+            billActions = addBillContentActions,
             modifier = Modifier.padding(innerPadding)
         )
     }

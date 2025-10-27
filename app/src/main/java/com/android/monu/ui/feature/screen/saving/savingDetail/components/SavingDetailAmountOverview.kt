@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.feature.screen.budgeting.components.calculateProgressBar
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.NumberHelper
 import com.android.monu.ui.theme.Blue800
 
 @Composable
@@ -64,7 +64,7 @@ fun SavingDetailAmountOverview(
                 Text(
                     text = stringResource(
                         R.string.percentage_value,
-                        NumberFormatHelper.formatToPercentageValue(currentAmount, targetAmount)
+                        NumberHelper.formatToPercentageValue(currentAmount, targetAmount)
                     ),
                     modifier = Modifier.padding(start = 16.dp),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 12.sp)
@@ -93,12 +93,12 @@ fun SavingDetailAmountOverview(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(currentAmount),
+                    text = NumberHelper.formatToRupiah(currentAmount),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(targetAmount),
+                    text = NumberHelper.formatToRupiah(targetAmount),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
             }

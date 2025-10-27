@@ -21,10 +21,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
-import com.android.monu.ui.feature.utils.TransactionChildCategory
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
+import com.android.monu.utils.TransactionChildCategory
+import com.android.monu.utils.TransactionType
 import com.android.monu.ui.theme.Blue800
 import com.android.monu.ui.theme.Green600
 import com.android.monu.ui.theme.Red600
@@ -73,7 +73,7 @@ fun TransactionListItem(
             )
         }
         Text(
-            text = NumberFormatHelper.formatToRupiah(transactionState.amount),
+            text = NumberHelper.formatToRupiah(transactionState.amount),
             style = MaterialTheme.typography.labelMedium.copy(
                 color = if (isDepositOrWithdraw)
                     depositOrWithdrawTransactionAmountColor(transactionState.childCategory) else

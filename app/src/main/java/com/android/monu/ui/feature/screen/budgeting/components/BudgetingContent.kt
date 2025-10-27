@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.budget.Budget
+import com.android.monu.domain.model.BudgetState
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.utils.debouncedClickable
 
@@ -24,7 +24,7 @@ import com.android.monu.ui.feature.utils.debouncedClickable
 fun BudgetingContent(
     totalMaxAmount: Long,
     totalUsedAmount: Long,
-    budgets: List<Budget>,
+    budgets: List<BudgetState>,
     onNavigateToBudgetDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -54,7 +54,7 @@ fun BudgetingContent(
 fun BudgetListContent(
     totalMaxAmount: Long,
     totalUsedAmount: Long,
-    budgets: List<Budget>,
+    budgets: List<BudgetState>,
     onNavigateToBudgetDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {

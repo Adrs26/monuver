@@ -1,18 +1,18 @@
 package com.android.monu.domain.usecase.budget
 
-import com.android.monu.domain.model.budget.Budget
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.BudgetState
+import com.android.monu.domain.model.EditBudgetState
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.ui.feature.screen.budgeting.editBudget.components.EditBudgetContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class UpdateBudgetUseCase(
     private val budgetRepository: BudgetRepository,
     private val transactionRepository: TransactionRepository
 ) {
-    suspend operator fun invoke(budgetState: EditBudgetContentState): DatabaseResultMessage {
+    suspend operator fun invoke(budgetState: EditBudgetState): DatabaseResultState {
         if (budgetState.maxAmount == 0L) {
-            return DatabaseResultMessage.EmptyBudgetMaxAmount
+            return DatabaseResultState.EmptyBudgetMaxAmount
         }
 
         val totalAmount = transactionRepository.getTotalTransactionAmountInDateRange(
@@ -22,10 +22,10 @@ class UpdateBudgetUseCase(
         )
 
         if (budgetState.maxAmount < totalAmount && !budgetState.isOverflowAllowed) {
-            return DatabaseResultMessage.CurrentBudgetAmountExceedsMaximumLimit
+            return DatabaseResultState.CurrentBudgetAmountExceedsMaximumLimit
         }
 
-        val budget = Budget(
+        val budget = BudgetState(
             id = budgetState.id,
             category = budgetState.category,
             cycle = budgetState.cycle,
@@ -39,6 +39,6 @@ class UpdateBudgetUseCase(
         )
 
         budgetRepository.updateBudget(budget)
-        return DatabaseResultMessage.UpdateBudgetSuccess
+        return DatabaseResultState.UpdateBudgetSuccess
     }
 }

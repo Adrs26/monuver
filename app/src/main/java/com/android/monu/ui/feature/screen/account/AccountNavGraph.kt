@@ -6,18 +6,18 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.android.monu.domain.model.AddAccountState
+import com.android.monu.domain.model.EditAccountState
 import com.android.monu.ui.feature.screen.account.accountDetail.AccountDetailActions
 import com.android.monu.ui.feature.screen.account.accountDetail.AccountDetailScreen
 import com.android.monu.ui.feature.screen.account.accountDetail.AccountDetailViewModel
 import com.android.monu.ui.feature.screen.account.addAccount.AddAccountActions
 import com.android.monu.ui.feature.screen.account.addAccount.AddAccountScreen
 import com.android.monu.ui.feature.screen.account.addAccount.AddAccountViewModel
-import com.android.monu.ui.feature.screen.account.addAccount.components.AddAccountContentState
 import com.android.monu.ui.feature.screen.account.components.AccountTypeScreen
 import com.android.monu.ui.feature.screen.account.editAccount.EditAccountActions
 import com.android.monu.ui.feature.screen.account.editAccount.EditAccountScreen
 import com.android.monu.ui.feature.screen.account.editAccount.EditAccountViewModel
-import com.android.monu.ui.feature.screen.account.editAccount.components.EditAccountContentState
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.Account
@@ -79,7 +79,7 @@ fun NavGraphBuilder.accountNavGraph(
                     navController.navigate(Account.Type)
                 }
 
-                override fun onAddNewAccount(accountState: AddAccountContentState) {
+                override fun onAddNewAccount(accountState: AddAccountState) {
                     viewModel.createNewAccountWithInitialTransaction(accountState)
                 }
             }
@@ -120,10 +120,10 @@ fun NavGraphBuilder.accountDetailNavGraph(
                 viewModelStoreOwner = it,
                 parameters = { parametersOf(it.savedStateHandle) }
             )
-            val account by viewModel.account.collectAsStateWithLifecycle()
+            val accountState by viewModel.accountState.collectAsStateWithLifecycle()
             val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
 
-            account?.let { account ->
+            accountState?.let { accountState ->
                 val accountDetailActions = object : AccountDetailActions {
                     override fun onNavigateBack() {
                         navController.navigateUp()
@@ -143,9 +143,9 @@ fun NavGraphBuilder.accountDetailNavGraph(
                 }
 
                 AccountDetailScreen(
-                    account = account,
-                    editResult = editResult,
-                    accountActions = accountDetailActions
+                    accountState = accountState,
+                    accountActions = accountDetailActions,
+                    editResult = editResult
                 )
             }
         }
@@ -158,10 +158,10 @@ fun NavGraphBuilder.accountDetailNavGraph(
             val viewModel = it.sharedKoinViewModel<EditAccountViewModel>(navController) {
                 parametersOf(it.savedStateHandle)
             }
-            val account by viewModel.account.collectAsStateWithLifecycle()
+            val accountState by viewModel.accountState.collectAsStateWithLifecycle()
             val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
 
-            account?.let { account ->
+            accountState?.let { accountState ->
                 val editAccountActions = object : EditAccountActions {
                     override fun onNavigateBack() {
                         navController.navigateUp()
@@ -172,13 +172,13 @@ fun NavGraphBuilder.accountDetailNavGraph(
                         navController.navigate(AccountDetail.Type)
                     }
 
-                    override fun onEditAccount(accountState: EditAccountContentState) {
+                    override fun onEditAccount(accountState: EditAccountState) {
                         viewModel.updateAccount(accountState)
                     }
                 }
 
                 EditAccountScreen(
-                    account = account,
+                    accountState = accountState,
                     editResult = editResult,
                     accountActions = editAccountActions
                 )

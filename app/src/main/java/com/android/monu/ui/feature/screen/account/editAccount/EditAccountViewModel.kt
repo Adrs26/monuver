@@ -4,11 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.android.monu.domain.model.account.Account
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AccountState
+import com.android.monu.domain.model.EditAccountState
 import com.android.monu.domain.usecase.account.GetAccountByIdUseCase
 import com.android.monu.domain.usecase.finance.UpdateAccountUseCase
-import com.android.monu.ui.feature.screen.account.editAccount.components.EditAccountContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.navigation.AccountDetail
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,40 +24,40 @@ class EditAccountViewModel(
     private val getAccountByIdUseCase: GetAccountByIdUseCase,
     private val updateAccountUseCase: UpdateAccountUseCase
 ) : ViewModel() {
-    private val _account = MutableStateFlow<Account?>(null)
-    val account = _account
+    private val _accountState = MutableStateFlow<AccountState?>(null)
+    val accountState = _accountState
         .onStart {
             val id = savedStateHandle.toRoute<AccountDetail.Edit>().accountId
             getAccountById(id)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
-    private val initialAccount = MutableStateFlow<Account?>(null)
+    private val initialAccountState = MutableStateFlow<AccountState?>(null)
 
-    private val _updateResult = MutableStateFlow<DatabaseResultMessage?>(null)
+    private val _updateResult = MutableStateFlow<DatabaseResultState?>(null)
     val updateResult = _updateResult.asStateFlow()
 
     private fun getAccountById(id: Int) {
         viewModelScope.launch {
             getAccountByIdUseCase(id).collect { account ->
-                initialAccount.value = account
-                _account.value = account
+                initialAccountState.value = account
+                _accountState.value = account
             }
         }
     }
 
     fun changeAccountType(type: Int) {
-        _account.update { account ->
-            account?.copy(type = type)
+        _accountState.update { accountState ->
+            accountState?.copy(type = type)
         }
     }
 
     fun restoreOriginalAccount() {
-        initialAccount.value.let {
-            _account.value = it
+        initialAccountState.value.let {
+            _accountState.value = it
         }
     }
 
-    fun updateAccount(accountState: EditAccountContentState) {
+    fun updateAccount(accountState: EditAccountState) {
         viewModelScope.launch {
             _updateResult.value = updateAccountUseCase(accountState)
             delay(500)

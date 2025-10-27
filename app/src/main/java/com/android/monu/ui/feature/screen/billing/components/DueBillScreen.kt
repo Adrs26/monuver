@@ -8,13 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.model.BillState
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun DueBillScreen(
-    bills: List<Bill>,
+    bills: List<BillState>,
     onNavigateToBillDetail: (Long) -> Unit
 ) {
     if (bills.isEmpty()) {

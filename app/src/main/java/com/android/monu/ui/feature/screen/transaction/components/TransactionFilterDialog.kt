@@ -31,10 +31,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.android.monu.R
-import com.android.monu.ui.feature.utils.DataProvider
+import com.android.monu.utils.DataProvider
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.Month
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.Month
+import com.android.monu.utils.TransactionType
 import kotlin.math.ceil
 
 @Composable

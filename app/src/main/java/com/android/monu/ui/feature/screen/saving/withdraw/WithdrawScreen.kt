@@ -17,13 +17,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.DepositWithdrawState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.saving.withdraw.components.WithdrawContent
 import com.android.monu.ui.feature.screen.saving.withdraw.components.WithdrawContentActions
-import com.android.monu.ui.feature.screen.saving.withdraw.components.WithdrawContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.ui.feature.utils.isCreateWithdrawTransactionSuccess
 import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.NumberHelper
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -34,26 +36,25 @@ import org.threeten.bp.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WithdrawScreen(
-    withdrawState: WithdrawState,
+    withdrawUiState: WithdrawUiState,
     withdrawActions: WithdrawActions
 ) {
     var withdrawDate by rememberSaveable { mutableStateOf("") }
     var withdrawAmount by rememberSaveable { mutableLongStateOf(0L) }
     var withdrawAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(withdrawAmount)))
+        mutableStateOf(TextFieldValue(NumberHelper.formatToRupiah(withdrawAmount)))
     }
 
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val withdrawContentState = WithdrawContentState(
+    val withdrawState = DepositWithdrawState(
         date = withdrawDate,
         amount = withdrawAmount,
-        amountFormat = withdrawAmountFormat,
-        accountId = withdrawState.account.first,
-        accountName = withdrawState.account.second,
-        savingId = withdrawState.saving.first,
-        savingName = withdrawState.saving.second
+        accountId = withdrawUiState.account.first,
+        accountName = withdrawUiState.account.second,
+        savingId = withdrawUiState.saving.first,
+        savingName = withdrawUiState.saving.second
     )
 
     val withdrawContentActions = object : WithdrawContentActions {
@@ -67,7 +68,7 @@ fun WithdrawScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(withdrawAmount)
+            val formattedText = NumberHelper.formatToRupiah(withdrawAmount)
             val newCursorPosition = formattedText.length
 
             withdrawAmountFormat = TextFieldValue(
@@ -80,17 +81,15 @@ fun WithdrawScreen(
             withdrawActions.onNavigateToAccount()
         }
 
-        override fun onAddNewWithdraw(withdrawState: WithdrawContentState) {
+        override fun onAddNewWithdraw(withdrawState: DepositWithdrawState) {
             withdrawActions.onAddNewWithdraw(withdrawState)
         }
     }
 
-    LaunchedEffect(withdrawState.addResult) {
-        withdrawState.addResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.CreateWithdrawTransactionSuccess) {
-                withdrawActions.onNavigateBack()
-            }
+    LaunchedEffect(withdrawUiState.addResult) {
+        withdrawUiState.addResult?.let { result ->
+            result.showToast(context)
+            if (result.isCreateWithdrawTransactionSuccess()) withdrawActions.onNavigateBack()
         }
     }
 
@@ -103,7 +102,8 @@ fun WithdrawScreen(
         }
     ) { innerPadding ->
         WithdrawContent(
-            withdrawState = withdrawContentState,
+            withdrawState = withdrawState,
+            withdrawAmountFormat = withdrawAmountFormat,
             withdrawActions = withdrawContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -128,14 +128,14 @@ fun WithdrawScreen(
     )
 }
 
-data class WithdrawState(
+data class WithdrawUiState(
     val account: Pair<Int, String>,
     val saving: Pair<Long, String>,
-    val addResult: DatabaseResultMessage?
+    val addResult: DatabaseResultState?
 )
 
 interface WithdrawActions {
     fun onNavigateBack()
     fun onNavigateToAccount()
-    fun onAddNewWithdraw(withdrawState: WithdrawContentState)
+    fun onAddNewWithdraw(withdrawState: DepositWithdrawState)
 }

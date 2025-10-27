@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
-import com.android.monu.domain.model.saving.Saving
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.SavingState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.components.TransactionListItem
 import com.android.monu.ui.feature.components.TransactionListItemState
@@ -24,8 +24,8 @@ import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun SavingDetailContent(
-    savingState: Saving,
-    transactions: List<Transaction>,
+    savingState: SavingState,
+    transactions: List<TransactionState>,
     onNavigateToDeposit: () -> Unit,
     onNavigateToWithdraw: () -> Unit,
     onNavigateToTransactionDetail: (Long) -> Unit,
@@ -57,8 +57,8 @@ fun SavingDetailContent(
 
 @Composable
 fun SavingDetailListContent(
-    savingState: Saving,
-    transactions: List<Transaction>,
+    savingState: SavingState,
+    transactions: List<TransactionState>,
     onNavigateToDeposit: () -> Unit,
     onNavigateToWithdraw: () -> Unit,
     onNavigateToTransactionDetail: (Long) -> Unit,
@@ -130,7 +130,7 @@ fun SavingDetailListContent(
 
 @Composable
 fun SavingDetailEmptyListContent(
-    savingState: Saving,
+    savingState: SavingState,
     onNavigateToDeposit: () -> Unit,
     onNavigateToWithdraw: () -> Unit,
     modifier: Modifier = Modifier

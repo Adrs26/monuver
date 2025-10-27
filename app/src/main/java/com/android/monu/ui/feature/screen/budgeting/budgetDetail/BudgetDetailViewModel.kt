@@ -22,12 +22,12 @@ class BudgetDetailViewModel(
     private val deleteBudgetUseCase: DeleteBudgetUseCase
 ) : ViewModel() {
 
-    val budget = getBudgetByIdUseCase(
+    val budgetState = getBudgetByIdUseCase(
         savedStateHandle.toRoute<BudgetDetail.Main>().budgetId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val transactions = budget
+    val transactions = budgetState
         .filterNotNull()
         .flatMapLatest { budget ->
             getTransactionsByCategoryAndDateRangeUseCase(

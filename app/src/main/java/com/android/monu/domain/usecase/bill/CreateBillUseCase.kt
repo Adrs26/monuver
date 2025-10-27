@@ -1,23 +1,23 @@
 package com.android.monu.domain.usecase.bill
 
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AddBillState
+import com.android.monu.domain.model.BillState
 import com.android.monu.domain.repository.BillRepository
-import com.android.monu.ui.feature.screen.billing.addBill.components.AddBillContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class CreateBillUseCase(
     private val repository: BillRepository
 ) {
-    suspend operator fun invoke(billState: AddBillContentState): DatabaseResultMessage {
+    suspend operator fun invoke(billState: AddBillState): DatabaseResultState {
         when {
-            billState.title.isEmpty() -> return DatabaseResultMessage.EmptyBillTitle
-            billState.date.isEmpty() -> return DatabaseResultMessage.EmptyBillDate
-            billState.amount == 0L -> return DatabaseResultMessage.EmptyBillAmount
+            billState.title.isEmpty() -> return DatabaseResultState.EmptyBillTitle
+            billState.date.isEmpty() -> return DatabaseResultState.EmptyBillDate
+            billState.amount == 0L -> return DatabaseResultState.EmptyBillAmount
             billState.isRecurring && billState.period == 2 && billState.fixPeriod.isEmpty() ->
-                return DatabaseResultMessage.EmptyBillFixPeriod
+                return DatabaseResultState.EmptyBillFixPeriod
         }
 
-        val bill = Bill(
+        val bill = BillState(
             title = billState.title,
             dueDate = billState.date,
             paidDate = null,
@@ -34,6 +34,6 @@ class CreateBillUseCase(
 
         val billId = repository.createNewBill(bill)
         repository.updateParentId(billId, billId)
-        return DatabaseResultMessage.CreateBillSuccess
+        return DatabaseResultState.CreateBillSuccess
     }
 }

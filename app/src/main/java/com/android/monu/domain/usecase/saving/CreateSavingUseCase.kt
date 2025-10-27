@@ -1,21 +1,21 @@
 package com.android.monu.domain.usecase.saving
 
-import com.android.monu.domain.model.saving.Saving
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AddSavingState
+import com.android.monu.domain.model.SavingState
 import com.android.monu.domain.repository.SavingRepository
-import com.android.monu.ui.feature.screen.saving.addSaving.components.AddSavingContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class CreateSavingUseCase(
     private val repository: SavingRepository
 ) {
-    suspend operator fun invoke(savingState: AddSavingContentState): DatabaseResultMessage {
+    suspend operator fun invoke(savingState: AddSavingState): DatabaseResultState {
         when {
-            savingState.title.isEmpty() -> return DatabaseResultMessage.EmptySavingTitle
-            savingState.targetDate.isEmpty() -> return DatabaseResultMessage.EmptySavingTargetDate
-            savingState.targetAmount == 0L -> return DatabaseResultMessage.EmptySavingTargetAmount
+            savingState.title.isEmpty() -> return DatabaseResultState.EmptySavingTitle
+            savingState.targetDate.isEmpty() -> return DatabaseResultState.EmptySavingTargetDate
+            savingState.targetAmount == 0L -> return DatabaseResultState.EmptySavingTargetAmount
         }
 
-        val saving = Saving(
+        val saving = SavingState(
             title = savingState.title,
             targetDate = savingState.targetDate,
             targetAmount = savingState.targetAmount,
@@ -24,6 +24,6 @@ class CreateSavingUseCase(
         )
 
         repository.createNewSaving(saving)
-        return DatabaseResultMessage.CreateSavingSuccess
+        return DatabaseResultState.CreateSavingSuccess
     }
 }

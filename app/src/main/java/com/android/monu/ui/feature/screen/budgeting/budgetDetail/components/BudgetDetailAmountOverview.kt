@@ -22,14 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.feature.screen.budgeting.budgetDetail.BudgetDetailState
+import com.android.monu.domain.model.BudgetState
 import com.android.monu.ui.feature.screen.budgeting.components.calculateProgressBar
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.NumberHelper
 
 @Composable
 fun BudgetDetailAmountOverview(
-    budgetState: BudgetDetailState,
+    budgetState: BudgetState,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -66,7 +66,7 @@ fun BudgetDetailAmountOverview(
                 Text(
                     text = stringResource(
                         R.string.percentage_value,
-                        NumberFormatHelper.formatToPercentageValue(
+                        NumberHelper.formatToPercentageValue(
                             value = budgetState.usedAmount,
                             total = budgetState.maxAmount
                         )
@@ -98,12 +98,12 @@ fun BudgetDetailAmountOverview(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(budgetState.usedAmount),
+                    text = NumberHelper.formatToRupiah(budgetState.usedAmount),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(budgetState.maxAmount),
+                    text = NumberHelper.formatToRupiah(budgetState.maxAmount),
                     style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
                 )
             }

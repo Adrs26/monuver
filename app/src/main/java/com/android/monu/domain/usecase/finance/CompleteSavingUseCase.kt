@@ -1,26 +1,26 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.TransactionChildCategory
-import com.android.monu.ui.feature.utils.TransactionParentCategory
-import com.android.monu.ui.feature.utils.TransactionType
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.TransactionChildCategory
+import com.android.monu.utils.TransactionParentCategory
+import com.android.monu.utils.TransactionType
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 
 class CompleteSavingUseCase(
     private val financeRepository: FinanceRepository
 ) {
-    suspend operator fun invoke(savingId: Long, savingName: String, savingAmount: Long): DatabaseResultMessage {
-        if (savingAmount == 0L) return DatabaseResultMessage.EmptySavingAmount
+    suspend operator fun invoke(savingId: Long, savingName: String, savingAmount: Long): DatabaseResultState {
+        if (savingAmount == 0L) return DatabaseResultState.EmptySavingAmount
 
         val currentDate = LocalDate.now()
         val isoDate = currentDate.format(DateTimeFormatter.ISO_DATE)
         val (month, year) = DateHelper.getMonthAndYear(isoDate)
 
-        val transaction = Transaction(
+        val transactionState = TransactionState(
             title = "Penyelesaian Tabungan",
             type = TransactionType.EXPENSE,
             parentCategory = TransactionParentCategory.OTHER_EXPENSE,
@@ -36,7 +36,7 @@ class CompleteSavingUseCase(
             isSpecialCase = true
         )
 
-        financeRepository.completeSaving(transaction, savingId)
-        return DatabaseResultMessage.CompleteSavingSuccess
+        financeRepository.completeSaving(transactionState, savingId)
+        return DatabaseResultState.CompleteSavingSuccess
     }
 }

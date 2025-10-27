@@ -1,22 +1,22 @@
 package com.android.monu.domain.usecase.finance
 
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.EditTransactionState
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.domain.repository.FinanceRepository
-import com.android.monu.ui.feature.screen.transaction.editTransaction.components.EditTransactionContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 class UpdateIncomeTransactionUseCase(
     private val repository: FinanceRepository
 ) {
-    suspend operator fun invoke(transactionState: EditTransactionContentState): DatabaseResultMessage {
+    suspend operator fun invoke(transactionState: EditTransactionState): DatabaseResultState {
         when {
-            transactionState.title.isEmpty() -> return DatabaseResultMessage.EmptyTransactionTitle
-            transactionState.amount == 0L -> return DatabaseResultMessage.EmptyTransactionAmount
+            transactionState.title.isEmpty() -> return DatabaseResultState.EmptyTransactionTitle
+            transactionState.amount == 0L -> return DatabaseResultState.EmptyTransactionAmount
         }
 
         val (month, year) = DateHelper.getMonthAndYear(transactionState.date)
-        val transaction = Transaction(
+        val transaction = TransactionState(
             id = transactionState.id,
             title = transactionState.title,
             type = transactionState.type,
@@ -34,9 +34,9 @@ class UpdateIncomeTransactionUseCase(
         )
 
         repository.updateIncomeTransaction(
-            transaction = transaction,
+            transactionState = transaction,
             initialAmount = transactionState.initialAmount
         )
-        return DatabaseResultMessage.UpdateTransactionSuccess
+        return DatabaseResultState.UpdateTransactionSuccess
     }
 }

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.components.CommonLottieAnimation
 import com.android.monu.ui.feature.components.TransactionListItem
 import com.android.monu.ui.feature.components.TransactionListItemState
@@ -22,7 +22,7 @@ import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun TransactionList(
-    transactions: LazyPagingItems<Transaction>,
+    transactions: LazyPagingItems<TransactionState>,
     onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {

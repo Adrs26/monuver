@@ -1,44 +1,30 @@
 package com.android.monu.data.mapper
 
 import com.android.monu.data.local.entity.room.SavingEntity
-import com.android.monu.domain.model.saving.Saving
+import com.android.monu.domain.model.SavingState
 
-object SavingMapper {
-    fun savingEntityToDomain(
-        savingEntity: SavingEntity
-    ): Saving {
-        return Saving(
-            id = savingEntity.id,
-            title = savingEntity.title,
-            targetDate = savingEntity.targetDate,
-            targetAmount = savingEntity.targetAmount,
-            currentAmount = savingEntity.currentAmount,
-            isActive = savingEntity.isActive
-        )
-    }
+fun SavingEntity.toDomain() = SavingState(
+    id = id,
+    title = title,
+    targetDate = targetDate,
+    targetAmount = targetAmount,
+    currentAmount = currentAmount,
+    isActive = isActive
+)
 
-    fun savingDomainToEntity(
-        saving: Saving
-    ): SavingEntity {
-        return SavingEntity(
-            title = saving.title,
-            targetDate = saving.targetDate,
-            targetAmount = saving.targetAmount,
-            currentAmount = saving.currentAmount,
-            isActive = saving.isActive
-        )
-    }
+fun SavingState.toEntity() = SavingEntity(
+    title = title,
+    targetDate = targetDate,
+    targetAmount = targetAmount,
+    currentAmount = currentAmount,
+    isActive = isActive
+)
 
-    fun savingDomainToEntityForUpdate(
-        saving: Saving
-    ): SavingEntity {
-        return SavingEntity(
-            id = saving.id,
-            title = saving.title,
-            targetDate = saving.targetDate,
-            targetAmount = saving.targetAmount,
-            currentAmount = saving.currentAmount,
-            isActive = saving.isActive
-        )
-    }
-}
+fun SavingState.toEntityForUpdate() = SavingEntity(
+    id = id,
+    title = title,
+    targetDate = targetDate,
+    targetAmount = targetAmount,
+    currentAmount = currentAmount,
+    isActive = isActive
+)

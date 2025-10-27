@@ -19,16 +19,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.data.datastore.ThemeSetting
-import com.android.monu.domain.model.transaction.TransactionBalanceSummary
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.domain.model.TransactionBalanceSummaryState
 import com.android.monu.ui.theme.Green100
 import com.android.monu.ui.theme.Green600
 import com.android.monu.ui.theme.Red100
 import com.android.monu.ui.theme.Red600
+import com.android.monu.utils.NumberHelper
 
 @Composable
 fun AnalyticsBalanceOverview(
-    amountSummary: TransactionBalanceSummary,
+    amountSummary: TransactionBalanceSummaryState,
     themeSetting: ThemeSetting,
     modifier: Modifier = Modifier
 ) {
@@ -76,7 +76,7 @@ fun BalanceData(
                 style = MaterialTheme.typography.labelSmall
             )
             Text(
-                text = NumberFormatHelper.formatToRupiah(totalAmount),
+                text = NumberHelper.formatToRupiah(totalAmount),
                 modifier = Modifier.padding(top = 2.dp),
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
             )
@@ -86,7 +86,7 @@ fun BalanceData(
                 style = MaterialTheme.typography.labelSmall
             )
             Text(
-                text = NumberFormatHelper.formatToRupiah(averageAmount.toLong()),
+                text = NumberHelper.formatToRupiah(averageAmount.toLong()),
                 modifier = Modifier.padding(top = 2.dp),
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 14.sp)
             )

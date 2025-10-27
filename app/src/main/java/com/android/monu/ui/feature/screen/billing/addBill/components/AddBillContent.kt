@@ -23,18 +23,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.AddBillState
 import com.android.monu.ui.feature.components.CycleFilterField
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.components.TextWithSwitch
 import com.android.monu.ui.feature.screen.billing.components.BillPeriodRadioGroupField
-import com.android.monu.ui.feature.utils.Cycle
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.Cycle
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun AddBillContent(
-    billState: AddBillContentState,
+    billState: AddBillState,
+    billAmountFormat: TextFieldValue,
     billActions: AddBillContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -65,7 +67,7 @@ fun AddBillContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
-            value = billState.amountFormat,
+            value = billAmountFormat,
             onValueChange = billActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -115,17 +117,6 @@ fun AddBillContent(
     }
 }
 
-data class AddBillContentState(
-    val title: String,
-    val date: String,
-    val amount: Long,
-    val amountFormat: TextFieldValue,
-    val isRecurring: Boolean,
-    val cycle: Int,
-    val period: Int,
-    val fixPeriod: String
-)
-
 interface AddBillContentActions {
     fun onTitleChange(title: String)
     fun onDateClick()
@@ -134,5 +125,5 @@ interface AddBillContentActions {
     fun onCycleChange(cycle: Int)
     fun onPeriodChange(period: Int)
     fun onFixPeriodChange(fixPeriod: String)
-    fun onAddNewBill(billState: AddBillContentState)
+    fun onAddNewBill(billState: AddBillState)
 }

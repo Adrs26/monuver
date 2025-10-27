@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
 
 @Composable
 fun BudgetListItem(
@@ -75,7 +75,7 @@ fun BudgetListItem(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(budgetState.usedAmount),
+                    text = NumberHelper.formatToRupiah(budgetState.usedAmount),
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 13.sp
@@ -89,7 +89,7 @@ fun BudgetListItem(
                     color = Color.Gray
                 )
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(budgetState.maxAmount),
+                    text = NumberHelper.formatToRupiah(budgetState.maxAmount),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     style = MaterialTheme.typography.labelSmall.copy(
@@ -134,7 +134,7 @@ fun BudgetListItemIcon(
             Text(
                 text = stringResource(
                     R.string.percentage_value,
-                    NumberFormatHelper.formatToPercentageValue(usedAmount, maxAmount)
+                    NumberHelper.formatToPercentageValue(usedAmount, maxAmount)
                 ),
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = color,

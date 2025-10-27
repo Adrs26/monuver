@@ -17,16 +17,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.PayBillState
 import com.android.monu.ui.feature.components.StaticTextInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
 
 @Composable
 fun PayBillContent(
-    billState: PayBillContentState,
+    billState: PayBillState,
     billActions: PayBillContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -72,7 +73,7 @@ fun PayBillContent(
         )
         StaticTextInputField(
             title = stringResource(R.string.amount),
-            value = NumberFormatHelper.formatToRupiah(billState.amount),
+            value = NumberHelper.formatToRupiah(billState.amount),
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextInputField(
@@ -105,20 +106,10 @@ fun PayBillContent(
     }
 }
 
-data class PayBillContentState(
-    val title: String,
-    val parentCategory: Int,
-    val childCategory: Int,
-    val date: String,
-    val amount: Long,
-    val sourceId: Int,
-    val sourceName: String
-)
-
 interface PayBillContentActions {
     fun onTitleChange(title: String)
     fun onNavigateToCategory()
     fun onDateClick()
     fun onNavigateToSource()
-    fun onPayBill(billState: PayBillContentState)
+    fun onPayBill(billState: PayBillState)
 }

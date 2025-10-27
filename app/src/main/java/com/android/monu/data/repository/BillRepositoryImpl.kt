@@ -6,8 +6,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.android.monu.data.local.dao.BillDao
-import com.android.monu.data.mapper.BillMapper
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.data.mapper.toDomain
+import com.android.monu.data.mapper.toEntity
+import com.android.monu.data.mapper.toEntityForUpdate
+import com.android.monu.domain.model.BillState
 import com.android.monu.domain.repository.BillRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -17,23 +19,19 @@ class BillRepositoryImpl(
     private val billDao: BillDao
 ) : BillRepository {
 
-    override fun getPendingBills(): Flow<List<Bill>> {
+    override fun getPendingBills(): Flow<List<BillState>> {
         return billDao.getPendingBills().map { bills ->
-            bills.map { bill ->
-                BillMapper.billEntityToDomain(bill)
-            }
+            bills.map { it.toDomain() }
         }
     }
 
-    override fun getDueBills(): Flow<List<Bill>> {
+    override fun getDueBills(): Flow<List<BillState>> {
         return billDao.getDueBills().map { bills ->
-            bills.map { bill ->
-                BillMapper.billEntityToDomain(bill)
-            }
+            bills.map { it.toDomain() }
         }
     }
 
-    override fun getPaidBills(scope: CoroutineScope): Flow<PagingData<Bill>> {
+    override fun getPaidBills(scope: CoroutineScope): Flow<PagingData<BillState>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 10,
@@ -44,20 +42,16 @@ class BillRepositoryImpl(
             }
         ).flow
             .map { pagingData ->
-                pagingData.map { bill ->
-                    BillMapper.billEntityToDomain(bill)
-                }
+                pagingData.map { it.toDomain() }
             }.cachedIn(scope)
     }
 
-    override fun getBillById(id: Long): Flow<Bill?> {
-        return billDao.getBillById(id).map { bill ->
-            bill?.let { BillMapper.billEntityToDomain(it) }
-        }
+    override fun getBillById(id: Long): Flow<BillState?> {
+        return billDao.getBillById(id).map { it?.toDomain() }
     }
 
-    override suspend fun createNewBill(bill: Bill): Long {
-        return billDao.createNewBill(BillMapper.billDomainToEntity(bill))
+    override suspend fun createNewBill(billState: BillState): Long {
+        return billDao.createNewBill(billState.toEntity())
     }
 
     override suspend fun updateParentId(id: Long, parentId: Long) {
@@ -68,8 +62,8 @@ class BillRepositoryImpl(
         billDao.deleteBillById(billId)
     }
 
-    override suspend fun updateBill(bill: Bill) {
-        billDao.updateBill(BillMapper.billDomainToEntityForUpdate(bill))
+    override suspend fun updateBill(billState: BillState) {
+        billDao.updateBill(billState.toEntityForUpdate())
     }
 
     override suspend fun updateBillPeriodByParentId(
@@ -80,9 +74,7 @@ class BillRepositoryImpl(
         billDao.updateBillPeriodByParentId(period, fixPeriod, parentId)
     }
 
-    override suspend fun getAllBills(): List<Bill> {
-        return billDao.getAllBills().map { bill ->
-            BillMapper.billEntityToDomain(bill)
-        }
+    override suspend fun getAllBills(): List<BillState> {
+        return billDao.getAllBills().map { it.toDomain() }
     }
 }

@@ -83,7 +83,6 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.gson)
-    implementation(libs.openpdf)
     implementation(libs.itextg)
 
     testImplementation(libs.junit)

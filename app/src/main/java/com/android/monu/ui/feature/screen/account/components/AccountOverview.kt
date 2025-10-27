@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.NumberHelper
 
 @Composable
 fun AccountOverview(
@@ -40,7 +40,7 @@ fun AccountOverview(
                 style = MaterialTheme.typography.labelSmall
             )
             Text(
-                text = NumberFormatHelper.formatToRupiah(totalBalance),
+                text = NumberHelper.formatToRupiah(totalBalance),
                 modifier = Modifier.padding(top = 4.dp),
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = 24.sp)
             )

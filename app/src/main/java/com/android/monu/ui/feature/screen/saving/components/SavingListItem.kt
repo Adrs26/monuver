@@ -27,15 +27,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.saving.Saving
+import com.android.monu.domain.model.SavingState
 import com.android.monu.ui.feature.screen.budgeting.components.calculateProgressBar
-import com.android.monu.ui.feature.utils.DateHelper
-import com.android.monu.ui.feature.utils.NumberFormatHelper
+import com.android.monu.utils.DateHelper
+import com.android.monu.utils.NumberHelper
 import com.android.monu.ui.theme.Blue800
 
 @Composable
 fun SavingListItem(
-    saving: Saving,
+    savingState: SavingState,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -45,8 +45,8 @@ fun SavingListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         SavingListItemIcon(
-            currentAmount = saving.currentAmount,
-            targetAmount = saving.targetAmount
+            currentAmount = savingState.currentAmount,
+            targetAmount = savingState.targetAmount
         )
         Column(
             modifier = Modifier
@@ -54,7 +54,7 @@ fun SavingListItem(
                 .weight(1f)
         ) {
             Text(
-                text = saving.title,
+                text = savingState.title,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
                 style = MaterialTheme.typography.labelMedium.copy(
@@ -62,7 +62,7 @@ fun SavingListItem(
                 )
             )
             Text(
-                text = DateHelper.formatDateToReadable(saving.targetDate),
+                text = DateHelper.formatDateToReadable(savingState.targetDate),
                 modifier = Modifier.padding(top = 4.dp),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -76,7 +76,7 @@ fun SavingListItem(
                 verticalAlignment = Alignment.Bottom
             ) {
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(saving.currentAmount),
+                    text = NumberHelper.formatToRupiah(savingState.currentAmount),
                     style = MaterialTheme.typography.labelMedium.copy(
                         color = MaterialTheme.colorScheme.onBackground,
                         fontSize = 13.sp
@@ -90,7 +90,7 @@ fun SavingListItem(
                     color = Color.Gray
                 )
                 Text(
-                    text = NumberFormatHelper.formatToRupiah(saving.targetAmount),
+                    text = NumberHelper.formatToRupiah(savingState.targetAmount),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                     style = MaterialTheme.typography.labelSmall.copy(
@@ -134,7 +134,7 @@ fun SavingListItemIcon(
             Text(
                 text = stringResource(
                     R.string.percentage_value,
-                    NumberFormatHelper.formatToPercentageValue(currentAmount, targetAmount)
+                    NumberHelper.formatToPercentageValue(currentAmount, targetAmount)
                 ),
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = Blue800,

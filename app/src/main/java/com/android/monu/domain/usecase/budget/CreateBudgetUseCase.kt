@@ -1,23 +1,23 @@
 package com.android.monu.domain.usecase.budget
 
-import com.android.monu.domain.model.budget.Budget
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.AddBudgetState
+import com.android.monu.domain.model.BudgetState
 import com.android.monu.domain.repository.BudgetRepository
 import com.android.monu.domain.repository.TransactionRepository
-import com.android.monu.ui.feature.screen.budgeting.addBudget.components.AddBudgetContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class CreateBudgetUseCase(
     private val budgetRepository: BudgetRepository,
     private val transactionRepository: TransactionRepository
 ) {
-    suspend operator fun invoke(budgetState: AddBudgetContentState): DatabaseResultMessage {
+    suspend operator fun invoke(budgetState: AddBudgetState): DatabaseResultState {
         when {
-            budgetState.category == 0 -> return DatabaseResultMessage.EmptyBudgetCategory
-            budgetState.maxAmount == 0L -> return DatabaseResultMessage.EmptyBudgetMaxAmount
+            budgetState.category == 0 -> return DatabaseResultState.EmptyBudgetCategory
+            budgetState.maxAmount == 0L -> return DatabaseResultState.EmptyBudgetMaxAmount
         }
 
         if (budgetRepository.isBudgetExists(budgetState.category)) {
-            return DatabaseResultMessage.ActiveBudgetWithCategoryAlreadyExists
+            return DatabaseResultState.ActiveBudgetWithCategoryAlreadyExists
         }
 
         val totalAmount = transactionRepository.getTotalTransactionAmountInDateRange(
@@ -27,10 +27,10 @@ class CreateBudgetUseCase(
         )
 
         if (budgetState.maxAmount < totalAmount && !budgetState.isOverflowAllowed) {
-            return DatabaseResultMessage.CurrentBudgetAmountExceedsMaximumLimit
+            return DatabaseResultState.CurrentBudgetAmountExceedsMaximumLimit
         }
 
-        val budget = Budget(
+        val budget = BudgetState(
             category = budgetState.category,
             cycle = budgetState.cycle,
             startDate = budgetState.startDate,
@@ -43,6 +43,6 @@ class CreateBudgetUseCase(
         )
 
         budgetRepository.createNewBudget(budget)
-        return DatabaseResultMessage.CreateBudgetSuccess
+        return DatabaseResultState.CreateBudgetSuccess
     }
 }

@@ -18,15 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.AddTransactionState
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun AddTransactionContent(
-    transactionState: AddTransactionContentState,
+    transactionState: AddTransactionState,
+    transactionAmountFormat: TextFieldValue,
     transactionActions: AddTransactionContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -72,7 +74,7 @@ fun AddTransactionContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
-            value = transactionState.amountFormat,
+            value = transactionAmountFormat,
             onValueChange = transactionActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -106,23 +108,11 @@ fun AddTransactionContent(
     }
 }
 
-data class AddTransactionContentState(
-    val title: String,
-    val type: Int,
-    val parentCategory: Int,
-    val childCategory: Int,
-    val date: String,
-    val amount: Long,
-    val amountFormat: TextFieldValue,
-    val sourceId: Int,
-    val sourceName: String
-)
-
 interface AddTransactionContentActions {
     fun onTitleChange(title: String)
     fun onNavigateToCategory(transactionType: Int)
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
     fun onNavigateToSource()
-    fun onAddNewTransaction(transactionState: AddTransactionContentState)
+    fun onAddNewTransaction(transactionState: AddTransactionState)
 }

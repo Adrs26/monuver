@@ -18,16 +18,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monu.R
+import com.android.monu.domain.model.EditTransactionState
 import com.android.monu.ui.feature.components.StaticTextInputField
 import com.android.monu.ui.feature.components.TextAmountInputField
 import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
-import com.android.monu.ui.feature.utils.DateHelper
+import com.android.monu.utils.DateHelper
 
 @Composable
 fun EditTransactionContent(
-    transactionState: EditTransactionContentState,
+    transactionState: EditTransactionState,
+    transactionAmountFormat: TextFieldValue,
     transactionActions: EditTransactionContentActions,
     modifier: Modifier = Modifier
 ) {
@@ -73,7 +75,7 @@ fun EditTransactionContent(
         )
         TextAmountInputField(
             title = stringResource(R.string.amount),
-            value = transactionState.amountFormat,
+            value = transactionAmountFormat,
             onValueChange = transactionActions::onAmountChange,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
@@ -98,27 +100,10 @@ fun EditTransactionContent(
     }
 }
 
-data class EditTransactionContentState(
-    val id: Long,
-    val title: String,
-    val type: Int,
-    val parentCategory: Int,
-    val childCategory: Int,
-    val initialParentCategory: Int,
-    val date: String,
-    val initialDate: String,
-    val amount: Long,
-    val amountFormat: TextFieldValue,
-    val initialAmount: Long,
-    val sourceId: Int,
-    val sourceName: String,
-    val isLocked: Boolean
-)
-
 interface EditTransactionContentActions {
     fun onTitleChange(title: String)
     fun onNavigateToCategory(transactionType: Int)
     fun onDateClick()
     fun onAmountChange(amountFormat: TextFieldValue)
-    fun onEditTransaction(transactionState: EditTransactionContentState)
+    fun onEditTransaction(transactionState: EditTransactionState)
 }

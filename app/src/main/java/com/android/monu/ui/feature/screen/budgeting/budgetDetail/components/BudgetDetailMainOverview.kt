@@ -16,13 +16,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.ui.feature.screen.budgeting.budgetDetail.BudgetDetailState
+import com.android.monu.domain.model.BudgetState
 import com.android.monu.ui.feature.screen.budgeting.components.formatBudgetDate
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 
 @Composable
 fun BudgetDetailMainOverview(
-    budgetState: BudgetDetailState,
+    budgetState: BudgetState,
     modifier: Modifier = Modifier
 ) {
     Card(

@@ -16,14 +16,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.android.monu.R
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.components.TransactionListItem
 import com.android.monu.ui.feature.components.TransactionListItemState
 import com.android.monu.ui.feature.utils.debouncedClickable
 
 @Composable
 fun HomeRecentTransactions(
-    recentTransactions: List<Transaction>,
+    recentTransactions: List<TransactionState>,
     onNavigateToTransaction: () -> Unit,
     onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
@@ -61,7 +61,7 @@ fun HomeRecentTransactions(
 
 @Composable
 fun RecentTransactionList(
-    recentTransactions: List<Transaction>,
+    recentTransactions: List<TransactionState>,
     onNavigateToTransactionDetail: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {

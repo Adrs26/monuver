@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.android.monu.domain.model.transaction.Transaction
+import com.android.monu.domain.model.TransactionState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.components.TransactionListItem
 import com.android.monu.ui.feature.components.TransactionListItemState
@@ -18,7 +18,7 @@ import com.android.monu.ui.feature.utils.debouncedClickable
 @Composable
 fun AnalyticsCategoryTransactionScreen(
     category: Int,
-    transactions: List<Transaction>,
+    transactions: List<TransactionState>,
     onNavigateBack: () -> Unit,
     onNavigateToTransactionDetail: (Long) -> Unit
 ) {

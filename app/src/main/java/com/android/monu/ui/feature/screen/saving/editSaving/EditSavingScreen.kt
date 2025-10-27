@@ -17,13 +17,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.android.monu.R
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.EditSavingState
 import com.android.monu.ui.feature.components.CommonAppBar
 import com.android.monu.ui.feature.screen.saving.editSaving.components.EditSavingContent
 import com.android.monu.ui.feature.screen.saving.editSaving.components.EditSavingContentActions
-import com.android.monu.ui.feature.screen.saving.editSaving.components.EditSavingContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
-import com.android.monu.ui.feature.utils.NumberFormatHelper
-import com.android.monu.ui.feature.utils.showMessageWithToast
+import com.android.monu.ui.feature.utils.isUpdateSavingSuccess
+import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.utils.NumberHelper
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -32,27 +33,26 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditSavingScreen(
-    savingState: EditSavingState,
+    savingUiState: EditSavingUiState,
     onNavigateBack: () -> Unit,
-    onEditSaving: (EditSavingContentState) -> Unit
+    onEditSaving: (EditSavingState) -> Unit
 ) {
-    var savingTitle by rememberSaveable { mutableStateOf(savingState.title) }
-    var savingTargetDate by rememberSaveable { mutableStateOf(savingState.targetDate) }
-    var savingTargetAmount by rememberSaveable { mutableLongStateOf(savingState.targetAmount) }
+    var savingTitle by rememberSaveable { mutableStateOf(savingUiState.title) }
+    var savingTargetDate by rememberSaveable { mutableStateOf(savingUiState.targetDate) }
+    var savingTargetAmount by rememberSaveable { mutableLongStateOf(savingUiState.targetAmount) }
     var savingTargetAmountFormat by remember {
-        mutableStateOf(TextFieldValue(NumberFormatHelper.formatToRupiah(savingTargetAmount)))
+        mutableStateOf(TextFieldValue(NumberHelper.formatToRupiah(savingTargetAmount)))
     }
 
     val calendarState = rememberUseCaseState()
     val context = LocalContext.current
 
-    val editSavingContentState = EditSavingContentState(
-        id = savingState.id,
+    val editSavingContentState = EditSavingState(
+        id = savingUiState.id,
         title = savingTitle,
         targetDate = savingTargetDate,
-        currentAmount = savingState.currentAmount,
-        targetAmount = savingTargetAmount,
-        targetAmountFormat = savingTargetAmountFormat
+        currentAmount = savingUiState.currentAmount,
+        targetAmount = savingTargetAmount
     )
 
     val editSavingContentActions = object : EditSavingContentActions {
@@ -70,7 +70,7 @@ fun EditSavingScreen(
                 cleanInput.toLong()
             } catch (_: NumberFormatException) { 0L }
 
-            val formattedText = NumberFormatHelper.formatToRupiah(savingTargetAmount)
+            val formattedText = NumberHelper.formatToRupiah(savingTargetAmount)
             val newCursorPosition = formattedText.length
 
             savingTargetAmountFormat = TextFieldValue(
@@ -79,17 +79,15 @@ fun EditSavingScreen(
             )
         }
 
-        override fun onEditSaving(savingState: EditSavingContentState) {
+        override fun onEditSaving(savingState: EditSavingState) {
             onEditSaving(savingState)
         }
     }
 
-    LaunchedEffect(savingState.editResult) {
-        savingState.editResult?.let { result ->
-            context.getString(result.message).showMessageWithToast(context)
-            if (result == DatabaseResultMessage.UpdateSavingSuccess) {
-                onNavigateBack()
-            }
+    LaunchedEffect(savingUiState.editResult) {
+        savingUiState.editResult?.let { result ->
+            result.showToast(context)
+            if (result.isUpdateSavingSuccess()) onNavigateBack()
         }
     }
 
@@ -103,6 +101,7 @@ fun EditSavingScreen(
     ) { innerPadding ->
         EditSavingContent(
             savingState = editSavingContentState,
+            savingTargetAmountFormat = savingTargetAmountFormat,
             savingActions = editSavingContentActions,
             modifier = Modifier.padding(innerPadding)
         )
@@ -120,11 +119,11 @@ fun EditSavingScreen(
     )
 }
 
-data class EditSavingState(
+data class EditSavingUiState(
     val id: Long,
     val title: String,
     val targetDate: String,
     val currentAmount: Long,
     val targetAmount: Long,
-    val editResult: DatabaseResultMessage?
+    val editResult: DatabaseResultState?
 )

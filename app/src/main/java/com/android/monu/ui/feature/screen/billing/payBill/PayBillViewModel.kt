@@ -4,12 +4,12 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.BillState
+import com.android.monu.domain.model.PayBillState
 import com.android.monu.domain.usecase.account.GetActiveAccountsUseCase
 import com.android.monu.domain.usecase.bill.GetBillByIdUseCase
 import com.android.monu.domain.usecase.finance.ProcessBillPaymentUseCase
-import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 import com.android.monu.ui.navigation.PayBill
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ class PayBillViewModel(
     private val processBillPaymentUseCase: ProcessBillPaymentUseCase
 ) : ViewModel() {
 
-    val bill = getBillByIdUseCase(
+    val billState = getBillByIdUseCase(
         savedStateHandle.toRoute<PayBill.Main>().billId
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
@@ -38,7 +38,7 @@ class PayBillViewModel(
     private val _transactionSource = MutableStateFlow(Pair(0, ""))
     val transactionSource = _transactionSource.asStateFlow()
 
-    private val _payResult = MutableStateFlow<DatabaseResultMessage?>(null)
+    private val _payResult = MutableStateFlow<DatabaseResultState?>(null)
     val payResult = _payResult.asStateFlow()
 
     fun changeTransactionCategory(parentCategory: Int, childCategory: Int) {
@@ -49,7 +49,7 @@ class PayBillViewModel(
         _transactionSource.value = Pair(sourceId, sourceName)
     }
 
-    fun payBill(bill: Bill, billState: PayBillContentState) {
+    fun payBill(bill: BillState, billState: PayBillState) {
         viewModelScope.launch {
             _payResult.value = processBillPaymentUseCase(bill, billState)
             delay(500)

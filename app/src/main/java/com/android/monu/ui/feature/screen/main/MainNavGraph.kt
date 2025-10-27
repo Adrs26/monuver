@@ -11,13 +11,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.android.monu.domain.model.transaction.TransactionBalanceSummary
+import com.android.monu.domain.model.TransactionBalanceSummaryState
 import com.android.monu.ui.feature.screen.analytics.AnalyticsActions
 import com.android.monu.ui.feature.screen.analytics.AnalyticsScreen
 import com.android.monu.ui.feature.screen.analytics.AnalyticsState
 import com.android.monu.ui.feature.screen.analytics.AnalyticsViewModel
 import com.android.monu.ui.feature.screen.budgeting.BudgetActions
-import com.android.monu.ui.feature.screen.budgeting.BudgetState
+import com.android.monu.ui.feature.screen.budgeting.BudgetUiState
 import com.android.monu.ui.feature.screen.budgeting.BudgetingScreen
 import com.android.monu.ui.feature.screen.budgeting.BudgetingViewModel
 import com.android.monu.ui.feature.screen.home.HomeActions
@@ -25,9 +25,8 @@ import com.android.monu.ui.feature.screen.home.HomeScreen
 import com.android.monu.ui.feature.screen.home.HomeViewModel
 import com.android.monu.ui.feature.screen.transaction.TransactionActions
 import com.android.monu.ui.feature.screen.transaction.TransactionScreen
-import com.android.monu.ui.feature.screen.transaction.TransactionState
+import com.android.monu.ui.feature.screen.transaction.TransactionUiState
 import com.android.monu.ui.feature.screen.transaction.TransactionViewModel
-import com.android.monu.ui.feature.utils.TransactionType
 import com.android.monu.ui.navigation.Account
 import com.android.monu.ui.navigation.AddBudget
 import com.android.monu.ui.navigation.AddTransaction
@@ -40,6 +39,7 @@ import com.android.monu.ui.navigation.Saving
 import com.android.monu.ui.navigation.Settings
 import com.android.monu.ui.navigation.TransactionDetail
 import com.android.monu.ui.navigation.Transfer
+import com.android.monu.utils.TransactionType
 import org.koin.androidx.compose.koinViewModel
 
 fun NavGraphBuilder.mainNavGraph(
@@ -50,7 +50,7 @@ fun NavGraphBuilder.mainNavGraph(
         val viewModel = koinViewModel<HomeViewModel>()
         val totalBalance by viewModel.totalAccountBalance.collectAsStateWithLifecycle()
         val recentTransactions by viewModel.recentTransactions.collectAsStateWithLifecycle()
-        val budgetSummary by viewModel.budgetSummary.collectAsStateWithLifecycle()
+        val budgetSummaryState by viewModel.budgetSummaryState.collectAsStateWithLifecycle()
 
         val homeActions = object : HomeActions {
             override fun onHandleExpiredBudget() {
@@ -110,7 +110,7 @@ fun NavGraphBuilder.mainNavGraph(
             }
         }
 
-        if (budgetSummary == null) {
+        if (budgetSummaryState == null) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
@@ -121,7 +121,7 @@ fun NavGraphBuilder.mainNavGraph(
             HomeScreen(
                 totalBalance = totalBalance,
                 recentTransactions = recentTransactions,
-                budgetSummary = budgetSummary!!,
+                budgetSummaryState = budgetSummaryState!!,
                 homeActions = homeActions
             )
         }
@@ -132,7 +132,7 @@ fun NavGraphBuilder.mainNavGraph(
         val filter by viewModel.filterState.collectAsStateWithLifecycle()
         val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
 
-        val transactionState = TransactionState(
+        val transactionUiState = TransactionUiState(
             queryFilter = filter.query,
             yearFilterOptions = yearFilterOptions,
             typeFilter = filter.type,
@@ -160,18 +160,18 @@ fun NavGraphBuilder.mainNavGraph(
         }
 
         TransactionScreen(
-            transactionState = transactionState,
+            transactionUiState = transactionUiState,
             transactionActions = transactionActions
         )
     }
     composable<Main.Budgeting> {
         val viewModel = koinViewModel<BudgetingViewModel>()
-        val summary by viewModel.budgetSummary.collectAsStateWithLifecycle()
+        val budgetSummaryState by viewModel.budgetSummaryState.collectAsStateWithLifecycle()
         val budgets by viewModel.budgets.collectAsStateWithLifecycle()
 
-        val budgetState = BudgetState(
-            totalMaxAmount = summary.totalMaxAmount,
-            totalUsedAmount = summary.totalUsedAmount,
+        val budgetUiState = BudgetUiState(
+            totalMaxAmount = budgetSummaryState.totalMaxAmount,
+            totalUsedAmount = budgetSummaryState.totalUsedAmount,
             budgets = budgets
         )
 
@@ -190,7 +190,7 @@ fun NavGraphBuilder.mainNavGraph(
         }
 
         BudgetingScreen(
-            budgetState = budgetState,
+            budgetUiState = budgetUiState,
             budgetActions = budgetActions
         )
     }
@@ -200,7 +200,7 @@ fun NavGraphBuilder.mainNavGraph(
         val filter by viewModel.filterState.collectAsStateWithLifecycle()
         val yearFilterOptions by viewModel.yearFilterOptions.collectAsStateWithLifecycle()
         val amountSummary by viewModel.transactionAmountSummary
-            .collectAsStateWithLifecycle(initialValue = TransactionBalanceSummary())
+            .collectAsStateWithLifecycle(initialValue = TransactionBalanceSummaryState())
         val categorySummaries by viewModel.transactionCategorySummaries
             .collectAsStateWithLifecycle(initialValue = emptyList())
         val dailySummaries by viewModel.transactionDailySummaries

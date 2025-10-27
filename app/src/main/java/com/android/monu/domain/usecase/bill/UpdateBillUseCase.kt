@@ -1,25 +1,25 @@
 package com.android.monu.domain.usecase.bill
 
-import com.android.monu.domain.model.bill.Bill
+import com.android.monu.domain.common.DatabaseResultState
+import com.android.monu.domain.model.BillState
+import com.android.monu.domain.model.EditBillState
 import com.android.monu.domain.repository.BillRepository
-import com.android.monu.ui.feature.screen.billing.editBill.components.EditBillContentState
-import com.android.monu.ui.feature.utils.DatabaseResultMessage
 
 class UpdateBillUseCase(
     private val repository: BillRepository
 ) {
-    suspend operator fun invoke(billState: EditBillContentState): DatabaseResultMessage {
+    suspend operator fun invoke(billState: EditBillState): DatabaseResultState {
         when {
-            billState.title.isEmpty() -> return DatabaseResultMessage.EmptyBillTitle
-            billState.date.isEmpty() -> return DatabaseResultMessage.EmptyBillDate
-            billState.amount == 0L -> return DatabaseResultMessage.EmptyBillAmount
+            billState.title.isEmpty() -> return DatabaseResultState.EmptyBillTitle
+            billState.date.isEmpty() -> return DatabaseResultState.EmptyBillDate
+            billState.amount == 0L -> return DatabaseResultState.EmptyBillAmount
             billState.isRecurring && billState.period == 2 && billState.fixPeriod.isEmpty() ->
-                return DatabaseResultMessage.EmptyBillFixPeriod
+                return DatabaseResultState.EmptyBillFixPeriod
             billState.fixPeriod.toInt() < billState.nowPaidPeriod ->
-                return DatabaseResultMessage.InvalidBillFixPeriod
+                return DatabaseResultState.InvalidBillFixPeriod
         }
 
-        val bill = Bill(
+        val bill = BillState(
             id = billState.id,
             parentId = billState.parentId,
             title = billState.title,
@@ -38,6 +38,6 @@ class UpdateBillUseCase(
 
         repository.updateBill(bill)
         repository.updateBillPeriodByParentId(bill.period, bill.fixPeriod, bill.parentId)
-        return DatabaseResultMessage.UpdateBillSuccess
+        return DatabaseResultState.UpdateBillSuccess
     }
 }

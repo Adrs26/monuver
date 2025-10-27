@@ -7,27 +7,27 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.android.monu.domain.model.PayBillState
 import com.android.monu.ui.feature.screen.billing.addBill.AddBillScreen
 import com.android.monu.ui.feature.screen.billing.addBill.AddBillViewModel
 import com.android.monu.ui.feature.screen.billing.billDetail.BillDetailActions
 import com.android.monu.ui.feature.screen.billing.billDetail.BillDetailScreen
 import com.android.monu.ui.feature.screen.billing.billDetail.BillDetailViewModel
 import com.android.monu.ui.feature.screen.billing.editBill.EditBillScreen
-import com.android.monu.ui.feature.screen.billing.editBill.EditBillState
+import com.android.monu.ui.feature.screen.billing.editBill.EditBillUiState
 import com.android.monu.ui.feature.screen.billing.editBill.EditBillViewModel
 import com.android.monu.ui.feature.screen.billing.payBill.PayBillActions
 import com.android.monu.ui.feature.screen.billing.payBill.PayBillScreen
-import com.android.monu.ui.feature.screen.billing.payBill.PayBillState
+import com.android.monu.ui.feature.screen.billing.payBill.PayBillUiState
 import com.android.monu.ui.feature.screen.billing.payBill.PayBillViewModel
-import com.android.monu.ui.feature.screen.billing.payBill.components.PayBillContentState
 import com.android.monu.ui.feature.screen.transaction.addTransaction.components.AddTransactionSourceScreen
 import com.android.monu.ui.feature.screen.transaction.components.TransactionCategoryScreen
-import com.android.monu.ui.feature.utils.Cycle
 import com.android.monu.ui.feature.utils.NavigationAnimation
-import com.android.monu.ui.feature.utils.TransactionType
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
 import com.android.monu.ui.navigation.Billing
 import com.android.monu.ui.navigation.PayBill
+import com.android.monu.utils.Cycle
+import com.android.monu.utils.TransactionType
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -46,7 +46,7 @@ fun NavGraphBuilder.billingNavGraph(
             val dueBills by viewModel.dueBills.collectAsStateWithLifecycle()
             val paidBills = viewModel.paidBills.collectAsLazyPagingItems()
 
-            val billState = BillState(
+            val billUiState = BillUiState(
                 pendingBills = pendingBills,
                 dueBills = dueBills,
                 paidBills = paidBills
@@ -67,7 +67,7 @@ fun NavGraphBuilder.billingNavGraph(
             }
 
             BillingScreen(
-                billState = billState,
+                billUiState = billUiState,
                 billActions = billActions
             )
         }
@@ -96,10 +96,10 @@ fun NavGraphBuilder.billingNavGraph(
                 viewModelStoreOwner = it,
                 parameters = { parametersOf(it.savedStateHandle) }
             )
-            val bill by viewModel.bill.collectAsStateWithLifecycle()
+            val billState by viewModel.billState.collectAsStateWithLifecycle()
             val editResult by viewModel.updateResult.collectAsStateWithLifecycle()
 
-            bill?.let { bill ->
+            billState?.let { billState ->
                 val billDetailActions = object : BillDetailActions {
                     override fun onNavigateBack() {
                         navController.navigateUp()
@@ -123,7 +123,7 @@ fun NavGraphBuilder.billingNavGraph(
                 }
 
                 BillDetailScreen(
-                    bill = bill,
+                    billState = billState,
                     editResult = editResult,
                     billDetailActions = billDetailActions
                 )
@@ -139,28 +139,28 @@ fun NavGraphBuilder.billingNavGraph(
                 viewModelStoreOwner = it,
                 parameters = { parametersOf(it.savedStateHandle) }
             )
-            val bill by viewModel.bill.collectAsStateWithLifecycle()
+            val billState by viewModel.billState.collectAsStateWithLifecycle()
             val updateResult by viewModel.updateResult.collectAsStateWithLifecycle()
 
-            bill?.let { bill ->
-                val editBillState = EditBillState(
-                    id = bill.id,
-                    parentId = bill.parentId,
-                    title = bill.title,
-                    date = bill.dueDate,
-                    amount = bill.amount,
-                    timeStamp = bill.timeStamp,
-                    isRecurring = bill.isRecurring,
-                    cycle = bill.cycle ?: Cycle.YEARLY,
-                    period = bill.period ?: 1,
-                    fixPeriod = (bill.fixPeriod ?: "").toString(),
-                    nowPaidPeriod = bill.nowPaidPeriod,
-                    isPaidBefore = bill.isPaidBefore,
+            billState?.let { billState ->
+                val editBillUiState = EditBillUiState(
+                    id = billState.id,
+                    parentId = billState.parentId,
+                    title = billState.title,
+                    date = billState.dueDate,
+                    amount = billState.amount,
+                    timeStamp = billState.timeStamp,
+                    isRecurring = billState.isRecurring,
+                    cycle = billState.cycle ?: Cycle.YEARLY,
+                    period = billState.period ?: 1,
+                    fixPeriod = (billState.fixPeriod ?: "").toString(),
+                    nowPaidPeriod = billState.nowPaidPeriod,
+                    isPaidBefore = billState.isPaidBefore,
                     editResult = updateResult
                 )
 
                 EditBillScreen(
-                    billState = editBillState,
+                    billUiState = editBillUiState,
                     onNavigateBack = navController::navigateUp,
                     onEditBill = viewModel::updateBill
                 )
@@ -182,13 +182,13 @@ fun NavGraphBuilder.payBillNavGraph(
             val viewModel = it.sharedKoinViewModel<PayBillViewModel>(navController) {
                 parametersOf(it.savedStateHandle)
             }
-            val bill by viewModel.bill.collectAsStateWithLifecycle()
+            val bill by viewModel.billState.collectAsStateWithLifecycle()
             val transactionCategory by viewModel.transactionCategory.collectAsStateWithLifecycle()
             val transactionSource by viewModel.transactionSource.collectAsStateWithLifecycle()
             val payResult by viewModel.payResult.collectAsStateWithLifecycle()
 
             bill?.let { bill ->
-                val payBillState = PayBillState(
+                val payBillUiState = PayBillUiState(
                     category = transactionCategory,
                     source = transactionSource,
                     payResult = payResult
@@ -207,14 +207,14 @@ fun NavGraphBuilder.payBillNavGraph(
                         navController.navigate(PayBill.Source)
                     }
 
-                    override fun onPayBill(billState: PayBillContentState) {
+                    override fun onPayBill(billState: PayBillState) {
                         viewModel.payBill(bill, billState)
                     }
                 }
 
                 PayBillScreen(
-                    bill = bill,
-                    payBillState = payBillState,
+                    billAmount = bill.amount,
+                    payBillUiState = payBillUiState,
                     payBillActions = payBillActions
                 )
             }
