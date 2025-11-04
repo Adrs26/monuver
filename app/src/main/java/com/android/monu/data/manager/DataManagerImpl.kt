@@ -234,7 +234,7 @@ class DataManagerImpl(
             context.getString(R.string.common_transaction_title),
             context.getString(R.string.common_transaction_parent_category),
             context.getString(R.string.common_transaction_child_category),
-            context.getString(R.string.common_transaction_source),
+            context.getString(R.string.common_transaction_account),
             context.getString(R.string.common_transaction_amount)
         )
         headers.forEach { header ->

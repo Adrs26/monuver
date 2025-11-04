@@ -36,8 +36,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.android.monu.R
 import com.android.monu.ui.feature.components.CommonFloatingActionButton
-import com.android.monu.ui.feature.screen.main.components.BottomNavigationBar
 import com.android.monu.ui.feature.screen.main.components.BudgetWarningDialog
+import com.android.monu.ui.feature.screen.main.components.MainNavigationBar
 import com.android.monu.utils.TransactionType
 import com.android.monu.ui.navigation.AddBudget
 import com.android.monu.ui.navigation.AddTransaction
@@ -53,7 +53,12 @@ fun MainScreen(
 ) {
     val mainNavController = rememberNavController()
 
-    val menuItems = listOf("Home", "Transaction", "Budgeting", "Analytics")
+    val menuItems = listOf(
+        Main.Home.toString(),
+        Main.Transaction.toString(),
+        Main.Budgeting.toString(),
+        Main.Analytics.toString()
+    )
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
 
@@ -96,30 +101,29 @@ fun MainScreen(
                     color = MaterialTheme.colorScheme.surfaceVariant,
                     thickness = 1.dp
                 )
-                BottomNavigationBar(
+                MainNavigationBar(
                     navController = mainNavController,
-                    onNavigate = { selectedMenu = it }
+                    onNavigate = { selectedMenu = it },
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
         },
         floatingActionButton = {
-            if (selectedMenu == menuItems[1] || selectedMenu == menuItems[2]) {
-                AnimatedVisibility(
-                    visible = showFab,
-                    enter = slideInVertically(
-                        initialOffsetY = { it },
-                        animationSpec = tween(durationMillis = 200)
-                    ) + fadeIn(animationSpec = tween(200)),
-                    exit = slideOutVertically(
-                        targetOffsetY = { it },
-                        animationSpec = tween(durationMillis = 200)
-                    ) + fadeOut(animationSpec = tween(200))
-                ) {
-                    CommonFloatingActionButton {
-                        when (selectedMenu) {
-                            menuItems[1] -> showBottomSheet = true
-                            menuItems[2] -> rootNavController.navigate(AddBudget.Main)
-                        }
+            AnimatedVisibility(
+                visible = showFab,
+                enter = slideInVertically(
+                    initialOffsetY = { it },
+                    animationSpec = tween(durationMillis = 200)
+                ) + fadeIn(animationSpec = tween(200)),
+                exit = slideOutVertically(
+                    targetOffsetY = { it },
+                    animationSpec = tween(durationMillis = 200)
+                ) + fadeOut(animationSpec = tween(200))
+            ) {
+                CommonFloatingActionButton {
+                    when (selectedMenu) {
+                        menuItems[1] -> showBottomSheet = true
+                        menuItems[2] -> rootNavController.navigate(AddBudget.Main)
                     }
                 }
             }

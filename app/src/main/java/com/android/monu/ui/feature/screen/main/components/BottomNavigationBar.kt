@@ -1,6 +1,5 @@
 package com.android.monu.ui.feature.screen.main.components
 
-import androidx.compose.foundation.background
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -10,8 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
@@ -21,70 +18,40 @@ import com.android.monu.R
 import com.android.monu.ui.navigation.Main
 
 @Composable
-fun BottomNavigationBar(
+fun MainNavigationBar(
     navController: NavHostController,
     onNavigate: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavigationBar(
-        modifier = modifier.background(MaterialTheme.colorScheme.background),
+        modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
-        val navigationItems = listOf(
-            BottomNavigationItem(
-                title = stringResource(R.string.home_menu),
-                filledIcon = painterResource(R.drawable.ic_home_filled),
-                outlinedIcon = painterResource(R.drawable.ic_home_outlined),
-                destination = Main.Home,
-                route = "Home"
-            ),
-            BottomNavigationItem(
-                title = stringResource(R.string.transaction_menu),
-                filledIcon = painterResource(R.drawable.ic_receipt_filled),
-                outlinedIcon = painterResource(R.drawable.ic_receipt_outlined),
-                destination = Main.Transaction,
-                route = "Transaction"
-            ),
-            BottomNavigationItem(
-                title = stringResource(R.string.budgeting_menu),
-                filledIcon = painterResource(R.drawable.ic_budgeting_filled),
-                outlinedIcon = painterResource(R.drawable.ic_budgeting_outlined),
-                destination = Main.Budgeting,
-                route = "Budgeting"
-            ),
-            BottomNavigationItem(
-                title = stringResource(R.string.analytics_menu),
-                filledIcon = painterResource(R.drawable.ic_analytics_filled),
-                outlinedIcon = painterResource(R.drawable.ic_analytics_outlined),
-                destination = Main.Analytics,
-                route = "Analytics"
-            )
-        )
-
-        navigationItems.map { item ->
-            val selected = isItemSelected(currentRoute, item.route)
+        MainNavigationDestination.entries.forEachIndexed { index, destination ->
+            val selected = isItemSelected(currentRoute, destination.route.toString())
             NavigationBarItem(
                 selected = selected,
                 onClick = {
-                    navController.navigate(item.destination) {
+                    navController.navigate(destination.route) {
                         popUpTo(navController.graph.startDestinationId) { saveState = true }
                         restoreState = true
                         launchSingleTop = true
                     }
-                    onNavigate(item.route)
+                    onNavigate(destination.route.toString())
                 },
                 icon = {
                     Icon(
-                        painter = if (selected) item.filledIcon else item.outlinedIcon,
-                        contentDescription = item.title
+                        painter = if (selected) painterResource(destination.selectedIcon) else
+                            painterResource(destination.icon),
+                        contentDescription = stringResource(destination.title)
                     )
                 },
                 label = {
                     Text(
-                        text = item.title,
+                        text = stringResource(destination.title),
                         style = MaterialTheme.typography.labelSmall.copy(
                             color = if (selected) MaterialTheme.colorScheme.primary else
                                 MaterialTheme.colorScheme.onSurface,
@@ -93,7 +60,7 @@ fun BottomNavigationBar(
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = Color.Transparent,
+                    indicatorColor = MaterialTheme.colorScheme.secondary,
                     selectedIconColor = MaterialTheme.colorScheme.primary,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurface
                 )
@@ -102,15 +69,39 @@ fun BottomNavigationBar(
     }
 }
 
+enum class MainNavigationDestination(
+    val title: Int,
+    val icon: Int,
+    val selectedIcon: Int,
+    val route: Any
+) {
+    HOME(
+        title = R.string.home_menu,
+        icon = R.drawable.ic_home_outlined,
+        selectedIcon = R.drawable.ic_home_filled,
+        route = Main.Home
+    ),
+    TRANSACTION(
+        title = R.string.transaction_menu,
+        icon = R.drawable.ic_receipt_outlined,
+        selectedIcon = R.drawable.ic_receipt_filled,
+        route = Main.Transaction
+    ),
+    BUDGETING(
+        title = R.string.budgeting_menu,
+        icon = R.drawable.ic_budgeting_outlined,
+        selectedIcon = R.drawable.ic_budgeting_filled,
+        route = Main.Budgeting
+    ),
+    ANALYTICS(
+        title = R.string.analytics_menu,
+        icon = R.drawable.ic_analytics_outlined,
+        selectedIcon = R.drawable.ic_analytics_filled,
+        route = Main.Analytics
+    )
+}
+
 private fun isItemSelected(currentRoute: String?, itemRoute: String): Boolean {
     if (currentRoute == null) return false
     return currentRoute.contains(itemRoute, ignoreCase = true)
 }
-
-data class BottomNavigationItem(
-    val title: String,
-    val filledIcon: Painter,
-    val outlinedIcon: Painter,
-    val destination: Any,
-    val route: String
-)

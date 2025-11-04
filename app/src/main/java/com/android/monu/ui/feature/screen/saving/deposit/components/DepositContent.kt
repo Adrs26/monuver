@@ -62,10 +62,10 @@ fun DepositContent(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextInputField(
-            title = stringResource(R.string.funds_source),
+            title = stringResource(R.string.source_account),
             value = depositState.accountName,
             onValueChange = { },
-            placeholderText = stringResource(R.string.choose_funds_source),
+            placeholderText = stringResource(R.string.choose_source_account),
             modifier = Modifier
                 .clickable(
                     indication = null,

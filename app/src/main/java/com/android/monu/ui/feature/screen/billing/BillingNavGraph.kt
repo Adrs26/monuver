@@ -24,6 +24,7 @@ import com.android.monu.ui.feature.screen.transaction.addTransaction.components.
 import com.android.monu.ui.feature.screen.transaction.components.TransactionCategoryScreen
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
+import com.android.monu.ui.navigation.Account
 import com.android.monu.ui.navigation.Billing
 import com.android.monu.ui.navigation.PayBill
 import com.android.monu.utils.Cycle
@@ -245,7 +246,8 @@ fun NavGraphBuilder.payBillNavGraph(
             AddTransactionSourceScreen(
                 accounts = accounts,
                 onNavigateBack = navController::navigateUp,
-                onSourceSelect = viewModel::changeTransactionSource
+                onSourceSelect = viewModel::changeTransactionSource,
+                onNavigateToAddAccount = { navController.navigate(Account.Add) }
             )
         }
     }

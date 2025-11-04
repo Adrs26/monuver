@@ -24,6 +24,7 @@ import com.android.monu.ui.feature.components.TextDateInputField
 import com.android.monu.ui.feature.components.TextInputField
 import com.android.monu.ui.feature.utils.DatabaseCodeMapper
 import com.android.monu.utils.DateHelper
+import com.android.monu.utils.TransactionType
 
 @Composable
 fun AddTransactionContent(
@@ -79,10 +80,14 @@ fun AddTransactionContent(
             modifier = Modifier.padding(horizontal = 16.dp)
         )
         TextInputField(
-            title = stringResource(R.string.funds_source),
+            title = if (transactionState.type == TransactionType.INCOME)
+                stringResource(R.string.destination_account) else
+                    stringResource(R.string.source_account),
             value = transactionState.sourceName,
             onValueChange = { },
-            placeholderText = stringResource(R.string.choose_funds_source),
+            placeholderText = if (transactionState.type == TransactionType.INCOME)
+                stringResource(R.string.choose_destination_account) else
+                    stringResource(R.string.choose_source_account),
             modifier = Modifier
                 .clickable(
                     indication = null,

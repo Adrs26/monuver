@@ -40,6 +40,9 @@ class SettingsViewModel(
     val isFirstRestore = preference.isFirstRestore
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
 
+    val isAuthenticationEnabled = preference.isAuthenticationEnabled
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+
     private val _exportProgress = MutableStateFlow<ExportStatusState>(ExportStatusState.Idle)
     val exportProgress = _exportProgress.asStateFlow()
 
@@ -97,6 +100,12 @@ class SettingsViewModel(
     fun deleteAllData() {
         viewModelScope.launch {
             deleteAllDataUseCase()
+        }
+    }
+
+    fun setAuthentication(enabled: Boolean) {
+        viewModelScope.launch {
+            preference.setAuthenticationEnabled(enabled)
         }
     }
 }

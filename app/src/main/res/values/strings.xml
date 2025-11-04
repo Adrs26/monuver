@@ -141,11 +141,8 @@
     <string name="choose_transaction_date">Pilih tanggal transaksi</string>
     <string name="amount">Nominal</string>
     <string name="funds_source">Sumber dana</string>
-    <string name="choose_funds_source">Pilih sumber dana</string>
     <string name="cannot_select_future_date">Transaksi tidak bisa dicatat untuk tanggal di masa depan</string>
     <string name="transaction_detail">Detail transaksi</string>
-    <string name="source">Sumber</string>
-    <string name="destination">Tujuan</string>
     <string name="edit_transaction">Ubah data transaksi</string>
     <string name="source_account">Akun sumber</string>
     <string name="destination_account">Akun tujuan</string>
@@ -248,8 +245,7 @@
     <string name="dark">Gelap</string>
     <string name="default_system">Default sistem</string>
     <string name="security">Keamanan</string>
-    <string name="activated_pin_authentication">Aktifkan autentikasi pin</string>
-    <string name="activated_fingerprint_authentication">Aktifkan autentikasi sidik jari</string>
+    <string name="activated_fingerprint_authentication">Aktifkan autentikasi</string>
     <string name="save_total_balance">Total saldo tabungan</string>
     <string name="bill">Tagihan</string>
     <string name="list_active_save">Daftar tabungan aktif</string>
@@ -334,6 +330,7 @@
     <string name="common_transaction_parent_category">KATEGORI</string>
     <string name="common_transaction_child_category">SUB-KATEGORI</string>
     <string name="common_transaction_source">SUMBER</string>
+    <string name="common_transaction_account">AKUN</string>
     <string name="common_transaction_destination">TUJUAN</string>
     <string name="common_transaction_amount">NOMINAL</string>
     <string name="common_transaction_total_income">TOTAL PEMASUKAN</string>
@@ -360,4 +357,6 @@
     <string name="you_can_not_select_future_start_period">Periode mulai tidak bisa melebihi tanggal hari ini</string>
     <string name="end_period_must_be_same_or_after_start_period">Periode akhir harus sama atau lebih baru dari periode mulai</string>
     <string name="start_period_can_not_after_end_period">Periode mulai tidak bisa dipilih setelah periode akhir</string>
+    <string name="choose_account">Pilih akun</string>
+    <string name="fingerprint_not_matched">Sidik jari tidak sesuai</string>
 </resources>

@@ -31,6 +31,7 @@ import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawUiState
 import com.android.monu.ui.feature.screen.saving.withdraw.WithdrawViewModel
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
+import com.android.monu.ui.navigation.Account
 import com.android.monu.ui.navigation.Deposit
 import com.android.monu.ui.navigation.TransactionDetail
 import com.android.monu.ui.navigation.Withdraw
@@ -255,7 +256,8 @@ fun NavGraphBuilder.depositNavGraph(
                 category = TransactionChildCategory.SAVINGS_IN,
                 accounts = accounts,
                 onNavigateBack = navController::navigateUp,
-                onAccountSelect = viewModel::changeTransactionSource
+                onAccountSelect = viewModel::changeTransactionSource,
+                onNavigateToAddAccount = { navController.navigate(Account.Add) }
             )
         }
     }
@@ -315,7 +317,8 @@ fun NavGraphBuilder.withdrawNavGraph(
                 category = TransactionChildCategory.SAVINGS_OUT,
                 accounts = accounts,
                 onNavigateBack = navController::navigateUp,
-                onAccountSelect = viewModel::changeTransactionDestination
+                onAccountSelect = viewModel::changeTransactionDestination,
+                onNavigateToAddAccount = { navController.navigate(Account.Add) }
             )
         }
     }

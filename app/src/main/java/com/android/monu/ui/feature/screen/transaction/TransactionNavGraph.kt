@@ -31,6 +31,7 @@ import com.android.monu.ui.feature.screen.transaction.transfer.TransferViewModel
 import com.android.monu.ui.feature.screen.transaction.transfer.components.TransferAccountScreen
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.feature.utils.sharedKoinViewModel
+import com.android.monu.ui.navigation.Account
 import com.android.monu.ui.navigation.AddTransaction
 import com.android.monu.ui.navigation.TransactionDetail
 import com.android.monu.ui.navigation.Transfer
@@ -116,7 +117,8 @@ fun NavGraphBuilder.addTransactionNavGraph(
             AddTransactionSourceScreen(
                 accounts = accounts,
                 onNavigateBack = navController::navigateUp,
-                onSourceSelect = viewModel::changeTransactionSource
+                onSourceSelect = viewModel::changeTransactionSource,
+                onNavigateToAddAccount = { navController.navigate(Account.Add) }
             )
         }
     }

@@ -62,14 +62,16 @@ fun TransactionDetailContent(
         )
         DataDivider()
         TransactionDetailData(
-            title = stringResource(R.string.source),
+            title = if (transactionState.type == TransactionType.INCOME)
+                stringResource(R.string.destination_account) else
+                    stringResource(R.string.source_account),
             content = transactionState.sourceName
         )
 
         if (transactionState.type == TransactionType.TRANSFER) {
             DataDivider()
             TransactionDetailData(
-                title = stringResource(R.string.destination),
+                title = stringResource(R.string.destination_account),
                 content = transactionState.destinationName.toString()
             )
         }

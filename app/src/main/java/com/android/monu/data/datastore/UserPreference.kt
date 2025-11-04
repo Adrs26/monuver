@@ -17,6 +17,7 @@ class UserPreference(private val context: Context) {
         private val FIRST_EXPORT_KEY = booleanPreferencesKey("first_export")
         private val FIRST_BACKUP_KEY = booleanPreferencesKey("first_backup")
         private val FIRST_RESTORE_KEY = booleanPreferencesKey("first_restore")
+        private val AUTHENTICATION_KEY = booleanPreferencesKey("authentication")
     }
 
     val themeSetting: Flow<ThemeSetting> = context.dataStore.data
@@ -43,6 +44,11 @@ class UserPreference(private val context: Context) {
             preferences[FIRST_RESTORE_KEY] ?: true
         }
 
+    val isAuthenticationEnabled: Flow<Boolean> = context.dataStore.data
+        .map { preferences ->
+            preferences[AUTHENTICATION_KEY] ?: false
+        }
+
     suspend fun saveThemeSetting(themeSetting: ThemeSetting) {
         context.dataStore.edit { preferences ->
             preferences[THEME_KEY] = themeSetting.name
@@ -64,6 +70,12 @@ class UserPreference(private val context: Context) {
     suspend fun setIsFirstRestoreToFalse() {
         context.dataStore.edit { preferences ->
             preferences[FIRST_RESTORE_KEY] = false
+        }
+    }
+
+    suspend fun setAuthenticationEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[AUTHENTICATION_KEY] = enabled
         }
     }
 }

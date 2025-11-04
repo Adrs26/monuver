@@ -1,11 +1,15 @@
 package com.android.monu.ui.feature.screen.saving.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.android.monu.R
 import com.android.monu.domain.model.AccountState
 import com.android.monu.ui.feature.components.CommonAppBar
@@ -25,13 +30,14 @@ fun SavingAccountScreen(
     category: Int,
     accounts: List<AccountState>,
     onNavigateBack: () -> Unit,
-    onAccountSelect: (Int, String) -> Unit
+    onAccountSelect: (Int, String) -> Unit,
+    onNavigateToAddAccount: () -> Unit
 ) {
     Scaffold(
         topBar = {
             CommonAppBar(
                 title = if (category == TransactionChildCategory.SAVINGS_IN)
-                    stringResource(R.string.choose_funds_source) else
+                    stringResource(R.string.choose_source_account) else
                         stringResource(R.string.choose_destination_account),
                 onNavigateBack = onNavigateBack
             )
@@ -66,12 +72,26 @@ fun SavingAccountScreen(
                     .background(MaterialTheme.colorScheme.background),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Kamu belum memiliki akun",
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurface
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Kamu belum memiliki akun",
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
                     )
-                )
+                    OutlinedButton(
+                        onClick = onNavigateToAddAccount,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.add_new_account),
+                            style = MaterialTheme.typography.labelMedium.copy(fontSize = 12.sp)
+                        )
+                    }
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ package com.android.monu.ui.feature.screen.settings
 import android.Manifest
 import android.net.Uri
 import android.os.Build
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import com.android.monu.R
 import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.domain.common.DatabaseResultState
@@ -30,6 +32,7 @@ import com.android.monu.ui.feature.screen.settings.components.SettingsApplicatio
 import com.android.monu.ui.feature.screen.settings.components.SettingsPreference
 import com.android.monu.ui.feature.screen.settings.components.SettingsSecurity
 import com.android.monu.ui.feature.screen.settings.components.SettingsThemeDialog
+import com.android.monu.ui.feature.utils.AuthenticationManager
 import com.android.monu.ui.feature.utils.showMessageWithToast
 import com.android.monu.ui.feature.utils.showToast
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -42,29 +45,25 @@ fun SettingsScreen(
     themeSetting: ThemeSetting,
     isFirstBackup: Boolean,
     isFirstRestore: Boolean,
+    isAuthenticationEnabled: Boolean,
     processResult: DatabaseResultState?,
-    onNavigateBack: () -> Unit,
-    onThemeChange: (ThemeSetting) -> Unit,
-    onNavigateToExport: () -> Unit,
-    onBackupData: () -> Unit,
-    onSetFirstBackupToFalse: () -> Unit,
-    onRestoreData: (Uri) -> Unit,
-    onSetFirstRestoreToFalse: () -> Unit,
-    onRemoveAllData: () -> Unit
+    settingsActions: SettingsActions
 ) {
     var checked by remember { mutableStateOf(true) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var showFirstBackupDialog by remember { mutableStateOf(false) }
     var showFirstRestoreDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showAuthenticationPrompt by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+    val activity = LocalActivity.current as FragmentActivity
 
     val storagePermissionState = rememberPermissionState(
         permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
         onPermissionResult = { isGranted ->
             if (isGranted) {
-                onBackupData()
+                settingsActions.onBackupData()
             } else {
                 context.getString(R.string.write_permission_storage_is_required_to_backup_data)
                     .showMessageWithToast(context)
@@ -74,7 +73,7 @@ fun SettingsScreen(
     val pickJsonFileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
-        uri?.let { onRestoreData(it) }
+        uri?.let { settingsActions.onRestoreData(it) }
     }
 
     LaunchedEffect(processResult) {
@@ -85,7 +84,7 @@ fun SettingsScreen(
         topBar = {
             CommonAppBar(
                 title = stringResource(R.string.settings),
-                onNavigateBack = onNavigateBack
+                onNavigateBack = settingsActions::onNavigateBack
             ) 
         }
     ) { innerPadding ->
@@ -104,7 +103,7 @@ fun SettingsScreen(
                 modifier = Modifier.padding(top = 8.dp)
             )
             SettingsApplicationData(
-                onExportDataClicked = onNavigateToExport,
+                onExportDataClicked = settingsActions::onNavigateToExport,
                 onBackupDataClicked = {
                     if (isFirstBackup) {
                         showFirstBackupDialog = true
@@ -113,7 +112,7 @@ fun SettingsScreen(
                             !storagePermissionState.status.isGranted) {
                             storagePermissionState.launchPermissionRequest()
                         } else {
-                            onBackupData()
+                            settingsActions.onBackupData()
                         }
                     }
                 },
@@ -127,8 +126,8 @@ fun SettingsScreen(
                 onDeleteDataClicked = { showDeleteDialog = true }
             )
             SettingsSecurity(
-                onPinAuthenticationClicked = {  },
-                onFingerprintAuthenticationClicked = {  }
+                isAuthenticationEnabled = isAuthenticationEnabled,
+                onAuthenticationClicked = { showAuthenticationPrompt = true }
             )
         }
     }
@@ -136,7 +135,7 @@ fun SettingsScreen(
     if (showThemeDialog) {
         SettingsThemeDialog(
             themeSetting = themeSetting,
-            onThemeChange = onThemeChange,
+            onThemeChange = settingsActions::onThemeChange,
             onDismissRequest = { showThemeDialog = false }
         )
     }
@@ -146,16 +145,16 @@ fun SettingsScreen(
             text = stringResource(R.string.first_backup_confirmation),
             onDismissRequest = {
                 showFirstBackupDialog = false
-                onSetFirstBackupToFalse()
+                settingsActions.onSetFirstBackupToFalse()
             },
             onConfirmRequest = {
                 showFirstBackupDialog = false
-                onSetFirstBackupToFalse()
+                settingsActions.onSetFirstBackupToFalse()
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
                     !storagePermissionState.status.isGranted) {
                     storagePermissionState.launchPermissionRequest()
                 } else {
-                    onBackupData()
+                    settingsActions.onBackupData()
                 }
             }
         )
@@ -166,11 +165,11 @@ fun SettingsScreen(
             text = stringResource(R.string.first_restore_confirmation),
             onDismissRequest = {
                 showFirstRestoreDialog = false
-                onSetFirstRestoreToFalse()
+                settingsActions.onSetFirstRestoreToFalse()
             },
             onConfirmRequest = {
                 showFirstRestoreDialog = false
-                onSetFirstRestoreToFalse()
+                settingsActions.onSetFirstRestoreToFalse()
                 pickJsonFileLauncher.launch(arrayOf("application/json"))
             }
         )
@@ -182,9 +181,36 @@ fun SettingsScreen(
             onDismissRequest = { showDeleteDialog = false },
             onConfirmRequest = {
                 showDeleteDialog = false
-                onRemoveAllData()
+                settingsActions.onRemoveAllData()
                 context.getString(R.string.all_data_successfully_deleted).showMessageWithToast(context)
             }
         )
     }
+
+    if (showAuthenticationPrompt && AuthenticationManager.canAuthenticate(context)) {
+        AuthenticationManager.showBiometricPrompt(
+            activity = activity,
+            onAuthSuccess = {
+                showAuthenticationPrompt = false
+                settingsActions.onAuthenticated(!isAuthenticationEnabled)
+            },
+            onAuthFailed = {
+                showAuthenticationPrompt = false
+                context.getString(R.string.fingerprint_not_matched).showMessageWithToast(context)
+            },
+            onAuthError = { showAuthenticationPrompt = false }
+        )
+    }
+}
+
+interface SettingsActions {
+    fun onNavigateBack()
+    fun onThemeChange(themeSetting: ThemeSetting)
+    fun onNavigateToExport()
+    fun onBackupData()
+    fun onSetFirstBackupToFalse()
+    fun onRestoreData(uri: Uri)
+    fun onSetFirstRestoreToFalse()
+    fun onRemoveAllData()
+    fun onAuthenticated(authenticated: Boolean)
 }

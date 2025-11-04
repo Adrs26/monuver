@@ -1,11 +1,13 @@
 package com.android.monu.ui.feature.screen.settings
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.android.monu.data.datastore.ThemeSetting
 import com.android.monu.ui.feature.screen.settings.export.ExportScreen
 import com.android.monu.ui.feature.utils.NavigationAnimation
 import com.android.monu.ui.navigation.Settings
@@ -25,21 +27,54 @@ fun NavGraphBuilder.settingsNavGraph(
             val themeSetting by viewModel.themeSetting.collectAsStateWithLifecycle()
             val isFirstBackup by viewModel.isFirstBackup.collectAsStateWithLifecycle()
             val isFirstRestore by viewModel.isFirstRestore.collectAsStateWithLifecycle()
+            val isAuthenticationEnabled by viewModel.isAuthenticationEnabled.collectAsStateWithLifecycle()
             val processResult by viewModel.processResult.collectAsStateWithLifecycle()
+
+            val settingsActions = object : SettingsActions {
+                override fun onNavigateBack() {
+                    navController.navigateUp()
+                }
+
+                override fun onThemeChange(themeSetting: ThemeSetting) {
+                    viewModel.changeTheme(themeSetting)
+                }
+
+                override fun onNavigateToExport() {
+                    navController.navigate(Settings.Export)
+                }
+
+                override fun onBackupData() {
+                    viewModel.backupData()
+                }
+
+                override fun onSetFirstBackupToFalse() {
+                    viewModel.setIsFirstBackupToFalse()
+                }
+
+                override fun onRestoreData(uri: Uri) {
+                    viewModel.restoreData(uri)
+                }
+
+                override fun onSetFirstRestoreToFalse() {
+                    viewModel.setIsFirstRestoreToFalse()
+                }
+
+                override fun onRemoveAllData() {
+                    viewModel.deleteAllData()
+                }
+
+                override fun onAuthenticated(authenticated: Boolean) {
+                    viewModel.setAuthentication(authenticated)
+                }
+            }
 
             SettingsScreen(
                 themeSetting = themeSetting,
                 isFirstBackup = isFirstBackup,
                 isFirstRestore = isFirstRestore,
+                isAuthenticationEnabled = isAuthenticationEnabled,
                 processResult = processResult,
-                onThemeChange = viewModel::changeTheme,
-                onNavigateBack = navController::navigateUp,
-                onNavigateToExport = { navController.navigate(Settings.Export) },
-                onBackupData = viewModel::backupData,
-                onSetFirstBackupToFalse = viewModel::setIsFirstBackupToFalse,
-                onRestoreData = viewModel::restoreData,
-                onSetFirstRestoreToFalse = viewModel::setIsFirstRestoreToFalse,
-                onRemoveAllData = viewModel::deleteAllData
+                settingsActions = settingsActions
             )
         }
         composable<Settings.Export>(

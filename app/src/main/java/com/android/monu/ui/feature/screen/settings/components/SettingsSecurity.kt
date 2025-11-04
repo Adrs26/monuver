@@ -5,13 +5,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,8 +28,8 @@ import com.android.monu.R
 
 @Composable
 fun SettingsSecurity(
-    onPinAuthenticationClicked: () -> Unit,
-    onFingerprintAuthenticationClicked: () -> Unit,
+    isAuthenticationEnabled: Boolean,
+    onAuthenticationClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -48,42 +51,13 @@ fun SettingsSecurity(
         ) {
             Row(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                    .clickable { onPinAuthenticationClicked() }
+                    .clip(RoundedCornerShape(16.dp))
+                    .clickable { onAuthenticationClicked() }
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_lock),
-                    contentDescription = null
-                )
-                Text(
-                    text = stringResource(R.string.activated_pin_authentication),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 16.dp),
-                    style = MaterialTheme.typography.labelSmall.copy(fontSize = 13.sp)
-                )
-                Icon(
-                    imageVector = Icons.AutoMirrored.Default.KeyboardArrowRight,
-                    contentDescription = null,
-                    modifier = Modifier.padding(start = 16.dp),
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant
-            )
-            Row(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
-                    .clickable { onFingerprintAuthenticationClicked() }
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_fingerprint),
                     contentDescription = null
                 )
                 Text(
@@ -93,11 +67,30 @@ fun SettingsSecurity(
                         .padding(start = 16.dp),
                     style = MaterialTheme.typography.labelSmall.copy(fontSize = 13.sp)
                 )
-                Icon(
-                    imageVector = Icons.AutoMirrored.Default.KeyboardArrowRight,
-                    contentDescription = null,
-                    modifier = Modifier.padding(start = 16.dp),
-                    tint = MaterialTheme.colorScheme.onSurface
+                Switch(
+                    checked = isAuthenticationEnabled,
+                    onCheckedChange = {},
+                    modifier = Modifier.height(24.dp),
+                    thumbContent = if (isAuthenticationEnabled) {
+                        {
+                            Icon(
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = null,
+                                modifier = Modifier.size(SwitchDefaults.IconSize)
+                            )
+                        }
+                    } else {
+                        null
+                    },
+                    enabled = false,
+                    colors = SwitchDefaults.colors(
+                        disabledUncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
+                        disabledUncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        disabledUncheckedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
+                        disabledCheckedThumbColor = MaterialTheme.colorScheme.background,
+                        disabledCheckedTrackColor = MaterialTheme.colorScheme.primary,
+                        disabledCheckedIconColor = MaterialTheme.colorScheme.primary
+                    )
                 )
             }
         }
