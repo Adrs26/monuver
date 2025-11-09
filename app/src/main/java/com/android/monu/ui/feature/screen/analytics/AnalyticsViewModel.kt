@@ -3,7 +3,7 @@ package com.android.monu.ui.feature.screen.analytics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.data.datastore.ThemeSetting
-import com.android.monu.data.datastore.UserPreference
+import com.android.monu.data.datastore.UserPreferences
 import com.android.monu.domain.usecase.transaction.GetDistinctTransactionYearsUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionBalanceSummaryUseCase
 import com.android.monu.domain.usecase.transaction.GetTransactionCategorySummaryUseCase
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import org.threeten.bp.LocalDate
 
 class AnalyticsViewModel(
-    preference: UserPreference,
+    preference: UserPreferences,
     getDistinctTransactionYearsUseCase: GetDistinctTransactionYearsUseCase,
     private val getTransactionBalanceSummaryUseCase: GetTransactionBalanceSummaryUseCase,
     private val getTransactionCategorySummaryUseCase: GetTransactionCategorySummaryUseCase,

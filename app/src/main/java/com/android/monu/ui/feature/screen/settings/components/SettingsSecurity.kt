@@ -69,7 +69,7 @@ fun SettingsSecurity(
                 )
                 Switch(
                     checked = isAuthenticationEnabled,
-                    onCheckedChange = {},
+                    onCheckedChange = { onAuthenticationClicked() },
                     modifier = Modifier.height(24.dp),
                     thumbContent = if (isAuthenticationEnabled) {
                         {
@@ -82,14 +82,15 @@ fun SettingsSecurity(
                     } else {
                         null
                     },
-                    enabled = false,
                     colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.background,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.background,
+                        uncheckedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         disabledUncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
                         disabledUncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledUncheckedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledCheckedThumbColor = MaterialTheme.colorScheme.background,
-                        disabledCheckedTrackColor = MaterialTheme.colorScheme.primary,
-                        disabledCheckedIconColor = MaterialTheme.colorScheme.primary
+                        disabledUncheckedBorderColor = MaterialTheme.colorScheme.surfaceVariant
                     )
                 )
             }

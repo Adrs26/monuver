@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.monu.data.datastore.ThemeSetting
-import com.android.monu.data.datastore.UserPreference
+import com.android.monu.data.datastore.UserPreferences
 import com.android.monu.domain.common.DatabaseResultState
 import com.android.monu.domain.common.ExportStatusState
 import com.android.monu.domain.model.ExportState
@@ -21,12 +21,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val preference: UserPreference,
+    private val preference: UserPreferences,
     private val exportDataToPdfUseCase: ExportDataToPdfUseCase,
     private val backupDataUseCase: BackupDataUseCase,
     private val restoreDataUseCase: RestoreDataUseCase,
     private val deleteAllDataUseCase: DeleteAllDataUseCase
 ) : ViewModel() {
+
+    val isNotificationEnabled = preference.isNotificationEnabled
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
     val themeSetting = preference.themeSetting
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ThemeSetting.SYSTEM)
@@ -48,6 +51,12 @@ class SettingsViewModel(
 
     private val _processResult = MutableStateFlow<DatabaseResultState?>(null)
     val processResult = _processResult.asStateFlow()
+
+    fun setNotification(isEnabled: Boolean) {
+        viewModelScope.launch {
+            preference.setNotification(isEnabled)
+        }
+    }
 
     fun changeTheme(themeSetting: ThemeSetting) {
         viewModelScope.launch {
@@ -103,9 +112,9 @@ class SettingsViewModel(
         }
     }
 
-    fun setAuthentication(enabled: Boolean) {
+    fun setAuthentication(isEnabled: Boolean) {
         viewModelScope.launch {
-            preference.setAuthenticationEnabled(enabled)
+            preference.setAuthentication(isEnabled)
         }
     }
 }

@@ -62,8 +62,7 @@ class MainActivity : AppCompatActivity() {
                         activity = activity,
                         onAuthSuccess = { viewModel.setAuthenticationStatus(true) },
                         onAuthFailed = {
-                            getString(R.string.fingerprint_not_matched)
-                                .showMessageWithToast(this@MainActivity)
+                            getString(R.string.fingerprint_not_matched).showMessageWithToast(this@MainActivity)
                         },
                         onAuthError = {}
                     )

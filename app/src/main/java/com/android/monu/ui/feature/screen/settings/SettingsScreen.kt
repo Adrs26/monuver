@@ -1,8 +1,11 @@
 package com.android.monu.ui.feature.screen.settings
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import com.android.monu.R
 import com.android.monu.data.datastore.ThemeSetting
@@ -35,6 +39,7 @@ import com.android.monu.ui.feature.screen.settings.components.SettingsThemeDialo
 import com.android.monu.ui.feature.utils.AuthenticationManager
 import com.android.monu.ui.feature.utils.showMessageWithToast
 import com.android.monu.ui.feature.utils.showToast
+import com.android.monu.ui.worker.startReminderWorker
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -42,14 +47,9 @@ import com.google.accompanist.permissions.rememberPermissionState
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsScreen(
-    themeSetting: ThemeSetting,
-    isFirstBackup: Boolean,
-    isFirstRestore: Boolean,
-    isAuthenticationEnabled: Boolean,
-    processResult: DatabaseResultState?,
+    settingsState: SettingsState,
     settingsActions: SettingsActions
 ) {
-    var checked by remember { mutableStateOf(true) }
     var showThemeDialog by remember { mutableStateOf(false) }
     var showFirstBackupDialog by remember { mutableStateOf(false) }
     var showFirstRestoreDialog by remember { mutableStateOf(false) }
@@ -58,6 +58,21 @@ fun SettingsScreen(
 
     val context = LocalContext.current
     val activity = LocalActivity.current as FragmentActivity
+
+    val notificationsPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(
+            permission = Manifest.permission.POST_NOTIFICATIONS,
+            onPermissionResult = { isGranted ->
+                if (isGranted) {
+                    startReminderWorker(context)
+                } else {
+                    context.getString(
+                        R.string.notification_permissions_required_to_use_bill_reminder_feature
+                    ).showMessageWithToast(context)
+                }
+            }
+        )
+    } else { null }
 
     val storagePermissionState = rememberPermissionState(
         permission = Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -76,8 +91,14 @@ fun SettingsScreen(
         uri?.let { settingsActions.onRestoreData(it) }
     }
 
-    LaunchedEffect(processResult) {
-        processResult?.showToast(context)
+    LaunchedEffect(notificationsPermissionState?.status?.isGranted) {
+        settingsActions.onNotificationEnableChange(
+            notificationsPermissionState?.status?.isGranted == true
+        )
+    }
+
+    LaunchedEffect(settingsState.processResult) {
+        settingsState.processResult?.showToast(context)
     }
 
     Scaffold(
@@ -96,16 +117,22 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             SettingsPreference(
-                isNotificationEnabled = checked,
-                themeSetting = themeSetting,
-                onNotificationClicked = { },
-                onThemeClicked = { showThemeDialog = true },
+                isNotificationEnabled = settingsState.isNotificationEnabled,
+                themeSetting = settingsState.themeSetting,
+                onNotificationEnableChange = {
+                    if (notificationsPermissionState?.status?.isGranted == false) {
+                        notificationsPermissionState.launchPermissionRequest()
+                    } else {
+                        openNotificationSettings(context)
+                    }
+                },
+                onThemeChange = { showThemeDialog = true },
                 modifier = Modifier.padding(top = 8.dp)
             )
             SettingsApplicationData(
                 onExportDataClicked = settingsActions::onNavigateToExport,
                 onBackupDataClicked = {
-                    if (isFirstBackup) {
+                    if (settingsState.isFirstBackup) {
                         showFirstBackupDialog = true
                     } else {
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
@@ -117,7 +144,7 @@ fun SettingsScreen(
                     }
                 },
                 onRestoreDataClicked = {
-                    if (isFirstRestore) {
+                    if (settingsState.isFirstRestore) {
                         showFirstRestoreDialog = true
                     } else {
                         pickJsonFileLauncher.launch(arrayOf("application/json"))
@@ -126,7 +153,7 @@ fun SettingsScreen(
                 onDeleteDataClicked = { showDeleteDialog = true }
             )
             SettingsSecurity(
-                isAuthenticationEnabled = isAuthenticationEnabled,
+                isAuthenticationEnabled = settingsState.isAuthenticationEnabled,
                 onAuthenticationClicked = { showAuthenticationPrompt = true }
             )
         }
@@ -134,7 +161,7 @@ fun SettingsScreen(
 
     if (showThemeDialog) {
         SettingsThemeDialog(
-            themeSetting = themeSetting,
+            themeSetting = settingsState.themeSetting,
             onThemeChange = settingsActions::onThemeChange,
             onDismissRequest = { showThemeDialog = false }
         )
@@ -192,7 +219,7 @@ fun SettingsScreen(
             activity = activity,
             onAuthSuccess = {
                 showAuthenticationPrompt = false
-                settingsActions.onAuthenticated(!isAuthenticationEnabled)
+                settingsActions.onAuthenticationEnableChange(!settingsState.isAuthenticationEnabled)
             },
             onAuthFailed = {
                 showAuthenticationPrompt = false
@@ -203,8 +230,32 @@ fun SettingsScreen(
     }
 }
 
+private fun openNotificationSettings(context: Context) {
+    val intent = Intent().apply {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+        } else {
+            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            data = "package:${context.packageName}".toUri()
+        }
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    context.startActivity(intent)
+}
+
+data class SettingsState(
+    val isNotificationEnabled: Boolean,
+    val themeSetting: ThemeSetting,
+    val isFirstBackup: Boolean,
+    val isFirstRestore: Boolean,
+    val isAuthenticationEnabled: Boolean,
+    val processResult: DatabaseResultState?,
+)
+
 interface SettingsActions {
     fun onNavigateBack()
+    fun onNotificationEnableChange(isEnabled: Boolean)
     fun onThemeChange(themeSetting: ThemeSetting)
     fun onNavigateToExport()
     fun onBackupData()
@@ -212,5 +263,5 @@ interface SettingsActions {
     fun onRestoreData(uri: Uri)
     fun onSetFirstRestoreToFalse()
     fun onRemoveAllData()
-    fun onAuthenticated(authenticated: Boolean)
+    fun onAuthenticationEnableChange(isEnabled: Boolean)
 }

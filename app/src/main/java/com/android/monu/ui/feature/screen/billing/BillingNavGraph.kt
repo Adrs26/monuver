@@ -46,11 +46,19 @@ fun NavGraphBuilder.billingNavGraph(
             val pendingBills by viewModel.pendingBills.collectAsStateWithLifecycle()
             val dueBills by viewModel.dueBills.collectAsStateWithLifecycle()
             val paidBills = viewModel.paidBills.collectAsLazyPagingItems()
+            val reminderDaysBeforeDue by viewModel.reminderDaysBeforeDue.collectAsStateWithLifecycle()
+            val isReminderBeforeDueDayEnabled by viewModel.isReminderBeforeDueDayEnabled
+                .collectAsStateWithLifecycle()
+            val isReminderForDueBillEnabled by viewModel.isReminderForDueBillEnabled
+                .collectAsStateWithLifecycle()
 
             val billUiState = BillUiState(
                 pendingBills = pendingBills,
                 dueBills = dueBills,
-                paidBills = paidBills
+                paidBills = paidBills,
+                reminderDaysBeforeDue = reminderDaysBeforeDue,
+                isReminderBeforeDueDayEnabled = isReminderBeforeDueDayEnabled,
+                isReminderForDueBillEnabled = isReminderForDueBillEnabled
             )
 
             val billActions = object : BillActions {
@@ -64,6 +72,18 @@ fun NavGraphBuilder.billingNavGraph(
 
                 override fun onNavigateToBillDetail(billId: Long) {
                     navController.navigate(Billing.Detail(billId))
+                }
+
+                override fun onSettingsApply(
+                    reminderDaysBeforeDue: Int,
+                    isReminderBeforeDueDayEnabled: Boolean,
+                    isReminderForDueBillEnabled: Boolean
+                ) {
+                    viewModel.setReminderSettings(
+                        reminderDaysBeforeDue = reminderDaysBeforeDue,
+                        isReminderBeforeDueDayEnabled = isReminderBeforeDueDayEnabled,
+                        isReminderForDueBillEnabled = isReminderForDueBillEnabled
+                    )
                 }
             }
 

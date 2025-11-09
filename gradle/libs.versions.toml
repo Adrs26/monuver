@@ -2,7 +2,7 @@
 accompanistPermissions = "0.37.3"
 agp = "8.13.0"
 biometric = "1.4.0-alpha04"
-coreSplashscreen = "1.0.1"
+coreSplashscreen = "1.2.0"
 datastorePreferences = "1.1.7"
 gson = "2.13.2"
 core = "1.3.0"
@@ -22,11 +22,12 @@ composeBom = "2025.09.00"
 lottieCompose = "6.7.1"
 mockitoCore = "5.20.0"
 mockitoKotlin = "6.1.0"
-navigationCompose = "2.9.5"
+navigationCompose = "2.9.6"
 pagingRuntime = "3.3.6"
 roomRuntime = "2.8.3"
 threetenabp = "1.4.9"
 ksp = "2.2.21-2.0.4"
+workRuntimeKtx = "2.11.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -41,6 +42,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 calendar = { module = "com.maxkeppeler.sheets-compose-dialogs:calendar", version.ref = "core" }
 core = { module = "com.maxkeppeler.sheets-compose-dialogs:core", version.ref = "core" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
@@ -61,6 +63,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koinAndroid" }
 koin-androidx-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koinAndroid" }
+koin-androidx-workmanager = { module = "io.insert-koin:koin-androidx-workmanager", version.ref = "koinAndroid" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }

@@ -1,6 +1,6 @@
 package com.android.monu.di
 
-import com.android.monu.data.datastore.UserPreference
+import com.android.monu.data.datastore.UserPreferences
 import com.android.monu.data.manager.DataManagerImpl
 import com.android.monu.data.repository.AccountRepositoryImpl
 import com.android.monu.data.repository.BillRepositoryImpl
@@ -28,5 +28,5 @@ val dataModule = module {
     singleOf(::SavingRepositoryImpl){ bind<SavingRepository>() }
     singleOf(::DataManagerImpl){ bind<DataManager>() }
 
-    singleOf(::UserPreference)
+    singleOf(::UserPreferences)
 }

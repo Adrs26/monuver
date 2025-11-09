@@ -359,4 +359,17 @@
     <string name="start_period_can_not_after_end_period">Periode mulai tidak bisa dipilih setelah periode akhir</string>
     <string name="choose_account">Pilih akun</string>
     <string name="fingerprint_not_matched">Sidik jari tidak sesuai</string>
+    <string name="notification_permissions_required_to_use_bill_reminder_feature">Izin notifikasi diperlukan untuk menggunakan fitur pengingat tagihan</string>
+    <string name="days_before">Sehari sebelumnya</string>
+    <string name="three_days_before">3 hari sebelumnya</string>
+    <string name="five_days_before">5 hari sebelumnya</string>
+    <string name="weeks_before">Seminggu sebelumnya</string>
+    <string name="due_day_reminder">Waktu pengingat jatuh tempo</string>
+    <string name="advance_reminder_settings">Pengaturan lanjutan</string>
+    <string name="remind_everyday_after_due_day">Ingatkan setiap hari mulai dari waktu pengingat</string>
+    <string name="remind_everyday_for_due_bill">Ingatkan setiap hari untuk tagihan yang sudah lewat jatuh tempo</string>
+    <string name="do_not_forget_pay_your_bill">Jangan lupa bayar tagihan kamu ya!</string>
+    <string name="n_days_before_due" tools:ignore="PluralsCandidate">%1$d hari menuju jatuh tempo tagihan %2$s</string>
+    <string name="due_days">Hari ini adalah jatuh tempo dari tagihan %1$s</string>
+    <string name="n_days_after_due" tools:ignore="PluralsCandidate">Tagihan %1$s sudah lewat %2$d hari dari jatuh tempo</string>
 </resources>

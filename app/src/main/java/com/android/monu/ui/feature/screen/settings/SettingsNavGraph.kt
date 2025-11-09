@@ -24,15 +24,29 @@ fun NavGraphBuilder.settingsNavGraph(
             popExitTransition = { NavigationAnimation.popExit }
         ) {
             val viewModel = koinViewModel<SettingsViewModel>()
+            val isNotificationEnabled by viewModel.isNotificationEnabled.collectAsStateWithLifecycle()
             val themeSetting by viewModel.themeSetting.collectAsStateWithLifecycle()
             val isFirstBackup by viewModel.isFirstBackup.collectAsStateWithLifecycle()
             val isFirstRestore by viewModel.isFirstRestore.collectAsStateWithLifecycle()
             val isAuthenticationEnabled by viewModel.isAuthenticationEnabled.collectAsStateWithLifecycle()
             val processResult by viewModel.processResult.collectAsStateWithLifecycle()
 
+            val settingsState = SettingsState(
+                isNotificationEnabled = isNotificationEnabled,
+                themeSetting = themeSetting,
+                isFirstBackup = isFirstBackup,
+                isFirstRestore = isFirstRestore,
+                isAuthenticationEnabled = isAuthenticationEnabled,
+                processResult = processResult
+            )
+
             val settingsActions = object : SettingsActions {
                 override fun onNavigateBack() {
                     navController.navigateUp()
+                }
+
+                override fun onNotificationEnableChange(isEnabled: Boolean) {
+                    viewModel.setNotification(isEnabled)
                 }
 
                 override fun onThemeChange(themeSetting: ThemeSetting) {
@@ -63,17 +77,13 @@ fun NavGraphBuilder.settingsNavGraph(
                     viewModel.deleteAllData()
                 }
 
-                override fun onAuthenticated(authenticated: Boolean) {
-                    viewModel.setAuthentication(authenticated)
+                override fun onAuthenticationEnableChange(isEnabled: Boolean) {
+                    viewModel.setAuthentication(isEnabled)
                 }
             }
 
             SettingsScreen(
-                themeSetting = themeSetting,
-                isFirstBackup = isFirstBackup,
-                isFirstRestore = isFirstRestore,
-                isAuthenticationEnabled = isAuthenticationEnabled,
-                processResult = processResult,
+                settingsState = settingsState,
                 settingsActions = settingsActions
             )
         }

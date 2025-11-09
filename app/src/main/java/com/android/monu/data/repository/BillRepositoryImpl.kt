@@ -77,4 +77,8 @@ class BillRepositoryImpl(
     override suspend fun getAllBills(): List<BillState> {
         return billDao.getAllBills().map { it.toDomain() }
     }
+
+    override suspend fun getAllUnpaidBills(): List<BillState> {
+        return billDao.getAllUnpaidBills().map { it.toDomain() }
+    }
 }

@@ -17,7 +17,8 @@ import com.android.monu.ui.feature.components.DebouncedIconButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BillAppBar(
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onReminderClick: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -41,7 +42,7 @@ fun BillAppBar(
         },
         actions = {
             DebouncedIconButton(
-                onClick = {}
+                onClick = onReminderClick
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Notifications,

@@ -1,6 +1,6 @@
 # 💰 Monu – Personal Finance Management App (Ongoing)
 
-Monu is an Android application designed to help users efficiently manage their personal finances. It enables users to record income and expenses, track spending habits, manage budgets, and many more. All in one simple and modern interface. Try it now (Some features are still under development) - [Monu](https://drive.google.com/file/d/1_P_eZQjfcvUfT7b5dyLr0qMl3XqGqeEZ/view?usp=sharing)
+Monu is an Android application designed to help users efficiently manage their personal finances. It enables users to record income and expenses, track spending habits, manage budgets, and many more. All in one simple and modern interface. Try it now (Some features are still under development) - [Monu](https://drive.google.com/file/d/1ekZn0UP33jOtnFiYXTQFOH03ClSDfhNU/view?usp=sharing)
 
 ---
 
@@ -61,7 +61,6 @@ The app follows **MVVM with Clean Architecture** principles for scalability and 
 ## 🚀 Future Plans
 
 - Publish on Google Play Store
-- Support language localization.
 - Integrate cloud sync with Server Database for seamless multi-device access.
 - Support for iOS.  
 

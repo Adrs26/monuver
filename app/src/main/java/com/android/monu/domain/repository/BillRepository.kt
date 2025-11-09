@@ -26,4 +26,6 @@ interface BillRepository {
     suspend fun updateBillPeriodByParentId(period: Int?, fixPeriod: Int?, parentId: Long)
 
     suspend fun getAllBills(): List<BillState>
+
+    suspend fun getAllUnpaidBills(): List<BillState>
 }

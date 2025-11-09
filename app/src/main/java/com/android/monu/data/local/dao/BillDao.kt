@@ -48,6 +48,9 @@ interface BillDao {
     @Query("SELECT * FROM bill")
     suspend fun getAllBills(): List<BillEntity>
 
+    @Query("SELECT * FROM bill WHERE is_paid = 0")
+    suspend fun getAllUnpaidBills(): List<BillEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllBills(bills: List<BillEntity>)
 }

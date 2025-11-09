@@ -15,7 +15,7 @@ class UpdateBillUseCase(
             billState.amount == 0L -> return DatabaseResultState.EmptyBillAmount
             billState.isRecurring && billState.period == 2 && billState.fixPeriod.isEmpty() ->
                 return DatabaseResultState.EmptyBillFixPeriod
-            billState.fixPeriod.toInt() < billState.nowPaidPeriod ->
+            billState.isRecurring && billState.fixPeriod.toInt() < billState.nowPaidPeriod ->
                 return DatabaseResultState.InvalidBillFixPeriod
         }
 

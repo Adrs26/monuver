@@ -11,6 +11,7 @@ import com.android.monu.domain.usecase.bill.GetBillByIdUseCase
 import com.android.monu.domain.usecase.bill.GetDueBillsUseCase
 import com.android.monu.domain.usecase.bill.GetPaidBillsUseCase
 import com.android.monu.domain.usecase.bill.GetPendingBillsUseCase
+import com.android.monu.domain.usecase.bill.GetUnpaidBillsUseCase
 import com.android.monu.domain.usecase.bill.UpdateBillUseCase
 import com.android.monu.domain.usecase.budget.CreateBudgetUseCase
 import com.android.monu.domain.usecase.budget.DeleteBudgetUseCase
@@ -114,6 +115,7 @@ val domainModule = module {
     factoryOf(::GetPendingBillsUseCase)
     factoryOf(::GetDueBillsUseCase)
     factoryOf(::GetPaidBillsUseCase)
+    factoryOf(::GetUnpaidBillsUseCase)
     factoryOf(::UpdateBillUseCase)
 
     factoryOf(::CreateSavingUseCase)

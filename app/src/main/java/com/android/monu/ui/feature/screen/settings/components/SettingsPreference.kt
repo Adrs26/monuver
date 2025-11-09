@@ -33,8 +33,8 @@ import com.android.monu.data.datastore.ThemeSetting
 fun SettingsPreference(
     isNotificationEnabled: Boolean,
     themeSetting: ThemeSetting,
-    onNotificationClicked: () -> Unit,
-    onThemeClicked: () -> Unit,
+    onNotificationEnableChange: () -> Unit,
+    onThemeChange: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -57,7 +57,7 @@ fun SettingsPreference(
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                    .clickable { onNotificationClicked() }
+                    .clickable { onNotificationEnableChange() }
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -74,7 +74,7 @@ fun SettingsPreference(
                 )
                 Switch(
                     checked = isNotificationEnabled,
-                    onCheckedChange = {},
+                    onCheckedChange = { onNotificationEnableChange() },
                     modifier = Modifier.height(24.dp),
                     thumbContent = if (isNotificationEnabled) {
                         {
@@ -87,14 +87,15 @@ fun SettingsPreference(
                     } else {
                         null
                     },
-                    enabled = false,
                     colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.background,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.background,
+                        uncheckedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
                         disabledUncheckedThumbColor = MaterialTheme.colorScheme.onSurface,
                         disabledUncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledUncheckedBorderColor = MaterialTheme.colorScheme.surfaceVariant,
-                        disabledCheckedThumbColor = MaterialTheme.colorScheme.background,
-                        disabledCheckedTrackColor = MaterialTheme.colorScheme.primary,
-                        disabledCheckedIconColor = MaterialTheme.colorScheme.primary
+                        disabledUncheckedBorderColor = MaterialTheme.colorScheme.surfaceVariant
                     )
                 )
             }
@@ -105,7 +106,7 @@ fun SettingsPreference(
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
-                    .clickable { onThemeClicked() }
+                    .clickable { onThemeChange() }
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
