@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">Monu</string>
+    <string name="app_name">Monuver</string>
     <string name="home_menu">Beranda</string>
     <string name="transaction_menu">Transaksi</string>
     <string name="budgeting_menu">Budget</string>
@@ -372,4 +372,19 @@
     <string name="n_days_before_due" tools:ignore="PluralsCandidate">%1$d hari menuju jatuh tempo tagihan %2$s</string>
     <string name="due_days">Hari ini adalah jatuh tempo dari tagihan %1$s</string>
     <string name="n_days_after_due" tools:ignore="PluralsCandidate">Tagihan %1$s sudah lewat %2$d hari dari jatuh tempo</string>
+    <string name="transaction_sub_information">%1$s · %2$s</string>
+    <string name="you_do_not_have_account">Kamu belum memiliki akun</string>
+    <string name="onboarding_first_title">Catat Dengan Cepat dan Mudah</string>
+    <string name="onboarding_first_description">Catat pengeluaran dan pemasukan kamu di berbagai akun (Cash, Bank, E-Wallet) tanpa batas, kapan pun</string>
+    <string name="onboarding_second_title">Kontrol Uang kamu dengan Budget</string>
+    <string name="onboarding_second_description">Tetapkan batas pengeluaran per kategori. Dapatkan alert real-time sebelum kamu melampaui batas</string>
+    <string name="onboarding_third_title">Pahami Pola Pengeluaran Dengan Cepat</string>
+    <string name="onboarding_third_description">Laporan bulanan otomatis dengan chart visual yang mudah dibaca. Ketahui ke mana perginya uang kamu</string>
+    <string name="onboarding_fourth_title">Bebas Utang, Raih Tujuan</string>
+    <string name="onboarding_fourth_description">Catat tagihan rutin dan dapatkan reminder. Lacak progres Tabungan untuk setiap tujuan finansial</string>
+    <string name="back">Kembali</string>
+    <string name="start">Mulai</string>
+    <string name="please_wait_this_process">Tunggu ya, proses ini tidak akan lama</string>
+    <string name="process_failed">Proses gagal. Mohon periksa koneksi internet dan coba lagi</string>
+    <string name="refresh">Muat ulang</string>
 </resources>

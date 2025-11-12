@@ -8,7 +8,7 @@
         tools:ignore="ScopedStorage" />
 
     <application
-        android:name=".MonuApplication"
+        android:name=".MonuverApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -39,6 +39,10 @@
                 android:value="androidx.startup"
                 tools:node="remove" />
         </provider>
+
+        <profileable
+            android:shell="true"
+            android:enabled="true"/>
     </application>
 
 </manifest>

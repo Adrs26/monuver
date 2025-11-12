@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.android.monu"
+    namespace = "com.android.monuver"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.android.monu"
+        applicationId = "com.android.monuver"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.androidx.biometric)
+    implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.navigation.compose)
