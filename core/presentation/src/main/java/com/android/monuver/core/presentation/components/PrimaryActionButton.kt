@@ -1,4 +1,4 @@
-package com.android.monuver.feature.settings.presentation.export.components
+package com.android.monuver.core.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,13 +9,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.android.monuver.feature.settings.R
 
 @Composable
-internal fun ExportBottomBar(
-    onExportData: () -> Unit
+fun PrimaryActionButton(
+    text: String,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -25,13 +24,13 @@ internal fun ExportBottomBar(
             thickness = 1.dp
         )
         Button(
-            onClick = onExportData,
+            onClick = onClick,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 16.dp),
         ) {
             Text(
-                text = stringResource(R.string.export),
+                text = text,
                 modifier = Modifier.padding(vertical = 8.dp),
                 style = MaterialTheme.typography.labelMedium
             )

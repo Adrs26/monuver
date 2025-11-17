@@ -1,6 +1,8 @@
 package com.android.monuver.feature.billing.presentation.billDetail
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +20,7 @@ import com.android.monuver.core.presentation.util.showMessageWithToast
 import com.android.monuver.core.presentation.util.showToast
 import com.android.monuver.feature.billing.R
 import com.android.monuver.feature.billing.presentation.billDetail.components.BillDetailAppBar
+import com.android.monuver.feature.billing.presentation.billDetail.components.BillDetailBottomBar
 import com.android.monuver.feature.billing.presentation.billDetail.components.BillDetailContent
 
 @Composable
@@ -42,15 +45,21 @@ internal fun BillDetailScreen(
                 onNavigateToEditBill = { billDetailActions.onNavigateToEditBill(billState.id) },
                 onRemoveBill = { showRemoveDialog = true }
             )
+        },
+        bottomBar = {
+            BillDetailBottomBar(
+                isPaid = billState.isPaid,
+                onProcessPayment = { billDetailActions.onNavigateToPayBill(billState.id) },
+                onCancelPayment = { billDetailActions.onCancelBillPayment(billState.id) }
+            )
         }
     ) { innerPadding ->
         BillDetailContent(
             billState = billState,
-            onNavigateToPayBill = billDetailActions::onNavigateToPayBill,
-            onCancelBillPayment = billDetailActions::onCancelBillPayment,
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 24.dp),
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
         )
     }
 

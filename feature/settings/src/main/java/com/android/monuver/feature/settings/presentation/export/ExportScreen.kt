@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.android.monuver.core.domain.util.DateHelper
 import com.android.monuver.core.presentation.components.CommonAppBar
+import com.android.monuver.core.presentation.components.PrimaryActionButton
 import com.android.monuver.core.presentation.components.StaticTextInputField
 import com.android.monuver.core.presentation.components.TextDateInputField
 import com.android.monuver.core.presentation.components.TextInputField
@@ -36,7 +37,6 @@ import com.android.monuver.feature.settings.R
 import com.android.monuver.feature.settings.domain.common.ExportStatusState
 import com.android.monuver.feature.settings.domain.model.ExportState
 import com.android.monuver.feature.settings.presentation.components.SettingsFirstActionConfirmationDialog
-import com.android.monuver.feature.settings.presentation.export.components.ExportBottomBar
 import com.android.monuver.feature.settings.presentation.export.components.ExportProgressDialog
 import com.android.monuver.feature.settings.presentation.export.components.ExportSortTypeRadioGroupField
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -120,28 +120,31 @@ internal fun ExportScreen(
             )
         },
         bottomBar = {
-            ExportBottomBar {
-                if (isFirstExport) {
-                    showFirstExportDialog = true
-                } else {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
-                        !storagePermissionState.status.isGranted) {
-                        storagePermissionState.launchPermissionRequest()
+            PrimaryActionButton(
+                text = stringResource(R.string.export),
+                onClick = {
+                    if (isFirstExport) {
+                        showFirstExportDialog = true
                     } else {
-                        onExportData(
-                            ExportState(
-                                title = title,
-                                username = username,
-                                startDate = startDate,
-                                endDate = endDate,
-                                sortType = sortType,
-                                isTransactionGrouped = isTransactionGrouped,
-                                isTransferIncluded = isTransferIncluded
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+                            !storagePermissionState.status.isGranted) {
+                            storagePermissionState.launchPermissionRequest()
+                        } else {
+                            onExportData(
+                                ExportState(
+                                    title = title,
+                                    username = username,
+                                    startDate = startDate,
+                                    endDate = endDate,
+                                    sortType = sortType,
+                                    isTransactionGrouped = isTransactionGrouped,
+                                    isTransferIncluded = isTransferIncluded
+                                )
                             )
-                        )
+                        }
                     }
                 }
-            }
+            )
         }
     ) { innerPadding ->
         Column(

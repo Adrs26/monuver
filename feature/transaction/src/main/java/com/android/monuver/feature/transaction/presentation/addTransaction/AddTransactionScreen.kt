@@ -4,15 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,7 +24,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.android.monuver.core.domain.common.DatabaseResultState
+import com.android.monuver.core.domain.util.DateHelper
+import com.android.monuver.core.domain.util.TransactionType
+import com.android.monuver.core.domain.util.toRupiah
 import com.android.monuver.core.presentation.components.CommonAppBar
+import com.android.monuver.core.presentation.components.PrimaryActionButton
 import com.android.monuver.core.presentation.components.TextAmountInputField
 import com.android.monuver.core.presentation.components.TextDateInputField
 import com.android.monuver.core.presentation.components.TextInputField
@@ -35,9 +36,6 @@ import com.android.monuver.core.presentation.util.DatabaseCodeMapper
 import com.android.monuver.core.presentation.util.showMessageWithToast
 import com.android.monuver.core.presentation.util.showToast
 import com.android.monuver.core.presentation.util.toRupiahFieldValue
-import com.android.monuver.core.domain.util.DateHelper
-import com.android.monuver.core.domain.util.TransactionType
-import com.android.monuver.core.domain.util.toRupiah
 import com.android.monuver.feature.transaction.R
 import com.android.monuver.feature.transaction.domain.model.AddTransactionState
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
@@ -96,12 +94,32 @@ internal fun AddTransactionScreen(
                         stringResource(R.string.add_expense),
                 onNavigateBack = transactionActions::onNavigateBack
             )
+        },
+        bottomBar = {
+            PrimaryActionButton(
+                text = stringResource(R.string.add),
+                onClick = {
+                    transactionActions.onAddNewTransaction(
+                        AddTransactionState(
+                            title = title,
+                            type = transactionType,
+                            parentCategory = transactionCategory.first,
+                            childCategory = transactionCategory.second,
+                            date = date,
+                            amount = amount,
+                            sourceId = transactionSource.first,
+                            sourceName = transactionSource.second
+                        )
+                    )
+                }
+            )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             TextInputField(
@@ -164,35 +182,9 @@ internal fun AddTransactionScreen(
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = transactionActions::onNavigateToSource
                     )
-                    .padding(horizontal = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 isEnable = false
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = {
-                    transactionActions.onAddNewTransaction(
-                        AddTransactionState(
-                            title = title,
-                            type = transactionType,
-                            parentCategory = transactionCategory.first,
-                            childCategory = transactionCategory.second,
-                            date = date,
-                            amount = amount,
-                            sourceId = transactionSource.first,
-                            sourceName = transactionSource.second
-                        )
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.add),
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
         }
     }
 

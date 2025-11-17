@@ -4,14 +4,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.android.monuver.core.domain.common.DatabaseResultState
 import com.android.monuver.core.domain.util.toRupiah
 import com.android.monuver.core.presentation.components.CommonAppBar
+import com.android.monuver.core.presentation.components.PrimaryActionButton
 import com.android.monuver.core.presentation.components.TextAmountInputField
 import com.android.monuver.core.presentation.components.TextInputField
 import com.android.monuver.core.presentation.util.DatabaseCodeMapper
@@ -66,12 +64,27 @@ internal fun AddAccountScreen(
                 title = stringResource(R.string.add_new_account),
                 onNavigateBack = onNavigateBack
             )
+        },
+        bottomBar = {
+            PrimaryActionButton(
+                text = stringResource(R.string.add),
+                onClick = {
+                    onAddAccount(
+                        AddAccountState(
+                            name = name,
+                            type = accountType,
+                            balance = balance
+                        )
+                    )
+                }
+            )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             TextInputField(
@@ -105,27 +118,6 @@ internal fun AddAccountScreen(
                 },
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = {
-                    onAddAccount(
-                        AddAccountState(
-                            name = name,
-                            type = accountType,
-                            balance = balance
-                        )
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.add),
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
         }
     }
 }

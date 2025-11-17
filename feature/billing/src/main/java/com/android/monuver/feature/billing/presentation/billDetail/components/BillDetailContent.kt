@@ -1,17 +1,14 @@
 package com.android.monuver.feature.billing.presentation.billDetail.components
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,8 +30,6 @@ import kotlin.time.ExperimentalTime
 @Composable
 internal fun BillDetailContent(
     billState: BillState,
-    onNavigateToPayBill: (Long) -> Unit,
-    onCancelBillPayment: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -43,7 +38,8 @@ internal fun BillDetailContent(
     ) {
         BillDetailData(
             title = stringResource(R.string.title),
-            content = billState.title
+            content = billState.title,
+            modifier = Modifier.padding(top = 32.dp)
         )
         HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
         BillDetailData(
@@ -88,39 +84,11 @@ internal fun BillDetailContent(
             HorizontalDivider(color = MaterialTheme.colorScheme.surfaceVariant)
             BillDetailData(
                 title = stringResource(R.string.paid_on),
-                content = DateHelper.formatToReadable(billState.paidDate ?: "2025-08-21")
+                content = DateHelper.formatToReadable(billState.paidDate ?: "2025-08-21"),
+                modifier = Modifier.padding(bottom = 32.dp)
             )
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        if (!billState.isPaid) {
-            Button(
-                onClick = { onNavigateToPayBill(billState.id) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.pay_bill),
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
         } else {
-            OutlinedButton(
-                onClick = { onCancelBillPayment(billState.id) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurfaceVariant)
-            ) {
-                Text(
-                    text = stringResource(R.string.cancel_bill_payment),
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    style = MaterialTheme.typography.labelMedium.copy(
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                )
-            }
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }

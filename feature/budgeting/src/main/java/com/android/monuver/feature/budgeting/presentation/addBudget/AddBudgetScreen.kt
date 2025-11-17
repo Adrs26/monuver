@@ -4,15 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,10 +24,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.android.monuver.feature.budgeting.presentation.components.BudgetTextSwitchField
 import com.android.monuver.core.domain.common.DatabaseResultState
+import com.android.monuver.core.domain.util.Cycle
+import com.android.monuver.core.domain.util.DateHelper
+import com.android.monuver.core.domain.util.toRupiah
 import com.android.monuver.core.presentation.components.CommonAppBar
 import com.android.monuver.core.presentation.components.CycleFilterField
+import com.android.monuver.core.presentation.components.PrimaryActionButton
 import com.android.monuver.core.presentation.components.TextAmountInputField
 import com.android.monuver.core.presentation.components.TextDateInputField
 import com.android.monuver.core.presentation.components.TextInputField
@@ -39,11 +39,9 @@ import com.android.monuver.core.presentation.util.isCreateBudgetSuccess
 import com.android.monuver.core.presentation.util.showMessageWithToast
 import com.android.monuver.core.presentation.util.showToast
 import com.android.monuver.core.presentation.util.toRupiahFieldValue
-import com.android.monuver.core.domain.util.Cycle
-import com.android.monuver.core.domain.util.DateHelper
-import com.android.monuver.core.domain.util.toRupiah
 import com.android.monuver.feature.budgeting.R
 import com.android.monuver.feature.budgeting.domain.model.AddBudgetState
+import com.android.monuver.feature.budgeting.presentation.components.BudgetTextSwitchField
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -89,12 +87,31 @@ internal fun AddBudgetScreen(
                 title = stringResource(R.string.add_budgeting),
                 onNavigateBack = onNavigateBack
             )
+        },
+        bottomBar = {
+            PrimaryActionButton(
+                text = stringResource(R.string.add),
+                onClick = {
+                    onAddNewBudget(
+                        AddBudgetState(
+                            category = category,
+                            maxAmount = maxAmount,
+                            cycle = cycle,
+                            startDate = getBudgetStartDate(cycle, startDate),
+                            endDate = getBudgetEndDate(cycle, endDate),
+                            isOverflowAllowed = isOverflowAllowed,
+                            isAutoUpdate = isAutoUpdate
+                        )
+                    )
+                }
+            )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             TextInputField(
@@ -171,33 +188,8 @@ internal fun AddBudgetScreen(
                 isAutoUpdate = isAutoUpdate,
                 onAutoUpdateChange = { isAutoUpdate = it },
                 budgetCycle = cycle,
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = {
-                    onAddNewBudget(
-                        AddBudgetState(
-                            category = category,
-                            maxAmount = maxAmount,
-                            cycle = cycle,
-                            startDate = getBudgetStartDate(cycle, startDate),
-                            endDate = getBudgetEndDate(cycle, endDate),
-                            isOverflowAllowed = isOverflowAllowed,
-                            isAutoUpdate = isAutoUpdate
-                        )
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.add),
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
         }
     }
 

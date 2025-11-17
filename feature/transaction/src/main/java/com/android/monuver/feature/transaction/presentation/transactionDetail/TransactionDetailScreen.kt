@@ -1,6 +1,8 @@
 package com.android.monuver.feature.transaction.presentation.transactionDetail
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,6 +50,7 @@ internal fun DetailTransactionScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp, vertical = 32.dp)
+                .verticalScroll(rememberScrollState())
         )
     }
 

@@ -4,15 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,6 +27,7 @@ import com.android.monuver.core.domain.common.DatabaseResultState
 import com.android.monuver.core.domain.util.DateHelper
 import com.android.monuver.core.domain.util.toRupiah
 import com.android.monuver.core.presentation.components.CommonAppBar
+import com.android.monuver.core.presentation.components.PrimaryActionButton
 import com.android.monuver.core.presentation.components.TextAmountInputField
 import com.android.monuver.core.presentation.components.TextDateInputField
 import com.android.monuver.core.presentation.components.TextInputField
@@ -72,12 +70,27 @@ internal fun AddSavingScreen(
                 title = stringResource(R.string.add_save),
                 onNavigateBack = onNavigateBack
             )
+        },
+        bottomBar = {
+            PrimaryActionButton(
+                text = stringResource(R.string.add),
+                onClick = {
+                    onAddNewSaving(
+                        AddSavingState(
+                            title = title,
+                            targetDate = targetDate,
+                            targetAmount = targetAmount
+                        )
+                    )
+                }
+            )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             TextInputField(
@@ -108,29 +121,8 @@ internal fun AddSavingScreen(
                     targetAmount = it.toRupiahFieldValue().first
                     formattedTargetAmount = it.toRupiahFieldValue().second
                 },
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = {
-                    onAddNewSaving(
-                        AddSavingState(
-                            title = title,
-                            targetDate = targetDate,
-                            targetAmount = targetAmount
-                        )
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.add),
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
         }
     }
 

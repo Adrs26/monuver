@@ -4,15 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,6 +27,7 @@ import com.android.monuver.core.domain.common.DatabaseResultState
 import com.android.monuver.core.domain.util.DateHelper
 import com.android.monuver.core.domain.util.toRupiah
 import com.android.monuver.core.presentation.components.CommonAppBar
+import com.android.monuver.core.presentation.components.PrimaryActionButton
 import com.android.monuver.core.presentation.components.StaticTextInputField
 import com.android.monuver.core.presentation.components.TextAmountInputField
 import com.android.monuver.core.presentation.components.TextDateInputField
@@ -79,12 +77,30 @@ internal fun WithdrawScreen(
                 title = stringResource(R.string.withdraw_save_balance),
                 onNavigateBack = withdrawActions::onNavigateBack
             )
+        },
+        bottomBar = {
+            PrimaryActionButton(
+                text = stringResource(R.string.withdraw),
+                onClick = {
+                    withdrawActions.onAddNewWithdraw(
+                        DepositWithdrawState(
+                            date = date,
+                            amount = amount,
+                            accountId = account.first,
+                            accountName = account.second,
+                            savingId = saving.first,
+                            savingName = saving.second
+                        )
+                    )
+                }
+            )
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             StaticTextInputField(
@@ -126,33 +142,9 @@ internal fun WithdrawScreen(
                         interactionSource = remember { MutableInteractionSource() },
                         onClick = withdrawActions::onNavigateToAccount
                     )
-                    .padding(horizontal = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 isEnable = false
             )
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = {
-                    withdrawActions.onAddNewWithdraw(
-                        DepositWithdrawState(
-                            date = date,
-                            amount = amount,
-                            accountId = account.first,
-                            accountName = account.second,
-                            savingId = saving.first,
-                            savingName = saving.second
-                        )
-                    )
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.withdraw),
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    style = MaterialTheme.typography.labelMedium
-                )
-            }
         }
     }
 
