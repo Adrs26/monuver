@@ -1,0 +1,12 @@
+package com.android.monuver.core.domain.usecase
+
+import com.android.monuver.core.domain.repository.CoreRepository
+import kotlinx.coroutines.flow.Flow
+
+class GetDistinctTransactionYearsUseCase(
+    private val repository: CoreRepository
+) {
+    operator fun invoke(): Flow<List<Int>> {
+        return repository.getDistinctTransactionYears()
+    }
+}

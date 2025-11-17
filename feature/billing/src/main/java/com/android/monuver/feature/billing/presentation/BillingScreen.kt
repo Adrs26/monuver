@@ -1,0 +1,118 @@
+package com.android.monuver.feature.billing.presentation
+
+import android.Manifest
+import android.os.Build
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.paging.compose.LazyPagingItems
+import com.android.monuver.core.presentation.components.CommonFloatingActionButton
+import com.android.monuver.core.presentation.util.showMessageWithToast
+import com.android.monuver.feature.billing.R
+import com.android.monuver.feature.billing.domain.model.BillListItemState
+import com.android.monuver.feature.billing.presentation.components.BillAppBar
+import com.android.monuver.feature.billing.presentation.components.BillReminderDialog
+import com.android.monuver.feature.billing.presentation.components.BillTabRowWithPager
+import com.android.monuver.feature.billing.worker.startReminderWorker
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+internal fun BillingScreen(
+    billUiState: BillUiState,
+    billActions: BillActions
+) {
+    val context = LocalContext.current
+
+    var showReminderDialog by remember { mutableStateOf(false) }
+
+    val notificationsPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        rememberPermissionState(
+            permission = Manifest.permission.POST_NOTIFICATIONS,
+            onPermissionResult = { isGranted ->
+                if (isGranted) {
+                    startReminderWorker(context)
+                    showReminderDialog = true
+                } else {
+                    context.getString(
+                        R.string.notification_permissions_required_to_use_bill_reminder_feature
+                    ).showMessageWithToast(context)
+                }
+            }
+        )
+    } else { null }
+
+    Scaffold(
+        topBar = {
+            BillAppBar(
+                onNavigateBack = billActions::onNavigateBack,
+                onReminderClick = {
+                    if (notificationsPermissionState?.status?.isGranted == true) {
+                        showReminderDialog = true
+                    } else {
+                        notificationsPermissionState?.launchPermissionRequest()
+                    }
+                }
+            )
+        },
+        floatingActionButton = {
+            CommonFloatingActionButton {
+                billActions.onNavigateToAddBill()
+            }
+        }
+    ) { innerPadding ->
+        BillTabRowWithPager(
+            billUiState = billUiState,
+            onNavigateToBillDetail = billActions::onNavigateToBillDetail,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        )
+    }
+
+    if (showReminderDialog) {
+        BillReminderDialog(
+            reminderDaysBeforeDue = billUiState.reminderDaysBeforeDue,
+            isReminderBeforeDueDayEnabled = billUiState.isReminderBeforeDueDayEnabled,
+            isReminderForDueBillEnabled = billUiState.isReminderForDueBillEnabled,
+            onDismissRequest = { showReminderDialog = false },
+            onSettingsApply = { reminderDays, isReminderBeforeEnabled, isReminderForDueBillEnabled ->
+                billActions.onSettingsApply(
+                    reminderDaysBeforeDue = reminderDays,
+                    isReminderBeforeDueDayEnabled = isReminderBeforeEnabled,
+                    isReminderForDueBillEnabled = isReminderForDueBillEnabled
+                )
+                startReminderWorker(context)
+            }
+        )
+    }
+}
+
+internal data class BillUiState(
+    val pendingBills: List<BillListItemState>,
+    val dueBills: List<BillListItemState>,
+    val paidBills: LazyPagingItems<BillListItemState>,
+    val reminderDaysBeforeDue: Int,
+    val isReminderBeforeDueDayEnabled: Boolean,
+    val isReminderForDueBillEnabled: Boolean,
+)
+
+internal interface BillActions {
+    fun onNavigateBack()
+    fun onNavigateToAddBill()
+    fun onNavigateToBillDetail(billId: Long)
+    fun onSettingsApply(
+        reminderDaysBeforeDue: Int,
+        isReminderBeforeDueDayEnabled: Boolean,
+        isReminderForDueBillEnabled: Boolean,
+    )
+}

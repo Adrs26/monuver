@@ -1,0 +1,12 @@
+package com.android.monuver.feature.home.domain.usecase
+
+import com.android.monuver.feature.home.domain.repository.HomeRepository
+import kotlinx.coroutines.flow.Flow
+
+class GetActiveAccountBalanceUseCase(
+    private val repository: HomeRepository
+) {
+    operator fun invoke(): Flow<Long?> {
+        return repository.getActiveAccountBalance()
+    }
+}

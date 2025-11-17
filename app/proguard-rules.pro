@@ -21,7 +21,6 @@
 #-renamesourcefileattribute SourceFile
 
 # Keep Compose compiler generated classes
--keep class androidx.compose.** { *; }
 -keep class androidx.activity.ComponentActivity { *; }
 
 # Optional: Keep ViewModels if you're using them
@@ -47,9 +46,6 @@
     @kotlinx.serialization.* <fields>;
     @kotlinx.serialization.* <methods>;
 }
-
-# Keep all kotlinx serialization-related classes and methods
--keep class kotlinx.serialization.** { *; }
 
 -dontwarn javax.annotation.Nullable
 
