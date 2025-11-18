@@ -19,5 +19,9 @@ dependencies {
     api(libs.kotlinx.coroutines.core)
     api(libs.kotlinx.datetime)
     api(libs.kotlinx.serialization.json)
-    testApi(libs.kotlinx.coroutines.test)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
 }

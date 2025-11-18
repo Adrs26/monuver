@@ -20,11 +20,11 @@ internal class AccountRepositoryImpl(
 ) : AccountRepository {
 
     override suspend fun createAccount(
-        account: AccountState,
+        accountState: AccountState,
         transactionState: TransactionState
     ) {
         database.withTransaction {
-            val accountId = accountDao.createNewAccount(account.toEntity())
+            val accountId = accountDao.createNewAccount(accountState.toEntity())
             val transactionWithAccountId = transactionState.copy(sourceId = accountId.toInt())
             transactionDao.createNewTransaction(transactionWithAccountId.toEntity())
         }
@@ -46,18 +46,36 @@ internal class AccountRepositoryImpl(
 
     override suspend fun updateAccountStatus(accountId: Int, isActive: Boolean) {
         database.withTransaction {
-            accountDao.updateAccountStatus(accountId, isActive)
-            transactionDao.updateTransactionLockStatusByAccountId(accountId, !isActive)
+            accountDao.updateAccountStatus(
+                accountId = accountId,
+                isActive = isActive
+            )
+            transactionDao.updateTransactionLockStatusByAccountId(
+                accountId = accountId,
+                isLocked = !isActive
+            )
         }
     }
 
-    override suspend fun updateAccount(account: AccountState) {
+    override suspend fun updateAccount(accountState: AccountState) {
         database.withTransaction {
-            accountDao.updateAccount(account.toEntityForUpdate())
-            transactionDao.updateAccountNameOnCommonTransaction(account.id, account.name)
-            transactionDao.updateAccountNameOnTransferTransaction(account.id, account.name)
-            transactionDao.updateAccountNameOnDepositTransaction(account.id, account.name)
-            transactionDao.updateAccountNameOnWithdrawTransaction(account.id, account.name)
+            accountDao.updateAccount(accountState.toEntityForUpdate())
+            transactionDao.updateAccountNameOnCommonTransaction(
+                accountId = accountState.id,
+                accountName = accountState.name
+            )
+            transactionDao.updateAccountNameOnTransferTransaction(
+                accountId = accountState.id,
+                accountName = accountState.name
+            )
+            transactionDao.updateAccountNameOnDepositTransaction(
+                accountId = accountState.id,
+                accountName = accountState.name
+            )
+            transactionDao.updateAccountNameOnWithdrawTransaction(
+                accountId = accountState.id,
+                accountName = accountState.name
+            )
         }
     }
 }

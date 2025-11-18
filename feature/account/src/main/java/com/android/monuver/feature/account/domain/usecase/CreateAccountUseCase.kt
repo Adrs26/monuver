@@ -1,7 +1,5 @@
 package com.android.monuver.feature.account.domain.usecase
 
-import com.android.monuver.feature.account.domain.model.AddAccountState
-import com.android.monuver.feature.account.domain.repository.AccountRepository
 import com.android.monuver.core.domain.common.DatabaseResultState
 import com.android.monuver.core.domain.model.AccountState
 import com.android.monuver.core.domain.model.TransactionState
@@ -9,6 +7,8 @@ import com.android.monuver.core.domain.util.DateHelper
 import com.android.monuver.core.domain.util.TransactionChildCategory
 import com.android.monuver.core.domain.util.TransactionParentCategory
 import com.android.monuver.core.domain.util.TransactionType
+import com.android.monuver.feature.account.domain.model.AddAccountState
+import com.android.monuver.feature.account.domain.repository.AccountRepository
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Clock
@@ -54,7 +54,7 @@ internal class CreateAccountUseCase(
         )
 
         repository.createAccount(
-            account = account,
+            accountState = account,
             transactionState = transactionState
         )
         return DatabaseResultState.CreateAccountSuccess

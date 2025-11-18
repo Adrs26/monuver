@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface AccountRepository {
 
-    suspend fun createAccount(account: AccountState, transactionState: TransactionState)
+    suspend fun createAccount(accountState: AccountState, transactionState: TransactionState)
 
     fun getAccountById(accountId: Int): Flow<AccountState?>
 
@@ -16,5 +16,5 @@ internal interface AccountRepository {
 
     suspend fun updateAccountStatus(accountId: Int, isActive: Boolean)
 
-    suspend fun updateAccount(account: AccountState)
+    suspend fun updateAccount(accountState: AccountState)
 }
