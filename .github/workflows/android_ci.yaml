@@ -28,7 +28,11 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v3
 
-      # 4. Run Unit Tests: Menjalankan semua Local Unit Tests (berjalan di JVM)
+      # 4. Izin Eksekusi
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 5. Run Unit Tests: Menjalankan semua Local Unit Tests (berjalan di JVM)
       #    Menggunakan gradlew (Gradle Wrapper) untuk memastikan versi yang benar.
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
