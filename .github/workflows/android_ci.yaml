@@ -18,10 +18,10 @@ jobs:
         uses: actions/checkout@v4
 
       # 2. Setup JDK: Menginstal Java Development Kit (JDK) yang diperlukan oleh Gradle
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
 
       # 3. Setup Gradle: Menyiapkan cache Gradle untuk mempercepat build
