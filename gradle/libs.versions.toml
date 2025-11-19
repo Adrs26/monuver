@@ -27,6 +27,7 @@ navigationCompose = "2.9.6"
 pagingRuntime = "3.3.6"
 roomRuntime = "2.8.3"
 ksp = "2.2.21-2.0.4"
+truth = "1.4.5"
 turbine = "1.2.1"
 workRuntimeKtx = "2.11.0"
 
@@ -72,6 +73,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieCompose" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
+truth = { module = "com.google.truth:truth", version.ref = "truth" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 [plugins]

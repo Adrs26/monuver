@@ -6,8 +6,8 @@ import com.android.monuver.core.domain.util.TransactionType
 import com.android.monuver.feature.account.domain.model.AddAccountState
 import com.android.monuver.feature.account.domain.repository.AccountRepository
 import com.android.monuver.feature.account.domain.usecase.CreateAccountUseCase
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -20,13 +20,13 @@ import org.mockito.kotlin.whenever
 
 class CreateAccountUseCaseTest {
 
-    private lateinit var accountRepository: AccountRepository
+    private lateinit var repository: AccountRepository
     private lateinit var createAccountUseCase: CreateAccountUseCase
 
     @Before
     fun setup() {
-        accountRepository = mock(AccountRepository::class.java)
-        createAccountUseCase = CreateAccountUseCase(accountRepository)
+        repository = mock(AccountRepository::class.java)
+        createAccountUseCase = CreateAccountUseCase(repository)
     }
 
     @Test
@@ -39,8 +39,8 @@ class CreateAccountUseCaseTest {
 
         val result = createAccountUseCase(addAccountState)
 
-        assert(result is DatabaseResultState.EmptyAccountName)
-        verifyNoInteractions(accountRepository)
+        assertThat(result).isEqualTo(DatabaseResultState.EmptyAccountName)
+        verifyNoInteractions(repository)
     }
 
     @Test
@@ -53,8 +53,8 @@ class CreateAccountUseCaseTest {
 
         val result = createAccountUseCase(addAccountState)
 
-        assert(result is DatabaseResultState.EmptyAccountType)
-        verifyNoInteractions(accountRepository)
+        assertThat(result).isEqualTo(DatabaseResultState.EmptyAccountType)
+        verifyNoInteractions(repository)
     }
 
     @Test
@@ -67,8 +67,8 @@ class CreateAccountUseCaseTest {
 
         val result = createAccountUseCase(addAccountState)
 
-        assert(result is DatabaseResultState.EmptyAccountBalance)
-        verifyNoInteractions(accountRepository)
+        assertThat(result).isEqualTo(DatabaseResultState.EmptyAccountBalance)
+        verifyNoInteractions(repository)
     }
 
     @Test
@@ -79,24 +79,24 @@ class CreateAccountUseCaseTest {
             balance = 1_000_000
         )
 
-        whenever(accountRepository.createAccount(any(), any())).thenReturn(Unit)
+        whenever(repository.createAccount(any(), any())).thenReturn(Unit)
 
         val result = createAccountUseCase(addAccountState)
 
-        assert(result is DatabaseResultState.CreateAccountSuccess)
+        assertThat(result).isEqualTo(DatabaseResultState.CreateAccountSuccess)
 
-        verify(accountRepository).createAccount(
+        verify(repository).createAccount(
             accountState = check {
-                assertEquals("BCA", it.name)
-                assertEquals(AccountType.BANK, it.type)
-                assertEquals(1_000_000, it.balance)
+                assertThat(it.name).isEqualTo("BCA")
+                assertThat(it.type).isEqualTo(AccountType.BANK)
+                assertThat(it.balance).isEqualTo(1_000_000)
                 assertTrue(it.isActive)
             },
             transactionState = check {
-                assertEquals("Penambahan Akun", it.title)
-                assertEquals(TransactionType.INCOME, it.type)
-                assertEquals(1_000_000, it.amount)
-                assertEquals("BCA", it.sourceName)
+                assertThat(it.title).isEqualTo("Penambahan Akun")
+                assertThat(it.type).isEqualTo(TransactionType.INCOME)
+                assertThat(it.amount).isEqualTo(1_000_000)
+                assertThat(it.sourceName).isEqualTo("BCA")
                 assertTrue(it.isLocked)
             }
         )

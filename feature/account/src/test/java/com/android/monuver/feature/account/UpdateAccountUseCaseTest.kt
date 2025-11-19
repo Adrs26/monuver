@@ -5,6 +5,7 @@ import com.android.monuver.core.domain.util.AccountType
 import com.android.monuver.feature.account.domain.model.EditAccountState
 import com.android.monuver.feature.account.domain.repository.AccountRepository
 import com.android.monuver.feature.account.domain.usecase.UpdateAccountUseCase
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -39,7 +40,7 @@ class UpdateAccountUseCaseTest {
 
         val result = updateAccountUseCase(editAccountState)
 
-        assert(result is DatabaseResultState.EmptyAccountName)
+        assertThat(result).isEqualTo(DatabaseResultState.EmptyAccountName)
         verifyNoInteractions(accountRepository)
     }
 
@@ -54,7 +55,7 @@ class UpdateAccountUseCaseTest {
 
         val result = updateAccountUseCase(editAccountState)
 
-        assert(result is DatabaseResultState.EmptyAccountType)
+        assertThat(result).isEqualTo(DatabaseResultState.EmptyAccountType)
         verifyNoInteractions(accountRepository)
     }
 
@@ -71,7 +72,7 @@ class UpdateAccountUseCaseTest {
 
         val result = updateAccountUseCase(editAccountState)
 
-        assert(result is DatabaseResultState.UpdateAccountSuccess)
+        assertThat(result).isEqualTo(DatabaseResultState.UpdateAccountSuccess)
 
         verify(accountRepository).updateAccount(
             accountState = check {

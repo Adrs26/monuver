@@ -5,9 +5,9 @@ import com.android.monuver.core.domain.model.AccountState
 import com.android.monuver.core.domain.util.AccountType
 import com.android.monuver.feature.account.domain.repository.AccountRepository
 import com.android.monuver.feature.account.domain.usecase.GetAccountByIdUseCase
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock
@@ -16,18 +16,18 @@ import org.mockito.kotlin.whenever
 
 class GetAccountByIdUseCaseTest {
 
-    private lateinit var accountRepository: AccountRepository
+    private lateinit var repository: AccountRepository
     private lateinit var getAccountByIdUseCase: GetAccountByIdUseCase
 
     @Before
     fun setup() {
-        accountRepository = mock(AccountRepository::class.java)
-        getAccountByIdUseCase = GetAccountByIdUseCase(accountRepository)
+        repository = mock(AccountRepository::class.java)
+        getAccountByIdUseCase = GetAccountByIdUseCase(repository)
     }
 
     @Test
     fun `should emit user`() = runTest {
-        val accountState = AccountState(
+        val expected = AccountState(
             id = 1,
             name = "BCA",
             type = AccountType.BANK,
@@ -35,16 +35,16 @@ class GetAccountByIdUseCaseTest {
             isActive = true
         )
 
-        whenever(accountRepository.getAccountById(1)).thenReturn(flowOf(accountState))
+        whenever(repository.getAccountById(1)).thenReturn(flowOf(expected))
 
-        val accountFlow = getAccountByIdUseCase(1)
+        val flow = getAccountByIdUseCase(1)
 
-        accountFlow.test {
-            val account = awaitItem()
-            assertEquals(accountState, account)
+        flow.test {
+            val result = awaitItem()
+            assertThat(result).isEqualTo(expected)
             awaitComplete()
         }
 
-        verify(accountRepository).getAccountById(1)
+        verify(repository).getAccountById(1)
     }
 }

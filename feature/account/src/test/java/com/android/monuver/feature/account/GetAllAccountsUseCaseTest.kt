@@ -5,9 +5,9 @@ import com.android.monuver.core.domain.model.AccountState
 import com.android.monuver.core.domain.util.AccountType
 import com.android.monuver.feature.account.domain.repository.AccountRepository
 import com.android.monuver.feature.account.domain.usecase.GetAllAccountsUseCase
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock
@@ -16,18 +16,18 @@ import org.mockito.kotlin.whenever
 
 class GetAllAccountsUseCaseTest {
 
-    private lateinit var accountRepository: AccountRepository
+    private lateinit var repository: AccountRepository
     private lateinit var getAllAccountsUseCase: GetAllAccountsUseCase
 
     @Before
     fun setup() {
-        accountRepository = mock(AccountRepository::class.java)
-        getAllAccountsUseCase = GetAllAccountsUseCase(accountRepository)
+        repository = mock(AccountRepository::class.java)
+        getAllAccountsUseCase = GetAllAccountsUseCase(repository)
     }
 
     @Test
     fun `should emit list of user`() = runTest {
-        val accounts = listOf(
+        val expected = listOf(
             AccountState(
                 id = 1,
                 name = "BCA",
@@ -44,20 +44,16 @@ class GetAllAccountsUseCaseTest {
             )
         )
 
-        whenever(accountRepository.getAllAccounts()).thenReturn(flowOf(accounts))
+        whenever(repository.getAllAccounts()).thenReturn(flowOf(expected))
 
-        val accountsFlow = getAllAccountsUseCase()
+        val flow = getAllAccountsUseCase()
 
-        accountsFlow.test {
-            val accounts = awaitItem()
-            assertEquals(2, accounts.size)
-            assertEquals("BCA", accounts[0].name)
-            assertEquals(1_000_000, accounts[0].balance)
-            assertEquals("BRI", accounts[1].name)
-            assertEquals(2_000_000, accounts[1].balance)
+        flow.test {
+            val result = awaitItem()
+            assertThat(result).containsExactlyElementsIn(expected)
             awaitComplete()
         }
 
-        verify(accountRepository).getAllAccounts()
+        verify(repository).getAllAccounts()
     }
 }
