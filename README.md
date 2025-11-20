@@ -2,7 +2,7 @@
 
 # Monuver – Personal Finance Management App
 
-Monuver is an Android application designed to help users efficiently manage their personal finances. It enables users to record income and expenses, track spending habits, manage budgets, and many more. All in one simple and modern interface. Try it now - [Monuver (beta ver)](https://drive.google.com/file/d/1PbYHKmH77q0nU888U4sXU8coNmC0xsba/view?usp=sharing)
+Monuver is an Android application designed to help users efficiently manage their personal finances. It enables users to record income and expenses, track spending habits, manage budgets, and many more. All in one simple and modern interface. Try it now - [Monuver (beta ver)](https://drive.google.com/file/d/1heT5G6CHki-fKBjvRQUb2-muylbIafHj/view?usp=sharing)
 
 ---
 
@@ -74,7 +74,7 @@ The app follows **MVVM with Clean Architecture** principles for scalability and 
 
 ## 🔗 Repository
 
-GitHub: [https://github.com/Adrs26/monu](https://github.com/Adrs26/monu)
+GitHub: [https://github.com/Adrs26/monuver](https://github.com/Adrs26/monuver)
 
 ---
 
