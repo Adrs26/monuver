@@ -3,7 +3,7 @@ package com.android.monuver.feature.transaction.presentation.transactionDetail.c
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -49,7 +49,7 @@ internal fun TransactionDetailAppBar(
                     onClick = onNavigateToEditTransaction
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Lock,
+                        imageVector = Icons.Outlined.Edit,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurface
                     )

@@ -59,7 +59,7 @@ internal fun EditBillScreen(
     var amount by rememberSaveable { mutableLongStateOf(billState.amount) }
     var formattedAmount by remember { mutableStateOf(TextFieldValue(amount.toRupiah())) }
     var period by rememberSaveable { mutableIntStateOf(billState.period ?: 0) }
-    var fixPeriod by rememberSaveable { mutableStateOf(billState.fixPeriod.toString()) }
+    var fixPeriod by rememberSaveable { mutableStateOf(billState.fixPeriod?.toString() ?: "") }
 
     val calendarState = rememberUseCaseState()
 
@@ -141,7 +141,10 @@ internal fun EditBillScreen(
             if (billState.isRecurring && !billState.isPaidBefore) {
                 BillPeriodRadioGroupField(
                     selectedPeriod = period,
-                    onPeriodSelect = { period = it },
+                    onPeriodSelect = {
+                        period = it
+                        if (period == 1) fixPeriod = ""
+                    },
                     fixPeriod = fixPeriod,
                     onFixPeriodChange = { fixPeriod = it },
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)

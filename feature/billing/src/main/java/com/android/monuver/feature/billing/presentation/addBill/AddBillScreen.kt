@@ -164,7 +164,10 @@ internal fun AddBillScreen(
                     )
                     BillPeriodRadioGroupField(
                         selectedPeriod = period,
-                        onPeriodSelect = { period = it },
+                        onPeriodSelect = {
+                            period = it
+                            if (period == 1) fixPeriod = ""
+                        },
                         fixPeriod = fixPeriod,
                         onFixPeriodChange = { fixPeriod = it },
                         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
